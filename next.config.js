@@ -51,10 +51,34 @@ const withPWA = require('@ducanh2912/next-pwa').default({
 });
 const withNextIntl = require('next-intl/plugin')('./i18n/request.ts');
 
+// Baseline security headers for every response. The CSP only carries the
+// directives that cannot break Next.js inline scripts (no script-src yet: a
+// nonce-based policy is planned with the Next 16 upgrade).
+const securityHeaders = [
+  {
+    key: 'Content-Security-Policy',
+    value: "frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
+  },
+  { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), microphone=(), geolocation=(), payment=(), screen-wake-lock=(self)',
+  },
+  ...(process.env.NODE_ENV === 'production'
+    ? [{ key: 'Strict-Transport-Security', value: 'max-age=31536000' }]
+    : []),
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
+  poweredByHeader: false,
+  async headers() {
+    return [{ source: '/:path*', headers: securityHeaders }];
+  },
 };
 
 module.exports = withPWA(withNextIntl(nextConfig));

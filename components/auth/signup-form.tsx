@@ -10,13 +10,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 type FormValues = { displayName: string; email: string; password: string };
 
@@ -58,7 +52,7 @@ export function SignupForm() {
       return;
     }
 
-    setServerError(t('signup.error'));
+    setServerError(res.status === 403 ? t('signup.restricted') : t('signup.error'));
   }
 
   return (
@@ -94,9 +88,7 @@ export function SignupForm() {
               aria-invalid={errors.email ? 'true' : 'false'}
               {...register('email')}
             />
-            {errors.email && (
-              <p className="text-sm text-destructive">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-2">
@@ -119,11 +111,7 @@ export function SignupForm() {
             </p>
           )}
 
-          <Button
-            type="submit"
-            className="min-h-tap w-full text-base"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" className="min-h-tap w-full text-base" disabled={isSubmitting}>
             {isSubmitting ? t('signup.submitting') : t('signup.submit')}
           </Button>
 

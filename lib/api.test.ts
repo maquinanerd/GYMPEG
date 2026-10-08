@@ -1,7 +1,14 @@
 import { describe, it, expect, vi } from 'vitest';
 import { z } from 'zod';
 import { Prisma } from '@/prisma/generated/client';
-import { ApiError, handleApiError, parseJsonBody } from './api';
+import {
+  ApiError,
+  AUTH_JSON_BODY_MAX_BYTES,
+  DEFAULT_JSON_BODY_MAX_BYTES,
+  handleApiError,
+  parseJsonBody,
+  readJsonBodyOrNull,
+} from './api';
 
 function jsonRequest(body: string): Request {
   return new Request('http://test.local/api', {
@@ -135,5 +142,22 @@ describe('parseJsonBody with a byte cap', () => {
     await expect(
       parseJsonBody(chunkedRequest(['{"name":42}']), schema, { maxBytes: 1024 }),
     ).rejects.toMatchObject({ status: 400 });
+  });
+});
+
+describe('default body caps', () => {
+  it('caps bodies even when the route passes no maxBytes', async () => {
+    const schema = z.object({ name: z.string() });
+    const big = JSON.stringify({ name: 'x'.repeat(DEFAULT_JSON_BODY_MAX_BYTES) });
+    await expect(parseJsonBody(jsonRequest(big), schema)).rejects.toMatchObject({ status: 413 });
+  });
+
+  it('readJsonBodyOrNull returns null for invalid JSON and 413 above the cap', async () => {
+    await expect(readJsonBodyOrNull(jsonRequest('not json{'))).resolves.toBeNull();
+    await expect(readJsonBodyOrNull(jsonRequest('{"a":1}'))).resolves.toEqual({ a: 1 });
+    const big = JSON.stringify({ password: 'x'.repeat(AUTH_JSON_BODY_MAX_BYTES) });
+    await expect(
+      readJsonBodyOrNull(jsonRequest(big), AUTH_JSON_BODY_MAX_BYTES),
+    ).rejects.toMatchObject({ status: 413 });
   });
 });

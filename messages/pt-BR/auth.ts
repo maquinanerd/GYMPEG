@@ -21,6 +21,7 @@ export const auth = {
     hasAccount: 'Já tem uma conta?',
     signIn: 'Entrar',
     error: 'Erro ao criar a conta.',
+    restricted: 'O cadastro é apenas por convite. Peça um convite para criar sua conta.',
   },
   logout: 'Sair',
   validation: {

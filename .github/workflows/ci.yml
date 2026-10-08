@@ -120,6 +120,7 @@ jobs:
           docker run -d --name smoke-app --network smoke -p 3000:3000 \
             -e DATABASE_URL=postgresql://gymcoach:gymcoach@smoke-db:5432/gymcoach \
             -e JWT_SECRET=docker-smoke-ci-secret-at-least-32-characters \
+            -e SIGNUP_MODE=open \
             gymcoach:smoke \
             sh -c "node node_modules/prisma/build/index.js migrate deploy && node server.js"
       - name: Probe the image (login page, register, login)

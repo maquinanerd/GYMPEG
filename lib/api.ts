@@ -26,6 +26,28 @@ export async function requireApiUserId(): Promise<string> {
   return userId;
 }
 
+// Every JSON body is read under a byte cap: route handlers have no built-in
+// limit, so an uncapped req.json() lets one request buffer unbounded memory.
+// Routes that legitimately take larger payloads (imports, backup, images)
+// pass their own maxBytes.
+export const DEFAULT_JSON_BODY_MAX_BYTES = 1_000_000;
+// Login and signup carry an email, a password and a name.
+export const AUTH_JSON_BODY_MAX_BYTES = 16_384;
+
+// Parses a capped JSON body for routes that validate it themselves. Returns
+// null when the body is not valid JSON; throws ApiError(413) when too large.
+export async function readJsonBodyOrNull(
+  req: Request,
+  maxBytes: number = DEFAULT_JSON_BODY_MAX_BYTES,
+): Promise<unknown> {
+  const text = await readBodyWithCap(req, maxBytes);
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    return null;
+  }
+}
+
 export async function parseJsonBody<T extends z.ZodTypeAny>(
   req: Request,
   schema: T,
@@ -33,11 +55,7 @@ export async function parseJsonBody<T extends z.ZodTypeAny>(
 ): Promise<z.infer<T>> {
   let body: unknown;
   try {
-    if (opts?.maxBytes !== undefined) {
-      body = JSON.parse(await readBodyWithCap(req, opts.maxBytes));
-    } else {
-      body = await req.json();
-    }
+    body = JSON.parse(await readBodyWithCap(req, opts?.maxBytes ?? DEFAULT_JSON_BODY_MAX_BYTES));
   } catch (err) {
     if (err instanceof ApiError) throw err;
     throw new ApiError(400, 'Invalid JSON');
@@ -55,10 +73,7 @@ export async function parseJsonBody<T extends z.ZodTypeAny>(
 // built-in body size limit, so `req.json()` / `req.arrayBuffer()` would
 // buffer an arbitrarily large body into memory before any check runs. Aborts
 // with 413 as soon as the cumulative byte count exceeds the cap.
-export async function readBodyBytesWithCap(
-  req: Request,
-  maxBytes: number,
-): Promise<Uint8Array> {
+export async function readBodyBytesWithCap(req: Request, maxBytes: number): Promise<Uint8Array> {
   if (!req.body) return new Uint8Array(0);
   const reader = req.body.getReader();
   const chunks: Uint8Array[] = [];
@@ -90,10 +105,7 @@ export async function readBodyBytesWithCap(
 }
 
 // Text variant of readBodyBytesWithCap, for JSON/CSV/XML bodies.
-export async function readBodyWithCap(
-  req: Request,
-  maxBytes: number,
-): Promise<string> {
+export async function readBodyWithCap(req: Request, maxBytes: number): Promise<string> {
   return new TextDecoder().decode(await readBodyBytesWithCap(req, maxBytes));
 }
 

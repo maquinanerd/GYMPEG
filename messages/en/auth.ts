@@ -18,6 +18,7 @@ export const auth = {
     hasAccount: 'Already have an account?',
     signIn: 'Sign in',
     error: 'Registration error.',
+    restricted: 'Signups are by invitation only. Ask for an invite to create an account.',
   },
   logout: 'Log out',
   validation: {

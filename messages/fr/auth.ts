@@ -21,6 +21,7 @@ export const auth = {
     hasAccount: 'Déjà un compte ?',
     signIn: 'Se connecter',
     error: 'Erreur lors de l’inscription.',
+    restricted: 'Les inscriptions se font uniquement sur invitation. Demandez une invitation pour créer un compte.',
   },
   logout: 'Se déconnecter',
   validation: {

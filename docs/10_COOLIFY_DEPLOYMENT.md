@@ -69,6 +69,8 @@ Marque os segredos apenas como **runtime** (não "build variable"), para não fi
 | `DATABASE_URL` | Postgres URL (internal) do passo 2 | sim |
 | `JWT_SECRET` | 48+ caracteres aleatórios (`openssl rand -base64 48`) | sim |
 | `NEXTAUTH_URL` | `https://<seu-subdominio>` | sim |
+| `SIGNUP_MODE` | `allowlist` (padrão em produção; `open` libera o cadastro, `closed` fecha) | não |
+| `SIGNUP_ALLOWED_EMAILS` | seu e-mail (e de quem você convidar), separados por vírgula | sim, para criar a primeira conta |
 | `AI_PROVIDER` | `gemini` (ou `demo` até ter chave) | sim |
 | `GEMINI_API_KEY` | chave do Google AI Studio | para IA real |
 | `AI_FALLBACK_PROVIDER` | `deepseek` | opcional |
@@ -86,9 +88,9 @@ Aba **Healthcheck** → habilitar, path `/api/health`, porta `3000`. A imagem ta
 
 ## 4. Primeiro deploy
 
-Deploy. Ao subir, acessar `/signup` e criar a conta. O catálogo de exercícios é criado automaticamente no registro (não precisa de seed).
+Deploy. Ao subir, acessar `/signup` e criar a conta com um e-mail listado em `SIGNUP_ALLOWED_EMAILS`. O catálogo de exercícios é criado automaticamente no registro (não precisa de seed).
 
-> Atenção: com o domínio público, qualquer pessoa pode se registrar. Até existir controle de cadastro (convite/allowlist), não divulgue a URL.
+> Em produção o cadastro vem fechado por padrão (`allowlist`): só os e-mails listados conseguem criar conta. Outros recebem "cadastro apenas por convite", sem revelar se o e-mail já existe.
 
 ## 5. Operação
 

@@ -6,6 +6,8 @@ import { signSession, SESSION_COOKIE, SESSION_COOKIE_OPTIONS } from '@/lib/auth'
 import { registerSchema } from '@/lib/schemas/auth';
 import { seedExerciseCatalog } from '@/lib/exercise-catalog';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
+import { isSignupAllowed } from '@/lib/signup-policy';
+import { ApiError, AUTH_JSON_BODY_MAX_BYTES, readJsonBodyOrNull } from '@/lib/api';
 
 // POST /api/auth/register: creates an account, seeds the default exercise
 // catalog for it, and signs the user in. Public route (see middleware).
@@ -19,7 +21,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const body = (await req.json().catch(() => null)) as unknown;
+    const body = await readJsonBodyOrNull(req, AUTH_JSON_BODY_MAX_BYTES);
     const parsed = registerSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
@@ -29,6 +31,15 @@ export async function POST(req: Request) {
     }
 
     const { email, password, displayName } = parsed.data;
+    // Checked before any lookup: a refused signup must not reveal whether the
+    // email already has an account.
+    if (!isSignupAllowed(email)) {
+      return NextResponse.json(
+        { error: 'Signups are by invitation only.', code: 'SIGNUP_RESTRICTED' },
+        { status: 403 },
+      );
+    }
+
     const existing = await db.user.findUnique({ where: { email } });
     if (existing) {
       return NextResponse.json(
@@ -50,6 +61,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ok: true });
   } catch (err) {
+    if (err instanceof ApiError) {
+      return NextResponse.json({ error: err.message }, { status: err.status });
+    }
     console.error('[register] error:', err);
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }

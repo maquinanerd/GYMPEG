@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { signSession, SESSION_COOKIE, SESSION_COOKIE_OPTIONS } from '@/lib/auth';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
+import { ApiError, AUTH_JSON_BODY_MAX_BYTES, readJsonBodyOrNull } from '@/lib/api';
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -20,7 +21,7 @@ export async function POST(req: Request) {
         { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } },
       );
     }
-    const body = (await req.json()) as unknown;
+    const body = await readJsonBodyOrNull(req, AUTH_JSON_BODY_MAX_BYTES);
     const parsed = loginSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json({ error: 'Invalid email or password.' }, { status: 400 });
@@ -31,10 +32,7 @@ export async function POST(req: Request) {
 
     // Message intentionally identical for an unknown user and a wrong password
     // (avoids email enumeration, even though we only have 1 user).
-    const invalid = NextResponse.json(
-      { error: 'Invalid credentials.' },
-      { status: 401 },
-    );
+    const invalid = NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });
 
     if (!user) return invalid;
     const ok = await bcrypt.compare(password, user.passwordHash);
@@ -45,6 +43,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ok: true });
   } catch (err) {
+    if (err instanceof ApiError) {
+      return NextResponse.json({ error: err.message }, { status: err.status });
+    }
     console.error('[login] error:', err);
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
