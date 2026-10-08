@@ -8,6 +8,22 @@ Base: auditoria de 2026-10-08 ([00_OPEN_SOURCE_AUDIT.md](00_OPEN_SOURCE_AUDIT.md
 - **Risco:** A/M/B = alto/médio/baixo, sobre dados, segurança ou prazo.
 - **Estado:** ✓ = feito neste fork · ⏳ = em andamento.
 
+## Progresso desde a auditoria
+
+| Data | Item | Commit |
+|---|---|---|
+| 2026-10-08 | pt-BR padrão + UI "GYM Peg" | `69a45f3` |
+| 2026-10-08 | Providers Gemini/DeepSeek + fallback, JSON nativo, usage | `77a0843` |
+| 2026-10-08 | `/api/health` + imagem que aplica migrations | `3e1924d` |
+| 2026-10-08 | Imagens não licenciadas removidas | `f7febeb` |
+| 2026-10-08 | Cadastro por convite em produção, limite de corpo JSON, headers de segurança (CSP parcial) | `b53eaf1` |
+| 2026-10-08 | Índices em FKs quentes (M1) | `57d61ac` |
+| 2026-10-08 | Sessões revogáveis, troca de senha, sair dos outros dispositivos, logout limpa dados locais (M3) | `e316c49` |
+| 2026-10-09 | Fuso horário do usuário em semanas, streaks, PRs, coach e datas (M2 parcial) | `0347b01` |
+| 2026-10-09 | Sync offline idempotente: `clientMutationId`, horário do aparelho, série tardia aceita, hidratação sem duplicar, finalizar só com fila vazia | `d0ee1bc` |
+
+Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (nonce); iniciar/finalizar treino offline e outbox por usuário; `Set.type`/`rpe`/alvo.
+
 ## Fundação e plataforma
 
 | Feature | Atual | Alvo | Gap | Prio | Esforço | Risco |

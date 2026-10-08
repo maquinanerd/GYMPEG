@@ -1,6 +1,8 @@
 # 14 — Plano de continuação
 
-Estado em **2026-10-08**: G0 concluído; código no `main` de `maquinanerd/GYMPEG`; CI do GitHub verde (lint, typecheck, unit, integração com Postgres, build, E2E). Deploy no Coolify aguardando a criação dos recursos (ver abaixo).
+Estado em **2026-10-09**: G0 concluído; G1 em andamento. Já entregues: épico 1.1 (produção segura), fuso horário do épico 1.2 e parte 1 do épico 1.4 (sync idempotente). Lista com commits na seção "Progresso" de `docs/GAP_MATRIX.md`. Código no `main` de `maquinanerd/GYMPEG`, CI do GitHub verde. Deploy no Coolify aguardando a criação dos recursos (ver abaixo).
+
+Ordem dos próximos épicos: **1.3 catálogo global** → 1.2 restante (onboarding) → 1.5 logger único (`Set.type`, RPE, alvo × realizado) → 1.4 parte 2 (iniciar/finalizar offline, outbox por usuário) → 1.6 programas com revisões → 1.7 exclusão de conta e export. O sync idempotente foi antecipado porque perda e duplicação de séries são o maior risco assim que houver uso real.
 
 ## Como retomar
 
@@ -36,7 +38,7 @@ Estado em **2026-10-08**: G0 concluído; código no `main` de `maquinanerd/GYMPE
 
 ## Riscos a monitorar
 
-- Cadastro aberto enquanto o épico 1.1 não sai: não divulgar a URL.
+- Cadastro: em produção só e-mails em `SIGNUP_ALLOWED_EMAILS` criam conta (padrão `allowlist`).
 - Fotos de progresso em volume local do Coolify, sem backup, até o G3.
 - O histórico herdado do upstream ainda contém as imagens removidas.
 - `npm audit`: 2 críticas e 18 altas, a maioria transitiva de next-pwa/workbox; resolvidas pelo upgrade para Serwist (G3) ou antes, se alguma for explorável em runtime.
