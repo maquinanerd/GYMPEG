@@ -43,7 +43,10 @@ export function SignupForm() {
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
+      body: JSON.stringify({
+        ...values,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }),
     });
 
     if (res.ok) {

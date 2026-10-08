@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Loader2, Save, User } from 'lucide-react';
 import { toast } from 'sonner';
@@ -25,6 +25,7 @@ export interface ProfileData {
   goal: TrainingGoal | null;
   weeklyFrequency: number | null;
   unit: WeightUnit;
+  timezone: string;
 }
 
 interface Props {
@@ -51,14 +52,21 @@ export function ProfileSection({ initial }: Props) {
   const [displayName, setDisplayName] = useState(initial.displayName ?? '');
   const [bodyweight, setBodyweight] = useState(numOrEmpty(initial.bodyweight));
   const [heightCm, setHeightCm] = useState(numOrEmpty(initial.heightCm));
-  const [weeklyFrequency, setWeeklyFrequency] = useState(
-    numOrEmpty(initial.weeklyFrequency),
-  );
+  const [weeklyFrequency, setWeeklyFrequency] = useState(numOrEmpty(initial.weeklyFrequency));
   const [sex, setSex] = useState<Sex | undefined>(initial.sex ?? undefined);
-  const [goal, setGoal] = useState<TrainingGoal | undefined>(
-    initial.goal ?? undefined,
-  );
+  const [goal, setGoal] = useState<TrainingGoal | undefined>(initial.goal ?? undefined);
   const [unit, setUnit] = useState<WeightUnit>(initial.unit);
+  const [timezone, setTimezone] = useState(initial.timezone);
+  // The full zone list is read after mount: server and browser ICU data can
+  // differ, and rendering it on the server would risk a hydration mismatch.
+  const [zoneOptions, setZoneOptions] = useState<string[]>([initial.timezone]);
+  const [deviceZone, setDeviceZone] = useState<string | null>(null);
+  useEffect(() => {
+    const zones = new Set(Intl.supportedValuesOf('timeZone'));
+    zones.add(initial.timezone);
+    setZoneOptions([...zones].sort());
+    setDeviceZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  }, [initial.timezone]);
   const [pending, setPending] = useState(false);
 
   function rangeOk(value: string, min: number, max: number): boolean {
@@ -68,9 +76,7 @@ export function ProfileSection({ initial }: Props) {
   }
 
   const isValid =
-    rangeOk(bodyweight, 20, 300) &&
-    rangeOk(heightCm, 100, 250) &&
-    rangeOk(weeklyFrequency, 1, 14);
+    rangeOk(bodyweight, 20, 300) && rangeOk(heightCm, 100, 250) && rangeOk(weeklyFrequency, 1, 14);
 
   async function save() {
     if (!isValid) {
@@ -88,6 +94,7 @@ export function ProfileSection({ initial }: Props) {
       if (sex) body.sex = sex;
       if (goal) body.goal = goal;
       body.unit = unit;
+      body.timezone = timezone;
 
       const res = await fetch('/api/profile', {
         method: 'PATCH',
@@ -113,9 +120,7 @@ export function ProfileSection({ initial }: Props) {
           <User className="size-5" />
           <h2 className="text-base font-semibold">{t('title')}</h2>
         </div>
-        <p className="text-xs text-muted-foreground">
-          {t('description')}
-        </p>
+        <p className="text-xs text-muted-foreground">{t('description')}</p>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="space-y-1.5">
@@ -244,23 +249,41 @@ export function ProfileSection({ initial }: Props) {
               ))}
             </SelectContent>
           </Select>
-          <p className="text-xs text-muted-foreground">
-            {t('unitDescription')}
-          </p>
+          <p className="text-xs text-muted-foreground">{t('unitDescription')}</p>
+        </div>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="timezone" className="text-sm">
+            {t('timezone')}
+          </Label>
+          <select
+            id="timezone"
+            value={timezone}
+            onChange={(e) => setTimezone(e.target.value)}
+            className="flex h-10 w-full max-w-xs rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            {zoneOptions.map((zone) => (
+              <option key={zone} value={zone}>
+                {zone.replace(/_/g, ' ')}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-muted-foreground">{t('timezoneDescription')}</p>
+          {deviceZone && deviceZone !== timezone && (
+            <Button
+              type="button"
+              variant="link"
+              className="h-auto p-0 text-xs"
+              onClick={() => setTimezone(deviceZone)}
+            >
+              {t('useDeviceTimezone', { zone: deviceZone.replace(/_/g, ' ') })}
+            </Button>
+          )}
         </div>
 
         <div>
-          <Button
-            type="button"
-            onClick={save}
-            disabled={pending || !isValid}
-            className="min-h-tap"
-          >
-            {pending ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Save className="size-4" />
-            )}
+          <Button type="button" onClick={save} disabled={pending || !isValid} className="min-h-tap">
+            {pending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
             <span className="ml-2">{common('actions.save')}</span>
           </Button>
         </div>

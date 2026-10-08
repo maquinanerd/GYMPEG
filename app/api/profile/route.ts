@@ -13,6 +13,7 @@ const PROFILE_SELECT = {
   weeklyFrequency: true,
   coachNote: true,
   unit: true,
+  timezone: true,
 } as const;
 
 export async function GET() {
@@ -40,14 +41,13 @@ export async function PATCH(req: Request) {
         ...(data.sex !== undefined ? { sex: data.sex } : {}),
         ...(data.heightCm !== undefined ? { heightCm: data.heightCm } : {}),
         ...(data.goal !== undefined ? { goal: data.goal } : {}),
-        ...(data.weeklyFrequency !== undefined
-          ? { weeklyFrequency: data.weeklyFrequency }
-          : {}),
+        ...(data.weeklyFrequency !== undefined ? { weeklyFrequency: data.weeklyFrequency } : {}),
         // Empty after trim -> store null (a clear), not an empty-string note.
         ...(data.coachNote !== undefined
           ? { coachNote: data.coachNote ? data.coachNote : null }
           : {}),
         ...(data.unit !== undefined ? { unit: data.unit } : {}),
+        ...(data.timezone !== undefined ? { timezone: data.timezone } : {}),
       },
       select: PROFILE_SELECT,
     });

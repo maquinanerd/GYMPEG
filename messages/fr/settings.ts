@@ -53,6 +53,9 @@ export const settings = {
     deleteDescription: '{name} sera supprimée. Les séances existantes conservent leur historique.',
   },
   profile: {
+    timezone: 'Fuseau horaire',
+    timezoneDescription: 'Les semaines, séries et dates suivent ce fuseau.',
+    useDeviceTimezone: 'Utiliser le fuseau de cet appareil ({zone})',
     title: 'Profil',
     description:
       'Votre profil personnalise le coach IA. Le poids corporel sert aussi à calculer le tonnage effectif des exercices au poids de corps ; le modifier recalcule l’historique.',

@@ -1,4 +1,5 @@
 import { db } from './db';
+import { localDayKey, safeTimeZone } from '@/lib/timezone';
 import { createTranslator } from 'next-intl';
 import { applyBodyweight, exerciseProgress, isStalled, isoWeekStart } from './stats';
 import { exerciseRecords } from './records';
@@ -153,9 +154,10 @@ export async function getHomeInsight(
 
   const user = await db.user.findUnique({
     where: { id: userId },
-    select: { bodyweight: true },
+    select: { bodyweight: true, timezone: true },
   });
   const bodyweight = user?.bodyweight ?? null;
+  const timeZone = safeTimeZone(user?.timezone);
 
   // Recent non-warmup strength sets, for stall detection. Grouped by exercise
   // in memory (one query) rather than per-exercise queries.
@@ -206,7 +208,7 @@ export async function getHomeInsight(
 
   const stalledExerciseNames: string[] = [];
   for (const [name, sets] of byExercise) {
-    const points = exerciseProgress(applyBodyweight(sets, bodyweight));
+    const points = exerciseProgress(applyBodyweight(sets, bodyweight), { timeZone });
     if (isStalled(points.map((p) => p.estimated1RM))) {
       stalledExerciseNames.push(name);
     }
@@ -236,7 +238,7 @@ export async function getHomeInsight(
     select: { startedAt: true },
   });
   if (lastSession) {
-    const lastDay = lastSession.startedAt.toISOString().slice(0, 10);
+    const lastDay = localDayKey(lastSession.startedAt, timeZone);
     const recordSets = await db.set.findMany({
       where: {
         isWarmup: false,
@@ -265,6 +267,7 @@ export async function getHomeInsight(
         exerciseName: s.exercise.name,
         sessionStartedAt: s.session.startedAt,
       })),
+      { timeZone },
     );
     const weightPR = records.find((r) => r.maxWeightDate === lastDay);
     const e1rmPR = records.find((r) => r.bestE1RMDate === lastDay);
@@ -273,12 +276,12 @@ export async function getHomeInsight(
   }
 
   // Distinct training days in the current ISO week.
-  const weekStart = isoWeekStart(now);
+  const weekStart = isoWeekStart(now, timeZone);
   const thisWeekSessions = await db.session.findMany({
     where: { userId, finishedAt: { not: null }, startedAt: { gte: weekStart } },
     select: { startedAt: true },
   });
-  const days = new Set(thisWeekSessions.map((s) => s.startedAt.toISOString().slice(0, 10)));
+  const days = new Set(thisWeekSessions.map((s) => localDayKey(s.startedAt, timeZone)));
   const trainingDaysThisWeek = thisWeekSessions.length > 0 ? days.size : null;
 
   const displayNames = stalledExerciseNames.map((name) => getExerciseDisplayName(name, locale));

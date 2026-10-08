@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import { getRequestConfig } from 'next-intl/server';
 import { localeCookieName, resolveLocale } from './config';
 import { loadMessages } from './messages';
+import { getRequestTimeZone } from '@/lib/user-timezone';
 
 export default getRequestConfig(async () => {
   const cookieStore = await cookies();
@@ -12,6 +13,7 @@ export default getRequestConfig(async () => {
   return {
     locale,
     messages: await loadMessages(locale),
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    // The signed-in user's zone (server containers run in UTC).
+    timeZone: await getRequestTimeZone(),
   };
 });

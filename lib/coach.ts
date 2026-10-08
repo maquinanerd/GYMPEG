@@ -8,9 +8,11 @@ import {
   isStalled,
   isoWeekStart,
   totalVolume,
+  weekStartBefore,
   weeklyConditioning,
   WEEKLY_CONDITIONING_TARGET_MIN,
 } from '@/lib/stats';
+import { getUserTimeZone } from '@/lib/user-timezone';
 import { READINESS_RECENCY_HOURS } from '@/lib/progression';
 import { isCardioSet } from '@/lib/cardio';
 import { goalProgress } from '@/lib/goals';
@@ -274,11 +276,12 @@ const COACH_RECORDS_CAP = 20;
 
 export async function buildCoachPayload(userId: string): Promise<CoachPayload> {
   const now = new Date();
-  const currentWeekStart = isoWeekStart(now);
-  const previousWeekStart = new Date(currentWeekStart);
-  previousWeekStart.setUTCDate(previousWeekStart.getUTCDate() - 7);
-  const eightWeeksAgo = new Date(currentWeekStart);
-  eightWeeksAgo.setUTCDate(eightWeeksAgo.getUTCDate() - 7 * 8);
+  // Weeks follow the user's wall clock (a Sunday-night session belongs to
+  // that Sunday's week).
+  const timeZone = await getUserTimeZone(userId);
+  const currentWeekStart = isoWeekStart(now, timeZone);
+  const previousWeekStart = weekStartBefore(currentWeekStart, 1, timeZone);
+  const eightWeeksAgo = weekStartBefore(currentWeekStart, 8, timeZone);
 
   // We fetch the bodyweight first (1 row, negligible) so we can pass it to
   // weekSummary, which depends on it to compute the effective volumes.
@@ -313,7 +316,7 @@ export async function buildCoachPayload(userId: string): Promise<CoachPayload> {
     fetchLatestReadiness(userId, now),
     fetchGoalsSummary(userId, bodyweight),
     fetchFatigueSummary(userId, bodyweight, now),
-    fetchRecordsSummary(userId, bodyweight),
+    fetchRecordsSummary(userId, bodyweight, timeZone),
     db.set.findMany({
       where: {
         isWarmup: false,
@@ -353,7 +356,7 @@ export async function buildCoachPayload(userId: string): Promise<CoachPayload> {
       sessionId: s.sessionId,
       sessionStartedAt: s.session.startedAt,
     })),
-    { windowWeeks: 2, now },
+    { windowWeeks: 2, now, timeZone },
   );
   const [conditioningPrev, conditioningCurrent] = conditioningWeeks;
   // Per-day breakdown of the current ISO week (issue #153): the shared
@@ -365,7 +368,7 @@ export async function buildCoachPayload(userId: string): Promise<CoachPayload> {
       isWarmup: s.isWarmup,
       sessionStartedAt: s.session.startedAt,
     })),
-    { now },
+    { now, timeZone },
   );
   const conditioning: ConditioningSummary = {
     weekCurrent: {
@@ -423,6 +426,7 @@ export async function buildCoachPayload(userId: string): Promise<CoachPayload> {
         })),
         bodyweight,
       ),
+      { timeZone },
     );
     const lastPoint = points[points.length - 1];
     const currentLoad = lastPoint ? lastPoint.maxWeight : null;
@@ -469,9 +473,7 @@ export async function buildCoachPayload(userId: string): Promise<CoachPayload> {
     },
     conditioning,
     records,
-    recentProgress: recentProgress.sort((a, b) =>
-      a.exerciseName.localeCompare(b.exerciseName),
-    ),
+    recentProgress: recentProgress.sort((a, b) => a.exerciseName.localeCompare(b.exerciseName)),
   };
 }
 
@@ -674,6 +676,7 @@ async function fetchGoalsSummary(
 async function fetchRecordsSummary(
   userId: string,
   bodyweight: number | null,
+  timeZone: string,
 ): Promise<RecordSummary[]> {
   const recordSetsRaw = await db.set.findMany({
     where: {
@@ -703,6 +706,7 @@ async function fetchRecordsSummary(
       exerciseName: s.exercise.name,
       sessionStartedAt: s.session.startedAt,
     })),
+    { timeZone },
   );
 
   // Most-recently-trained exercises first, so a capped list keeps the lifts the
@@ -716,10 +720,7 @@ async function fetchRecordsSummary(
 
   return records
     .slice()
-    .sort(
-      (a, b) =>
-        (lastTrained.get(b.exerciseName) ?? 0) - (lastTrained.get(a.exerciseName) ?? 0),
-    )
+    .sort((a, b) => (lastTrained.get(b.exerciseName) ?? 0) - (lastTrained.get(a.exerciseName) ?? 0))
     .slice(0, COACH_RECORDS_CAP)
     .map((r: ExerciseRecord) => ({
       exerciseName: r.exerciseName,
@@ -819,10 +820,7 @@ async function fetchFatigueSummary(
 // The most recent readiness check-in, but only if it is recent enough to be
 // relevant (within the last 7 days). Returns null otherwise. This is an INPUT
 // signal for the coach; it does not change the coach output contract.
-async function fetchLatestReadiness(
-  userId: string,
-  now: Date,
-): Promise<ReadinessSummary | null> {
+async function fetchLatestReadiness(userId: string, now: Date): Promise<ReadinessSummary | null> {
   const sevenDaysAgo = addDays(now, -7);
   const checkin = await db.readinessCheckin.findFirst({
     where: { userId, createdAt: { gte: sevenDaysAgo } },
@@ -830,13 +828,15 @@ async function fetchLatestReadiness(
   });
   if (!checkin) return null;
 
-  const daysAgo = Math.floor(
-    (now.getTime() - checkin.createdAt.getTime()) / (1000 * 60 * 60 * 24),
-  );
+  const daysAgo = Math.floor((now.getTime() - checkin.createdAt.getTime()) / (1000 * 60 * 60 * 24));
 
   // soreness is stored as JSON; coerce to a plain { group: 1-5 } map defensively.
   let soreness: Record<string, number> | null = null;
-  if (checkin.soreness && typeof checkin.soreness === 'object' && !Array.isArray(checkin.soreness)) {
+  if (
+    checkin.soreness &&
+    typeof checkin.soreness === 'object' &&
+    !Array.isArray(checkin.soreness)
+  ) {
     const entries = Object.entries(checkin.soreness as Record<string, unknown>).filter(
       ([, v]) => typeof v === 'number',
     ) as Array<[string, number]>;
@@ -959,7 +959,11 @@ export async function buildCurrentSessionContext(
   let readinessToday: CurrentSessionContext['readinessToday'] = null;
   if (checkin) {
     let soreness: Record<string, number> | null = null;
-    if (checkin.soreness && typeof checkin.soreness === 'object' && !Array.isArray(checkin.soreness)) {
+    if (
+      checkin.soreness &&
+      typeof checkin.soreness === 'object' &&
+      !Array.isArray(checkin.soreness)
+    ) {
       const entries = Object.entries(checkin.soreness as Record<string, unknown>).filter(
         ([, v]) => typeof v === 'number',
       ) as Array<[string, number]>;

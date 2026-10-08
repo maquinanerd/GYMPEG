@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Sex, TrainingGoal, WeightUnit } from '@/lib/prisma-client';
+import { isValidTimeZone } from '@/lib/timezone';
 
 // Max length of the free-text note to the coach (issue #188). Shared between
 // the profile API's Zod bound and the coach-page UI's character counter so the
@@ -29,6 +30,8 @@ export const profileUpdateSchema = z.object({
     .optional(),
   // Preferred weight unit (display + input only; data stays in kg).
   unit: z.nativeEnum(WeightUnit).optional(),
+  // IANA time zone for weeks, streaks and dates.
+  timezone: z.string().refine(isValidTimeZone, 'Unknown time zone').optional(),
 });
 
 export type ProfileUpdate = z.infer<typeof profileUpdateSchema>;

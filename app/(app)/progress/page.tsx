@@ -1,4 +1,5 @@
 import { TrendingUp } from 'lucide-react';
+import { safeTimeZone } from '@/lib/timezone';
 import { getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
@@ -44,11 +45,7 @@ interface SearchParams {
 
 const RECENT_WEEKS = 12;
 
-export default async function ProgressPage(
-  props: {
-    searchParams: Promise<SearchParams>;
-  }
-) {
+export default async function ProgressPage(props: { searchParams: Promise<SearchParams> }) {
   const t = await getTranslations('progress');
   const exerciseT = await getTranslations('exercises');
   const searchParams = await props.searchParams;
@@ -81,11 +78,19 @@ export default async function ProgressPage(
     }),
     db.user.findUnique({
       where: { id: auth.userId },
-      select: { bodyweight: true, unit: true, weeklyFrequency: true, deloadUntil: true },
+      select: {
+        bodyweight: true,
+        unit: true,
+        weeklyFrequency: true,
+        deloadUntil: true,
+        timezone: true,
+      },
     }),
   ]);
   const bodyweight = user?.bodyweight ?? null;
   const unit = user?.unit ?? 'KG';
+  // Weeks, streaks and record dates follow the user's wall clock.
+  const timeZone = safeTimeZone(user?.timezone);
 
   // The user's per-muscle volume targets (issue #211): personal MEV/MRV bands
   // that override the global defaults for the volume-landmark card. Absent
@@ -94,13 +99,10 @@ export default async function ProgressPage(
     where: { userId: auth.userId },
     select: { muscleGroup: true, mev: true, mrv: true },
   });
-  const volumeTargets: Record<string, { mev: number; mrv: number }> =
-    Object.fromEntries(
-      volumeTargetRows.map((t) => [t.muscleGroup, { mev: t.mev, mrv: t.mrv }]),
-    );
-  const usesBodyweightById = new Map(
-    exercisesWithSets.map((e) => [e.id, e.usesBodyweight]),
+  const volumeTargets: Record<string, { mev: number; mrv: number }> = Object.fromEntries(
+    volumeTargetRows.map((t) => [t.muscleGroup, { mev: t.mev, mrv: t.mrv }]),
   );
+  const usesBodyweightById = new Map(exercisesWithSets.map((e) => [e.id, e.usesBodyweight]));
 
   // Finished sessions over the window, for the consistency card.
   const finishedSessions = await db.session.findMany({
@@ -113,11 +115,10 @@ export default async function ProgressPage(
   });
   const consistency = trainingConsistency(
     finishedSessions.map((s) => s.startedAt),
-    { weeklyFrequency: user?.weeklyFrequency ?? null, windowWeeks: RECENT_WEEKS },
+    { weeklyFrequency: user?.weeklyFrequency ?? null, windowWeeks: RECENT_WEEKS, timeZone },
   );
 
-  const selectedExerciseId =
-    searchParams.exerciseId ?? exercisesWithSets[0]?.id;
+  const selectedExerciseId = searchParams.exerciseId ?? exercisesWithSets[0]?.id;
 
   // Max load + 1RM for the selected exercise, over all available history,
   // plus its target goal (issue #90) fetched in parallel.
@@ -150,9 +151,7 @@ export default async function ProgressPage(
   ]);
 
   const selectedUsesBodyweight =
-    selectedExerciseId != null
-      ? (usesBodyweightById.get(selectedExerciseId) ?? false)
-      : false;
+    selectedExerciseId != null ? (usesBodyweightById.get(selectedExerciseId) ?? false) : false;
   const adjustedExerciseSets = applyBodyweight(
     exerciseSets.map((s) => ({
       weight: s.weight,
@@ -165,7 +164,7 @@ export default async function ProgressPage(
     })),
     bodyweight,
   );
-  const exercisePoints = exerciseProgress(adjustedExerciseSets);
+  const exercisePoints = exerciseProgress(adjustedExerciseSets, { timeZone });
 
   // The goal is measured against the best bodyweight-adjusted e1RM over the
   // full history loaded above.
@@ -203,6 +202,7 @@ export default async function ProgressPage(
       })),
       bodyweight,
     ),
+    { timeZone },
   );
 
   // Weekly working-set count per muscle group, for the MEV/MRV reference band.
@@ -214,6 +214,7 @@ export default async function ProgressPage(
       muscleGroup: s.exercise.muscleGroup,
       sessionStartedAt: s.session.startedAt,
     })),
+    { timeZone },
   );
 
   // Weekly training FREQUENCY per muscle group (issue #225): distinct training
@@ -227,25 +228,23 @@ export default async function ProgressPage(
       muscleGroup: s.exercise.muscleGroup,
       sessionStartedAt: s.session.startedAt,
     })),
+    { timeZone },
   );
 
   // Classify the most recent completed (non-current) week against the band so
   // the dashboard can flag below MEV / within / above MRV per muscle group.
   // Falling back to the latest available week keeps a signal when only the
   // current week has data.
-  const currentWeekKey = isoWeekKey(new Date());
+  const currentWeekKey = isoWeekKey(new Date(), timeZone);
   const latestCompletedWeek =
-    [...weeklySetsPoints]
-      .reverse()
-      .find((w) => w.weekKey !== currentWeekKey) ??
+    [...weeklySetsPoints].reverse().find((w) => w.weekKey !== currentWeekKey) ??
     weeklySetsPoints[weeklySetsPoints.length - 1];
   // Frequency for the exact week the landmarks card displays, so volume and
   // frequency describe the same week per muscle group.
-  const frequencyForWeek =
-    latestCompletedWeek
-      ? weeklyFrequencyPoints.find((w) => w.weekKey === latestCompletedWeek.weekKey)
-          ?.byMuscleGroup ?? {}
-      : {};
+  const frequencyForWeek = latestCompletedWeek
+    ? (weeklyFrequencyPoints.find((w) => w.weekKey === latestCompletedWeek.weekKey)
+        ?.byMuscleGroup ?? {})
+    : {};
   const volumeLandmarks = latestCompletedWeek
     ? {
         weekKey: latestCompletedWeek.weekKey,
@@ -254,24 +253,22 @@ export default async function ProgressPage(
         mev: WEEKLY_SETS_MEV,
         mrv: WEEKLY_SETS_MRV,
         byMuscleGroup: Object.fromEntries(
-          Object.entries(latestCompletedWeek.byMuscleGroup).map(
-            ([group, sets]) => {
-              const band = resolveVolumeBand(group, volumeTargets);
-              return [
-                group,
-                {
-                  sets,
-                  // Distinct training days for this muscle in the same week
-                  // (issue #225). 0 when the muscle was not trained.
-                  frequency: frequencyForWeek[group] ?? 0,
-                  zone: classifyWeeklySets(sets, band.mev, band.mrv),
-                  mev: band.mev,
-                  mrv: band.mrv,
-                  custom: band.custom,
-                },
-              ];
-            },
-          ),
+          Object.entries(latestCompletedWeek.byMuscleGroup).map(([group, sets]) => {
+            const band = resolveVolumeBand(group, volumeTargets);
+            return [
+              group,
+              {
+                sets,
+                // Distinct training days for this muscle in the same week
+                // (issue #225). 0 when the muscle was not trained.
+                frequency: frequencyForWeek[group] ?? 0,
+                zone: classifyWeeklySets(sets, band.mev, band.mrv),
+                mev: band.mev,
+                mrv: band.mrv,
+                custom: band.custom,
+              },
+            ];
+          }),
         ),
       }
     : null;
@@ -316,6 +313,7 @@ export default async function ProgressPage(
           })),
           bodyweight,
         ),
+        { timeZone },
       );
       const first = points[0];
       const last = points[points.length - 1];
@@ -323,9 +321,7 @@ export default async function ProgressPage(
       return {
         exerciseId: exo.id,
         exerciseName: exo.name,
-        muscleGroup: exerciseT(
-          `muscleGroups.${muscleGroupMessageKeys[exo.muscleGroup]}`,
-        ),
+        muscleGroup: exerciseT(`muscleGroups.${muscleGroupMessageKeys[exo.muscleGroup]}`),
         sessions: points.length,
         firstWeight: first.maxWeight,
         firstDate: first.date,
@@ -340,17 +336,13 @@ export default async function ProgressPage(
       };
     }),
   );
-  const recap = recapRows.filter(
-    (r): r is NonNullable<typeof r> => r !== null,
-  );
+  const recap = recapRows.filter((r): r is NonNullable<typeof r> => r !== null);
 
   // Program-level deload recommendation: aggregates the stalled flags above
   // with the most recent readiness check-ins. Display-only. Stale check-ins
   // are excluded so the trigger reflects the current block, not dead data.
   const readinessSince = new Date();
-  readinessSince.setUTCDate(
-    readinessSince.getUTCDate() - DELOAD_READINESS_MAX_AGE_DAYS,
-  );
+  readinessSince.setUTCDate(readinessSince.getUTCDate() - DELOAD_READINESS_MAX_AGE_DAYS);
   const recentCheckins = await db.readinessCheckin.findMany({
     where: { userId: auth.userId, createdAt: { gte: readinessSince } },
     orderBy: { createdAt: 'desc' },
@@ -404,7 +396,7 @@ export default async function ProgressPage(
             sessionId: s.sessionId,
             sessionStartedAt: s.session.startedAt,
           })),
-        { windowWeeks: 8 },
+        { windowWeeks: 8, timeZone },
       )
     : null;
 
@@ -443,12 +435,11 @@ export default async function ProgressPage(
       exerciseName: s.exercise.name,
       sessionStartedAt: s.session.startedAt,
     })),
+    { timeZone },
   );
 
   const deload = recommendDeload({
-    stalledExerciseNames: recap
-      .filter((r) => r.stalled)
-      .map((r) => r.exerciseName),
+    stalledExerciseNames: recap.filter((r) => r.stalled).map((r) => r.exerciseName),
     recentReadiness: recentCheckins.map((c) => c.readiness),
   });
 
@@ -525,9 +516,7 @@ export default async function ProgressPage(
               exercises={exercisesWithSets.map((e) => ({
                 id: e.id,
                 name: e.name,
-                muscleGroup: exerciseT(
-                  `muscleGroups.${muscleGroupMessageKeys[e.muscleGroup]}`,
-                ),
+                muscleGroup: exerciseT(`muscleGroups.${muscleGroupMessageKeys[e.muscleGroup]}`),
               }))}
               selectedExerciseId={selectedExerciseId}
               exercisePoints={exercisePoints}
@@ -555,9 +544,7 @@ export default async function ProgressPage(
               selectedBestE1RM={selectedBestE1RM}
               selectedUsesBodyweight={selectedUsesBodyweight}
             />
-            {records.length > 0 && (
-              <RecordsCard records={records} unit={unit} />
-            )}
+            {records.length > 0 && <RecordsCard records={records} unit={unit} />}
           </>
         )}
       </div>

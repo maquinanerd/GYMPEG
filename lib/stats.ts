@@ -1,4 +1,5 @@
 import type { Set } from '@/lib/prisma-client';
+import { localCalendarDate, localDayKey, zonedStartOfDay } from '@/lib/timezone';
 import { isCardioSet } from '@/lib/cardio';
 
 // ============================================================
@@ -37,9 +38,10 @@ export function effectiveWeight(
 // decorated beforehand with `usesBodyweight` (typically copied from
 // `set.exercise.usesBodyweight` in the Server Component). We avoid mutating,
 // returning a new list instead.
-export function applyBodyweight<
-  T extends { weight: number; usesBodyweight?: boolean | null },
->(sets: T[], bodyweight: number | null | undefined): T[] {
+export function applyBodyweight<T extends { weight: number; usesBodyweight?: boolean | null }>(
+  sets: T[],
+  bodyweight: number | null | undefined,
+): T[] {
   if (!bodyweight || bodyweight <= 0) return sets;
   return sets.map((s) =>
     s.usesBodyweight ? { ...s, weight: +(bodyweight + s.weight).toFixed(2) } : s,
@@ -49,9 +51,7 @@ export function applyBodyweight<
 // Volume of a set = load × reps. For bodyweight (weight = 0),
 // we return 0 by convention (impossible to compare with a load).
 // Cardio sets carry no tonnage and always count 0.
-export function setVolume(
-  set: Pick<Set, 'weight' | 'reps' | 'isWarmup'> & MaybeCardio,
-): number {
+export function setVolume(set: Pick<Set, 'weight' | 'reps' | 'isWarmup'> & MaybeCardio): number {
   if (set.isWarmup || isCardioSet(set)) return 0;
   return set.weight * set.reps;
 }
@@ -74,11 +74,7 @@ export function estimate1RM(weight: number, reps: number): number {
 // formula inverted around estimate1RM, so a set maps back to its own weight
 // when targetReps equals its reps. Returns 0 when there is nothing to
 // estimate from (no load, no reps) or no target.
-export function estimateRepMax(
-  weight: number,
-  reps: number,
-  targetReps: number,
-): number {
+export function estimateRepMax(weight: number, reps: number, targetReps: number): number {
   if (targetReps <= 0) return 0;
   return estimate1RM(weight, reps) / (1 + targetReps / 30);
 }
@@ -86,9 +82,7 @@ export function estimateRepMax(
 // Best estimated 1RM over a list of sets (warmups and drop sets included
 // since they are technically valid for estimating strength). Cardio sets
 // are skipped: they have no load to estimate from.
-export function best1RM(
-  sets: (Pick<Set, 'weight' | 'reps' | 'isWarmup'> & MaybeCardio)[],
-): number {
+export function best1RM(sets: (Pick<Set, 'weight' | 'reps' | 'isWarmup'> & MaybeCardio)[]): number {
   let best = 0;
   for (const s of sets) {
     if (s.isWarmup || isCardioSet(s)) continue;
@@ -103,11 +97,11 @@ export function best1RM(
 // ============================================================
 
 // Returns the ISO key of a date in the "YYYY-Www" format (week starting Monday).
-// UTC-only: the calendar day is read with UTC getters so week bucketing is
-// identical on every host timezone (issue #160 - three reviews flagged the
-// latent local-time skew).
-export function isoWeekKey(date: Date): string {
-  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+// The calendar day is read in `timeZone` (default UTC), never in the host's
+// local time, so bucketing is identical on every server (issue #160). Pass the
+// user's zone so a Sunday-night session stays in its own week.
+export function isoWeekKey(date: Date, timeZone: string = 'UTC'): string {
+  const d = localCalendarDate(date, timeZone);
   // Thursday of the current week (ISO: the week belongs to the year its Thursday falls in).
   const dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
@@ -116,13 +110,28 @@ export function isoWeekKey(date: Date): string {
   return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
 }
 
-// Date of the Monday (00:00 UTC) of the ISO week containing the given date.
-// UTC-only, like isoWeekKey above.
-export function isoWeekStart(date: Date): Date {
-  const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+// Instant at which the ISO week containing the given date starts: Monday
+// 00:00 in `timeZone` (default UTC), like isoWeekKey above.
+export function isoWeekStart(date: Date, timeZone: string = 'UTC'): Date {
+  const d = localCalendarDate(date, timeZone);
   const dayNum = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() - (dayNum - 1));
-  return d;
+  return zonedStartOfDay(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(), timeZone);
+}
+
+// Calendar options shared by the aggregations below: the user's IANA time
+// zone. Defaults to UTC (the historical behavior).
+export interface CalendarOptions {
+  timeZone?: string;
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Start of the ISO week `weeks` weeks before `weekStart` (negative = after).
+// Computed from noon of the shifted day so a DST change never lands it in the
+// wrong week.
+export function weekStartBefore(weekStart: Date, weeks: number, timeZone: string): Date {
+  return isoWeekStart(new Date(weekStart.getTime() - weeks * 7 * DAY_MS + DAY_MS / 2), timeZone);
 }
 
 // ============================================================
@@ -143,11 +152,10 @@ export interface ExerciseChartPoint {
 export function exerciseProgress(
   sets: (Pick<Set, 'weight' | 'reps' | 'isWarmup'> &
     MaybeCardio & { sessionId: string; sessionStartedAt: Date })[],
+  options: CalendarOptions = {},
 ): ExerciseChartPoint[] {
-  const bySession = new Map<
-    string,
-    { startedAt: Date; sets: typeof sets }
-  >();
+  const timeZone = options.timeZone ?? 'UTC';
+  const bySession = new Map<string, { startedAt: Date; sets: typeof sets }>();
   for (const s of sets) {
     if (s.isWarmup || isCardioSet(s)) continue;
     const entry = bySession.get(s.sessionId);
@@ -165,7 +173,7 @@ export function exerciseProgress(
       ...sessionSets.filter((s) => s.weight === maxWeight).map((s) => s.reps),
     );
     points.push({
-      date: startedAt.toISOString().slice(0, 10),
+      date: localDayKey(startedAt, timeZone),
       sessionStartedAt: startedAt,
       maxWeight,
       topSetReps: topReps,
@@ -240,29 +248,28 @@ export function weeklyVolumeByMuscleGroup(
       muscleGroup: string;
       sessionStartedAt: Date;
     })[],
+  options: CalendarOptions = {},
 ): WeeklyVolumePoint[] {
+  const timeZone = options.timeZone ?? 'UTC';
   const byWeek = new Map<string, WeeklyVolumePoint>();
   for (const s of sets) {
     if (s.isWarmup || isCardioSet(s)) continue;
-    const key = isoWeekKey(s.sessionStartedAt);
+    const key = isoWeekKey(s.sessionStartedAt, timeZone);
     let entry = byWeek.get(key);
     if (!entry) {
       entry = {
         weekKey: key,
-        weekStart: isoWeekStart(s.sessionStartedAt),
+        weekStart: isoWeekStart(s.sessionStartedAt, timeZone),
         byMuscleGroup: {},
         total: 0,
       };
       byWeek.set(key, entry);
     }
     const v = setVolume(s);
-    entry.byMuscleGroup[s.muscleGroup] =
-      (entry.byMuscleGroup[s.muscleGroup] ?? 0) + v;
+    entry.byMuscleGroup[s.muscleGroup] = (entry.byMuscleGroup[s.muscleGroup] ?? 0) + v;
     entry.total += v;
   }
-  return [...byWeek.values()].sort(
-    (a, b) => a.weekStart.getTime() - b.weekStart.getTime(),
-  );
+  return [...byWeek.values()].sort((a, b) => a.weekStart.getTime() - b.weekStart.getTime());
 }
 
 // ============================================================
@@ -342,28 +349,27 @@ export function weeklySetsByMuscleGroup(
       muscleGroup: string;
       sessionStartedAt: Date;
     })[],
+  options: CalendarOptions = {},
 ): WeeklySetsPoint[] {
+  const timeZone = options.timeZone ?? 'UTC';
   const byWeek = new Map<string, WeeklySetsPoint>();
   for (const s of sets) {
     if (s.isWarmup || isCardioSet(s)) continue;
-    const key = isoWeekKey(s.sessionStartedAt);
+    const key = isoWeekKey(s.sessionStartedAt, timeZone);
     let entry = byWeek.get(key);
     if (!entry) {
       entry = {
         weekKey: key,
-        weekStart: isoWeekStart(s.sessionStartedAt),
+        weekStart: isoWeekStart(s.sessionStartedAt, timeZone),
         byMuscleGroup: {},
         total: 0,
       };
       byWeek.set(key, entry);
     }
-    entry.byMuscleGroup[s.muscleGroup] =
-      (entry.byMuscleGroup[s.muscleGroup] ?? 0) + 1;
+    entry.byMuscleGroup[s.muscleGroup] = (entry.byMuscleGroup[s.muscleGroup] ?? 0) + 1;
     entry.total += 1;
   }
-  return [...byWeek.values()].sort(
-    (a, b) => a.weekStart.getTime() - b.weekStart.getTime(),
-  );
+  return [...byWeek.values()].sort((a, b) => a.weekStart.getTime() - b.weekStart.getTime());
 }
 
 export interface WeeklyFrequencyPoint {
@@ -388,7 +394,9 @@ export function weeklyFrequencyByMuscleGroup(
       muscleGroup: string;
       sessionStartedAt: Date;
     })[],
+  options: CalendarOptions = {},
 ): WeeklyFrequencyPoint[] {
+  const timeZone = options.timeZone ?? 'UTC';
   interface Bucket {
     weekStart: Date;
     // muscleGroup -> set of UTC calendar-day strings (YYYY-MM-DD).
@@ -397,13 +405,13 @@ export function weeklyFrequencyByMuscleGroup(
   const byWeek = new Map<string, Bucket>();
   for (const s of sets) {
     if (s.isWarmup || isCardioSet(s)) continue;
-    const key = isoWeekKey(s.sessionStartedAt);
+    const key = isoWeekKey(s.sessionStartedAt, timeZone);
     let entry = byWeek.get(key);
     if (!entry) {
-      entry = { weekStart: isoWeekStart(s.sessionStartedAt), days: new Map() };
+      entry = { weekStart: isoWeekStart(s.sessionStartedAt, timeZone), days: new Map() };
       byWeek.set(key, entry);
     }
-    const day = s.sessionStartedAt.toISOString().slice(0, 10);
+    const day = localDayKey(s.sessionStartedAt, timeZone);
     let groupDays = entry.days.get(s.muscleGroup);
     if (!groupDays) {
       groupDays = new globalThis.Set<string>();
@@ -451,10 +459,11 @@ export function weeklyConditioning(
     sessionId: string;
     sessionStartedAt: Date;
   }[],
-  options: { windowWeeks?: number; now?: Date } = {},
+  options: { windowWeeks?: number; now?: Date } & CalendarOptions = {},
 ): ConditioningWeekPoint[] {
   const windowWeeks = options.windowWeeks ?? 8;
   const now = options.now ?? new Date();
+  const timeZone = options.timeZone ?? 'UTC';
 
   interface Bucket {
     seconds: number;
@@ -464,7 +473,7 @@ export function weeklyConditioning(
   const byWeek = new Map<string, Bucket>();
   for (const s of sets) {
     if (s.isWarmup || !isCardioSet(s)) continue;
-    const key = isoWeekKey(s.sessionStartedAt);
+    const key = isoWeekKey(s.sessionStartedAt, timeZone);
     let bucket = byWeek.get(key);
     if (!bucket) {
       bucket = { seconds: 0, meters: 0, sessionIds: new globalThis.Set<string>() };
@@ -476,12 +485,11 @@ export function weeklyConditioning(
   }
 
   // Zero-filled window: the current ISO week and the (windowWeeks - 1) before.
-  const currentWeekStart = isoWeekStart(now);
+  const currentWeekStart = isoWeekStart(now, timeZone);
   const points: ConditioningWeekPoint[] = [];
   for (let i = windowWeeks - 1; i >= 0; i--) {
-    const weekStart = new Date(currentWeekStart);
-    weekStart.setUTCDate(weekStart.getUTCDate() - i * 7);
-    const weekKey = isoWeekKey(weekStart);
+    const weekStart = weekStartBefore(currentWeekStart, i, timeZone);
+    const weekKey = isoWeekKey(weekStart, timeZone);
     const bucket = byWeek.get(weekKey);
     points.push({
       weekKey,
@@ -514,18 +522,18 @@ export function dailyConditioning(
     isWarmup: boolean;
     sessionStartedAt: Date;
   }[],
-  options: { now?: Date } = {},
+  options: { now?: Date } & CalendarOptions = {},
 ): ConditioningDayPoint[] {
   const now = options.now ?? new Date();
-  const weekStart = isoWeekStart(now);
-  const weekEnd = new Date(weekStart);
-  weekEnd.setUTCDate(weekEnd.getUTCDate() + 7);
+  const timeZone = options.timeZone ?? 'UTC';
+  const weekStart = isoWeekStart(now, timeZone);
+  const weekEnd = weekStartBefore(weekStart, -1, timeZone);
 
   const byDay = new Map<string, { seconds: number; meters: number }>();
   for (const s of sets) {
     if (s.isWarmup || !isCardioSet(s)) continue;
     if (s.sessionStartedAt < weekStart || s.sessionStartedAt >= weekEnd) continue;
-    const day = s.sessionStartedAt.toISOString().slice(0, 10);
+    const day = localDayKey(s.sessionStartedAt, timeZone);
     let bucket = byDay.get(day);
     if (!bucket) {
       bucket = { seconds: 0, meters: 0 };
@@ -575,21 +583,24 @@ export interface ConsistencySummary {
 //   is measured from the most recent completed-or-met week backwards.
 export function trainingConsistency(
   finishedSessionDates: Date[],
-  options: { weeklyFrequency?: number | null; windowWeeks?: number; now?: Date } = {},
+  options: {
+    weeklyFrequency?: number | null;
+    windowWeeks?: number;
+    now?: Date;
+  } & CalendarOptions = {},
 ): ConsistencySummary {
   const windowWeeks = options.windowWeeks ?? 12;
   const now = options.now ?? new Date();
+  const timeZone = options.timeZone ?? 'UTC';
   const weeklyFrequency =
-    options.weeklyFrequency != null && options.weeklyFrequency > 0
-      ? options.weeklyFrequency
-      : null;
+    options.weeklyFrequency != null && options.weeklyFrequency > 0 ? options.weeklyFrequency : null;
 
   // Distinct trained calendar days per ISO week key. (`Set` from @prisma/client
   // shadows the global Set type here, so reference it via globalThis.)
   const daysByWeek = new Map<string, globalThis.Set<string>>();
   for (const date of finishedSessionDates) {
-    const weekKey = isoWeekKey(date);
-    const dayKey = date.toISOString().slice(0, 10);
+    const weekKey = isoWeekKey(date, timeZone);
+    const dayKey = localDayKey(date, timeZone);
     let days = daysByWeek.get(weekKey);
     if (!days) {
       days = new globalThis.Set<string>();
@@ -599,17 +610,14 @@ export function trainingConsistency(
   }
 
   // Build the window: the current ISO week and the (windowWeeks - 1) before it.
-  const currentWeekStart = isoWeekStart(now);
-  const currentWeekKey = isoWeekKey(now);
+  const currentWeekStart = isoWeekStart(now, timeZone);
+  const currentWeekKey = isoWeekKey(now, timeZone);
   const weeks: ConsistencyWeek[] = [];
   for (let i = windowWeeks - 1; i >= 0; i--) {
-    const weekStart = new Date(currentWeekStart);
-    weekStart.setUTCDate(weekStart.getUTCDate() - i * 7);
-    const weekKey = isoWeekKey(weekStart);
+    const weekStart = weekStartBefore(currentWeekStart, i, timeZone);
+    const weekKey = isoWeekKey(weekStart, timeZone);
     const trainedDays = daysByWeek.get(weekKey)?.size ?? 0;
-    const onStreak = weeklyFrequency
-      ? trainedDays >= weeklyFrequency
-      : trainedDays >= 1;
+    const onStreak = weeklyFrequency ? trainedDays >= weeklyFrequency : trainedDays >= 1;
     weeks.push({
       weekKey,
       weekStartIso: weekStart.toISOString(),

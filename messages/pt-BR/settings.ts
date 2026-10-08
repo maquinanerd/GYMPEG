@@ -53,6 +53,9 @@ export const settings = {
     deleteDescription: '{name} será removida. Os treinos existentes mantêm seu histórico.',
   },
   profile: {
+    timezone: 'Fuso horário',
+    timezoneDescription: 'Semanas, sequências e datas seguem este fuso.',
+    useDeviceTimezone: 'Usar o fuso deste dispositivo ({zone})',
     title: 'Perfil',
     description:
       'Seu perfil personaliza o coach de IA. O peso corporal também é usado para calcular a tonelagem efetiva dos exercícios com peso corporal; alterá-lo recalcula o histórico anterior.',

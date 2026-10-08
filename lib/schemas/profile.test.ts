@@ -125,15 +125,13 @@ describe('profileUpdateSchema', () => {
   describe('coachNote (#188: trimmed, bounded by COACH_NOTE_MAX_LEN)', () => {
     it('accepts a note exactly at COACH_NOTE_MAX_LEN', () => {
       expect(
-        profileUpdateSchema.safeParse({ coachNote: 'x'.repeat(COACH_NOTE_MAX_LEN) })
-          .success,
+        profileUpdateSchema.safeParse({ coachNote: 'x'.repeat(COACH_NOTE_MAX_LEN) }).success,
       ).toBe(true);
     });
 
     it('rejects a note one character over COACH_NOTE_MAX_LEN', () => {
       expect(
-        profileUpdateSchema.safeParse({ coachNote: 'x'.repeat(COACH_NOTE_MAX_LEN + 1) })
-          .success,
+        profileUpdateSchema.safeParse({ coachNote: 'x'.repeat(COACH_NOTE_MAX_LEN + 1) }).success,
       ).toBe(false);
     });
 
@@ -172,6 +170,13 @@ describe('profileUpdateSchema', () => {
     it('clears with null', () => {
       expect(profileUpdateSchema.parse({ displayName: null }).displayName).toBeNull();
     });
+  });
+
+  it('accepts IANA time zones and rejects unknown ones', () => {
+    expect(profileUpdateSchema.parse({ timezone: 'America/Sao_Paulo' }).timezone).toBe(
+      'America/Sao_Paulo',
+    );
+    expect(profileUpdateSchema.safeParse({ timezone: 'Mars/Base' }).success).toBe(false);
   });
 
   it('exposes COACH_NOTE_MAX_LEN as the shared 500-char limit', () => {

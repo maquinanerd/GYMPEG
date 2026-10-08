@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { email, password, displayName } = parsed.data;
+    const { email, password, displayName, timezone } = parsed.data;
     // Checked before any lookup: a refused signup must not reveal whether the
     // email already has an account.
     if (!isSignupAllowed(email)) {
@@ -51,7 +51,12 @@ export async function POST(req: Request) {
 
     const passwordHash = await hashPassword(password);
     const user = await db.user.create({
-      data: { email, passwordHash, displayName: displayName ?? null },
+      data: {
+        email,
+        passwordHash,
+        displayName: displayName ?? null,
+        ...(timezone ? { timezone } : {}),
+      },
     });
 
     // Give the new account a starter catalog so the app is not empty.

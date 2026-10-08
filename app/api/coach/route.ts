@@ -3,7 +3,8 @@ import { db } from '@/lib/db';
 import { handleApiError, requireApiUserId } from '@/lib/api';
 import { buildCoachPayload, callCoach } from '@/lib/coach';
 import { LlmError } from '@/lib/llm';
-import { isoWeekStart } from '@/lib/stats';
+import { isoWeekStart, weekStartBefore } from '@/lib/stats';
+import { getUserTimeZone } from '@/lib/user-timezone';
 
 // POST /api/coach: generates a new debrief for the current week.
 // The structured payload is computed server-side then sent to the configured
@@ -16,9 +17,9 @@ export async function POST() {
     const { markdown, modelUsed, promptText } = await callCoach(payload);
 
     const now = new Date();
-    const weekStart = isoWeekStart(now);
-    const weekEnd = new Date(weekStart);
-    weekEnd.setUTCDate(weekEnd.getUTCDate() + 7);
+    const timeZone = await getUserTimeZone(userId);
+    const weekStart = isoWeekStart(now, timeZone);
+    const weekEnd = weekStartBefore(weekStart, -1, timeZone);
 
     const stored = await db.coachSession.create({
       data: {

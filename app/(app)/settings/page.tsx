@@ -9,6 +9,7 @@ import { ImportSection } from '@/components/settings/import-section';
 import { GymProfilesSection } from '@/components/settings/gym-profiles-section';
 import { McpSection } from '@/components/settings/mcp-section';
 import { SecuritySection } from '@/components/settings/security-section';
+import { DEFAULT_TIME_ZONE } from '@/lib/timezone';
 
 export default async function SettingsPage() {
   const t = await getTranslations('settings');
@@ -25,6 +26,7 @@ export default async function SettingsPage() {
         goal: true,
         weeklyFrequency: true,
         unit: true,
+        timezone: true,
         activeGymId: true,
       },
     }),
@@ -90,6 +92,7 @@ export default async function SettingsPage() {
             goal: user?.goal ?? null,
             weeklyFrequency: user?.weeklyFrequency ?? null,
             unit: user?.unit ?? 'KG',
+            timezone: user?.timezone ?? DEFAULT_TIME_ZONE,
           }}
         />
 

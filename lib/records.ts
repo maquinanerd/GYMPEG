@@ -1,5 +1,6 @@
 import type { Set } from '@/lib/prisma-client';
-import { estimate1RM, best1RM } from '@/lib/stats';
+import { estimate1RM, best1RM, type CalendarOptions } from '@/lib/stats';
+import { localDayKey } from '@/lib/timezone';
 
 // ============================================================
 // Personal records (PRs) - derived on read from existing set
@@ -103,8 +104,9 @@ export interface ExerciseRecord {
   bestE1RMDate: string; // ISO date of the set with the best estimated 1RM
 }
 
-function isoDay(d: Date): string {
-  return d.toISOString().slice(0, 10);
+// Calendar day of the set in the user's zone (default UTC).
+function isoDay(d: Date, timeZone: string): string {
+  return localDayKey(d, timeZone);
 }
 
 // Given a flat list of (bodyweight-adjusted) working sets across exercises,
@@ -113,7 +115,11 @@ function isoDay(d: Date): string {
 // cardio sets, and sets with a non-positive load or reps are ignored; an
 // exercise with no qualifying set yields no row. Ties keep the earliest set
 // (the date the record was first reached).
-export function exerciseRecords(sets: RecordSet[]): ExerciseRecord[] {
+export function exerciseRecords(
+  sets: RecordSet[],
+  options: CalendarOptions = {},
+): ExerciseRecord[] {
+  const timeZone = options.timeZone ?? 'UTC';
   const byExercise = new Map<string, ExerciseRecord>();
 
   for (const s of sets) {
@@ -122,7 +128,7 @@ export function exerciseRecords(sets: RecordSet[]): ExerciseRecord[] {
     }
 
     const e1rm = +estimate1RM(s.weight, s.reps).toFixed(1);
-    const day = isoDay(s.sessionStartedAt);
+    const day = isoDay(s.sessionStartedAt, timeZone);
     const current = byExercise.get(s.exerciseName);
 
     if (!current) {
@@ -150,7 +156,5 @@ export function exerciseRecords(sets: RecordSet[]): ExerciseRecord[] {
     }
   }
 
-  return [...byExercise.values()].sort((a, b) =>
-    a.exerciseName.localeCompare(b.exerciseName),
-  );
+  return [...byExercise.values()].sort((a, b) => a.exerciseName.localeCompare(b.exerciseName));
 }

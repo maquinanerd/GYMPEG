@@ -50,6 +50,9 @@ export const settings = {
     deleteDescription: '{name} will be removed. Existing sessions keep their training history.',
   },
   profile: {
+    timezone: 'Time zone',
+    timezoneDescription: 'Weeks, streaks and dates follow this zone.',
+    useDeviceTimezone: 'Use this device time zone ({zone})',
     title: 'Profile',
     description:
       'Your profile tailors the AI coach. Bodyweight is also used to compute effective tonnage for bodyweight exercises; changing it recalculates past history.',

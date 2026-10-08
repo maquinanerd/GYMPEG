@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isValidTimeZone } from '@/lib/timezone';
 
 // bcrypt only hashes the first 72 bytes: anything past that would be silently
 // ignored, so a longer password is refused instead of half-checked.
@@ -15,6 +16,11 @@ export const registerSchema = z.object({
   email: z.string().email('Invalid email').max(200),
   password: passwordSchema,
   displayName: z.string().trim().min(1).max(80).optional(),
+  // The device's zone, sent by the signup form; ignored when unknown.
+  timezone: z
+    .string()
+    .optional()
+    .transform((value) => (isValidTimeZone(value) ? value : undefined)),
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
