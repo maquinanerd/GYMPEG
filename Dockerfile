@@ -89,4 +89,13 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-CMD ["node", "server.js"]
+# Probe used by Docker and Coolify: /api/health answers 200 only when the
+# database is reachable.
+HEALTHCHECK --interval=15s --timeout=5s --start-period=60s --retries=5 \
+  CMD wget -qO- http://127.0.0.1:3000/api/health >/dev/null 2>&1 || exit 1
+
+# Apply pending migrations (idempotent, a no-op when up to date), then start
+# the standalone server. Platforms that build from this Dockerfile (Coolify)
+# need no custom start command. The Prisma bundle is invoked directly because
+# the .bin shim loses its .wasm files when COPY dereferences the symlink.
+CMD ["sh", "-c", "node node_modules/prisma/build/index.js migrate deploy && exec node server.js"]
