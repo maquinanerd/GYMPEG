@@ -1,6 +1,13 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ChevronLeft, Dumbbell, History, TrendingUp } from 'lucide-react';
+import {
+  ChevronLeft,
+  Dumbbell,
+  History,
+  ListOrdered,
+  TrendingUp,
+  TriangleAlert,
+} from 'lucide-react';
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
@@ -16,6 +23,7 @@ import { ExerciseMediaDialog } from '@/components/exercises/exercise-media-dialo
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { safeSessionReturnPath } from '@/lib/session-exercise-navigation';
+import { usableExerciseWhere } from '@/lib/catalog/access';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -33,8 +41,9 @@ export default async function ExerciseDetailPage({ params, searchParams }: Props
 
   const [exercise, user] = await Promise.all([
     db.exercise.findFirst({
-      where: { id, userId: auth.userId },
+      where: { id, ...usableExerciseWhere(auth.userId) },
       include: {
+        muscles: { include: { muscle: true } },
         sets: {
           where: { isWarmup: false, session: { userId: auth.userId } },
           orderBy: { completedAt: 'desc' },
@@ -49,6 +58,14 @@ export default async function ExerciseDetailPage({ params, searchParams }: Props
   ]);
 
   if (!exercise) notFound();
+  const muscleName = (m: { namePtBr: string; nameEn: string }) =>
+    locale === 'pt-BR' ? m.namePtBr : m.nameEn;
+  const primaryMuscles = exercise.muscles
+    .filter((m) => m.role === 'PRIMARY')
+    .map((m) => muscleName(m.muscle));
+  const secondaryMuscles = exercise.muscles
+    .filter((m) => m.role !== 'PRIMARY')
+    .map((m) => muscleName(m.muscle));
   const returnTo = safeSessionReturnPath(requestedReturnTo);
   const displayName = getExerciseDisplayName(exercise.name, locale);
   const unit = user?.unit ?? 'KG';
@@ -134,7 +151,48 @@ export default async function ExerciseDetailPage({ params, searchParams }: Props
               {exercise.notes}
             </p>
           )}
+          {primaryMuscles.length > 0 && (
+            <dl className="grid gap-x-4 gap-y-3 text-sm sm:grid-cols-2">
+              <div>
+                <dt className="text-xs text-muted-foreground">{t('primaryMuscles')}</dt>
+                <dd className="font-medium">{primaryMuscles.join(', ')}</dd>
+              </div>
+              {secondaryMuscles.length > 0 && (
+                <div>
+                  <dt className="text-xs text-muted-foreground">{t('secondaryMuscles')}</dt>
+                  <dd className="font-medium">{secondaryMuscles.join(', ')}</dd>
+                </div>
+              )}
+            </dl>
+          )}
         </section>
+
+        {exercise.instructionsPtBr.length > 0 && (
+          <section className="space-y-3 border-t border-border pt-5" lang="pt-BR">
+            <h2 className="flex items-center gap-2 text-base font-semibold">
+              <ListOrdered className="size-4" />
+              {t('howTo')}
+            </h2>
+            <ol className="list-decimal space-y-2 pl-5 text-sm">
+              {exercise.instructionsPtBr.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+            {exercise.commonMistakesPtBr.length > 0 && (
+              <div className="space-y-2 rounded-md bg-muted/40 p-3">
+                <h3 className="flex items-center gap-2 text-sm font-medium">
+                  <TriangleAlert className="size-4" />
+                  {t('commonMistakes')}
+                </h3>
+                <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                  {exercise.commonMistakesPtBr.map((mistake) => (
+                    <li key={mistake}>{mistake}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </section>
+        )}
 
         <section className="space-y-3 border-t border-border pt-5">
           <div className="flex items-center justify-between gap-3">

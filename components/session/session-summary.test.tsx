@@ -3,8 +3,9 @@ import { render, screen } from '@testing-library/react';
 import type { Exercise, ProgramExercise, Session } from '@/lib/prisma-client';
 import type { PendingSet } from '@/lib/indexeddb';
 import { SessionSummary, computeSessionPRs } from './session-summary';
+import { exerciseFixture } from '@/tests/fixtures/exercise';
 
-const exo: Exercise = {
+const exo: Exercise = exerciseFixture({
   id: 'e1',
   userId: 'u',
   name: 'Squat',
@@ -15,7 +16,7 @@ const exo: Exercise = {
   usesBodyweight: false,
   equipmentType: 'BARBELL',
   createdAt: new Date(),
-};
+});
 
 const pe: ProgramExercise & { exercise: Exercise } = {
   id: 'pe',

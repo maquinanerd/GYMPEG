@@ -1,0 +1,135 @@
+[
+  {
+    "slug": "pectoralis_major",
+    "nameEn": "Pectoralis major",
+    "namePtBr": "Peitoral maior",
+    "group": "CHEST",
+    "view": "front"
+  },
+  {
+    "slug": "anterior_deltoid",
+    "nameEn": "Anterior deltoid",
+    "namePtBr": "Deltoide anterior",
+    "group": "SHOULDERS_FRONT",
+    "view": "front"
+  },
+  {
+    "slug": "lateral_deltoid",
+    "nameEn": "Lateral deltoid",
+    "namePtBr": "Deltoide lateral",
+    "group": "SHOULDERS_LATERAL",
+    "view": "front"
+  },
+  {
+    "slug": "posterior_deltoid",
+    "nameEn": "Posterior deltoid",
+    "namePtBr": "Deltoide posterior",
+    "group": "SHOULDERS_REAR",
+    "view": "back"
+  },
+  {
+    "slug": "biceps",
+    "nameEn": "Biceps",
+    "namePtBr": "Bíceps",
+    "group": "BICEPS",
+    "view": "front"
+  },
+  {
+    "slug": "triceps",
+    "nameEn": "Triceps",
+    "namePtBr": "Tríceps",
+    "group": "TRICEPS",
+    "view": "back"
+  },
+  {
+    "slug": "forearm",
+    "nameEn": "Forearm",
+    "namePtBr": "Antebraço",
+    "group": "FOREARMS",
+    "view": "front"
+  },
+  {
+    "slug": "trapezius",
+    "nameEn": "Trapezius",
+    "namePtBr": "Trapézio",
+    "group": "BACK_THICKNESS",
+    "view": "back"
+  },
+  {
+    "slug": "rhomboids",
+    "nameEn": "Rhomboids",
+    "namePtBr": "Romboides",
+    "group": "BACK_THICKNESS",
+    "view": "back"
+  },
+  {
+    "slug": "latissimus_dorsi",
+    "nameEn": "Latissimus dorsi",
+    "namePtBr": "Grande dorsal",
+    "group": "BACK_WIDTH",
+    "view": "back"
+  },
+  {
+    "slug": "erector_spinae",
+    "nameEn": "Erector spinae",
+    "namePtBr": "Eretores da espinha (lombar)",
+    "group": "LOWER_BACK",
+    "view": "back"
+  },
+  {
+    "slug": "rectus_abdominis",
+    "nameEn": "Rectus abdominis",
+    "namePtBr": "Reto do abdômen",
+    "group": "ABS",
+    "view": "front"
+  },
+  {
+    "slug": "obliques",
+    "nameEn": "Obliques",
+    "namePtBr": "Oblíquos",
+    "group": "ABS",
+    "view": "front"
+  },
+  {
+    "slug": "gluteus",
+    "nameEn": "Gluteus",
+    "namePtBr": "Glúteos",
+    "group": "GLUTES",
+    "view": "back"
+  },
+  {
+    "slug": "abductors",
+    "nameEn": "Hip abductors",
+    "namePtBr": "Abdutores do quadril",
+    "group": "GLUTES",
+    "view": "back"
+  },
+  {
+    "slug": "adductors",
+    "nameEn": "Hip adductors",
+    "namePtBr": "Adutores do quadril",
+    "group": "QUADS",
+    "view": "front"
+  },
+  {
+    "slug": "quadriceps",
+    "nameEn": "Quadriceps",
+    "namePtBr": "Quadríceps",
+    "group": "QUADS",
+    "view": "front"
+  },
+  {
+    "slug": "hamstrings",
+    "nameEn": "Hamstrings",
+    "namePtBr": "Posteriores da coxa",
+    "group": "HAMSTRINGS",
+    "view": "back"
+  },
+  {
+    "slug": "calves",
+    "nameEn": "Calves",
+    "namePtBr": "Panturrilhas",
+    "group": "CALVES",
+    "view": "back"
+  }
+]

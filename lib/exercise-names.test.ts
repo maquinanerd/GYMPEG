@@ -1,10 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EXERCISE_CATALOG } from '@/lib/exercise-catalog';
 import { programTemplates } from '@/lib/programs/templates';
-import {
-  exerciseNameDictionaries,
-  getExerciseDisplayName,
-} from '@/i18n/exercise-names';
+import { exerciseNameDictionaries, getExerciseDisplayName } from '@/i18n/exercise-names';
 
 describe('exercise name localization', () => {
   it('translates a recognized exercise into Russian', () => {
@@ -16,14 +13,16 @@ describe('exercise name localization', () => {
   });
 
   it('translates recognized exercises into Brazilian gym vocabulary', () => {
-    expect(getExerciseDisplayName('Bench Press', 'pt-BR')).toBe('Supino reto');
+    // Catalog exercises (and their legacy names) use the curated pt-BR name
+    // from data/catalog; the static dictionary covers the rest.
+    expect(getExerciseDisplayName('Bench Press', 'pt-BR')).toBe('Supino reto com barra');
     expect(getExerciseDisplayName('Barbell bench press', 'pt-BR')).toBe('Supino reto com barra');
-    expect(getExerciseDisplayName('Lat Pulldown', 'pt-BR')).toBe('Puxada alta');
+    expect(getExerciseDisplayName('Lat Pulldown', 'pt-BR')).toBe('Puxada alta aberta');
     expect(getExerciseDisplayName('Leg extension', 'pt-BR')).toBe('Cadeira extensora');
     expect(getExerciseDisplayName('Lying leg curl', 'pt-BR')).toBe('Mesa flexora');
-    expect(getExerciseDisplayName('Seated Cable Row', 'pt-BR')).toBe('Remada baixa');
-    expect(getExerciseDisplayName('Skullcrusher', 'pt-BR')).toBe('Tríceps testa');
-    expect(getExerciseDisplayName('Face Pull', 'pt-BR')).toBe('Face pull');
+    expect(getExerciseDisplayName('Seated Cable Row', 'pt-BR')).toBe('Remada baixa com triângulo');
+    expect(getExerciseDisplayName('Skullcrusher', 'pt-BR')).toBe('Tríceps testa com barra W');
+    expect(getExerciseDisplayName('Face Pull', 'pt-BR')).toBe('Face pull na polia com corda');
     expect(getExerciseDisplayName('Squats · Barbell', 'pt-BR')).toBe('Agachamento · Barra');
   });
 
@@ -70,9 +69,7 @@ describe('exercise name localization', () => {
         ),
       ),
     );
-    const missing = [...names].filter(
-      (name) => getExerciseDisplayName(name, 'ru') === name,
-    );
+    const missing = [...names].filter((name) => getExerciseDisplayName(name, 'ru') === name);
     expect(missing).toEqual([]);
   });
 

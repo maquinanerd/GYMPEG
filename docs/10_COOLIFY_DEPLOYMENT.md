@@ -57,7 +57,7 @@ Segunda cópia: em Settings → **S3 Storages**, cadastrar um bucket (R2/S3/MinI
 |---|---|
 | Build Pack | **Dockerfile** |
 | Ports Exposes | `3000` |
-| Domains | `https://<seu-subdominio>` (ex.: `https://gym.seudominio.com.br`) |
+| Domains | `https://gympeg.62.171.164.224.sslip.io` (wildcard sslip.io do servidor, HTTPS automático; domínio próprio pode ser somado depois) |
 | Auto Deploy | ligado (deploy a cada push em `main`) |
 
 ### Variáveis de ambiente
@@ -68,7 +68,7 @@ Marque os segredos apenas como **runtime** (não "build variable"), para não fi
 |---|---|---|
 | `DATABASE_URL` | Postgres URL (internal) do passo 2 | sim |
 | `JWT_SECRET` | 48+ caracteres aleatórios (`openssl rand -base64 48`) | sim |
-| `NEXTAUTH_URL` | `https://<seu-subdominio>` | sim |
+| `NEXTAUTH_URL` | `https://gympeg.62.171.164.224.sslip.io` | sim |
 | `SIGNUP_MODE` | `allowlist` (padrão em produção; `open` libera o cadastro, `closed` fecha) | não |
 | `SIGNUP_ALLOWED_EMAILS` | seu e-mail (e de quem você convidar), separados por vírgula | sim, para criar a primeira conta |
 | `AI_PROVIDER` | `gemini` (ou `demo` até ter chave) | sim |

@@ -38,6 +38,7 @@ import { MeasurementsCard } from '@/components/progress/measurements-card';
 import { PhotosCard } from '@/components/progress/photos-card';
 import { ConditioningCard } from '@/components/progress/conditioning-card';
 import { RecordsCard } from '@/components/progress/records-card';
+import { usableExerciseWhere } from '@/lib/catalog/access';
 
 interface SearchParams {
   exerciseId?: string;
@@ -60,7 +61,7 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
   const [exercisesWithSets, user] = await Promise.all([
     db.exercise.findMany({
       where: {
-        userId: auth.userId,
+        ...usableExerciseWhere(auth.userId),
         // The lifting selector/recap only makes sense for weight x reps work;
         // cardio exercises (issue #133) have no load chart to show here (a
         // dedicated conditioning view is the follow-up, issue #135).

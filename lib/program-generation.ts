@@ -8,6 +8,8 @@ import {
 } from '@/lib/schemas/program-generation';
 import { defaultIntraSetConfig } from '@/lib/intra-set-autoregulation';
 import type { Prisma } from '@/lib/prisma-client';
+import { pickableExerciseWhere } from '@/lib/catalog/access';
+import { ensureUsableExercise } from '@/lib/catalog/resolve';
 
 // Generates a structured program draft from a natural-language goal. Does not
 // persist anything: the result is previewed (and edited) before saving.
@@ -26,7 +28,7 @@ export async function generateProgram(userId: string, goal: string): Promise<Gen
       },
     }),
     db.exercise.findMany({
-      where: { userId },
+      where: pickableExerciseWhere(userId),
       select: { name: true, muscleGroup: true, category: true, equipmentType: true },
       orderBy: { name: 'asc' },
     }),
@@ -132,19 +134,16 @@ async function createGeneratedWorkout(
 
   let exerciseOrder = 1;
   for (const ex of w.exercises) {
-    const exercise = await tx.exercise.upsert({
-      where: { userId_name: { userId, name: ex.name } },
-      update: {},
-      create: {
-        userId,
-        name: ex.name,
-        muscleGroup: ex.muscleGroup,
-        // A CARDIO machine is always logged as cardio (duration/distance),
-        // whatever category the model picked.
-        category: ex.equipmentType === 'CARDIO' ? 'CARDIO' : ex.category,
-        equipmentType: ex.equipmentType ?? 'OTHER',
-        defaultRestSec: ex.restSec,
-      },
+    // Catalog exercises are reused by name (pt-BR, aliases, legacy names);
+    // only unknown names become the user's custom exercise.
+    const { exercise } = await ensureUsableExercise(tx, userId, {
+      name: ex.name,
+      muscleGroup: ex.muscleGroup,
+      // A CARDIO machine is always logged as cardio (duration/distance),
+      // whatever category the model picked.
+      category: ex.equipmentType === 'CARDIO' ? 'CARDIO' : ex.category,
+      equipmentType: ex.equipmentType ?? 'OTHER',
+      defaultRestSec: ex.restSec,
     });
 
     const autoregDefaults = defaultIntraSetConfig(exercise);

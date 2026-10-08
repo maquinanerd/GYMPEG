@@ -7,6 +7,7 @@ import { isDeloadActive } from '@/lib/deload';
 import { getReturnToTrainingRecommendations } from '@/lib/return-to-training-history';
 import { SessionRunner, type SerializedLastPerformance } from '@/components/session/session-runner';
 import { liveSessionGymInclude } from '@/lib/session-gym-selection';
+import { pickableExerciseWhere } from '@/lib/catalog/access';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -68,7 +69,7 @@ export default async function SessionRunPage(props: Props) {
     // Catalog for the in-session exercise menu: only the fields it reads
     // (SessionCatalogExercise), not the whole row.
     db.exercise.findMany({
-      where: { userId: auth.userId },
+      where: pickableExerciseWhere(auth.userId),
       orderBy: [{ muscleGroup: 'asc' }, { name: 'asc' }],
       select: {
         id: true,

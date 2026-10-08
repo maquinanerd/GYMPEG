@@ -4,8 +4,9 @@ import type { Exercise, ProgramExercise } from '@/lib/prisma-client';
 import { READINESS_RECENCY_HOURS, type ReadinessSignal } from '@/lib/progression';
 import { ExerciseCard } from './exercise-card';
 import type { SerializedLastPerformance } from './session-runner';
+import { exerciseFixture } from '@/tests/fixtures/exercise';
 
-const exo: Exercise = {
+const exo: Exercise = exerciseFixture({
   id: 'e1',
   userId: 'u',
   name: 'Squat',
@@ -16,7 +17,7 @@ const exo: Exercise = {
   usesBodyweight: false,
   equipmentType: 'BARBELL',
   createdAt: new Date(),
-};
+});
 
 const pe: ProgramExercise & { exercise: Exercise } = {
   id: 'pe',

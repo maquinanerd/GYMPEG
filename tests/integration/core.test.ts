@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { db } from '@/lib/db';
-import { seedExerciseCatalog, EXERCISE_CATALOG } from '@/lib/exercise-catalog';
+import { EXERCISE_CATALOG } from '@/lib/exercise-catalog';
+import { syncGlobalCatalog } from '@/lib/catalog/sync';
+import { findUsableExerciseByName } from '@/lib/catalog/resolve';
 import { buildProgramFromGenerated } from '@/lib/program-generation';
 import type { GeneratedProgram } from '@/lib/schemas/program-generation';
 import { buildCoachPayload } from '@/lib/coach';
@@ -11,27 +13,69 @@ async function makeUser(email: string) {
   return db.user.create({ data: { email, passwordHash: 'x' } });
 }
 
-describe('seedExerciseCatalog', () => {
-  it('seeds the full catalog and is idempotent', async () => {
+describe('global exercise catalog', () => {
+  it('covers every starter exercise and a second sync is a no-op', async () => {
     const user = await makeUser('seed@test.dev');
 
-    const first = await seedExerciseCatalog(db, user.id);
-    expect(first.size).toBe(EXERCISE_CATALOG.length);
+    const first = await syncGlobalCatalog(db);
+    expect(first.skipped).toBe(false);
+    for (const { name } of EXERCISE_CATALOG) {
+      const exercise = await findUsableExerciseByName(db, user.id, name);
+      expect(exercise?.userId, name).toBeNull();
+    }
+    // Nothing is copied into the account.
+    await expect(db.exercise.count({ where: { userId: user.id } })).resolves.toBe(0);
 
-    const count1 = await db.exercise.count({ where: { userId: user.id } });
-    expect(count1).toBe(EXERCISE_CATALOG.length);
+    const second = await syncGlobalCatalog(db);
+    expect(second.skipped).toBe(true);
+  });
 
-    // Running again must not create duplicates (upsert on userId+name).
-    await seedExerciseCatalog(db, user.id);
-    const count2 = await db.exercise.count({ where: { userId: user.id } });
-    expect(count2).toBe(EXERCISE_CATALOG.length);
+  it('folds an old per-account copy into the global exercise, keeping its history', async () => {
+    const user = await makeUser('legacy@test.dev');
+    const copy = await db.exercise.create({
+      data: {
+        userId: user.id,
+        name: 'Barbell bench press',
+        muscleGroup: 'CHEST',
+        category: 'COMPOUND',
+      },
+    });
+    const session = await db.session.create({ data: { userId: user.id } });
+    await db.set.create({
+      data: { sessionId: session.id, exerciseId: copy.id, setNumber: 1, weight: 80, reps: 8 },
+    });
+
+    const report = await syncGlobalCatalog(db);
+    expect(report.merged).toBe(1);
+
+    const global = await findUsableExerciseByName(db, user.id, 'Barbell bench press');
+    expect(global?.userId).toBeNull();
+    await expect(db.exercise.findUnique({ where: { id: copy.id } })).resolves.toBeNull();
+    await expect(db.set.count({ where: { exerciseId: global!.id } })).resolves.toBe(1);
+  });
+
+  it('keeps custom exercises private and never merges unknown names', async () => {
+    const owner = await makeUser('owner@test.dev');
+    const other = await makeUser('other@test.dev');
+    await db.exercise.create({
+      data: {
+        userId: owner.id,
+        name: 'My odd machine',
+        muscleGroup: 'OTHER',
+        category: 'ISOLATION',
+      },
+    });
+    await syncGlobalCatalog(db);
+
+    await expect(findUsableExerciseByName(db, owner.id, 'my odd machine')).resolves.not.toBeNull();
+    await expect(findUsableExerciseByName(db, other.id, 'My odd machine')).resolves.toBeNull();
   });
 });
 
 describe('buildProgramFromGenerated', () => {
   it('persists the program, reuses existing exercises and creates new ones', async () => {
     const user = await makeUser('build@test.dev');
-    await seedExerciseCatalog(db, user.id);
+    await syncGlobalCatalog(db);
     const before = await db.exercise.count({ where: { userId: user.id } });
 
     const generated: GeneratedProgram = {
@@ -204,7 +248,14 @@ describe('buildCoachPayload cardio exclusion (issue #140)', () => {
       data: { sessionId: session.id, exerciseId: bench.id, setNumber: 1, weight: 80, reps: 8 },
     });
     await db.set.create({
-      data: { sessionId: session.id, exerciseId: bench.id, setNumber: 2, weight: 40, reps: 10, isWarmup: true },
+      data: {
+        sessionId: session.id,
+        exerciseId: bench.id,
+        setNumber: 2,
+        weight: 40,
+        reps: 10,
+        isWarmup: true,
+      },
     });
     await db.set.create({
       data: {
@@ -275,13 +326,9 @@ describe('buildCoachPayload conditioning (issue #145)', () => {
     const inPreviousWeek = new Date(weekStart.getTime() - 7 * 24 * 60 * 60 * 1000 + 60 * 60 * 1000);
 
     // Two cardio sessions this week (30 min / 5 km and 10 min), one last week.
-    await cardioSession(user.id, run.id, inCurrentWeek, [
-      { durationSec: 1800, distanceM: 5000 },
-    ]);
+    await cardioSession(user.id, run.id, inCurrentWeek, [{ durationSec: 1800, distanceM: 5000 }]);
     await cardioSession(user.id, run.id, inCurrentWeek, [{ durationSec: 600 }]);
-    await cardioSession(user.id, run.id, inPreviousWeek, [
-      { durationSec: 3600, distanceM: 10000 },
-    ]);
+    await cardioSession(user.id, run.id, inPreviousWeek, [{ durationSec: 3600, distanceM: 10000 }]);
 
     const payload = await buildCoachPayload(user.id);
     expect(payload.conditioning.weekCurrent).toEqual({
@@ -341,9 +388,7 @@ describe('buildCoachPayload conditioning (issue #145)', () => {
     const { user: userB, run: runB } = await makeCardioUser('conditioning-b@test.dev');
     const weekStart = isoWeekStart(new Date());
     const inCurrentWeek = new Date(weekStart.getTime() + 60 * 60 * 1000);
-    await cardioSession(userB.id, runB.id, inCurrentWeek, [
-      { durationSec: 1800, distanceM: 5000 },
-    ]);
+    await cardioSession(userB.id, runB.id, inCurrentWeek, [{ durationSec: 1800, distanceM: 5000 }]);
 
     const payload = await buildCoachPayload(userA.id);
     expect(payload.conditioning.weekCurrent).toEqual({ minutes: 0, km: 0, sessions: 0 });
@@ -570,9 +615,7 @@ describe('buildCoachPayload fatigue (issue #101)', () => {
     const payload = await buildCoachPayload(user.id);
     expect(payload.fatigue.stalledExercises).toEqual(['Bench', 'Squat']);
     expect(payload.fatigue.deloadRecommended).toBe(true);
-    expect(payload.fatigue.deloadReasons).toEqual([
-      '2 lifts have stalled: Bench, Squat.',
-    ]);
+    expect(payload.fatigue.deloadReasons).toEqual(['2 lifts have stalled: Bench, Squat.']);
   });
 
   it('does not recommend a deload on a single stalled lift', async () => {

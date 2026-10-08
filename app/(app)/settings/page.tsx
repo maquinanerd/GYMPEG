@@ -10,6 +10,7 @@ import { GymProfilesSection } from '@/components/settings/gym-profiles-section';
 import { McpSection } from '@/components/settings/mcp-section';
 import { SecuritySection } from '@/components/settings/security-section';
 import { DEFAULT_TIME_ZONE } from '@/lib/timezone';
+import { pickableExerciseWhere } from '@/lib/catalog/access';
 
 export default async function SettingsPage() {
   const t = await getTranslations('settings');
@@ -36,7 +37,7 @@ export default async function SettingsPage() {
       include: { exerciseConfigs: true },
     }),
     db.exercise.findMany({
-      where: { userId: auth.userId },
+      where: pickableExerciseWhere(auth.userId),
       orderBy: { name: 'asc' },
     }),
     db.mcpAccessToken.findMany({

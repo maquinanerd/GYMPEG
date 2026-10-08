@@ -1,4 +1,5 @@
 import type { Locale } from '@/i18n/config';
+import { catalogPtBrName } from '@/lib/catalog/search-index';
 
 type ExerciseNameDictionary = Readonly<Record<string, string>>;
 
@@ -413,6 +414,12 @@ function normalizeExerciseName(name: string): string {
 }
 
 export function getExerciseDisplayName(name: string, locale: string): string {
+  // The curated global catalog (data/catalog) is the source of truth for
+  // pt-BR names; the static dictionaries cover the rest.
+  if (locale === 'pt-BR') {
+    const curated = catalogPtBrName(name);
+    if (curated) return curated;
+  }
   const dictionary = normalizedDictionaries.get(locale as Locale);
   return dictionary?.get(normalizeExerciseName(name)) ?? name;
 }

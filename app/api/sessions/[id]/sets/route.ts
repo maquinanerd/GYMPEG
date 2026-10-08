@@ -8,6 +8,7 @@ import { effectiveWeight } from '@/lib/stats';
 import { resolveSetEquipmentSnapshot } from '@/lib/set-equipment';
 import { acceptsSetAfterFinish, resolvePerformedAt } from '@/lib/set-timing';
 import { Prisma } from '@/prisma/generated/client';
+import { usableExerciseWhere } from '@/lib/catalog/access';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -57,7 +58,7 @@ export async function POST(req: Request, props: Params) {
 
     // Validation: the exercise must belong to the user.
     const exercise = await db.exercise.findFirst({
-      where: { id: data.exerciseId, userId },
+      where: { id: data.exerciseId, ...usableExerciseWhere(userId) },
     });
     if (!exercise) {
       throw new ApiError(400, 'Invalid exercise.');

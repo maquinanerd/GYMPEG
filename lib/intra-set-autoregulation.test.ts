@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { Exercise, ProgramExercise } from '@/lib/prisma-client';
 import { defaultIntraSetConfig, recommendNextIntraSet } from '@/lib/intra-set-autoregulation';
+import { exerciseFixture } from '@/tests/fixtures/exercise';
 
-const squat: Exercise = {
+const squat: Exercise = exerciseFixture({
   id: 'squat',
   userId: 'u',
   name: 'Back Squat',
@@ -13,7 +14,7 @@ const squat: Exercise = {
   usesBodyweight: false,
   equipmentType: 'BARBELL',
   createdAt: new Date(),
-};
+});
 
 const curl: Exercise = {
   ...squat,

@@ -17,6 +17,7 @@ import {
   exerciseCategoryMessageKeys,
   muscleGroupMessageKeys,
 } from '@/i18n/enum-keys';
+import { matchesExerciseQuery } from '@/lib/catalog/search-index';
 
 interface ExercisesViewProps {
   exercises: Exercise[];
@@ -30,15 +31,13 @@ export function ExercisesView({ exercises }: ExercisesViewProps) {
   const [editing, setEditing] = useState<Exercise | null>(null);
   const [query, setQuery] = useState('');
 
-  // Case-insensitive substring match on the exercise name. The query only
+  // Accent- and case-insensitive match on the name, the displayed (pt-BR)
+  // name and the catalog search terms ("puxada", "pulley"). The query only
   // narrows the already-loaded list (no API call); an empty query shows
-  // everything, preserving the original behaviour.
+  // everything.
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return exercises;
-    return exercises.filter(
-      (ex) => ex.name.toLowerCase().includes(q) || exerciseName(ex.name).toLowerCase().includes(q),
-    );
+    if (!query.trim()) return exercises;
+    return exercises.filter((ex) => matchesExerciseQuery(ex.name, exerciseName(ex.name), query));
   }, [exerciseName, exercises, query]);
 
   const grouped = useMemo(() => groupByMuscle(filtered), [filtered]);
@@ -142,6 +141,7 @@ function ExerciseRow({ exercise, onEdit }: { exercise: Exercise; onEdit: () => v
             <Badge variant="secondary">
               {t(`categories.${exerciseCategoryMessageKeys[exercise.category]}`)}
             </Badge>
+            {exercise.userId === null && <Badge variant="outline">{t('catalogBadge')}</Badge>}
             {/* One non-wrapping unit, so the separator never orphans at a line end. */}
             <span className="whitespace-nowrap">
               <span>
@@ -155,18 +155,22 @@ function ExerciseRow({ exercise, onEdit }: { exercise: Exercise; onEdit: () => v
             <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{exercise.notes}</p>
           )}
         </div>
-        <div className="-mb-2 -mr-2 -mt-4 flex w-full shrink-0 items-center justify-end sm:-mt-2 sm:w-auto">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onEdit}
-            aria-label={t('editTitle')}
-            className="min-h-tap min-w-tap"
-          >
-            <Pencil className="size-4" />
-          </Button>
-          <DeleteExerciseButton exerciseId={exercise.id} exerciseName={displayName} />
-        </div>
+        {/* Catalog exercises are shared and read-only: only custom ones can be
+            edited or deleted. */}
+        {exercise.userId !== null && (
+          <div className="-mb-2 -mr-2 -mt-4 flex w-full shrink-0 items-center justify-end sm:-mt-2 sm:w-auto">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onEdit}
+              aria-label={t('editTitle')}
+              className="min-h-tap min-w-tap"
+            >
+              <Pencil className="size-4" />
+            </Button>
+            <DeleteExerciseButton exerciseId={exercise.id} exerciseName={displayName} />
+          </div>
+        )}
       </CardContent>
     </Card>
   );

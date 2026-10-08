@@ -5,6 +5,7 @@ import { rateLimit } from '@/lib/rate-limit';
 import { tcxImportInputSchema } from '@/lib/schemas/import';
 import { parseTcx, tcxExerciseName, TCX_MAX_BYTES } from '@/lib/import/tcx';
 import { Prisma } from '@/prisma/generated/client';
+import { findUsableExerciseByName } from '@/lib/catalog/resolve';
 
 // How close an existing session's start has to be to count as a likely
 // duplicate of the imported activity (the preview warns; confirm still works,
@@ -78,10 +79,11 @@ export async function POST(req: Request) {
     // Confirm: one transaction creates (or reuses, ownership-scoped) the
     // cardio exercise, the session and its single cardio set.
     const result = await db.$transaction(async (tx) => {
-      let exercise = await tx.exercise.findFirst({
-        where: { userId, name: exerciseName },
-        select: { id: true, category: true },
-      });
+      // Catalog first (global cardio exercises), then the user's own.
+      const resolved = await findUsableExerciseByName(tx, userId, exerciseName);
+      let exercise: { id: string; category: string } | null = resolved
+        ? { id: resolved.id, category: resolved.category }
+        : null;
       let createdExercise = false;
       if (exercise && exercise.category !== 'CARDIO') {
         // The user owns a non-cardio exercise with the default name (e.g. a

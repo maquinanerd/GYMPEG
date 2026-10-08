@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { rateLimit } from '@/lib/rate-limit';
 import { aiParseSet } from '@/lib/set-parse';
+import { usableExerciseWhere } from '@/lib/catalog/access';
 
 // Opt-in "Parse with AI" for free-text set logging (issue #210). Parses ONE set
 // description into the form fields for the user to confirm - it NEVER logs a set
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
     // its category to tell the model which shape to return.
     const [exercise, user] = await Promise.all([
       db.exercise.findFirst({
-        where: { id: exerciseId, userId },
+        where: { id: exerciseId, ...usableExerciseWhere(userId) },
         select: { name: true, category: true },
       }),
       db.user.findUnique({ where: { id: userId }, select: { unit: true } }),

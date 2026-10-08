@@ -9,6 +9,7 @@ export const exercises = {
   noMatchDescription: 'No exercise name matches “{query}”. Try a different search.',
   restSeconds: 'rest {seconds}s',
   editTitle: 'Edit exercise',
+  catalogBadge: 'Catalog',
   addTitle: 'Add an exercise',
   formDescription: 'Enter the name, muscle group and category.',
   muscleGroup: 'Muscle group',
@@ -52,6 +53,10 @@ export const exercises = {
     searchCommons: 'Search Wikimedia Commons',
   },
   detail: {
+    primaryMuscles: 'Primary muscles',
+    secondaryMuscles: 'Secondary muscles',
+    howTo: 'How to do it',
+    commonMistakes: 'Common mistakes',
     back: 'Back to exercises',
     backToSession: 'Back to workout',
     information: 'Exercise information',

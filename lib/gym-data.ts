@@ -1,5 +1,6 @@
 import { db } from '@/lib/db';
 import { ApiError } from '@/lib/api';
+import { usableExerciseWhere } from '@/lib/catalog/access';
 
 export async function validateGymExerciseConfigs(
   userId: string,
@@ -8,7 +9,10 @@ export async function validateGymExerciseConfigs(
   const deduped = [...new Map(configs.map((config) => [config.exerciseId, config])).values()];
   if (deduped.length === 0) return deduped;
   const ownedCount = await db.exercise.count({
-    where: { userId, id: { in: deduped.map((config) => config.exerciseId) } },
+    where: {
+      ...usableExerciseWhere(userId),
+      id: { in: deduped.map((config) => config.exerciseId) },
+    },
   });
   if (ownedCount !== deduped.length) throw new ApiError(400, 'Invalid exercise configuration.');
   return deduped;

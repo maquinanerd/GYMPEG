@@ -1,0 +1,3136 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "name": "Barbell bench press",
+      "namePtBr": "Supino reto com barra",
+      "legacyNames": [
+        "Barbell bench press",
+        "Bench Press"
+      ],
+      "terms": [
+        "barbell bench press",
+        "supino reto com barra",
+        "supino",
+        "supino reto",
+        "supino plano",
+        "supino com barra",
+        "bench press",
+        "flat bench press",
+        "barbell bench press medium grip"
+      ]
+    },
+    {
+      "name": "Wide-grip barbell bench press",
+      "namePtBr": "Supino reto com barra pegada aberta",
+      "legacyNames": [],
+      "terms": [
+        "wide grip barbell bench press",
+        "supino reto com barra pegada aberta",
+        "supino aberto",
+        "supino pegada larga",
+        "wide grip bench press"
+      ]
+    },
+    {
+      "name": "Close-grip bench press",
+      "namePtBr": "Supino fechado com barra",
+      "legacyNames": [
+        "Close-grip bench press"
+      ],
+      "terms": [
+        "close grip bench press",
+        "supino fechado com barra",
+        "supino fechado",
+        "supino pegada fechada",
+        "close grip bench",
+        "close grip barbell bench press"
+      ]
+    },
+    {
+      "name": "Flat dumbbell bench press",
+      "namePtBr": "Supino reto com halteres",
+      "legacyNames": [
+        "Flat dumbbell bench press"
+      ],
+      "terms": [
+        "flat dumbbell bench press",
+        "supino reto com halteres",
+        "supino halteres",
+        "supino com halter",
+        "supino reto halter",
+        "dumbbell bench press"
+      ]
+    },
+    {
+      "name": "Neutral-grip dumbbell bench press",
+      "namePtBr": "Supino reto com halteres pegada neutra",
+      "legacyNames": [],
+      "terms": [
+        "neutral grip dumbbell bench press",
+        "supino reto com halteres pegada neutra",
+        "supino neutro",
+        "supino martelo",
+        "hammer grip dumbbell press",
+        "dumbbell bench press with neutral grip"
+      ]
+    },
+    {
+      "name": "Machine chest press",
+      "namePtBr": "Supino reto na máquina",
+      "legacyNames": [
+        "Machine chest press"
+      ],
+      "terms": [
+        "machine chest press",
+        "supino reto na maquina",
+        "supino maquina",
+        "chest press",
+        "seated chest press",
+        "machine bench press"
+      ]
+    },
+    {
+      "name": "Plate-loaded chest press",
+      "namePtBr": "Supino reto articulado",
+      "legacyNames": [],
+      "terms": [
+        "plate loaded chest press",
+        "supino reto articulado",
+        "supino articulado",
+        "supino maquina de anilha",
+        "lever chest press",
+        "leverage chest press"
+      ]
+    },
+    {
+      "name": "Smith machine bench press",
+      "namePtBr": "Supino reto no Smith",
+      "legacyNames": [],
+      "terms": [
+        "smith machine bench press",
+        "supino reto no smith",
+        "supino smith",
+        "supino guiado",
+        "smith bench press"
+      ]
+    },
+    {
+      "name": "Incline barbell bench press",
+      "namePtBr": "Supino inclinado com barra",
+      "legacyNames": [
+        "Incline Bench Press"
+      ],
+      "terms": [
+        "incline barbell bench press",
+        "supino inclinado com barra",
+        "supino inclinado",
+        "supino inclinado barra",
+        "incline bench",
+        "barbell incline bench press medium grip",
+        "incline bench press"
+      ]
+    },
+    {
+      "name": "Incline dumbbell press (30 deg)",
+      "namePtBr": "Supino inclinado com halteres",
+      "legacyNames": [
+        "Incline dumbbell press (30 deg)",
+        "Incline Dumbbell Press"
+      ],
+      "terms": [
+        "incline dumbbell press 30 deg",
+        "supino inclinado com halteres",
+        "supino inclinado halter",
+        "supino inclinado com halter",
+        "incline db press",
+        "incline dumbbell press"
+      ]
+    },
+    {
+      "name": "Neutral-grip incline dumbbell press",
+      "namePtBr": "Supino inclinado com halteres pegada neutra",
+      "legacyNames": [],
+      "terms": [
+        "neutral grip incline dumbbell press",
+        "supino inclinado com halteres pegada neutra",
+        "supino inclinado neutro",
+        "supino inclinado martelo",
+        "incline dumbbell bench with palms facing in",
+        "hammer grip incline db bench press"
+      ]
+    },
+    {
+      "name": "Incline machine chest press",
+      "namePtBr": "Supino inclinado na máquina",
+      "legacyNames": [],
+      "terms": [
+        "incline machine chest press",
+        "supino inclinado na maquina",
+        "supino inclinado maquina",
+        "supino inclinado articulado",
+        "incline chest press machine",
+        "leverage incline chest press"
+      ]
+    },
+    {
+      "name": "Smith machine incline bench press",
+      "namePtBr": "Supino inclinado no Smith",
+      "legacyNames": [],
+      "terms": [
+        "smith machine incline bench press",
+        "supino inclinado no smith",
+        "supino inclinado smith",
+        "supino inclinado guiado",
+        "incline smith press"
+      ]
+    },
+    {
+      "name": "Decline barbell bench press",
+      "namePtBr": "Supino declinado com barra",
+      "legacyNames": [],
+      "terms": [
+        "decline barbell bench press",
+        "supino declinado com barra",
+        "supino declinado",
+        "supino declinado barra",
+        "decline bench"
+      ]
+    },
+    {
+      "name": "Decline dumbbell bench press",
+      "namePtBr": "Supino declinado com halteres",
+      "legacyNames": [],
+      "terms": [
+        "decline dumbbell bench press",
+        "supino declinado com halteres",
+        "supino declinado halter",
+        "decline db press"
+      ]
+    },
+    {
+      "name": "Decline machine chest press",
+      "namePtBr": "Supino declinado na máquina",
+      "legacyNames": [],
+      "terms": [
+        "decline machine chest press",
+        "supino declinado na maquina",
+        "supino declinado maquina",
+        "supino declinado articulado",
+        "decline chest press machine",
+        "leverage decline chest press"
+      ]
+    },
+    {
+      "name": "Smith machine decline bench press",
+      "namePtBr": "Supino declinado no Smith",
+      "legacyNames": [],
+      "terms": [
+        "smith machine decline bench press",
+        "supino declinado no smith",
+        "supino declinado smith",
+        "supino declinado guiado",
+        "decline smith press",
+        "smith machine decline press"
+      ]
+    },
+    {
+      "name": "Flat dumbbell fly",
+      "namePtBr": "Crucifixo reto com halteres",
+      "legacyNames": [],
+      "terms": [
+        "flat dumbbell fly",
+        "crucifixo reto com halteres",
+        "crucifixo",
+        "crucifixo reto",
+        "crucifixo com halteres",
+        "dumbbell fly",
+        "dumbbell flyes"
+      ]
+    },
+    {
+      "name": "Incline dumbbell fly",
+      "namePtBr": "Crucifixo inclinado com halteres",
+      "legacyNames": [],
+      "terms": [
+        "incline dumbbell fly",
+        "crucifixo inclinado com halteres",
+        "crucifixo inclinado",
+        "incline dumbbell flyes"
+      ]
+    },
+    {
+      "name": "Cable crossover (high pulley)",
+      "namePtBr": "Crossover na polia alta",
+      "legacyNames": [
+        "Cable Fly"
+      ],
+      "terms": [
+        "cable crossover high pulley",
+        "crossover na polia alta",
+        "crossover",
+        "cross over",
+        "crucifixo na polia",
+        "voador na polia",
+        "cable fly",
+        "high cable fly",
+        "cable crossover"
+      ]
+    },
+    {
+      "name": "Low-to-high cable fly",
+      "namePtBr": "Crossover na polia baixa",
+      "legacyNames": [],
+      "terms": [
+        "low to high cable fly",
+        "crossover na polia baixa",
+        "crossover baixo",
+        "crucifixo polia baixa",
+        "low cable crossover"
+      ]
+    },
+    {
+      "name": "Single-arm cable crossover",
+      "namePtBr": "Crossover unilateral",
+      "legacyNames": [],
+      "terms": [
+        "single arm cable crossover",
+        "crossover unilateral",
+        "crossover um braco",
+        "one arm cable fly"
+      ]
+    },
+    {
+      "name": "Flat bench cable fly",
+      "namePtBr": "Crucifixo na polia deitado",
+      "legacyNames": [],
+      "terms": [
+        "flat bench cable fly",
+        "crucifixo na polia deitado",
+        "crucifixo no cabo deitado",
+        "lying cable fly",
+        "flat bench cable flyes"
+      ]
+    },
+    {
+      "name": "Pec deck (or cable fly)",
+      "namePtBr": "Voador (peck deck)",
+      "legacyNames": [
+        "Pec deck (or cable fly)"
+      ],
+      "terms": [
+        "pec deck or cable fly",
+        "voador peck deck",
+        "voador",
+        "peck deck",
+        "pec deck",
+        "crucifixo na maquina",
+        "fly maquina",
+        "butterfly machine",
+        "butterfly"
+      ]
+    },
+    {
+      "name": "Push-up",
+      "namePtBr": "Flexão de braço",
+      "legacyNames": [],
+      "terms": [
+        "push up",
+        "flexao de braco",
+        "flexao",
+        "apoio",
+        "flexao no solo",
+        "pushups"
+      ]
+    },
+    {
+      "name": "Kneeling push-up",
+      "namePtBr": "Flexão de braço com joelhos apoiados",
+      "legacyNames": [],
+      "terms": [
+        "kneeling push up",
+        "flexao de braco com joelhos apoiados",
+        "flexao de joelhos",
+        "flexao ajoelhado",
+        "knee push up"
+      ]
+    },
+    {
+      "name": "Wide push-up",
+      "namePtBr": "Flexão de braço aberta",
+      "legacyNames": [],
+      "terms": [
+        "wide push up",
+        "flexao de braco aberta",
+        "flexao pegada aberta",
+        "wide grip push up",
+        "push up wide"
+      ]
+    },
+    {
+      "name": "Incline push-up",
+      "namePtBr": "Flexão inclinada (mãos elevadas)",
+      "legacyNames": [],
+      "terms": [
+        "incline push up",
+        "flexao inclinada maos elevadas",
+        "flexao no banco",
+        "flexao com maos no banco",
+        "hands elevated push up"
+      ]
+    },
+    {
+      "name": "Decline push-up",
+      "namePtBr": "Flexão declinada (pés elevados)",
+      "legacyNames": [],
+      "terms": [
+        "decline push up",
+        "flexao declinada pes elevados",
+        "flexao com pes no banco",
+        "flexao pes elevados",
+        "feet elevated push up"
+      ]
+    },
+    {
+      "name": "Close-grip push-up",
+      "namePtBr": "Flexão de braço fechada (diamante)",
+      "legacyNames": [],
+      "terms": [
+        "close grip push up",
+        "flexao de braco fechada diamante",
+        "flexao diamante",
+        "flexao para triceps",
+        "flexao fechada",
+        "diamond push up",
+        "push ups close triceps position"
+      ]
+    },
+    {
+      "name": "Chest dip",
+      "namePtBr": "Mergulho nas paralelas (ênfase no peito)",
+      "legacyNames": [],
+      "terms": [
+        "chest dip",
+        "mergulho nas paralelas enfase no peito",
+        "mergulho para peito",
+        "paralelas peito",
+        "chest dips",
+        "dips chest version"
+      ]
+    },
+    {
+      "name": "Dumbbell pullover",
+      "namePtBr": "Pullover com halter",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell pullover",
+        "pullover com halter",
+        "pullover",
+        "pull over",
+        "bent arm dumbbell pullover"
+      ]
+    },
+    {
+      "name": "Lat pulldown (wide grip)",
+      "namePtBr": "Puxada alta aberta",
+      "legacyNames": [
+        "Lat pulldown (wide grip)",
+        "Lat Pulldown"
+      ],
+      "terms": [
+        "lat pulldown wide grip",
+        "puxada alta aberta",
+        "puxada",
+        "puxada alta",
+        "puxada frente",
+        "pulley",
+        "pulley frente",
+        "puxada pronada",
+        "pulldown",
+        "wide grip lat pulldown",
+        "lat pulldown"
+      ]
+    },
+    {
+      "name": "Close-grip lat pulldown",
+      "namePtBr": "Puxada alta pronada fechada",
+      "legacyNames": [],
+      "terms": [
+        "close grip lat pulldown",
+        "puxada alta pronada fechada",
+        "puxada fechada",
+        "puxada pegada fechada",
+        "close grip front lat pulldown"
+      ]
+    },
+    {
+      "name": "Underhand lat pulldown",
+      "namePtBr": "Puxada alta supinada",
+      "legacyNames": [],
+      "terms": [
+        "underhand lat pulldown",
+        "puxada alta supinada",
+        "puxada supinada",
+        "pulley supinado",
+        "reverse grip lat pulldown",
+        "underhand cable pulldowns"
+      ]
+    },
+    {
+      "name": "V-bar lat pulldown",
+      "namePtBr": "Puxada alta com triângulo",
+      "legacyNames": [],
+      "terms": [
+        "v bar lat pulldown",
+        "puxada alta com triangulo",
+        "puxada triangulo",
+        "puxada com triangulo",
+        "puxada neutra fechada",
+        "v bar pulldown"
+      ]
+    },
+    {
+      "name": "Neutral-grip lat pulldown",
+      "namePtBr": "Puxada alta com pegada neutra",
+      "legacyNames": [
+        "Neutral-grip lat pulldown"
+      ],
+      "terms": [
+        "neutral grip lat pulldown",
+        "puxada alta com pegada neutra",
+        "puxada neutra",
+        "puxada pegada paralela",
+        "puxada barra romana",
+        "parallel grip pulldown"
+      ]
+    },
+    {
+      "name": "Single-arm lat pulldown",
+      "namePtBr": "Puxada unilateral na polia",
+      "legacyNames": [],
+      "terms": [
+        "single arm lat pulldown",
+        "puxada unilateral na polia",
+        "puxada unilateral",
+        "puxada um braco",
+        "one arm lat pulldown"
+      ]
+    },
+    {
+      "name": "Behind-the-neck lat pulldown",
+      "namePtBr": "Puxada atrás da nuca",
+      "legacyNames": [],
+      "terms": [
+        "behind the neck lat pulldown",
+        "puxada atras da nuca",
+        "puxada nuca",
+        "pulley nuca",
+        "puxada por tras",
+        "behind the neck pulldown",
+        "wide grip pulldown behind the neck"
+      ]
+    },
+    {
+      "name": "Plate-loaded lat pulldown",
+      "namePtBr": "Puxada articulada",
+      "legacyNames": [],
+      "terms": [
+        "plate loaded lat pulldown",
+        "puxada articulada",
+        "puxada na maquina",
+        "puxada maquina articulada",
+        "pulldown articulado",
+        "lever lat pulldown"
+      ]
+    },
+    {
+      "name": "Straight-arm cable pulldown",
+      "namePtBr": "Pulldown com braços estendidos",
+      "legacyNames": [
+        "Straight-arm cable pulldown"
+      ],
+      "terms": [
+        "straight arm cable pulldown",
+        "pulldown com bracos estendidos",
+        "pullover na polia",
+        "puxada com bracos estendidos",
+        "pulldown braco reto",
+        "straight arm pulldown"
+      ]
+    },
+    {
+      "name": "Rope straight-arm pulldown",
+      "namePtBr": "Pulldown com corda",
+      "legacyNames": [],
+      "terms": [
+        "rope straight arm pulldown",
+        "pulldown com corda",
+        "pullover com corda",
+        "pulldown na corda",
+        "rope pullover"
+      ]
+    },
+    {
+      "name": "Pronated pull-ups (weighted if possible)",
+      "namePtBr": "Barra fixa pronada",
+      "legacyNames": [
+        "Pronated pull-ups (weighted if possible)",
+        "Pull-up"
+      ],
+      "terms": [
+        "pronated pull ups weighted if possible",
+        "barra fixa pronada",
+        "barra fixa",
+        "barra",
+        "barra pronada",
+        "barra fixa aberta",
+        "pull up",
+        "pullups"
+      ]
+    },
+    {
+      "name": "Chin-up",
+      "namePtBr": "Barra fixa supinada",
+      "legacyNames": [
+        "Chin-up"
+      ],
+      "terms": [
+        "chin up",
+        "barra fixa supinada",
+        "barra supinada",
+        "barra fixa pegada supinada",
+        "chinup"
+      ]
+    },
+    {
+      "name": "Neutral-grip pull-up",
+      "namePtBr": "Barra fixa pegada neutra",
+      "legacyNames": [],
+      "terms": [
+        "neutral grip pull up",
+        "barra fixa pegada neutra",
+        "barra neutra",
+        "barra fixa triangulo",
+        "v bar pullup"
+      ]
+    },
+    {
+      "name": "Band-assisted pull-up",
+      "namePtBr": "Barra fixa assistida com elástico",
+      "legacyNames": [],
+      "terms": [
+        "band assisted pull up",
+        "barra fixa assistida com elastico",
+        "barra com elastico",
+        "barra assistida elastico",
+        "assisted pull up band"
+      ]
+    },
+    {
+      "name": "Assisted pull-up machine",
+      "namePtBr": "Barra fixa no graviton",
+      "legacyNames": [],
+      "terms": [
+        "assisted pull up machine",
+        "barra fixa no graviton",
+        "graviton",
+        "gravitron",
+        "barra assistida",
+        "barra fixa assistida"
+      ]
+    },
+    {
+      "name": "Bent-over barbell row",
+      "namePtBr": "Remada curvada com barra",
+      "legacyNames": [
+        "Bent-over barbell row",
+        "Barbell Row"
+      ],
+      "terms": [
+        "bent over barbell row",
+        "remada curvada com barra",
+        "remada curvada",
+        "remada curvada pronada",
+        "remada com barra",
+        "barbell row",
+        "bent over row"
+      ]
+    },
+    {
+      "name": "Reverse-grip barbell row",
+      "namePtBr": "Remada curvada supinada",
+      "legacyNames": [],
+      "terms": [
+        "reverse grip barbell row",
+        "remada curvada supinada",
+        "remada supinada",
+        "remada curvada pegada supinada",
+        "underhand barbell row",
+        "reverse grip bent over rows"
+      ]
+    },
+    {
+      "name": "Bent-over dumbbell row",
+      "namePtBr": "Remada curvada com halteres",
+      "legacyNames": [],
+      "terms": [
+        "bent over dumbbell row",
+        "remada curvada com halteres",
+        "remada curvada halter",
+        "remada com halteres",
+        "two dumbbell row",
+        "bent over two dumbbell row"
+      ]
+    },
+    {
+      "name": "Seated cable row (close handles)",
+      "namePtBr": "Remada baixa com triângulo",
+      "legacyNames": [
+        "Seated cable row (close handles)",
+        "Seated Cable Row"
+      ],
+      "terms": [
+        "seated cable row close handles",
+        "remada baixa com triangulo",
+        "remada baixa",
+        "remada baixa no cabo",
+        "remada sentada na polia",
+        "remada triangulo",
+        "remada na polia baixa",
+        "seated cable row",
+        "cable row",
+        "seated cable rows"
+      ]
+    },
+    {
+      "name": "Wide-grip seated cable row",
+      "namePtBr": "Remada baixa com pegada aberta",
+      "legacyNames": [],
+      "terms": [
+        "wide grip seated cable row",
+        "remada baixa com pegada aberta",
+        "remada baixa aberta",
+        "remada sentada barra reta",
+        "wide grip cable row"
+      ]
+    },
+    {
+      "name": "Single-arm seated cable row",
+      "namePtBr": "Remada baixa unilateral",
+      "legacyNames": [],
+      "terms": [
+        "single arm seated cable row",
+        "remada baixa unilateral",
+        "remada unilateral na polia",
+        "remada sentada unilateral",
+        "one arm cable row",
+        "seated one arm cable pulley rows"
+      ]
+    },
+    {
+      "name": "T-bar row",
+      "namePtBr": "Remada cavalinho",
+      "legacyNames": [],
+      "terms": [
+        "t bar row",
+        "remada cavalinho",
+        "cavalinho",
+        "remada t",
+        "t bar",
+        "remada com barra t",
+        "t bar row with handle"
+      ]
+    },
+    {
+      "name": "Chest-supported T-bar row",
+      "namePtBr": "Remada cavalinho apoiada",
+      "legacyNames": [],
+      "terms": [
+        "chest supported t bar row",
+        "remada cavalinho apoiada",
+        "cavalinho apoiado",
+        "remada cavalinho maquina",
+        "t bar apoiado",
+        "lying t bar row"
+      ]
+    },
+    {
+      "name": "Single-arm dumbbell row",
+      "namePtBr": "Remada unilateral com halter (serrote)",
+      "legacyNames": [
+        "Single-arm dumbbell row",
+        "Dumbbell Row"
+      ],
+      "terms": [
+        "single arm dumbbell row",
+        "remada unilateral com halter serrote",
+        "serrote",
+        "remada serrote",
+        "remada unilateral",
+        "remada com halter",
+        "one arm dumbbell row",
+        "dumbbell row"
+      ]
+    },
+    {
+      "name": "Chest-supported machine row",
+      "namePtBr": "Remada sentada na máquina",
+      "legacyNames": [
+        "Chest-supported machine row"
+      ],
+      "terms": [
+        "chest supported machine row",
+        "remada sentada na maquina",
+        "remada maquina",
+        "remada com apoio no peito",
+        "remada maquina apoiada",
+        "machine row"
+      ]
+    },
+    {
+      "name": "Plate-loaded iso-lateral row",
+      "namePtBr": "Remada articulada",
+      "legacyNames": [],
+      "terms": [
+        "plate loaded iso lateral row",
+        "remada articulada",
+        "remada maquina articulada",
+        "remada articulada unilateral",
+        "lever iso row",
+        "leverage iso row"
+      ]
+    },
+    {
+      "name": "Plate-loaded high row",
+      "namePtBr": "Remada articulada pegada alta (high row)",
+      "legacyNames": [],
+      "terms": [
+        "plate loaded high row",
+        "remada articulada pegada alta high row",
+        "high row",
+        "remada alta articulada",
+        "lever high row",
+        "leverage high row"
+      ]
+    },
+    {
+      "name": "Smith machine bent-over row",
+      "namePtBr": "Remada curvada no Smith",
+      "legacyNames": [],
+      "terms": [
+        "smith machine bent over row",
+        "remada curvada no smith",
+        "remada smith",
+        "remada guiada",
+        "smith row"
+      ]
+    },
+    {
+      "name": "Chest-supported dumbbell row",
+      "namePtBr": "Remada com halteres apoiada no banco inclinado",
+      "legacyNames": [],
+      "terms": [
+        "chest supported dumbbell row",
+        "remada com halteres apoiada no banco inclinado",
+        "remada apoiada",
+        "remada no banco inclinado",
+        "remada deitada",
+        "seal row",
+        "incline dumbbell row",
+        "dumbbell incline row"
+      ]
+    },
+    {
+      "name": "Inverted row",
+      "namePtBr": "Remada invertida (australiana)",
+      "legacyNames": [],
+      "terms": [
+        "inverted row",
+        "remada invertida australiana",
+        "remada australiana",
+        "barra australiana",
+        "remada no smith com peso corporal",
+        "bodyweight row"
+      ]
+    },
+    {
+      "name": "Face pull (rope)",
+      "namePtBr": "Face pull na polia com corda",
+      "legacyNames": [
+        "Face pull (rope)",
+        "Face Pull"
+      ],
+      "terms": [
+        "face pull rope",
+        "face pull na polia com corda",
+        "face pull",
+        "puxada para o rosto",
+        "face pull corda",
+        "rope face pull"
+      ]
+    },
+    {
+      "name": "Barbell shrug",
+      "namePtBr": "Encolhimento com barra",
+      "legacyNames": [],
+      "terms": [
+        "barbell shrug",
+        "encolhimento com barra",
+        "encolhimento",
+        "trapezio com barra",
+        "shrug",
+        "barbell shrugs"
+      ]
+    },
+    {
+      "name": "Dumbbell shrug",
+      "namePtBr": "Encolhimento com halteres",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell shrug",
+        "encolhimento com halteres",
+        "encolhimento halter",
+        "trapezio com halteres",
+        "dumbbell shrugs"
+      ]
+    },
+    {
+      "name": "Machine shrug",
+      "namePtBr": "Encolhimento na máquina",
+      "legacyNames": [],
+      "terms": [
+        "machine shrug",
+        "encolhimento na maquina",
+        "encolhimento articulado",
+        "trapezio maquina",
+        "lever shrug",
+        "leverage shrug"
+      ]
+    },
+    {
+      "name": "Cable shrug",
+      "namePtBr": "Encolhimento na polia",
+      "legacyNames": [],
+      "terms": [
+        "cable shrug",
+        "encolhimento na polia",
+        "encolhimento no cabo",
+        "trapezio na polia",
+        "cable shrugs"
+      ]
+    },
+    {
+      "name": "Barbell deadlift",
+      "namePtBr": "Levantamento terra",
+      "legacyNames": [
+        "Deadlift"
+      ],
+      "terms": [
+        "barbell deadlift",
+        "levantamento terra",
+        "terra",
+        "levantamento terra convencional",
+        "terra convencional",
+        "deadlift",
+        "conventional deadlift"
+      ]
+    },
+    {
+      "name": "Deficit deadlift",
+      "namePtBr": "Levantamento terra com déficit",
+      "legacyNames": [],
+      "terms": [
+        "deficit deadlift",
+        "levantamento terra com deficit",
+        "terra deficit",
+        "terra na plataforma",
+        "deficit pull"
+      ]
+    },
+    {
+      "name": "Sumo deadlift",
+      "namePtBr": "Levantamento terra sumô",
+      "legacyNames": [],
+      "terms": [
+        "sumo deadlift",
+        "levantamento terra sumo",
+        "terra sumo",
+        "sumo com barra",
+        "sumo pull"
+      ]
+    },
+    {
+      "name": "Barbell Romanian deadlift",
+      "namePtBr": "Levantamento terra romeno com barra",
+      "legacyNames": [
+        "Romanian Deadlift"
+      ],
+      "terms": [
+        "barbell romanian deadlift",
+        "levantamento terra romeno com barra",
+        "terra romeno",
+        "romeno",
+        "rdl",
+        "romeno com barra",
+        "romanian deadlift barbell",
+        "romanian deadlift"
+      ]
+    },
+    {
+      "name": "Dumbbell Romanian Deadlift",
+      "namePtBr": "Levantamento terra romeno com halteres",
+      "legacyNames": [
+        "Dumbbell Romanian Deadlift"
+      ],
+      "terms": [
+        "dumbbell romanian deadlift",
+        "levantamento terra romeno com halteres",
+        "romeno com halteres",
+        "terra romeno halter",
+        "rdl com halteres",
+        "db rdl"
+      ]
+    },
+    {
+      "name": "Stiff-legged barbell deadlift",
+      "namePtBr": "Stiff com barra",
+      "legacyNames": [],
+      "terms": [
+        "stiff legged barbell deadlift",
+        "stiff com barra",
+        "stiff",
+        "levantamento terra stiff",
+        "terra stiff",
+        "stiff leg deadlift"
+      ]
+    },
+    {
+      "name": "Stiff-legged dumbbell deadlift",
+      "namePtBr": "Stiff com halteres",
+      "legacyNames": [],
+      "terms": [
+        "stiff legged dumbbell deadlift",
+        "stiff com halteres",
+        "stiff halter",
+        "stiff com halter",
+        "dumbbell stiff leg deadlift"
+      ]
+    },
+    {
+      "name": "Smith machine stiff-legged deadlift",
+      "namePtBr": "Stiff no Smith",
+      "legacyNames": [],
+      "terms": [
+        "smith machine stiff legged deadlift",
+        "stiff no smith",
+        "stiff guiado",
+        "stiff smith",
+        "smith stiff leg deadlift"
+      ]
+    },
+    {
+      "name": "Trap bar deadlift",
+      "namePtBr": "Levantamento terra com barra hexagonal",
+      "legacyNames": [],
+      "terms": [
+        "trap bar deadlift",
+        "levantamento terra com barra hexagonal",
+        "trap bar",
+        "barra hexagonal",
+        "terra hexagonal",
+        "hex bar deadlift"
+      ]
+    },
+    {
+      "name": "Barbell good morning",
+      "namePtBr": "Good morning com barra",
+      "legacyNames": [
+        "Barbell good morning"
+      ],
+      "terms": [
+        "barbell good morning",
+        "good morning com barra",
+        "good morning",
+        "bom dia",
+        "good morning barbell"
+      ]
+    },
+    {
+      "name": "Back extension (hyperextension)",
+      "namePtBr": "Hiperextensão lombar no banco romano",
+      "legacyNames": [
+        "Back extension (hyperextension)"
+      ],
+      "terms": [
+        "back extension hyperextension",
+        "hiperextensao lombar no banco romano",
+        "hiperextensao",
+        "banco romano",
+        "extensao lombar",
+        "lombar no banco",
+        "back extension",
+        "hyperextension",
+        "hyperextensions back extensions"
+      ]
+    },
+    {
+      "name": "Barbell hip thrust (or machine)",
+      "namePtBr": "Elevação pélvica com barra",
+      "legacyNames": [
+        "Barbell hip thrust (or machine)"
+      ],
+      "terms": [
+        "barbell hip thrust or machine",
+        "elevacao pelvica com barra",
+        "hip thrust",
+        "elevacao pelvica",
+        "elevacao de quadril com barra",
+        "barbell hip thrust"
+      ]
+    },
+    {
+      "name": "Machine hip thrust",
+      "namePtBr": "Elevação pélvica na máquina",
+      "legacyNames": [],
+      "terms": [
+        "machine hip thrust",
+        "elevacao pelvica na maquina",
+        "hip thrust maquina",
+        "elevacao pelvica maquina",
+        "gluteo maquina hip thrust",
+        "hip thrust machine"
+      ]
+    },
+    {
+      "name": "Barbell glute bridge",
+      "namePtBr": "Ponte de glúteo com barra",
+      "legacyNames": [],
+      "terms": [
+        "barbell glute bridge",
+        "ponte de gluteo com barra",
+        "ponte com barra",
+        "elevacao pelvica no chao",
+        "glute bridge barbell"
+      ]
+    },
+    {
+      "name": "Glute bridge",
+      "namePtBr": "Ponte de glúteo",
+      "legacyNames": [],
+      "terms": [
+        "glute bridge",
+        "ponte de gluteo",
+        "ponte",
+        "ponte no solo",
+        "elevacao de quadril no solo",
+        "bodyweight glute bridge",
+        "butt lift bridge"
+      ]
+    },
+    {
+      "name": "Single-leg glute bridge",
+      "namePtBr": "Ponte de glúteo unilateral",
+      "legacyNames": [],
+      "terms": [
+        "single leg glute bridge",
+        "ponte de gluteo unilateral",
+        "ponte unilateral",
+        "ponte com uma perna",
+        "one leg glute bridge"
+      ]
+    },
+    {
+      "name": "Kettlebell swing",
+      "namePtBr": "Swing com kettlebell",
+      "legacyNames": [],
+      "terms": [
+        "kettlebell swing",
+        "swing com kettlebell",
+        "swing",
+        "balanco com kettlebell",
+        "two hand kettlebell swing"
+      ]
+    },
+    {
+      "name": "Cable pull-through",
+      "namePtBr": "Pull-through na polia",
+      "legacyNames": [],
+      "terms": [
+        "cable pull through",
+        "pull through na polia",
+        "pull through",
+        "puxada entre as pernas"
+      ]
+    },
+    {
+      "name": "Single-leg Romanian deadlift",
+      "namePtBr": "Stiff unilateral com halter",
+      "legacyNames": [],
+      "terms": [
+        "single leg romanian deadlift",
+        "stiff unilateral com halter",
+        "terra romeno unilateral",
+        "rdl unilateral",
+        "single leg rdl"
+      ]
+    },
+    {
+      "name": "Power clean",
+      "namePtBr": "Power clean",
+      "legacyNames": [
+        "Power Clean"
+      ],
+      "terms": [
+        "power clean",
+        "clean",
+        "levantamento olimpico",
+        "barbell power clean"
+      ]
+    },
+    {
+      "name": "Barbell back squat",
+      "namePtBr": "Agachamento livre com barra",
+      "legacyNames": [
+        "Back Squat"
+      ],
+      "terms": [
+        "barbell back squat",
+        "agachamento livre com barra",
+        "agachamento",
+        "agachamento livre",
+        "agachamento costas",
+        "agacho",
+        "back squat barbell",
+        "squat",
+        "barbell squat",
+        "back squat"
+      ]
+    },
+    {
+      "name": "Wide-stance barbell squat",
+      "namePtBr": "Agachamento com barra base aberta",
+      "legacyNames": [],
+      "terms": [
+        "wide stance barbell squat",
+        "agachamento com barra base aberta",
+        "agachamento aberto",
+        "agachamento sumo com barra",
+        "wide stance squat"
+      ]
+    },
+    {
+      "name": "Barbell front squat",
+      "namePtBr": "Agachamento frontal com barra",
+      "legacyNames": [
+        "Front Squat"
+      ],
+      "terms": [
+        "barbell front squat",
+        "agachamento frontal com barra",
+        "agachamento frontal",
+        "agachamento pela frente",
+        "front squat barbell",
+        "front barbell squat",
+        "front squat"
+      ]
+    },
+    {
+      "name": "Goblet squat",
+      "namePtBr": "Agachamento goblet",
+      "legacyNames": [
+        "Goblet squat"
+      ],
+      "terms": [
+        "goblet squat",
+        "agachamento goblet",
+        "goblet",
+        "agachamento com halter",
+        "agachamento taca",
+        "goblet squat dumbbell"
+      ]
+    },
+    {
+      "name": "Dumbbell sumo squat",
+      "namePtBr": "Agachamento sumô com halter",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell sumo squat",
+        "agachamento sumo com halter",
+        "agachamento sumo",
+        "sumo",
+        "plie",
+        "agachamento plie",
+        "plie squat",
+        "plie dumbbell squat"
+      ]
+    },
+    {
+      "name": "Smith machine squat",
+      "namePtBr": "Agachamento no Smith",
+      "legacyNames": [],
+      "terms": [
+        "smith machine squat",
+        "agachamento no smith",
+        "agachamento guiado",
+        "agachamento smith",
+        "agachamento na maquina smith",
+        "smith squat"
+      ]
+    },
+    {
+      "name": "Machine squat (or Hack squat)",
+      "namePtBr": "Agachamento no hack",
+      "legacyNames": [
+        "Machine squat (or Hack squat)"
+      ],
+      "terms": [
+        "machine squat or hack squat",
+        "agachamento no hack",
+        "hack",
+        "hack squat",
+        "hack machine",
+        "agachamento na maquina",
+        "hack squat machine"
+      ]
+    },
+    {
+      "name": "Reverse hack squat",
+      "namePtBr": "Hack invertido",
+      "legacyNames": [],
+      "terms": [
+        "reverse hack squat",
+        "hack invertido",
+        "agachamento hack invertido",
+        "hack de frente",
+        "reverse hack"
+      ]
+    },
+    {
+      "name": "Pendulum squat",
+      "namePtBr": "Agachamento no pêndulo",
+      "legacyNames": [],
+      "terms": [
+        "pendulum squat",
+        "agachamento no pendulo",
+        "pendulo",
+        "pendulum",
+        "agachamento pendulo",
+        "pendulum squat machine"
+      ]
+    },
+    {
+      "name": "V-squat machine",
+      "namePtBr": "Agachamento no V-squat",
+      "legacyNames": [],
+      "terms": [
+        "v squat machine",
+        "agachamento no v squat",
+        "v squat"
+      ]
+    },
+    {
+      "name": "Lying machine squat",
+      "namePtBr": "Agachamento na máquina deitado",
+      "legacyNames": [],
+      "terms": [
+        "lying machine squat",
+        "agachamento na maquina deitado",
+        "agachamento deitado",
+        "agachamento horizontal na maquina",
+        "lying squat machine"
+      ]
+    },
+    {
+      "name": "Bulgarian split squat",
+      "namePtBr": "Agachamento búlgaro com halteres",
+      "legacyNames": [
+        "Bulgarian split squat",
+        "Bulgarian Split Squat"
+      ],
+      "terms": [
+        "bulgarian split squat",
+        "agachamento bulgaro com halteres",
+        "bulgaro",
+        "agachamento bulgaro",
+        "afundo bulgaro",
+        "rear foot elevated split squat",
+        "split squat with dumbbells"
+      ]
+    },
+    {
+      "name": "Smith machine Bulgarian split squat",
+      "namePtBr": "Agachamento búlgaro no Smith",
+      "legacyNames": [],
+      "terms": [
+        "smith machine bulgarian split squat",
+        "agachamento bulgaro no smith",
+        "bulgaro no smith",
+        "bulgaro guiado",
+        "smith split squat",
+        "smith single leg split squat"
+      ]
+    },
+    {
+      "name": "Dumbbell lunge",
+      "namePtBr": "Avanço com halteres",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell lunge",
+        "avanco com halteres",
+        "avanco",
+        "lunge",
+        "afundo a frente",
+        "passada a frente",
+        "forward lunge",
+        "dumbbell lunges"
+      ]
+    },
+    {
+      "name": "Dumbbell split squat",
+      "namePtBr": "Afundo com halteres",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell split squat",
+        "afundo com halteres",
+        "afundo",
+        "afundo estatico",
+        "split squat",
+        "static lunge"
+      ]
+    },
+    {
+      "name": "Walking lunges with dumbbells",
+      "namePtBr": "Passada com halteres",
+      "legacyNames": [
+        "Walking lunges with dumbbells"
+      ],
+      "terms": [
+        "walking lunges with dumbbells",
+        "passada com halteres",
+        "passada",
+        "afundo caminhando",
+        "avanco caminhando",
+        "lunge caminhando",
+        "dumbbell walking lunge"
+      ]
+    },
+    {
+      "name": "Barbell walking lunge",
+      "namePtBr": "Passada com barra",
+      "legacyNames": [],
+      "terms": [
+        "barbell walking lunge",
+        "passada com barra",
+        "passada barra",
+        "afundo caminhando com barra",
+        "walking lunge barbell"
+      ]
+    },
+    {
+      "name": "Barbell lunge",
+      "namePtBr": "Avanço com barra",
+      "legacyNames": [],
+      "terms": [
+        "barbell lunge",
+        "avanco com barra",
+        "avanco barra",
+        "afundo com barra",
+        "barbell forward lunge"
+      ]
+    },
+    {
+      "name": "Dumbbell reverse lunge",
+      "namePtBr": "Afundo reverso com halteres",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell reverse lunge",
+        "afundo reverso com halteres",
+        "recuo",
+        "avanco para tras",
+        "lunge reverso",
+        "rear lunge",
+        "dumbbell rear lunge"
+      ]
+    },
+    {
+      "name": "Dumbbell step-up",
+      "namePtBr": "Subida no banco com halteres",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell step up",
+        "subida no banco com halteres",
+        "step up",
+        "subida no step",
+        "subida no caixote",
+        "step ups",
+        "dumbbell step ups"
+      ]
+    },
+    {
+      "name": "Bodyweight squat",
+      "namePtBr": "Agachamento sem carga (peso corporal)",
+      "legacyNames": [],
+      "terms": [
+        "bodyweight squat",
+        "agachamento sem carga peso corporal",
+        "agachamento sem peso",
+        "air squat",
+        "agachamento livre sem carga",
+        "air squat bodyweight"
+      ]
+    },
+    {
+      "name": "Sissy squat",
+      "namePtBr": "Agachamento sissy",
+      "legacyNames": [],
+      "terms": [
+        "sissy squat",
+        "agachamento sissy",
+        "sissy",
+        "weighted sissy squat"
+      ]
+    },
+    {
+      "name": "Leg press (45 deg)",
+      "namePtBr": "Leg press 45°",
+      "legacyNames": [
+        "Leg press (45 deg)",
+        "Leg Press"
+      ],
+      "terms": [
+        "leg press 45 deg",
+        "leg press 45",
+        "leg 45",
+        "leg press inclinado",
+        "leg",
+        "45 degree leg press",
+        "leg press"
+      ]
+    },
+    {
+      "name": "Narrow-stance leg press",
+      "namePtBr": "Leg press 45° com pés juntos",
+      "legacyNames": [],
+      "terms": [
+        "narrow stance leg press",
+        "leg press 45 com pes juntos",
+        "leg press fechado",
+        "leg press pes juntos",
+        "close stance leg press"
+      ]
+    },
+    {
+      "name": "Horizontal leg press",
+      "namePtBr": "Leg press horizontal",
+      "legacyNames": [],
+      "terms": [
+        "horizontal leg press",
+        "leg press horizontal",
+        "leg horizontal",
+        "leg press sentado",
+        "leg press reto",
+        "seated leg press"
+      ]
+    },
+    {
+      "name": "Single-leg leg press",
+      "namePtBr": "Leg press unilateral",
+      "legacyNames": [],
+      "terms": [
+        "single leg leg press",
+        "leg press unilateral",
+        "leg unilateral",
+        "leg press uma perna",
+        "one leg leg press"
+      ]
+    },
+    {
+      "name": "Vertical leg press",
+      "namePtBr": "Leg press vertical",
+      "legacyNames": [],
+      "terms": [
+        "vertical leg press",
+        "leg press vertical",
+        "leg vertical",
+        "smith machine leg press"
+      ]
+    },
+    {
+      "name": "Leg extension",
+      "namePtBr": "Cadeira extensora",
+      "legacyNames": [
+        "Leg extension",
+        "Leg Extension"
+      ],
+      "terms": [
+        "leg extension",
+        "cadeira extensora",
+        "extensora",
+        "extensao de joelhos",
+        "leg extensions machine",
+        "leg extensions"
+      ]
+    },
+    {
+      "name": "Single-leg extension",
+      "namePtBr": "Cadeira extensora unilateral",
+      "legacyNames": [],
+      "terms": [
+        "single leg extension",
+        "cadeira extensora unilateral",
+        "extensora unilateral",
+        "one leg extension",
+        "single leg leg extension"
+      ]
+    },
+    {
+      "name": "Lying leg curl",
+      "namePtBr": "Mesa flexora",
+      "legacyNames": [
+        "Lying leg curl",
+        "Leg Curl"
+      ],
+      "terms": [
+        "lying leg curl",
+        "mesa flexora",
+        "flexora",
+        "flexora deitada",
+        "flexora deitado",
+        "lying leg curls machine",
+        "prone leg curl",
+        "lying leg curls",
+        "leg curl"
+      ]
+    },
+    {
+      "name": "Seated leg curl",
+      "namePtBr": "Cadeira flexora",
+      "legacyNames": [
+        "Seated leg curl"
+      ],
+      "terms": [
+        "seated leg curl",
+        "cadeira flexora",
+        "flexora sentada",
+        "flexora sentado",
+        "seated hamstring curl"
+      ]
+    },
+    {
+      "name": "Standing leg curl",
+      "namePtBr": "Flexora em pé",
+      "legacyNames": [],
+      "terms": [
+        "standing leg curl",
+        "flexora em pe",
+        "flexora unilateral em pe",
+        "flexora vertical",
+        "standing hamstring curl"
+      ]
+    },
+    {
+      "name": "Nordic hamstring curl",
+      "namePtBr": "Flexão nórdica",
+      "legacyNames": [],
+      "terms": [
+        "nordic hamstring curl",
+        "flexao nordica",
+        "nordico",
+        "nordic",
+        "flexora nordica",
+        "natural glute ham raise"
+      ]
+    },
+    {
+      "name": "Glute-ham raise",
+      "namePtBr": "Glute-ham raise (GHD)",
+      "legacyNames": [],
+      "terms": [
+        "glute ham raise",
+        "glute ham raise ghd",
+        "ghr",
+        "ghd",
+        "flexora no ghd",
+        "ghd raise"
+      ]
+    },
+    {
+      "name": "Hip abduction machine",
+      "namePtBr": "Cadeira abdutora",
+      "legacyNames": [],
+      "terms": [
+        "hip abduction machine",
+        "cadeira abdutora",
+        "abdutora",
+        "abducao de quadril",
+        "maquina abdutora",
+        "thigh abductor"
+      ]
+    },
+    {
+      "name": "Hip adduction machine",
+      "namePtBr": "Cadeira adutora",
+      "legacyNames": [
+        "Hip adduction machine"
+      ],
+      "terms": [
+        "hip adduction machine",
+        "cadeira adutora",
+        "adutora",
+        "aducao de quadril",
+        "maquina adutora",
+        "thigh adductor"
+      ]
+    },
+    {
+      "name": "Cable hip abduction",
+      "namePtBr": "Abdução de quadril na polia",
+      "legacyNames": [],
+      "terms": [
+        "cable hip abduction",
+        "abducao de quadril na polia",
+        "abducao na polia",
+        "gluteo medio na polia",
+        "standing cable abduction"
+      ]
+    },
+    {
+      "name": "Cable hip adduction",
+      "namePtBr": "Adução de quadril na polia",
+      "legacyNames": [],
+      "terms": [
+        "cable hip adduction",
+        "aducao de quadril na polia",
+        "aducao na polia",
+        "adutor na polia",
+        "standing cable adduction"
+      ]
+    },
+    {
+      "name": "Cable glute kickback",
+      "namePtBr": "Glúteo coice na polia",
+      "legacyNames": [
+        "Cable glute kickback"
+      ],
+      "terms": [
+        "cable glute kickback",
+        "gluteo coice na polia",
+        "coice na polia",
+        "gluteo na polia",
+        "gluteo no cabo",
+        "one legged cable kickback"
+      ]
+    },
+    {
+      "name": "Glute kickback machine",
+      "namePtBr": "Glúteo na máquina (coice)",
+      "legacyNames": [],
+      "terms": [
+        "glute kickback machine",
+        "gluteo na maquina coice",
+        "gluteo maquina",
+        "coice na maquina",
+        "kickback maquina",
+        "machine glute kickback"
+      ]
+    },
+    {
+      "name": "Quadruped glute kickback",
+      "namePtBr": "Glúteo quatro apoios",
+      "legacyNames": [],
+      "terms": [
+        "quadruped glute kickback",
+        "gluteo quatro apoios",
+        "quatro apoios",
+        "gluteo caneleira",
+        "coice no solo",
+        "gluteo no chao",
+        "glute kickback bodyweight",
+        "glute kickback"
+      ]
+    },
+    {
+      "name": "Banded lateral walk",
+      "namePtBr": "Caminhada lateral com miniband",
+      "legacyNames": [],
+      "terms": [
+        "banded lateral walk",
+        "caminhada lateral com miniband",
+        "monster walk",
+        "caminhada lateral",
+        "miniband",
+        "passo lateral com elastico",
+        "lateral band walk"
+      ]
+    },
+    {
+      "name": "Standing barbell overhead press",
+      "namePtBr": "Desenvolvimento militar com barra em pé",
+      "legacyNames": [
+        "Standing barbell overhead press",
+        "Overhead Press"
+      ],
+      "terms": [
+        "standing barbell overhead press",
+        "desenvolvimento militar com barra em pe",
+        "desenvolvimento militar",
+        "militar",
+        "desenvolvimento em pe",
+        "ohp",
+        "overhead press barbell",
+        "military press",
+        "standing military press",
+        "overhead press"
+      ]
+    },
+    {
+      "name": "Seated barbell overhead press",
+      "namePtBr": "Desenvolvimento com barra sentado",
+      "legacyNames": [],
+      "terms": [
+        "seated barbell overhead press",
+        "desenvolvimento com barra sentado",
+        "desenvolvimento barra sentado",
+        "desenvolvimento com barra",
+        "seated military press",
+        "seated barbell military press"
+      ]
+    },
+    {
+      "name": "Seated dumbbell overhead press",
+      "namePtBr": "Desenvolvimento com halteres sentado",
+      "legacyNames": [
+        "Seated dumbbell overhead press"
+      ],
+      "terms": [
+        "seated dumbbell overhead press",
+        "desenvolvimento com halteres sentado",
+        "desenvolvimento",
+        "desenvolvimento com halteres",
+        "desenvolvimento halter",
+        "desenvolvimento sentado",
+        "dumbbell shoulder press"
+      ]
+    },
+    {
+      "name": "Standing dumbbell shoulder press",
+      "namePtBr": "Desenvolvimento com halteres em pé",
+      "legacyNames": [],
+      "terms": [
+        "standing dumbbell shoulder press",
+        "desenvolvimento com halteres em pe",
+        "desenvolvimento halter em pe",
+        "standing dumbbell press"
+      ]
+    },
+    {
+      "name": "Arnold press",
+      "namePtBr": "Desenvolvimento Arnold",
+      "legacyNames": [],
+      "terms": [
+        "arnold press",
+        "desenvolvimento arnold",
+        "arnold",
+        "desenvolvimento com rotacao",
+        "arnold dumbbell press"
+      ]
+    },
+    {
+      "name": "Machine shoulder press",
+      "namePtBr": "Desenvolvimento na máquina",
+      "legacyNames": [],
+      "terms": [
+        "machine shoulder press",
+        "desenvolvimento na maquina",
+        "desenvolvimento maquina",
+        "shoulder press",
+        "machine military press",
+        "machine shoulder military press"
+      ]
+    },
+    {
+      "name": "Plate-loaded shoulder press",
+      "namePtBr": "Desenvolvimento articulado",
+      "legacyNames": [],
+      "terms": [
+        "plate loaded shoulder press",
+        "desenvolvimento articulado",
+        "desenvolvimento maquina articulada",
+        "lever shoulder press",
+        "leverage shoulder press"
+      ]
+    },
+    {
+      "name": "Smith machine shoulder press",
+      "namePtBr": "Desenvolvimento no Smith",
+      "legacyNames": [],
+      "terms": [
+        "smith machine shoulder press",
+        "desenvolvimento no smith",
+        "desenvolvimento guiado",
+        "desenvolvimento smith",
+        "smith overhead press",
+        "smith machine overhead shoulder press"
+      ]
+    },
+    {
+      "name": "Cable shoulder press",
+      "namePtBr": "Desenvolvimento na polia",
+      "legacyNames": [],
+      "terms": [
+        "cable shoulder press",
+        "desenvolvimento na polia",
+        "desenvolvimento no cabo",
+        "seated cable shoulder press"
+      ]
+    },
+    {
+      "name": "Push press",
+      "namePtBr": "Push press (desenvolvimento com impulso)",
+      "legacyNames": [],
+      "terms": [
+        "push press",
+        "push press desenvolvimento com impulso",
+        "desenvolvimento com impulso",
+        "desenvolvimento com auxilio das pernas",
+        "barbell push press"
+      ]
+    },
+    {
+      "name": "Dumbbell lateral raise",
+      "namePtBr": "Elevação lateral com halteres",
+      "legacyNames": [
+        "Dumbbell lateral raise",
+        "Lateral Raise"
+      ],
+      "terms": [
+        "dumbbell lateral raise",
+        "elevacao lateral com halteres",
+        "elevacao lateral",
+        "lateral",
+        "abducao de ombros",
+        "side lateral raise",
+        "lateral raises",
+        "lateral raise"
+      ]
+    },
+    {
+      "name": "Seated dumbbell lateral raise",
+      "namePtBr": "Elevação lateral sentado com halteres",
+      "legacyNames": [],
+      "terms": [
+        "seated dumbbell lateral raise",
+        "elevacao lateral sentado com halteres",
+        "elevacao lateral sentado",
+        "seated side lateral raise"
+      ]
+    },
+    {
+      "name": "Single-arm dumbbell lateral raise",
+      "namePtBr": "Elevação lateral unilateral com halter",
+      "legacyNames": [],
+      "terms": [
+        "single arm dumbbell lateral raise",
+        "elevacao lateral unilateral com halter",
+        "elevacao lateral unilateral",
+        "lateral um braco",
+        "one arm side laterals"
+      ]
+    },
+    {
+      "name": "Cable lateral raises",
+      "namePtBr": "Elevação lateral na polia",
+      "legacyNames": [
+        "Cable lateral raises"
+      ],
+      "terms": [
+        "cable lateral raises",
+        "elevacao lateral na polia",
+        "lateral na polia",
+        "elevacao lateral no cabo",
+        "lateral cabo",
+        "cable lateral raise"
+      ]
+    },
+    {
+      "name": "Seated cable lateral raise",
+      "namePtBr": "Elevação lateral na polia sentado",
+      "legacyNames": [],
+      "terms": [
+        "seated cable lateral raise",
+        "elevacao lateral na polia sentado",
+        "lateral na polia sentado",
+        "cable seated lateral raise"
+      ]
+    },
+    {
+      "name": "Machine lateral raise",
+      "namePtBr": "Elevação lateral na máquina",
+      "legacyNames": [],
+      "terms": [
+        "machine lateral raise",
+        "elevacao lateral na maquina",
+        "lateral maquina",
+        "elevacao lateral maquina",
+        "lateral raise machine"
+      ]
+    },
+    {
+      "name": "Barbell upright row",
+      "namePtBr": "Remada alta com barra",
+      "legacyNames": [],
+      "terms": [
+        "barbell upright row",
+        "remada alta com barra",
+        "remada alta",
+        "remada alta barra",
+        "upright row",
+        "upright barbell row"
+      ]
+    },
+    {
+      "name": "Cable upright row",
+      "namePtBr": "Remada alta na polia",
+      "legacyNames": [],
+      "terms": [
+        "cable upright row",
+        "remada alta na polia",
+        "remada alta no cabo",
+        "upright cable row"
+      ]
+    },
+    {
+      "name": "Dumbbell upright row",
+      "namePtBr": "Remada alta com halteres",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell upright row",
+        "remada alta com halteres",
+        "remada alta halter",
+        "standing dumbbell upright row"
+      ]
+    },
+    {
+      "name": "Dumbbell front raise",
+      "namePtBr": "Elevação frontal com halteres",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell front raise",
+        "elevacao frontal com halteres",
+        "elevacao frontal",
+        "frontal",
+        "elevacao frontal halter",
+        "front raise",
+        "front two dumbbell raise"
+      ]
+    },
+    {
+      "name": "Alternating dumbbell front raise",
+      "namePtBr": "Elevação frontal alternada com halteres",
+      "legacyNames": [],
+      "terms": [
+        "alternating dumbbell front raise",
+        "elevacao frontal alternada com halteres",
+        "frontal alternada",
+        "elevacao frontal alternada",
+        "alternating front raise",
+        "front dumbbell raise"
+      ]
+    },
+    {
+      "name": "Cable front raise",
+      "namePtBr": "Elevação frontal na polia",
+      "legacyNames": [],
+      "terms": [
+        "cable front raise",
+        "elevacao frontal na polia",
+        "frontal na polia",
+        "elevacao frontal no cabo",
+        "front cable raise"
+      ]
+    },
+    {
+      "name": "Plate front raise",
+      "namePtBr": "Elevação frontal com anilha",
+      "legacyNames": [],
+      "terms": [
+        "plate front raise",
+        "elevacao frontal com anilha",
+        "frontal com anilha",
+        "elevacao com anilha",
+        "front plate raise"
+      ]
+    },
+    {
+      "name": "Machine rear delt fly",
+      "namePtBr": "Crucifixo inverso na máquina",
+      "legacyNames": [
+        "Machine rear delt fly"
+      ],
+      "terms": [
+        "machine rear delt fly",
+        "crucifixo inverso na maquina",
+        "voador invertido",
+        "peck deck invertido",
+        "posterior de ombro na maquina",
+        "reverse pec deck",
+        "reverse machine flyes"
+      ]
+    },
+    {
+      "name": "Bent-over dumbbell reverse fly",
+      "namePtBr": "Crucifixo inverso com halteres",
+      "legacyNames": [
+        "Rear Delt Fly"
+      ],
+      "terms": [
+        "bent over dumbbell reverse fly",
+        "crucifixo inverso com halteres",
+        "crucifixo inverso",
+        "posterior de ombro",
+        "voador invertido com halteres",
+        "reverse flyes",
+        "rear delt raise",
+        "rear delt fly"
+      ]
+    },
+    {
+      "name": "Cable reverse fly",
+      "namePtBr": "Crucifixo inverso na polia",
+      "legacyNames": [],
+      "terms": [
+        "cable reverse fly",
+        "crucifixo inverso na polia",
+        "crucifixo inverso no cabo",
+        "posterior na polia",
+        "crucifixo inverso no crossover",
+        "cable rear delt fly"
+      ]
+    },
+    {
+      "name": "Barbell curl",
+      "namePtBr": "Rosca direta com barra",
+      "legacyNames": [
+        "Barbell Curl"
+      ],
+      "terms": [
+        "barbell curl",
+        "rosca direta com barra",
+        "rosca direta",
+        "rosca com barra",
+        "rosca biceps",
+        "biceps com barra",
+        "straight bar curl"
+      ]
+    },
+    {
+      "name": "EZ-bar curl",
+      "namePtBr": "Rosca direta com barra W",
+      "legacyNames": [
+        "EZ-bar curl"
+      ],
+      "terms": [
+        "ez bar curl",
+        "rosca direta com barra w",
+        "rosca barra w",
+        "rosca w",
+        "rosca direta w",
+        "ez bar biceps curl"
+      ]
+    },
+    {
+      "name": "Dumbbell biceps curl",
+      "namePtBr": "Rosca direta com halteres",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell biceps curl",
+        "rosca direta com halteres",
+        "rosca simultanea",
+        "rosca com halteres",
+        "rosca halter",
+        "dumbbell curl",
+        "dumbbell bicep curl"
+      ]
+    },
+    {
+      "name": "Alternating dumbbell curl",
+      "namePtBr": "Rosca alternada com halteres",
+      "legacyNames": [],
+      "terms": [
+        "alternating dumbbell curl",
+        "rosca alternada com halteres",
+        "rosca alternada",
+        "alternada",
+        "alternate bicep curl",
+        "dumbbell alternate bicep curl"
+      ]
+    },
+    {
+      "name": "Seated dumbbell curl",
+      "namePtBr": "Rosca com halteres sentado",
+      "legacyNames": [],
+      "terms": [
+        "seated dumbbell curl",
+        "rosca com halteres sentado",
+        "rosca sentado",
+        "rosca halteres sentado",
+        "seated curl"
+      ]
+    },
+    {
+      "name": "Hammer curl (dumbbell)",
+      "namePtBr": "Rosca martelo com halteres",
+      "legacyNames": [
+        "Hammer curl (dumbbell)",
+        "Hammer Curl"
+      ],
+      "terms": [
+        "hammer curl dumbbell",
+        "rosca martelo com halteres",
+        "rosca martelo",
+        "martelo",
+        "hammer curls",
+        "hammer curl"
+      ]
+    },
+    {
+      "name": "Alternating hammer curl",
+      "namePtBr": "Rosca martelo alternada",
+      "legacyNames": [],
+      "terms": [
+        "alternating hammer curl",
+        "rosca martelo alternada",
+        "martelo alternado",
+        "alternate hammer curl"
+      ]
+    },
+    {
+      "name": "Cross-body hammer curl",
+      "namePtBr": "Rosca martelo cruzada",
+      "legacyNames": [],
+      "terms": [
+        "cross body hammer curl",
+        "rosca martelo cruzada",
+        "martelo cruzado",
+        "rosca cruzada",
+        "cross body curl"
+      ]
+    },
+    {
+      "name": "Cable rope hammer curl",
+      "namePtBr": "Rosca martelo na polia com corda",
+      "legacyNames": [],
+      "terms": [
+        "cable rope hammer curl",
+        "rosca martelo na polia com corda",
+        "martelo na polia",
+        "rosca corda",
+        "rope hammer curl",
+        "cable hammer curls rope attachment"
+      ]
+    },
+    {
+      "name": "EZ-bar preacher curl",
+      "namePtBr": "Rosca Scott com barra W",
+      "legacyNames": [],
+      "terms": [
+        "ez bar preacher curl",
+        "rosca scott com barra w",
+        "rosca scott",
+        "scott",
+        "rosca no banco scott",
+        "preacher curl"
+      ]
+    },
+    {
+      "name": "Single-arm dumbbell preacher curl",
+      "namePtBr": "Rosca Scott unilateral com halter",
+      "legacyNames": [],
+      "terms": [
+        "single arm dumbbell preacher curl",
+        "rosca scott unilateral com halter",
+        "scott unilateral",
+        "scott com halter",
+        "one arm preacher curl",
+        "one arm dumbbell preacher curl"
+      ]
+    },
+    {
+      "name": "Machine preacher curl",
+      "namePtBr": "Rosca Scott na máquina",
+      "legacyNames": [],
+      "terms": [
+        "machine preacher curl",
+        "rosca scott na maquina",
+        "scott maquina",
+        "rosca maquina scott",
+        "machine preacher curls"
+      ]
+    },
+    {
+      "name": "Standing cable curl (straight bar)",
+      "namePtBr": "Rosca direta na polia",
+      "legacyNames": [
+        "Standing cable curl (straight bar)",
+        "Cable Curl"
+      ],
+      "terms": [
+        "standing cable curl straight bar",
+        "rosca direta na polia",
+        "rosca na polia",
+        "rosca no cabo",
+        "rosca na polia baixa",
+        "cable biceps curl",
+        "standing biceps cable curl",
+        "cable curl"
+      ]
+    },
+    {
+      "name": "Single-arm cable curl",
+      "namePtBr": "Rosca unilateral na polia",
+      "legacyNames": [],
+      "terms": [
+        "single arm cable curl",
+        "rosca unilateral na polia",
+        "rosca um braco na polia",
+        "one arm cable curl",
+        "standing one arm cable curl"
+      ]
+    },
+    {
+      "name": "High cable curl",
+      "namePtBr": "Rosca bíceps na polia alta",
+      "legacyNames": [],
+      "terms": [
+        "high cable curl",
+        "rosca biceps na polia alta",
+        "biceps no crossover",
+        "rosca crossover",
+        "duplo biceps na polia",
+        "overhead cable curl",
+        "high cable curls"
+      ]
+    },
+    {
+      "name": "Concentration curl",
+      "namePtBr": "Rosca concentrada",
+      "legacyNames": [
+        "Concentration curl"
+      ],
+      "terms": [
+        "concentration curl",
+        "rosca concentrada",
+        "concentrada",
+        "rosca concentrada sentado",
+        "concentration curls"
+      ]
+    },
+    {
+      "name": "Incline dumbbell curl (bench 60 deg)",
+      "namePtBr": "Rosca inclinada com halteres",
+      "legacyNames": [
+        "Incline dumbbell curl (bench 60 deg)"
+      ],
+      "terms": [
+        "incline dumbbell curl bench 60 deg",
+        "rosca inclinada com halteres",
+        "rosca inclinada",
+        "rosca no banco inclinado",
+        "incline curl",
+        "incline dumbbell curl"
+      ]
+    },
+    {
+      "name": "Reverse EZ-bar curl",
+      "namePtBr": "Rosca inversa com barra W",
+      "legacyNames": [
+        "Reverse EZ-bar curl"
+      ],
+      "terms": [
+        "reverse ez bar curl",
+        "rosca inversa com barra w",
+        "rosca inversa",
+        "rosca pronada",
+        "rosca invertida",
+        "reverse grip ez curl"
+      ]
+    },
+    {
+      "name": "Reverse barbell curl",
+      "namePtBr": "Rosca inversa com barra reta",
+      "legacyNames": [],
+      "terms": [
+        "reverse barbell curl",
+        "rosca inversa com barra reta",
+        "rosca inversa barra reta",
+        "reverse curl straight bar"
+      ]
+    },
+    {
+      "name": "Machine biceps curl",
+      "namePtBr": "Rosca bíceps na máquina",
+      "legacyNames": [],
+      "terms": [
+        "machine biceps curl",
+        "rosca biceps na maquina",
+        "rosca maquina",
+        "biceps maquina",
+        "machine curl",
+        "machine bicep curl"
+      ]
+    },
+    {
+      "name": "Spider curl",
+      "namePtBr": "Rosca spider",
+      "legacyNames": [],
+      "terms": [
+        "spider curl",
+        "rosca spider",
+        "rosca aranha",
+        "spider",
+        "spider curls"
+      ]
+    },
+    {
+      "name": "Barbell wrist curl",
+      "namePtBr": "Rosca de punho com barra",
+      "legacyNames": [
+        "Barbell wrist curl"
+      ],
+      "terms": [
+        "barbell wrist curl",
+        "rosca de punho com barra",
+        "rosca punho",
+        "flexao de punho",
+        "antebraco com barra",
+        "wrist curl",
+        "seated palm up barbell wrist curl"
+      ]
+    },
+    {
+      "name": "Reverse wrist curl",
+      "namePtBr": "Rosca de punho inversa",
+      "legacyNames": [],
+      "terms": [
+        "reverse wrist curl",
+        "rosca de punho inversa",
+        "extensao de punho",
+        "rosca punho invertida",
+        "palms down wrist curl",
+        "seated palms down barbell wrist curl"
+      ]
+    },
+    {
+      "name": "Triceps pushdown (straight bar)",
+      "namePtBr": "Tríceps pulley com barra",
+      "legacyNames": [
+        "Triceps Pushdown"
+      ],
+      "terms": [
+        "triceps pushdown straight bar",
+        "triceps pulley com barra",
+        "triceps pulley",
+        "triceps na polia",
+        "triceps barra reta",
+        "cable pushdown",
+        "triceps pushdown"
+      ]
+    },
+    {
+      "name": "Triceps pushdown (rope)",
+      "namePtBr": "Tríceps corda",
+      "legacyNames": [
+        "Triceps pushdown (rope)"
+      ],
+      "terms": [
+        "triceps pushdown rope",
+        "triceps corda",
+        "triceps na corda",
+        "triceps pulley corda",
+        "triceps na polia com corda",
+        "rope pushdown",
+        "triceps pushdown rope attachment"
+      ]
+    },
+    {
+      "name": "Triceps pushdown (V-bar)",
+      "namePtBr": "Tríceps pulley com barra V",
+      "legacyNames": [],
+      "terms": [
+        "triceps pushdown v bar",
+        "triceps pulley com barra v",
+        "triceps barra v",
+        "triceps v",
+        "v bar pushdown",
+        "triceps pushdown v bar attachment"
+      ]
+    },
+    {
+      "name": "Reverse-grip triceps pushdown",
+      "namePtBr": "Tríceps pulley inverso",
+      "legacyNames": [],
+      "terms": [
+        "reverse grip triceps pushdown",
+        "triceps pulley inverso",
+        "triceps supinado",
+        "triceps inverso",
+        "pulley inverso",
+        "underhand pushdown"
+      ]
+    },
+    {
+      "name": "Overhead dumbbell triceps extension",
+      "namePtBr": "Tríceps francês com halter",
+      "legacyNames": [
+        "Overhead Triceps Extension"
+      ],
+      "terms": [
+        "overhead dumbbell triceps extension",
+        "triceps frances com halter",
+        "triceps frances",
+        "frances",
+        "triceps atras da cabeca",
+        "standing dumbbell triceps extension",
+        "overhead triceps extension"
+      ]
+    },
+    {
+      "name": "Single-arm overhead dumbbell extension",
+      "namePtBr": "Tríceps francês unilateral com halter",
+      "legacyNames": [],
+      "terms": [
+        "single arm overhead dumbbell extension",
+        "triceps frances unilateral com halter",
+        "frances unilateral",
+        "one arm overhead extension",
+        "standing one arm dumbbell triceps extension"
+      ]
+    },
+    {
+      "name": "Overhead cable triceps extension",
+      "namePtBr": "Tríceps francês na polia",
+      "legacyNames": [
+        "Overhead cable triceps extension"
+      ],
+      "terms": [
+        "overhead cable triceps extension",
+        "triceps frances na polia",
+        "frances na polia",
+        "triceps frances corda",
+        "triceps overhead",
+        "cable overhead triceps extension",
+        "cable rope overhead triceps extension"
+      ]
+    },
+    {
+      "name": "Overhead EZ-bar triceps extension",
+      "namePtBr": "Tríceps francês com barra W",
+      "legacyNames": [],
+      "terms": [
+        "overhead ez bar triceps extension",
+        "triceps frances com barra w",
+        "frances barra w",
+        "frances com barra",
+        "overhead barbell triceps extension",
+        "standing overhead barbell triceps extension"
+      ]
+    },
+    {
+      "name": "EZ-bar skull crusher",
+      "namePtBr": "Tríceps testa com barra W",
+      "legacyNames": [
+        "EZ-bar skull crusher",
+        "Skullcrusher"
+      ],
+      "terms": [
+        "ez bar skull crusher",
+        "triceps testa com barra w",
+        "triceps testa",
+        "testa",
+        "skull crusher",
+        "lying triceps extension",
+        "ez bar skullcrusher",
+        "skullcrusher"
+      ]
+    },
+    {
+      "name": "Dumbbell skull crusher",
+      "namePtBr": "Tríceps testa com halteres",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell skull crusher",
+        "triceps testa com halteres",
+        "testa com halteres",
+        "triceps testa halter",
+        "lying dumbbell triceps extension",
+        "lying dumbbell tricep extension"
+      ]
+    },
+    {
+      "name": "Dumbbell triceps kickback",
+      "namePtBr": "Tríceps coice com halter",
+      "legacyNames": [],
+      "terms": [
+        "dumbbell triceps kickback",
+        "triceps coice com halter",
+        "triceps coice",
+        "coice com halter",
+        "kickback com halter",
+        "tricep kickback",
+        "tricep dumbbell kickback"
+      ]
+    },
+    {
+      "name": "Cable triceps kickback",
+      "namePtBr": "Tríceps coice na polia",
+      "legacyNames": [],
+      "terms": [
+        "cable triceps kickback",
+        "triceps coice na polia",
+        "coice de triceps na polia",
+        "kickback na polia",
+        "triceps coice cabo",
+        "cable kickback triceps"
+      ]
+    },
+    {
+      "name": "Machine triceps extension",
+      "namePtBr": "Tríceps na máquina",
+      "legacyNames": [],
+      "terms": [
+        "machine triceps extension",
+        "triceps na maquina",
+        "triceps maquina",
+        "extensao de triceps na maquina",
+        "triceps machine"
+      ]
+    },
+    {
+      "name": "Machine dips or parallel bars",
+      "namePtBr": "Mergulho nas paralelas",
+      "legacyNames": [
+        "Machine dips or parallel bars"
+      ],
+      "terms": [
+        "machine dips or parallel bars",
+        "mergulho nas paralelas",
+        "mergulho",
+        "paralelas",
+        "mergulho assistido",
+        "mergulho no graviton",
+        "triceps dips",
+        "dips",
+        "dips triceps version"
+      ]
+    },
+    {
+      "name": "Bench dip",
+      "namePtBr": "Mergulho no banco",
+      "legacyNames": [],
+      "terms": [
+        "bench dip",
+        "mergulho no banco",
+        "triceps banco",
+        "triceps no banco",
+        "mergulho banco",
+        "bench dips"
+      ]
+    },
+    {
+      "name": "Seated dip machine",
+      "namePtBr": "Mergulho na máquina sentado",
+      "legacyNames": [],
+      "terms": [
+        "seated dip machine",
+        "mergulho na maquina sentado",
+        "dip maquina",
+        "mergulho maquina",
+        "dip machine"
+      ]
+    },
+    {
+      "name": "Standing calf raise (or machine)",
+      "namePtBr": "Panturrilha em pé na máquina",
+      "legacyNames": [
+        "Standing calf raise (or machine)",
+        "Standing Calf Raise"
+      ],
+      "terms": [
+        "standing calf raise or machine",
+        "panturrilha em pe na maquina",
+        "panturrilha",
+        "panturrilha em pe",
+        "gemeos",
+        "elevacao de calcanhares",
+        "standing calf raises",
+        "calf raise",
+        "standing calf raise"
+      ]
+    },
+    {
+      "name": "Seated calf raise machine",
+      "namePtBr": "Panturrilha sentado na máquina",
+      "legacyNames": [
+        "Seated calf raise machine",
+        "Seated Calf Raise"
+      ],
+      "terms": [
+        "seated calf raise machine",
+        "panturrilha sentado na maquina",
+        "panturrilha sentado",
+        "soleo",
+        "gemeos sentado",
+        "panturrilha no banco",
+        "seated calf raise"
+      ]
+    },
+    {
+      "name": "Calf press on leg press",
+      "namePtBr": "Panturrilha no leg press",
+      "legacyNames": [],
+      "terms": [
+        "calf press on leg press",
+        "panturrilha no leg press",
+        "panturrilha leg",
+        "gemeos no leg press",
+        "leg press calf raise",
+        "calf press on the leg press machine"
+      ]
+    },
+    {
+      "name": "Smith machine calf raise",
+      "namePtBr": "Panturrilha em pé no Smith",
+      "legacyNames": [],
+      "terms": [
+        "smith machine calf raise",
+        "panturrilha em pe no smith",
+        "panturrilha smith",
+        "panturrilha guiada",
+        "smith calf raise"
+      ]
+    },
+    {
+      "name": "Standing dumbbell calf raise",
+      "namePtBr": "Panturrilha em pé com halteres",
+      "legacyNames": [],
+      "terms": [
+        "standing dumbbell calf raise",
+        "panturrilha em pe com halteres",
+        "panturrilha com halteres",
+        "panturrilha halter",
+        "dumbbell calf raise"
+      ]
+    },
+    {
+      "name": "Single-leg calf raise",
+      "namePtBr": "Panturrilha unilateral em pé",
+      "legacyNames": [],
+      "terms": [
+        "single leg calf raise",
+        "panturrilha unilateral em pe",
+        "panturrilha uma perna",
+        "panturrilha no degrau",
+        "one leg calf raise"
+      ]
+    },
+    {
+      "name": "Donkey calf raise",
+      "namePtBr": "Panturrilha burrinho",
+      "legacyNames": [],
+      "terms": [
+        "donkey calf raise",
+        "panturrilha burrinho",
+        "burrinho",
+        "gemeos burrinho",
+        "donkey calf raises"
+      ]
+    },
+    {
+      "name": "Crunch",
+      "namePtBr": "Abdominal supra",
+      "legacyNames": [],
+      "terms": [
+        "crunch",
+        "abdominal supra",
+        "abdominal",
+        "abdominal curto",
+        "abdominal reto",
+        "crunches",
+        "ab crunch"
+      ]
+    },
+    {
+      "name": "Weighted crunch",
+      "namePtBr": "Abdominal supra com carga",
+      "legacyNames": [],
+      "terms": [
+        "weighted crunch",
+        "abdominal supra com carga",
+        "abdominal com anilha",
+        "abdominal com peso",
+        "weighted crunches"
+      ]
+    },
+    {
+      "name": "Decline crunch",
+      "namePtBr": "Abdominal no banco declinado",
+      "legacyNames": [],
+      "terms": [
+        "decline crunch",
+        "abdominal no banco declinado",
+        "abdominal declinado",
+        "abdominal na prancha declinada",
+        "decline sit up"
+      ]
+    },
+    {
+      "name": "Oblique crunch",
+      "namePtBr": "Abdominal oblíquo",
+      "legacyNames": [],
+      "terms": [
+        "oblique crunch",
+        "abdominal obliquo",
+        "obliquo",
+        "abdominal lateral",
+        "abdominal cruzado",
+        "oblique crunches"
+      ]
+    },
+    {
+      "name": "Bicycle crunch",
+      "namePtBr": "Abdominal bicicleta",
+      "legacyNames": [],
+      "terms": [
+        "bicycle crunch",
+        "abdominal bicicleta",
+        "abdominal bike",
+        "bicicleta no solo",
+        "air bike crunch",
+        "air bike"
+      ]
+    },
+    {
+      "name": "Reverse crunch",
+      "namePtBr": "Abdominal infra",
+      "legacyNames": [],
+      "terms": [
+        "reverse crunch",
+        "abdominal infra",
+        "infra",
+        "abdominal inferior",
+        "reverse crunches"
+      ]
+    },
+    {
+      "name": "Sit-up",
+      "namePtBr": "Abdominal completo (sit-up)",
+      "legacyNames": [],
+      "terms": [
+        "sit up",
+        "abdominal completo sit up",
+        "abdominal completo",
+        "abdominal sentando",
+        "situp",
+        "full sit up"
+      ]
+    },
+    {
+      "name": "Hanging leg raises",
+      "namePtBr": "Elevação de pernas na barra",
+      "legacyNames": [
+        "Hanging leg raises",
+        "Hanging Leg Raise"
+      ],
+      "terms": [
+        "hanging leg raises",
+        "elevacao de pernas na barra",
+        "elevacao de pernas",
+        "abdominal na barra",
+        "abdominal suspenso",
+        "elevacao de pernas suspenso",
+        "hanging leg raise ab",
+        "hanging leg raise"
+      ]
+    },
+    {
+      "name": "Captain's chair knee raise",
+      "namePtBr": "Elevação de joelhos nas paralelas",
+      "legacyNames": [],
+      "terms": [
+        "captain s chair knee raise",
+        "elevacao de joelhos nas paralelas",
+        "abdominal nas paralelas",
+        "cadeira do capitao",
+        "elevacao de joelhos",
+        "knee raise parallel bars",
+        "knee hip raise on parallel bars"
+      ]
+    },
+    {
+      "name": "Lying leg raise",
+      "namePtBr": "Elevação de pernas deitado",
+      "legacyNames": [],
+      "terms": [
+        "lying leg raise",
+        "elevacao de pernas deitado",
+        "elevacao de pernas no banco",
+        "elevacao de pernas no solo",
+        "abdominal infra deitado",
+        "flat bench leg raise",
+        "flat bench lying leg raise"
+      ]
+    },
+    {
+      "name": "Plank + side plank",
+      "namePtBr": "Prancha + prancha lateral",
+      "legacyNames": [
+        "Plank + side plank"
+      ],
+      "terms": [
+        "plank side plank",
+        "prancha prancha lateral",
+        "prancha",
+        "prancha frontal",
+        "prancha isometrica",
+        "plank",
+        "front plank"
+      ]
+    },
+    {
+      "name": "Side plank",
+      "namePtBr": "Prancha lateral",
+      "legacyNames": [],
+      "terms": [
+        "side plank",
+        "prancha lateral",
+        "prancha de lado",
+        "side bridge"
+      ]
+    },
+    {
+      "name": "Cable crunch (kneeling)",
+      "namePtBr": "Abdominal na polia ajoelhado",
+      "legacyNames": [
+        "Cable crunch (kneeling)"
+      ],
+      "terms": [
+        "cable crunch kneeling",
+        "abdominal na polia ajoelhado",
+        "abdominal na polia",
+        "abdominal corda",
+        "abdominal no cabo",
+        "crunch na polia",
+        "cable crunch"
+      ]
+    },
+    {
+      "name": "Machine crunch",
+      "namePtBr": "Abdominal na máquina",
+      "legacyNames": [
+        "Machine crunch"
+      ],
+      "terms": [
+        "machine crunch",
+        "abdominal na maquina",
+        "abdominal maquina",
+        "crunch maquina",
+        "ab crunch machine"
+      ]
+    },
+    {
+      "name": "Ab wheel rollout",
+      "namePtBr": "Roda abdominal",
+      "legacyNames": [],
+      "terms": [
+        "ab wheel rollout",
+        "roda abdominal",
+        "rodinha",
+        "rodinha abdominal",
+        "ab wheel",
+        "rollout",
+        "ab roller"
+      ]
+    },
+    {
+      "name": "Pallof press",
+      "namePtBr": "Pallof press (antirrotação na polia)",
+      "legacyNames": [],
+      "terms": [
+        "pallof press",
+        "pallof press antirrotacao na polia",
+        "pallof",
+        "antirrotacao",
+        "anti rotation press"
+      ]
+    },
+    {
+      "name": "Russian twist",
+      "namePtBr": "Rotação russa (russian twist)",
+      "legacyNames": [],
+      "terms": [
+        "russian twist",
+        "rotacao russa russian twist",
+        "rotacao de tronco sentado",
+        "abdominal russo",
+        "seated russian twist"
+      ]
+    },
+    {
+      "name": "Cable wood chop",
+      "namePtBr": "Lenhador na polia",
+      "legacyNames": [],
+      "terms": [
+        "cable wood chop",
+        "lenhador na polia",
+        "lenhador",
+        "wood chop",
+        "rotacao na polia",
+        "standing cable wood chop"
+      ]
+    },
+    {
+      "name": "Dead bug",
+      "namePtBr": "Dead bug (inseto morto)",
+      "legacyNames": [],
+      "terms": [
+        "dead bug",
+        "dead bug inseto morto",
+        "inseto morto",
+        "deadbug"
+      ]
+    },
+    {
+      "name": "Seated knee tuck",
+      "namePtBr": "Abdominal remador",
+      "legacyNames": [],
+      "terms": [
+        "seated knee tuck",
+        "abdominal remador",
+        "remador",
+        "abdominal canivete sentado",
+        "seated leg tuck"
+      ]
+    },
+    {
+      "name": "Running",
+      "namePtBr": "Corrida",
+      "legacyNames": [
+        "Running"
+      ],
+      "terms": [
+        "running",
+        "corrida",
+        "correr",
+        "esteira",
+        "corrida na esteira",
+        "trote",
+        "treadmill run",
+        "jogging",
+        "running treadmill"
+      ]
+    },
+    {
+      "name": "Walking",
+      "namePtBr": "Caminhada",
+      "legacyNames": [],
+      "terms": [
+        "walking",
+        "caminhada",
+        "caminhar",
+        "caminhada na esteira",
+        "esteira inclinada",
+        "treadmill walk",
+        "walking treadmill"
+      ]
+    },
+    {
+      "name": "Cycling",
+      "namePtBr": "Bicicleta",
+      "legacyNames": [
+        "Cycling"
+      ],
+      "terms": [
+        "cycling",
+        "bicicleta",
+        "bike",
+        "bicicleta ergometrica",
+        "pedalar",
+        "spinning",
+        "ciclismo",
+        "stationary bike",
+        "bicycling",
+        "bicycling stationary"
+      ]
+    },
+    {
+      "name": "Rowing machine",
+      "namePtBr": "Remo ergômetro",
+      "legacyNames": [
+        "Rowing machine"
+      ],
+      "terms": [
+        "rowing machine",
+        "remo ergometro",
+        "remo",
+        "remo seco",
+        "remo indoor",
+        "indoor rower",
+        "stationary rowing",
+        "rowing stationary"
+      ]
+    },
+    {
+      "name": "Jump rope",
+      "namePtBr": "Pular corda",
+      "legacyNames": [
+        "Jump rope"
+      ],
+      "terms": [
+        "jump rope",
+        "pular corda",
+        "corda de pular",
+        "pulo de corda",
+        "rope jumping",
+        "skipping rope"
+      ]
+    },
+    {
+      "name": "Elliptical trainer",
+      "namePtBr": "Elíptico",
+      "legacyNames": [],
+      "terms": [
+        "elliptical trainer",
+        "eliptico",
+        "transport",
+        "simulador de caminhada",
+        "elliptical",
+        "cross trainer"
+      ]
+    },
+    {
+      "name": "Stair climber",
+      "namePtBr": "Simulador de escada",
+      "legacyNames": [],
+      "terms": [
+        "stair climber",
+        "simulador de escada",
+        "escada",
+        "escada ergometrica",
+        "stairmaster",
+        "stair mill"
+      ]
+    },
+    {
+      "name": "Farmer's walk",
+      "namePtBr": "Caminhada do fazendeiro",
+      "legacyNames": [],
+      "terms": [
+        "farmer s walk",
+        "caminhada do fazendeiro",
+        "farmer walk",
+        "caminhada com carga",
+        "farmers carry"
+      ]
+    }
+  ]
+}

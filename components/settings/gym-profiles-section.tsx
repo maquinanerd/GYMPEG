@@ -30,6 +30,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useExerciseName } from '@/components/shared/use-exercise-name';
+import { matchesExerciseQuery } from '@/lib/catalog/search-index';
 
 type GymWithConfigs = Gym & { exerciseConfigs: GymExerciseConfig[] };
 
@@ -63,10 +64,9 @@ export function GymProfilesSection({ initialGyms, activeGymId: initialActive, ex
   const [saving, setSaving] = useState(false);
 
   const filteredExercises = useMemo(() => {
-    const query = search.trim().toLocaleLowerCase();
-    if (!query) return exercises;
+    if (!search.trim()) return exercises;
     return exercises.filter((exercise) =>
-      exerciseName(exercise.name).toLocaleLowerCase().includes(query),
+      matchesExerciseQuery(exercise.name, exerciseName(exercise.name), search),
     );
   }, [exerciseName, exercises, search]);
 

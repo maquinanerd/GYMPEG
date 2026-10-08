@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { getExerciseMedia } from '@/lib/exercise-media';
 import { itemStackAppliesToExercise, itemStackStopsApplying } from '@/lib/gym-loads';
 import type { EquipmentType } from '@/lib/prisma-client';
+import { pickableExerciseWhere, usableExerciseWhere } from '@/lib/catalog/access';
 
 export const GYM_EQUIPMENT_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
 export type GymEquipmentImageMimeType = (typeof GYM_EQUIPMENT_IMAGE_MIME_TYPES)[number];
@@ -142,7 +143,7 @@ async function buildGymExerciseCoverage(
       select: { exerciseId: true, isAvailable: true, weightOptions: true },
     }),
     db.exercise.findMany({
-      where: { userId },
+      where: pickableExerciseWhere(userId),
       orderBy: { name: 'asc' },
       select: {
         id: true,
@@ -310,7 +311,7 @@ export async function upsertOwnedGymEquipment(
     requestedExerciseIds ?? current?.exerciseLinks.map((link) => link.exerciseId) ?? [];
   const exercises = exerciseIds.length
     ? await db.exercise.findMany({
-        where: { userId, id: { in: exerciseIds } },
+        where: { ...usableExerciseWhere(userId), id: { in: exerciseIds } },
         select: { id: true, name: true, equipmentType: true },
       })
     : [];

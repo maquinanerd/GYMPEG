@@ -9,6 +9,7 @@ import {
   executeStrongImport,
   setDuplicateKey,
 } from '@/lib/import/strong-import';
+import { usableExerciseWhere } from '@/lib/catalog/access';
 
 // How many per-line errors the response reports (the count is always exact).
 const MAX_REPORTED_ERRORS = 50;
@@ -92,7 +93,7 @@ export async function POST(req: Request) {
     }
 
     const exercises = await db.exercise.findMany({
-      where: { userId },
+      where: usableExerciseWhere(userId),
       select: { name: true },
     });
     const plan = buildStrongImportPlan(

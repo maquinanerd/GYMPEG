@@ -1,4 +1,6 @@
 import type { Prisma, PrismaClient } from '@/prisma/generated/client';
+import { usableExerciseWhere } from '@/lib/catalog/access';
+import { findUsableExerciseByName } from '@/lib/catalog/resolve';
 
 // ============================================================
 // CSV import planning + execution (issues #100/#113)
@@ -228,7 +230,7 @@ export async function executeStrongImport(
   // Resolve the user's exercises case-insensitively, creating the missing
   // ones (OTHER / ISOLATION; the user can re-categorize later).
   const existing = await tx.exercise.findMany({
-    where: { userId },
+    where: usableExerciseWhere(userId),
     select: { id: true, name: true },
   });
   const idByLower = new Map(existing.map((e) => [e.name.trim().toLowerCase(), e.id]));
@@ -242,6 +244,13 @@ export async function executeStrongImport(
   for (const name of plan.newExerciseNames) {
     const lower = name.trim().toLowerCase();
     if (idByLower.has(lower)) continue;
+    // A catalog alias ("Bench Press (Barbell)" -> the global bench press)
+    // reuses the global exercise instead of creating a copy.
+    const known = await findUsableExerciseByName(tx, userId, name);
+    if (known) {
+      idByLower.set(lower, known.id);
+      continue;
+    }
     const isCardio = cardioLowers.has(lower);
     const created = await tx.exercise.create({
       data: {

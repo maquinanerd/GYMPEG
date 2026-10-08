@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Exercise } from '@/lib/prisma-client';
 import { ExercisesView } from './exercises-view';
+import { exerciseFixture } from '@/tests/fixtures/exercise';
 
 // Production serves no media until a licensed source is approved; cover the
 // media branch with a fixture instead of the real catalog.
@@ -18,7 +19,7 @@ vi.mock('next/navigation', () => ({
 }));
 
 function exercise(over: Partial<Exercise>): Exercise {
-  return {
+  return exerciseFixture({
     id: over.id ?? 'e1',
     userId: 'u',
     name: over.name ?? 'Exercise',
@@ -30,7 +31,7 @@ function exercise(over: Partial<Exercise>): Exercise {
     equipmentType: over.equipmentType ?? 'OTHER',
     createdAt: new Date('2026-01-01T00:00:00Z'),
     ...over,
-  };
+  });
 }
 
 const exercises: Exercise[] = [

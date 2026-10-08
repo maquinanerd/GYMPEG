@@ -5,6 +5,7 @@ import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib
 import { findAchievingSet } from '@/lib/goals';
 import { setUpdateSchema } from '@/lib/schemas/set';
 import { effectiveWeight } from '@/lib/stats';
+import { usableExerciseWhere } from '@/lib/catalog/access';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -123,7 +124,7 @@ async function rederiveGoalAchievement(
 
   const [exercise, sets] = await Promise.all([
     tx.exercise.findFirst({
-      where: { id: exerciseId, userId },
+      where: { id: exerciseId, ...usableExerciseWhere(userId) },
       select: { usesBodyweight: true },
     }),
     tx.set.findMany({

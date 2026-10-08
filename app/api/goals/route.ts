@@ -4,6 +4,7 @@ import { goalInputSchema } from '@/lib/schemas/goal';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { findAchievingSet } from '@/lib/goals';
 import { applyBodyweight } from '@/lib/stats';
+import { usableExerciseWhere } from '@/lib/catalog/access';
 
 // GET /api/goals: the user's exercise goals, with the exercise identity.
 export async function GET() {
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
     const data = await parseJsonBody(req, goalInputSchema);
 
     const exercise = await db.exercise.findFirst({
-      where: { id: data.exerciseId, userId },
+      where: { id: data.exerciseId, ...usableExerciseWhere(userId) },
     });
     if (!exercise) {
       throw new ApiError(404, 'Exercise not found.');

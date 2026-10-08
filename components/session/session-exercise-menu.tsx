@@ -10,6 +10,7 @@ import { useExerciseName } from '@/components/shared/use-exercise-name';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { matchesExerciseQuery } from '@/lib/catalog/search-index';
 
 type SessionProgramExercise = ProgramExercise & { exercise: Exercise };
 // The catalog fields this menu reads. The session page selects exactly these,
@@ -27,7 +28,10 @@ interface Props {
   programExercises: SessionProgramExercise[];
   catalog: SessionCatalogExercise[];
   loggedSetCount: number;
-  onChanged: (options?: { selectProgramExerciseId?: string; removedProgramExerciseId?: string }) => void;
+  onChanged: (options?: {
+    selectProgramExerciseId?: string;
+    removedProgramExerciseId?: string;
+  }) => void;
 }
 
 // Targets for a program row created from the session menu. Cardio follows the
@@ -122,10 +126,8 @@ export function SessionExerciseMenu({
               exercise.muscleGroup === programExercise.exercise.muscleGroup,
           );
     if (!needle) return source;
-    return source.filter(
-      (exercise) =>
-        exercise.name.toLocaleLowerCase().includes(needle) ||
-        exerciseName(exercise.name).toLocaleLowerCase().includes(needle),
+    return source.filter((exercise) =>
+      matchesExerciseQuery(exercise.name, exerciseName(exercise.name), needle),
     );
   }, [
     catalog,

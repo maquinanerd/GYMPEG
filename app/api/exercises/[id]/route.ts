@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { exerciseInputSchema } from '@/lib/schemas/exercise';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
+import { usableExerciseWhere } from '@/lib/catalog/access';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -15,7 +16,9 @@ export async function GET(_req: Request, props: Params) {
   const params = await props.params;
   try {
     const userId = await requireApiUserId();
-    const exercise = await db.exercise.findFirst({ where: { id: params.id, userId } });
+    const exercise = await db.exercise.findFirst({
+      where: { id: params.id, ...usableExerciseWhere(userId) },
+    });
     if (!exercise) throw new ApiError(404, 'Exercise not found.');
     return NextResponse.json(exercise);
   } catch (err) {

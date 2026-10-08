@@ -161,30 +161,137 @@ model Message {
   @@index([conversationId, createdAt])
 }
 
+// One table for both kinds of exercise:
+// - global catalog (userId null): curated, shared, read-only for users,
+//   identified by a stable `slug` and synced from data/catalog/*.json;
+// - custom (userId set): private to its owner, never overrides a global one.
 model Exercise {
-  id                String                 @id @default(cuid())
-  userId            String
-  user              User                   @relation(fields: [userId], references: [id])
-  name              String
-  muscleGroup       MuscleGroup
-  category          ExerciseCategory
-  defaultRestSec    Int                    @default(90)
-  notes             String?
+  id                 String                 @id @default(cuid())
+  userId             String?
+  user               User?                  @relation(fields: [userId], references: [id], onDelete: Restrict)
+  name               String
+  slug               String?                @unique
+  namePtBr           String?
+  muscleGroup        MuscleGroup
+  category           ExerciseCategory
+  movementPattern    MovementPattern?
+  laterality         Laterality?
+  level              ExerciseLevel?
+  // Finer equipment tags than equipmentType (bench, smith_machine, ...).
+  equipmentTags      String[]               @default([])
+  instructionsPtBr   String[]               @default([])
+  commonMistakesPtBr String[]               @default([])
+  defaultRestSec     Int                    @default(90)
+  notes              String?
   // For bodyweight exercises (pull-ups, dips, push-ups...): the effective
   // tonnage includes User.bodyweight. Set.weight remains the added load (0 by
   // default, always >= 0 - the input schemas clamp it; negative loads for
   // assistance machines are deliberately not supported, see issue #118).
-  usesBodyweight    Boolean                @default(false)
+  usesBodyweight     Boolean                @default(false)
   // Determines which saved-gym inventory constrains suggested loads.
-  equipmentType     EquipmentType          @default(OTHER)
-  createdAt         DateTime               @default(now())
-  programExercises  ProgramExercise[]
-  sets              Set[]
-  goals             ExerciseGoal[]
-  gymConfigs        GymExerciseConfig[]
-  gymEquipmentLinks GymEquipmentExercise[]
+  equipmentType      EquipmentType          @default(OTHER)
+  // Provenance of catalog rows (license per row, ADR-005).
+  source             String?
+  sourceRef          String?
+  sourceLicense      String?
+  reviewStatus       String?
+  // Hidden from pickers when false; history keeps pointing at it.
+  active             Boolean                @default(true)
+  createdAt          DateTime               @default(now())
+  programExercises   ProgramExercise[]
+  sets               Set[]
+  goals              ExerciseGoal[]
+  gymConfigs         GymExerciseConfig[]
+  gymEquipmentLinks  GymEquipmentExercise[]
+  aliases            ExerciseAlias[]
+  muscles            ExerciseMuscle[]
 
   @@unique([userId, name])
+  @@index([userId, active])
+}
+
+enum MovementPattern {
+  SQUAT
+  HINGE
+  HORIZONTAL_PUSH
+  VERTICAL_PUSH
+  HORIZONTAL_PULL
+  VERTICAL_PULL
+  KNEE_FLEXION
+  KNEE_EXTENSION
+  ELBOW_FLEXION
+  ELBOW_EXTENSION
+  SHOULDER_ABDUCTION
+  CALF
+  CORE
+  CARRY
+  ISOLATION
+  CARDIO
+}
+
+enum Laterality {
+  BILATERAL
+  UNILATERAL
+  ALTERNATING
+}
+
+enum ExerciseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum MuscleRole {
+  PRIMARY
+  SECONDARY
+  STABILIZER
+}
+
+// Anatomical muscles; slugs double as the ids of the body-map SVG.
+model Muscle {
+  id        String           @id @default(cuid())
+  slug      String           @unique
+  nameEn    String
+  namePtBr  String
+  group     MuscleGroup
+  view      String
+  exercises ExerciseMuscle[]
+}
+
+model ExerciseMuscle {
+  exerciseId String
+  exercise   Exercise   @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  muscleId   String
+  muscle     Muscle     @relation(fields: [muscleId], references: [id], onDelete: Cascade)
+  role       MuscleRole
+
+  @@id([exerciseId, muscleId])
+  @@index([muscleId])
+}
+
+// Search terms (pt-BR and English) and legacy names of catalog exercises.
+// `normalized` is lower-case without accents, matched by the search.
+model ExerciseAlias {
+  id         String   @id @default(cuid())
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  alias      String
+  normalized String
+  locale     String
+  // Exact name this exercise had in the per-user catalog (merge source).
+  isLegacy   Boolean  @default(false)
+
+  @@unique([exerciseId, normalized])
+  @@index([normalized])
+}
+
+// Content hash of the last catalog sync, so a boot only rewrites the catalog
+// when data/catalog changed.
+model CatalogSync {
+  id       String   @id
+  version  Int
+  hash     String
+  syncedAt DateTime @default(now())
 }
 
 enum EquipmentType {

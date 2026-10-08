@@ -12,6 +12,7 @@ export const exercises = {
   noMatchDescription: 'Упражнений по запросу «{query}» нет. Измените запрос.',
   restSeconds: 'отдых {seconds} с',
   editTitle: 'Изменить упражнение',
+  catalogBadge: 'Каталог',
   addTitle: 'Добавить упражнение',
   formDescription: 'Укажите название, группу мышц и категорию.',
   muscleGroup: 'Группа мышц',
@@ -55,6 +56,10 @@ export const exercises = {
     searchCommons: 'Найти на Wikimedia Commons',
   },
   detail: {
+    primaryMuscles: 'Основные мышцы',
+    secondaryMuscles: 'Вспомогательные мышцы',
+    howTo: 'Техника выполнения',
+    commonMistakes: 'Частые ошибки',
     back: 'Назад к упражнениям',
     backToSession: 'Назад к тренировке',
     information: 'Информация об упражнении',

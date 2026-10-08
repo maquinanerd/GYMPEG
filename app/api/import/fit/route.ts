@@ -5,6 +5,7 @@ import { rateLimit } from '@/lib/rate-limit';
 import { fitImportInputSchema } from '@/lib/schemas/import';
 import { parseFit, fitExerciseName, type FitActivity } from '@/lib/import/fit';
 import { Prisma } from '@/prisma/generated/client';
+import { findUsableExerciseByName } from '@/lib/catalog/resolve';
 
 // How close an existing session's start has to be to count as a likely
 // duplicate of the imported activity (the preview warns; confirm still works).
@@ -46,10 +47,11 @@ async function summarize(userId: string, activity: FitActivity) {
 async function confirmOne(userId: string, activity: FitActivity) {
   const exerciseName = fitExerciseName(activity.sport);
   return db.$transaction(async (tx) => {
-    let exercise = await tx.exercise.findFirst({
-      where: { userId, name: exerciseName },
-      select: { id: true, category: true },
-    });
+    // Catalog first (global cardio exercises), then the user's own.
+    const resolved = await findUsableExerciseByName(tx, userId, exerciseName);
+    let exercise: { id: string; category: string } | null = resolved
+      ? { id: resolved.id, category: resolved.category }
+      : null;
     let createdExercise = false;
     if (exercise && exercise.category !== 'CARDIO') {
       // The user owns a non-cardio exercise with the default name: never write

@@ -8,8 +8,9 @@ import {
   weightIncrement,
   type ReadinessSignal,
 } from './progression';
+import { exerciseFixture } from '@/tests/fixtures/exercise';
 
-const compoundExo: Exercise = {
+const compoundExo: Exercise = exerciseFixture({
   id: 'e1',
   userId: 'u',
   name: 'Squat',
@@ -20,9 +21,9 @@ const compoundExo: Exercise = {
   usesBodyweight: false,
   equipmentType: 'BARBELL',
   createdAt: new Date(),
-};
+});
 
-const isolationExo: Exercise = {
+const isolationExo: Exercise = exerciseFixture({
   id: 'e2',
   userId: 'u',
   name: 'Curl',
@@ -33,7 +34,7 @@ const isolationExo: Exercise = {
   usesBodyweight: false,
   equipmentType: 'DUMBBELL',
   createdAt: new Date(),
-};
+});
 
 function makePe(
   exercise: Exercise,

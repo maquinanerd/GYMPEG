@@ -5,7 +5,6 @@ import { SESSION_COOKIE, SESSION_COOKIE_OPTIONS } from '@/lib/auth-token';
 import { createAuthSession } from '@/lib/auth-session';
 import { hashPassword } from '@/lib/password';
 import { registerSchema } from '@/lib/schemas/auth';
-import { seedExerciseCatalog } from '@/lib/exercise-catalog';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
 import { isSignupAllowed } from '@/lib/signup-policy';
 import { ApiError, AUTH_JSON_BODY_MAX_BYTES, readJsonBodyOrNull } from '@/lib/api';
@@ -59,8 +58,8 @@ export async function POST(req: Request) {
       },
     });
 
-    // Give the new account a starter catalog so the app is not empty.
-    await seedExerciseCatalog(db, user.id);
+    // No per-account catalog copy: every account shares the global catalog
+    // (data/catalog, synced at server start).
 
     const { token } = await createAuthSession({
       userId: user.id,

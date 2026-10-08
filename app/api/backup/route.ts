@@ -29,6 +29,8 @@ import {
   MAX_GYM_EQUIPMENT_PER_GYM,
   decodeGymEquipmentImage,
 } from '@/lib/gym-equipment';
+import { usableExerciseWhere } from '@/lib/catalog/access';
+import { findUsableExerciseByName } from '@/lib/catalog/resolve';
 
 // ============================================================
 // Backup / Import JSON (LOT 11, completed by issue #168)
@@ -129,7 +131,7 @@ export async function GET() {
           },
         },
       }),
-      db.exercise.findMany({ where: { userId }, orderBy: { name: 'asc' } }),
+      db.exercise.findMany({ where: usableExerciseWhere(userId), orderBy: { name: 'asc' } }),
       db.session.findMany({
         where: { userId },
         orderBy: { startedAt: 'asc' },
@@ -683,6 +685,13 @@ export async function POST(req: Request) {
         // 3. Recreate the exercises; we keep a name -> id index to link them.
         const exerciseIdByName = new Map<string, string>();
         for (const e of payload.exercises) {
+          // Catalog exercises are linked, not copied: the user's own exercises
+          // were purged above, so a match here is a global one.
+          const known = await findUsableExerciseByName(tx, userId, e.name);
+          if (known) {
+            exerciseIdByName.set(e.name, known.id);
+            continue;
+          }
           const created = await tx.exercise.create({
             data: {
               userId,

@@ -19,6 +19,7 @@ import {
   Prisma,
 } from '@/prisma/generated/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { findUsableExerciseByName } from '../lib/catalog/resolve';
 
 // Prisma 7 requires a driver adapter to connect (the Rust engine was removed).
 const prisma = new PrismaClient({
@@ -81,11 +82,7 @@ function workingLoad(
   weeksElapsed: number,
   ex: { category: ExerciseCategory; usesBodyweight: boolean },
 ): number {
-  const stepKg = ex.usesBodyweight
-    ? 2.5
-    : ex.category === ExerciseCategory.COMPOUND
-      ? 2.5
-      : 1;
+  const stepKg = ex.usesBodyweight ? 2.5 : ex.category === ExerciseCategory.COMPOUND ? 2.5 : 1;
   // ~one increment every 1.6 weeks, with noise.
   let increments = Math.floor(weeksElapsed / 1.6 + rng() * 0.6);
   if (weeksElapsed >= 7) increments -= 1; // light deload week 7 onward bump
@@ -241,7 +238,9 @@ async function main() {
   await prisma.exerciseGoal.deleteMany({ where: { userId: user.id } });
   const firstCompound = program.workouts
     .flatMap((w) => w.exercises)
-    .find((pe) => pe.exercise.category === ExerciseCategory.COMPOUND && !pe.exercise.usesBodyweight);
+    .find(
+      (pe) => pe.exercise.category === ExerciseCategory.COMPOUND && !pe.exercise.usesBodyweight,
+    );
   if (firstCompound) {
     const load = workingLoad(baseWeight(firstCompound.exercise), WEEKS - 1, firstCompound.exercise);
     await prisma.exerciseGoal.create({
@@ -290,9 +289,8 @@ async function main() {
   // heart-rate-over-time chart - the flagship import features. Deterministic.
   const ownerId = user.id;
   async function cardioExercise(name: string) {
-    const existing = await prisma.exercise.findFirst({
-      where: { userId: ownerId, name, category: ExerciseCategory.CARDIO },
-    });
+    const found = await findUsableExerciseByName(prisma, ownerId, name);
+    const existing = found?.category === ExerciseCategory.CARDIO ? found : null;
     return (
       existing ??
       (await prisma.exercise.create({
@@ -311,8 +309,24 @@ async function main() {
   let cardioSessions = 0;
   for (let w = WEEKS - 1; w >= 0; w--) {
     const plans = [
-      { day: 2, ex: runEx, sport: 'Running', dur: Math.round((28 + rng() * 14) * 60), mps: 2.7 + rng() * 0.5, avg: 150 + Math.round(rng() * 10), peak: 174 + Math.round(rng() * 10) },
-      { day: 6, ex: bikeEx, sport: 'Cycling', dur: Math.round((40 + rng() * 25) * 60), mps: 6.5 + rng() * 1.5, avg: 132 + Math.round(rng() * 10), peak: 156 + Math.round(rng() * 10) },
+      {
+        day: 2,
+        ex: runEx,
+        sport: 'Running',
+        dur: Math.round((28 + rng() * 14) * 60),
+        mps: 2.7 + rng() * 0.5,
+        avg: 150 + Math.round(rng() * 10),
+        peak: 174 + Math.round(rng() * 10),
+      },
+      {
+        day: 6,
+        ex: bikeEx,
+        sport: 'Cycling',
+        dur: Math.round((40 + rng() * 25) * 60),
+        mps: 6.5 + rng() * 1.5,
+        avg: 132 + Math.round(rng() * 10),
+        peak: 156 + Math.round(rng() * 10),
+      },
     ];
     for (const p of plans) {
       const startedAt = sessionDate(w, p.day);
@@ -324,7 +338,12 @@ async function main() {
       const track = buildCardioTrack(durationSec, distanceM, avgHr, maxHr);
       const finishedAt = new Date(startedAt.getTime() + durationSec * 1000);
       const session = await prisma.session.create({
-        data: { userId: user.id, startedAt, finishedAt, notes: `Imported from a FIT file (${p.sport}).` },
+        data: {
+          userId: user.id,
+          startedAt,
+          finishedAt,
+          notes: `Imported from a FIT file (${p.sport}).`,
+        },
       });
       await prisma.set.create({
         data: {
@@ -357,9 +376,24 @@ async function main() {
     const measuredAt = sessionDate(w, 1);
     if (measuredAt > now) continue;
     const elapsed = WEEKS - 1 - w; // 0 = oldest
-    measurements.push({ userId: user.id, site: BodyMeasurementSite.WAIST, valueCm: +(86 - elapsed * 0.18 + (rng() - 0.5) * 0.6).toFixed(1), measuredAt });
-    measurements.push({ userId: user.id, site: BodyMeasurementSite.ARM_RIGHT, valueCm: +(37.5 + elapsed * 0.06 + (rng() - 0.5) * 0.3).toFixed(1), measuredAt });
-    measurements.push({ userId: user.id, site: BodyMeasurementSite.THIGH_RIGHT, valueCm: +(58 + elapsed * 0.08 + (rng() - 0.5) * 0.4).toFixed(1), measuredAt });
+    measurements.push({
+      userId: user.id,
+      site: BodyMeasurementSite.WAIST,
+      valueCm: +(86 - elapsed * 0.18 + (rng() - 0.5) * 0.6).toFixed(1),
+      measuredAt,
+    });
+    measurements.push({
+      userId: user.id,
+      site: BodyMeasurementSite.ARM_RIGHT,
+      valueCm: +(37.5 + elapsed * 0.06 + (rng() - 0.5) * 0.3).toFixed(1),
+      measuredAt,
+    });
+    measurements.push({
+      userId: user.id,
+      site: BodyMeasurementSite.THIGH_RIGHT,
+      valueCm: +(58 + elapsed * 0.08 + (rng() - 0.5) * 0.4).toFixed(1),
+      measuredAt,
+    });
   }
   await prisma.bodyMeasurement.createMany({ data: measurements });
 

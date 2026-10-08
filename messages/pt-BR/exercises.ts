@@ -13,6 +13,7 @@ export const exercises = {
   noMatchDescription: 'Nenhum exercício corresponde a “{query}”. Tente outra busca.',
   restSeconds: 'descanso {seconds}s',
   editTitle: 'Editar exercício',
+  catalogBadge: 'Catálogo',
   addTitle: 'Adicionar um exercício',
   formDescription: 'Informe o nome, o grupo muscular e a categoria.',
   muscleGroup: 'Grupo muscular',
@@ -56,6 +57,10 @@ export const exercises = {
     searchCommons: 'Buscar no Wikimedia Commons',
   },
   detail: {
+    primaryMuscles: 'Músculos principais',
+    secondaryMuscles: 'Músculos secundários',
+    howTo: 'Como executar',
+    commonMistakes: 'Erros comuns',
     back: 'Voltar aos exercícios',
     backToSession: 'Voltar ao treino',
     information: 'Informações do exercício',

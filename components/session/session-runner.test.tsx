@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PendingSet } from '@/lib/indexeddb';
 import type { Exercise, ProgramExercise } from '@/lib/prisma-client';
 import { SessionRunner } from './session-runner';
+import { exerciseFixture } from '@/tests/fixtures/exercise';
 
 // The runner is wired to IndexedDB, the sync queue and the router. These tests
 // cover the wiring around the in-session exercise menu and the superset
@@ -122,7 +123,7 @@ const menu = () => harness.menu as MenuProps;
 const table = () => harness.table as TableProps;
 
 function exercise(id: string, name: string): Exercise {
-  return {
+  return exerciseFixture({
     id,
     userId: 'u',
     name,
@@ -133,7 +134,7 @@ function exercise(id: string, name: string): Exercise {
     usesBodyweight: false,
     equipmentType: 'BARBELL',
     createdAt: new Date(),
-  };
+  });
 }
 
 function row(

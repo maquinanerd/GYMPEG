@@ -55,7 +55,7 @@ model Consent { id String @id; userId String; purpose ConsentPurpose /* AI_PROCE
 // ---------- Catálogo ----------
 model Exercise {
   id               String   @id
-  ownerId          String?  // null = catálogo global; preenchido = exercício customizado (privado)
+  userId           String?  // null = catálogo global; preenchido = exercício customizado (privado)
   slug             String
   name             String   // nome canônico em inglês (busca, importação)
   namePtBr         String?
@@ -127,12 +127,12 @@ Regra de exclusão: toda FK para `User` passa a `onDelete: Cascade`. A exclusão
 
 | # | Migration | Tipo | Gate |
 |---|---|---|---|
-| M1 | Índices em FKs quentes | expand | G1 |
-| M2 | `User.timezone`, `locale`, `experience`, `birthDate`; `UserPreference`; `TrainingAvailability`; `ExercisePreference` | expand | G1 |
-| M3 | `AuthSession` + troca do JWT por sessão em banco | expand + código | G1 |
+| M1 ✓ | Índices em FKs quentes | expand | G1 |
+| M2 (parcial: `timezone`) | `User.timezone`, `locale`, `experience`, `birthDate`; `UserPreference`; `TrainingAvailability`; `ExercisePreference` | expand | G1 |
+| M3 ✓ | `AuthSession` + troca do JWT por sessão em banco | expand + código | G1 |
 | M4 | FKs de `User` → Cascade; `CoachSession.userId` com FK | contract | G1 |
-| M5 | Catálogo global: `Exercise.ownerId` (renomeia `userId`, nullable), novos campos, `Muscle`, `ExerciseMuscle`, `ExerciseAlias`; seed curado; backfill que funde as cópias por usuário no global equivalente (via `replacedById`) e mantém o resto como customizado | expand + backfill | G1 |
-| M6 | `Set`: `clientMutationId`, `userId`, `type`, `rpe`, `performedAt`, alvo, `bodyweightKgSnapshot`, `deletedAt`; backfill (`type` a partir de `isWarmup`/`isDropSet`, `performedAt = completedAt`, ids gerados para o legado) | expand + backfill | G1 |
+| M5 ✓ | Catálogo global: `Exercise.userId` passa a aceitar nulo (= global, nome mantido para não reescrever 60 consultas), `slug`, campos de catálogo, `Muscle`, `ExerciseMuscle`, `ExerciseAlias`, `CatalogSync`; carga a partir de `data/catalog` no start; fusão das cópias por usuário no global equivalente; o resto fica como customizado | expand + backfill | G1 |
+| M6 (parcial: `clientMutationId`, `receivedAt`, horário do aparelho) | `Set`: `clientMutationId`, `userId`, `type`, `rpe`, `performedAt`, alvo, `bodyweightKgSnapshot`, `deletedAt`; backfill (`type` a partir de `isWarmup`/`isDropSet`, `performedAt = completedAt`, ids gerados para o legado) | expand + backfill | G1 |
 | M7 | `Session.clientId`, `SessionExercise` + backfill a partir dos sets | expand + backfill | G1 |
 | M8 | `ProgramRevision`, `ProgramPhase`, `ProgramWeek`, `ProgressionRule`; revisão v1 gerada para cada programa existente | expand + backfill | G1 |
 | M9 | `PersonalRecord`, `TrainingRecommendation`, `DeloadEvent`, `TrainingGuideline` | expand | G2 |

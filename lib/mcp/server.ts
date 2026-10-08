@@ -40,6 +40,8 @@ import {
   undoHistoricalEquipmentBackfill,
 } from '@/lib/mcp/historical-equipment-backfill';
 import { Prisma } from '@/prisma/generated/client';
+import { pickableExerciseWhere } from '@/lib/catalog/access';
+import { ensureUsableExercise } from '@/lib/catalog/resolve';
 
 export const GYMCOACH_MCP_INSTRUCTIONS = `GymCoach stores the trainee's profile, gyms, equipment, programs, workout history, sets, RIR, goals and recovery signals.
 
@@ -446,7 +448,7 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
     async ({ search, limit }) => {
       const exercises = await db.exercise.findMany({
         where: {
-          userId: principal.userId,
+          ...pickableExerciseWhere(principal.userId),
           ...(search ? { name: { contains: search, mode: 'insensitive' as const } } : {}),
         },
         orderBy: { name: 'asc' },
@@ -734,17 +736,14 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
       if (!workout) throw new Error('Workout not found.');
 
       const created = await db.$transaction(async (tx) => {
-        const exercise = await tx.exercise.upsert({
-          where: { userId_name: { userId: principal.userId, name: input.name } },
-          update: {},
-          create: {
-            userId: principal.userId,
-            name: input.name,
-            muscleGroup: input.muscleGroup,
-            category: input.category,
-            equipmentType: input.equipmentType ?? 'OTHER',
-            defaultRestSec: input.restSec,
-          },
+        // A name the catalog knows reuses that exercise; anything else becomes
+        // the user's custom exercise.
+        const { exercise } = await ensureUsableExercise(tx, principal.userId, {
+          name: input.name,
+          muscleGroup: input.muscleGroup,
+          category: input.category,
+          equipmentType: input.equipmentType ?? 'OTHER',
+          defaultRestSec: input.restSec,
         });
         const last = await tx.programExercise.findFirst({
           where: { workoutId },
