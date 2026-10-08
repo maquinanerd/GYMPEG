@@ -13,7 +13,9 @@ afterEach(() => {
 });
 
 function mockFetch(status: number, body: unknown) {
-  const fn = vi.fn(async () => new Response(JSON.stringify(body), { status }));
+  const fn = vi.fn(
+    async (_url: string, _init?: RequestInit) => new Response(JSON.stringify(body), { status }),
+  );
   vi.stubGlobal('fetch', fn);
   return fn;
 }
