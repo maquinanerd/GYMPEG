@@ -232,6 +232,10 @@ describe('buildCoachPayload cardio exclusion (issue #140)', () => {
 describe('buildCoachPayload conditioning (issue #145)', () => {
   async function makeCardioUser(email: string) {
     const user = await makeUser(email);
+    // These expectations bucket weeks in UTC; the payload follows the user's
+    // zone (default America/Sao_Paulo), so pin it to UTC here. Time zone
+    // bucketing itself is covered by lib/stats-timezone.test.ts.
+    await db.user.update({ where: { id: user.id }, data: { timezone: 'UTC' } });
     const run = await db.exercise.create({
       data: { userId: user.id, name: 'Running', muscleGroup: 'OTHER', category: 'CARDIO' },
     });
