@@ -14,3 +14,4 @@ docker/postgres-data
 coverage
 .turbo
 .vercel
+_audit

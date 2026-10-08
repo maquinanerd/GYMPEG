@@ -1,20 +1,16 @@
-# Security Policy
+# Política de segurança
 
-## Reporting a vulnerability
+## Reportar uma vulnerabilidade
 
-Please do not open a public issue for security problems. Instead, use GitHub's
-private vulnerability reporting ("Report a vulnerability" in the Security tab),
-or contact the maintainers privately. We will acknowledge the report and work
-on a fix as quickly as we reasonably can.
+Não abra issue pública para problemas de segurança. Use o reporte privado de vulnerabilidades do GitHub ("Report a vulnerability" na aba Security de https://github.com/maquinanerd/GYMPEG).
 
-## Scope and notes
+## Notas de operação
 
-GymCoach is self-hosted. Operators are responsible for:
+GYM Peg lida com dados pessoais sensíveis (peso, medidas, fotos corporais). Em produção:
 
-- Setting a strong, unique `JWT_SECRET` (at least 32 characters).
-- Keeping their LLM provider API key (`ANTHROPIC_API_KEY` or
-  `OPENROUTER_API_KEY`) secret. Note that the AI coach sends the user's
-  training data to the configured provider.
-- Running the app behind HTTPS (a reverse proxy such as Nginx, Caddy or
-  Traefik) in production.
-- Keeping dependencies up to date (`npm audit`).
+- `JWT_SECRET` forte e único (mínimo 32 caracteres), fora do repositório.
+- Chaves de provedores de IA mantidas em segredo. O coach de IA envia um contexto compacto e estruturado do treino do usuário ao provedor configurado; nunca o banco bruto.
+- HTTPS obrigatório (Coolify/Traefik termina TLS).
+- PostgreSQL sem porta pública, com backup agendado e teste de restauração.
+- Fotos de progresso apenas em storage privado com acesso autenticado ou URL assinada de curta duração.
+- Dependências atualizadas (`npm audit`).

@@ -6,3 +6,4 @@ dist
 coverage
 prisma/migrations
 package-lock.json
+_audit
