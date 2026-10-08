@@ -49,6 +49,7 @@ export async function generateProgram(userId: string, goal: string): Promise<Gen
     system: PROGRAM_GEN_SYSTEM_PROMPT,
     messages: [{ role: 'user', content: userMessage }],
     maxTokens: 8000,
+    responseFormat: 'json',
   });
 
   const parsed = parseGeneratedProgram(text);

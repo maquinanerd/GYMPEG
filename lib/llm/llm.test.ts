@@ -27,6 +27,8 @@ import { resolveProviderId, getLlmProvider } from './index';
 import { LlmError } from './types';
 
 const ENV_KEYS = [
+  'AI_PROVIDER',
+  'AI_FALLBACK_PROVIDER',
   'LLM_PROVIDER',
   'ANTHROPIC_API_KEY',
   'ANTHROPIC_MODEL',
@@ -57,9 +59,9 @@ afterEach(() => {
 });
 
 describe('provider selection', () => {
-  it('defaults to anthropic when LLM_PROVIDER is unset', () => {
-    expect(resolveProviderId()).toBe('anthropic');
-    expect(getLlmProvider().id).toBe('anthropic');
+  it('defaults to gemini when no provider is set', () => {
+    expect(resolveProviderId()).toBe('gemini');
+    expect(getLlmProvider().id).toBe('gemini');
   });
 
   it('selects openrouter when LLM_PROVIDER=openrouter (case-insensitive)', () => {
@@ -74,9 +76,9 @@ describe('provider selection', () => {
     expect(getLlmProvider().id).toBe('codex-lb');
   });
 
-  it('falls back to anthropic for an unknown value', () => {
+  it('falls back to the default provider for an unknown value', () => {
     process.env.LLM_PROVIDER = 'gpt-whatever';
-    expect(resolveProviderId()).toBe('anthropic');
+    expect(resolveProviderId()).toBe('gemini');
   });
 });
 
