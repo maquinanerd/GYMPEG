@@ -1,7 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ExerciseMediaDialog } from './exercise-media-dialog';
+
+// Production serves no media until a licensed source is approved; cover the
+// media branch with a fixture instead of the real catalog.
+vi.mock(
+  '@/lib/exercise-media',
+  async () => (await import('@/tests/fixtures/exercise-media-mock')).exerciseMediaMock,
+);
 
 describe('ExerciseMediaDialog', () => {
   it('shows the local start and finish frames with source information', async () => {

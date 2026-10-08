@@ -2,6 +2,13 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { SessionExerciseStrip } from './session-exercise-strip';
 
+// Production serves no media until a licensed source is approved; cover the
+// media branch with a fixture instead of the real catalog.
+vi.mock(
+  '@/lib/exercise-media',
+  async () => (await import('@/tests/fixtures/exercise-media-mock')).exerciseMediaMock,
+);
+
 vi.mock('@/components/shared/use-exercise-name', () => ({
   useExerciseName: () => (name: string) => name,
 }));

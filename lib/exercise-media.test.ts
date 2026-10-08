@@ -2,12 +2,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import catalog from '@/data/exercise-media.json';
-import { exerciseMediaCoverage, getExerciseMedia } from './exercise-media';
+import {
+  exerciseMediaApproved,
+  exerciseMediaCoverage,
+  getExerciseDatasetId,
+  getExerciseMedia,
+} from './exercise-media';
 import { EXERCISE_CATALOG } from './exercise-catalog';
 import { exerciseNameDictionaries } from '@/i18n/exercise-names';
 
 describe('exercise media catalog', () => {
-  it('covers the default catalog and imported Alpha Progression names', () => {
+  it('maps the default catalog and imported Alpha Progression names to dataset ids', () => {
     const imported = Object.keys(exerciseNameDictionaries.ru ?? {}).filter((name) =>
       name.includes('·'),
     );
@@ -16,30 +21,24 @@ describe('exercise media catalog', () => {
       ...imported,
       'Шея зад · Misc',
     ];
-    const { missing } = exerciseMediaCoverage(names);
-    expect(missing).toEqual([]);
+    const unmapped = names.filter((name) => getExerciseDatasetId(name) === null);
+    expect(unmapped).toEqual([]);
   });
 
-  it('keeps both local frames for every mapped dataset exercise', () => {
-    for (const group of catalog.groups) {
-      for (const frame of ['0.jpg', '1.jpg']) {
-        expect(
-          fs.existsSync(
-            path.join(
-              process.cwd(),
-              'public',
-              'exercise-media',
-              'free-exercise-db',
-              group.datasetId,
-              frame,
-            ),
-          ),
-        ).toBe(true);
-      }
-    }
+  it('serves no media while the source license is unverified', () => {
+    expect(catalog.source.license).toBe('UNVERIFIED');
+    expect(exerciseMediaApproved).toBe(false);
+    expect(getExerciseMedia('Barbell bench press')).toBeNull();
+    expect(exerciseMediaCoverage(['Barbell bench press']).missing).toEqual(['Barbell bench press']);
+  });
+
+  it('does not ship image files from an unapproved source', () => {
+    const dir = path.join(process.cwd(), 'public', 'exercise-media', catalog.source.id);
+    expect(fs.existsSync(dir)).toBe(false);
   });
 
   it('returns null for an unknown custom exercise', () => {
+    expect(getExerciseDatasetId('A future custom movement')).toBeNull();
     expect(getExerciseMedia('A future custom movement')).toBeNull();
   });
 });

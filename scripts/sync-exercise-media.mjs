@@ -7,6 +7,14 @@ if (!sourceRoot || !fs.existsSync(path.join(sourceRoot, 'dist', 'exercises.json'
 }
 
 const appCatalog = JSON.parse(fs.readFileSync('data/exercise-media.json', 'utf8'));
+// The free-exercise-db images were scraped from the web upstream and are not
+// licensed for commercial use (docs/EXERCISE_MEDIA_AUDIT.md). Refuse to copy
+// them into public/ until the source is replaced by licensed media.
+if (appCatalog.source.approvedForProduction !== true) {
+  throw new Error(
+    `Media source "${appCatalog.source.id}" is not approved for production (license: ${appCatalog.source.license}).`,
+  );
+}
 const sourceCatalog = JSON.parse(
   fs.readFileSync(path.join(sourceRoot, 'dist', 'exercises.json'), 'utf8'),
 );

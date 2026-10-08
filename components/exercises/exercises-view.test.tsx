@@ -4,6 +4,13 @@ import userEvent from '@testing-library/user-event';
 import type { Exercise } from '@/lib/prisma-client';
 import { ExercisesView } from './exercises-view';
 
+// Production serves no media until a licensed source is approved; cover the
+// media branch with a fixture instead of the real catalog.
+vi.mock(
+  '@/lib/exercise-media',
+  async () => (await import('@/tests/fixtures/exercise-media-mock')).exerciseMediaMock,
+);
+
 // The catalog renders the create/edit dialogs and the delete button, which call
 // useRouter; mock it so the component mounts under jsdom.
 vi.mock('next/navigation', () => ({
@@ -105,7 +112,9 @@ describe('ExercisesView catalog card at mobile width (issue #330)', () => {
         ]}
       />,
     );
-    const withMedia = screen.getByRole('button', { name: 'View technique for Barbell Bench Press' });
+    const withMedia = screen.getByRole('button', {
+      name: 'View technique for Barbell Bench Press',
+    });
     const withoutMedia = screen.getByRole('button', {
       name: 'View technique for Future custom movement',
     });
