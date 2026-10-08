@@ -236,6 +236,37 @@ describe('offline set sync', () => {
     expect(listener).not.toHaveBeenCalled();
   });
 
+  it('sends the local id as idempotency key and the device time as performedAt', async () => {
+    const item = { ...pendingSet(), gymEquipmentId: null, createdAt: 1_760_000_000_000 };
+    mockGetDB.mockReturnValue(fakeDB(item));
+    const fetchMock = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValue(new Response(JSON.stringify({ id: 'server-9' }), { status: 201 }));
+
+    await flushPendingSets();
+
+    const body = JSON.parse(fetchMock.mock.calls[0]![1]!.body as string);
+    expect(body.clientMutationId).toBe('local-1');
+    expect(body.performedAt).toBe(1_760_000_000_000);
+    expect(item.status).toBe('synced');
+    expect(item.serverId).toBe('server-9');
+  });
+
+  it('resends a set left in syncing by a closed tab', async () => {
+    const item = { ...pendingSet(), gymEquipmentId: null, status: 'syncing' as const };
+    const db = fakeDB(item);
+    mockGetDB.mockReturnValue(db);
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ id: 'server-2' }), { status: 200 }),
+    );
+
+    await flushPendingSets();
+
+    const statuses = db.pendingSets.where.mock.results[0]!.value.anyOf.mock.calls[0]![0];
+    expect(statuses).toContain('syncing');
+    expect(item.status).toBe('synced');
+  });
+
   it('patches an existing server set instead of posting a duplicate', async () => {
     const item: PendingSet = {
       ...pendingSet(),
@@ -256,11 +287,14 @@ describe('offline set sync', () => {
     await flushPendingSets();
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(fetchMock).toHaveBeenCalledWith('/api/sets/server%2F1', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ weight: 95, reps: 9, rir: 1 }),
-    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      '/api/sets/server%2F1',
+      expect.objectContaining({
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ weight: 95, reps: 9, rir: 1 }),
+      }),
+    );
     expect(item.status).toBe('synced');
     expect(item.serverId).toBe('server-1');
   });

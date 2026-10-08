@@ -31,6 +31,8 @@ export const session = {
   setDeleteError: 'Could not delete the set.',
   finished: 'Session finished.',
   finishError: 'Could not finish the session.',
+  finishPending:
+    '{count, plural, one {# set has not synced yet.} other {# sets have not synced yet.}} Connect to the internet and try again.',
   equipmentDropped:
     'Set saved, but the equipment was not attached: it is no longer available in this gym.',
   rest: {

@@ -605,6 +605,18 @@ export function SessionRunner({
       if (typeof navigator !== 'undefined' && navigator.onLine) {
         await flushPendingSets();
       }
+      // Finishing while sets are still queued used to strand them: the server
+      // refused them once the session was closed. Close only when the queue of
+      // this session is empty (permanently failed rows do not block).
+      const unsynced = await getDB()
+        .pendingSets.where('sessionId')
+        .equals(session.id)
+        .filter((row) => row.status === 'pending' || row.status === 'syncing')
+        .count();
+      if (unsynced > 0) {
+        toast.error(t('finishPending', { count: unsynced }));
+        return;
+      }
       const res = await fetch(`/api/sessions/${session.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

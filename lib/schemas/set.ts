@@ -15,7 +15,10 @@ export const setInputSchema = z.object({
   setNumber: z.coerce.number().int().min(1).max(50),
   weight: z.coerce.number().min(0).max(500),
   reps: z.coerce.number().int().min(0).max(100),
-  rir: z.union([z.coerce.number().int().min(0).max(5), z.null()]).optional().nullable(),
+  rir: z
+    .union([z.coerce.number().int().min(0).max(5), z.null()])
+    .optional()
+    .nullable(),
   // Cardio fields (issue #133): only valid on CARDIO exercises - the API
   // enforces that with validateSetForCategory below, since the category lives
   // on the exercise row, not in the payload. Bounds: 1 second to 24 hours,
@@ -43,16 +46,28 @@ export const setInputSchema = z.object({
   notes: z.string().trim().max(500).optional().nullable(),
   isWarmup: z.boolean().optional().default(false),
   isDropSet: z.boolean().optional().default(false),
+  // Offline queue idempotency key (the set's client-side id). Optional so
+  // older clients and imports keep working.
+  clientMutationId: z
+    .string()
+    .min(8)
+    .max(64)
+    .regex(/^[A-Za-z0-9_-]+$/)
+    .optional(),
+  // When the set was performed on the device (epoch ms). Bounded server-side.
+  performedAt: z.number().int().positive().optional(),
 });
 
 export type SetInput = z.infer<typeof setInputSchema>;
 
-export const setUpdateSchema = setInputSchema.pick({
-  weight: true,
-  reps: true,
-}).extend({
-  rir: z.union([z.null(), z.coerce.number().int().min(0).max(5)]),
-});
+export const setUpdateSchema = setInputSchema
+  .pick({
+    weight: true,
+    reps: true,
+  })
+  .extend({
+    rir: z.union([z.null(), z.coerce.number().int().min(0).max(5)]),
+  });
 
 export type SetUpdateInput = z.infer<typeof setUpdateSchema>;
 

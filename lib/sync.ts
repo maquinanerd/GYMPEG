@@ -66,11 +66,23 @@ export async function flushPendingSets(): Promise<FlushResult> {
   }
 }
 
+// A request that never answers must not hold the queue forever.
+const REQUEST_TIMEOUT_MS = 15_000;
+
+function timeoutSignal(): AbortSignal | undefined {
+  return typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function'
+    ? AbortSignal.timeout(REQUEST_TIMEOUT_MS)
+    : undefined;
+}
+
 async function doFlush(): Promise<FlushResult> {
   const db = getDB();
+  // 'syncing' rows are included: a tab closed mid-request leaves them stuck in
+  // that state forever otherwise. Re-sending is safe because the server
+  // deduplicates on clientMutationId (POST) and a PATCH is idempotent.
   const pending = await db.pendingSets
     .where('status')
-    .anyOf(['pending', 'failed'])
+    .anyOf(['pending', 'failed', 'syncing'])
     .sortBy('createdAt');
 
   let flushed = 0;
@@ -94,6 +106,7 @@ async function doFlush(): Promise<FlushResult> {
       if (existingServerId != null) {
         res = await fetch(`/api/sets/${encodeURIComponent(existingServerId)}`, {
           method: 'PATCH',
+          signal: timeoutSignal(),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(sentPatch),
         });
@@ -110,10 +123,15 @@ async function doFlush(): Promise<FlushResult> {
           notes: item.notes,
           isWarmup: item.isWarmup,
           isDropSet: item.isDropSet,
+          // Idempotency key: a retry of this very set returns the stored row.
+          clientMutationId: item.localId,
+          // When it was performed on the device, not when it reached the server.
+          performedAt: item.createdAt,
         };
         const post = (gymEquipmentId: string | null) =>
           fetch(`/api/sessions/${item.sessionId}/sets`, {
             method: 'POST',
+            signal: timeoutSignal(),
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...payload, gymEquipmentId }),
           });

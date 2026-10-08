@@ -6,12 +6,19 @@ import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib
 import { setAchievesGoal } from '@/lib/goals';
 import { effectiveWeight } from '@/lib/stats';
 import { resolveSetEquipmentSnapshot } from '@/lib/set-equipment';
+import { acceptsSetAfterFinish, resolvePerformedAt } from '@/lib/set-timing';
+import { Prisma } from '@/prisma/generated/client';
 
 interface Params {
   params: Promise<{ id: string }>;
 }
 
 // POST /api/sessions/[id]/sets: records a set in a session.
+//
+// Idempotent when the offline queue sends `clientMutationId`: a retried POST
+// (lost response, reload, two tabs) returns the set already stored with that
+// key instead of creating a duplicate. `performedAt` (device clock, bounded)
+// becomes completedAt, so a set logged offline keeps the time it was done.
 export async function POST(req: Request, props: Params) {
   const params = await props.params;
   try {
@@ -23,11 +30,30 @@ export async function POST(req: Request, props: Params) {
     if (!session) {
       throw new ApiError(404, 'Session not found.');
     }
-    if (session.finishedAt) {
-      throw new ApiError(400, 'Session already finished.');
-    }
 
     const data = await parseJsonBody(req, setInputSchema);
+
+    // Replay of a set this session already stored: answer with it (200) so the
+    // client marks it synced, whatever the session state is now.
+    if (data.clientMutationId) {
+      const existing = await db.set.findUnique({
+        where: {
+          sessionId_clientMutationId: {
+            sessionId: params.id,
+            clientMutationId: data.clientMutationId,
+          },
+        },
+      });
+      if (existing) return NextResponse.json(existing, { status: 200 });
+    }
+
+    const performedAt = resolvePerformedAt(data.performedAt, {
+      now: new Date(),
+      sessionStartedAt: session.startedAt,
+    });
+    if (!acceptsSetAfterFinish(session.finishedAt, performedAt, data.clientMutationId)) {
+      throw new ApiError(400, 'Session already finished.');
+    }
 
     // Validation: the exercise must belong to the user.
     const exercise = await db.exercise.findFirst({
@@ -45,35 +71,59 @@ export async function POST(req: Request, props: Params) {
     }
     const isCardio = exercise.category === 'CARDIO';
 
-    const created = await db.$transaction(async (tx) => {
-      const canonicalWeight = isCardio ? 0 : data.weight;
-      const equipmentSnapshot = await resolveSetEquipmentSnapshot(tx, {
-        userId,
-        sessionGymId: session.gymId,
-        exerciseId: data.exerciseId,
-        gymEquipmentId: data.gymEquipmentId,
-      });
-      return tx.set.create({
-        data: {
-          sessionId: params.id,
+    let created: Set;
+    try {
+      created = await db.$transaction(async (tx) => {
+        const canonicalWeight = isCardio ? 0 : data.weight;
+        const equipmentSnapshot = await resolveSetEquipmentSnapshot(tx, {
+          userId,
+          sessionGymId: session.gymId,
           exerciseId: data.exerciseId,
-          ...equipmentSnapshot,
-          setNumber: data.setNumber,
-          // Cardio sets store weight = 0 / reps = 1 by convention (the columns
-          // are NOT NULL); the UI never shows them for CARDIO exercises.
-          weight: canonicalWeight,
-          reps: isCardio ? 1 : data.reps,
-          rir: isCardio ? null : (data.rir ?? null),
-          durationSec: isCardio ? data.durationSec : null,
-          distanceM: isCardio ? (data.distanceM ?? null) : null,
-          avgHr: isCardio ? (data.avgHr ?? null) : null,
-          maxHr: isCardio ? (data.maxHr ?? null) : null,
-          notes: data.notes ?? null,
-          isWarmup: data.isWarmup ?? false,
-          isDropSet: data.isDropSet ?? false,
-        },
+          gymEquipmentId: data.gymEquipmentId,
+        });
+        return tx.set.create({
+          data: {
+            sessionId: params.id,
+            exerciseId: data.exerciseId,
+            ...equipmentSnapshot,
+            setNumber: data.setNumber,
+            // Cardio sets store weight = 0 / reps = 1 by convention (the columns
+            // are NOT NULL); the UI never shows them for CARDIO exercises.
+            weight: canonicalWeight,
+            reps: isCardio ? 1 : data.reps,
+            rir: isCardio ? null : (data.rir ?? null),
+            durationSec: isCardio ? data.durationSec : null,
+            distanceM: isCardio ? (data.distanceM ?? null) : null,
+            avgHr: isCardio ? (data.avgHr ?? null) : null,
+            maxHr: isCardio ? (data.maxHr ?? null) : null,
+            notes: data.notes ?? null,
+            isWarmup: data.isWarmup ?? false,
+            isDropSet: data.isDropSet ?? false,
+            clientMutationId: data.clientMutationId ?? null,
+            completedAt: performedAt,
+          },
+        });
       });
-    });
+    } catch (err) {
+      // Two concurrent POSTs with the same key (two tabs, a retry racing the
+      // original): the loser returns the winner's row instead of failing.
+      if (
+        data.clientMutationId &&
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        const winner = await db.set.findUnique({
+          where: {
+            sessionId_clientMutationId: {
+              sessionId: params.id,
+              clientMutationId: data.clientMutationId,
+            },
+          },
+        });
+        if (winner) return NextResponse.json(winner, { status: 200 });
+      }
+      throw err;
+    }
     // Best-effort: the set is already committed, so a failure here must never
     // fail the request (a 500 would make the offline sync retry the POST and
     // duplicate the set). An unstamped goal self-heals on the next achieving

@@ -34,6 +34,8 @@ export const session = {
   setDeleteError: 'Não foi possível excluir a série.',
   finished: 'Treino concluído.',
   finishError: 'Não foi possível concluir o treino.',
+  finishPending:
+    '{count, plural, one {# série ainda não foi sincronizada.} other {# séries ainda não foram sincronizadas.}} Conecte-se à internet e tente de novo.',
   equipmentDropped:
     'Série salva, mas o equipamento não foi vinculado: ele não está mais disponível nesta academia.',
   rest: {

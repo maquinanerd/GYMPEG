@@ -422,7 +422,15 @@ model Set {
   isWarmup              Boolean       @default(false)
   isDropSet             Boolean       @default(false)
   completedAt           DateTime      @default(now())
+  // Idempotency key from the offline queue (the client-side id of the set).
+  // A retried POST with the same key returns the stored set instead of a
+  // duplicate. Null for sets created before offline idempotency.
+  clientMutationId      String?
+  // When the server received the set. completedAt is when it was performed
+  // (the device clock, bounded server-side), which differs for offline logs.
+  receivedAt            DateTime      @default(now())
 
+  @@unique([sessionId, clientMutationId])
   @@index([exerciseId, completedAt])
   // Leading on gymEquipmentId so the FK referential action (ON DELETE SET
   // NULL, executed by Postgres since relationMode is unset) can locate the
