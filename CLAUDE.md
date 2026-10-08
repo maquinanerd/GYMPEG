@@ -44,7 +44,11 @@ Postgres de teste: `docker compose -f docker-compose.test.yml up -d` e depois `D
 
 ## Upstream
 
-`upstream` = `https://github.com/gymcoach-app/gymcoach`. Para trazer correções: `git fetch upstream && git merge upstream/main` em uma branch, resolver conflitos preservando nossas mudanças (pt-BR, providers, docs). Não reintroduzir `.claude/` nem os workflows de demo/publicação do upstream.
+Hard fork (ADR-001). `upstream` = `https://github.com/gymcoach-app/gymcoach` serve só de referência: não fazer `git merge upstream/main`. Correções de segurança do upstream são avaliadas e trazidas à mão (cherry-pick ou reescrita). Não reintroduzir `.claude/`, os workflows de demo/publicação nem a mídia de `public/exercise-media/free-exercise-db` (não licenciada, ver ADR-005).
+
+## Próximos passos
+
+`docs/14_CONTINUATION_PLAN.md` (como retomar, decisões pendentes) e `docs/13_ROADMAP.md` (épicos do G1 em ordem).
 
 ## Deploy
 
