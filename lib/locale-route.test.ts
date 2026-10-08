@@ -31,6 +31,16 @@ describe('POST /api/locale', () => {
     expect(cookie).toContain('SameSite=lax');
   });
 
+  it('accepts the Brazilian Portuguese locale', async () => {
+    const response = await POST(
+      request('http://gymcoach.local:3030/api/locale', { locale: 'pt-BR' }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ locale: 'pt-BR' });
+    expect(response.headers.get('set-cookie')).toContain('gymcoach.locale=pt-BR');
+  });
+
   it('leaves the cookie non-secure outside production by default', async () => {
     const response = await POST(request('https://gymcoach.example/api/locale', { locale: 'en' }));
     expect(response.headers.get('set-cookie')).not.toContain('Secure');

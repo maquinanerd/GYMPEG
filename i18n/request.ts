@@ -1,12 +1,13 @@
 import { cookies } from 'next/headers';
 import { getRequestConfig } from 'next-intl/server';
-import { defaultLocale, isLocale, localeCookieName } from './config';
+import { localeCookieName, resolveLocale } from './config';
 import { loadMessages } from './messages';
 
 export default getRequestConfig(async () => {
   const cookieStore = await cookies();
-  const requestedLocale = cookieStore.get(localeCookieName)?.value;
-  const locale = isLocale(requestedLocale) ? requestedLocale : defaultLocale;
+  // No cookie (or an unrecognized one) falls back to the default locale; a
+  // loosely formatted tag such as "pt" or "pt_BR" still resolves to pt-BR.
+  const locale = resolveLocale(cookieStore.get(localeCookieName)?.value);
 
   return {
     locale,

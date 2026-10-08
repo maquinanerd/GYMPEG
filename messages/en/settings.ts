@@ -149,7 +149,7 @@ export const settings = {
   mcp: {
     title: 'ChatGPT and MCP',
     description:
-      'Connect an external AI agent to your GymCoach data. Tokens can be revoked at any time.',
+      'Connect an external AI agent to your GYM Peg data. Tokens can be revoked at any time.',
     keyName: 'Connection name',
     create: 'Create connection',
     created: 'MCP connection created.',

@@ -37,6 +37,21 @@ describe('getTrainingDisplayName', () => {
     );
   });
 
+  it('localizes imported names into Brazilian Portuguese with the right week plurals', () => {
+    expect(getTrainingDisplayName('Day 2 · Day 1', 'pt-BR')).toBe('Dia 2 · Dia 1');
+    expect(getTrainingDisplayName('Day 3 · Week 5 · New plan', 'pt-BR')).toBe(
+      'Dia 3 · Semana 5 · Novo plano',
+    );
+    expect(getTrainingDisplayName('New plan · 1 week (2026-04-23)', 'pt-BR')).toBe(
+      'Novo plano · 1 semana (2026-04-23)',
+    );
+    expect(getTrainingDisplayName('New plan · 2 weeks', 'pt-BR')).toBe('Novo plano · 2 semanas');
+    expect(getTrainingDisplayName('Full Body · Day 1 · Full Body Hybrid', 'pt-BR')).toBe(
+      'Corpo inteiro · Dia 1 · Híbrido corpo inteiro',
+    );
+    expect(getTrainingDisplayName('Upper · Lower', 'pt-BR')).toBe('Superiores · Inferiores');
+  });
+
   it('localizes common imported split names', () => {
     expect(getTrainingDisplayName('Full Body · Day 1 · Full Body Hybrid', 'ru')).toBe(
       'Всё тело · День 1 · Гибридная программа на всё тело',

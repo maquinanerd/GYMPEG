@@ -15,6 +15,18 @@ describe('exercise name localization', () => {
     expect(getExerciseDisplayName('Bench Press', 'fr')).toBe('Développé couché');
   });
 
+  it('translates recognized exercises into Brazilian gym vocabulary', () => {
+    expect(getExerciseDisplayName('Bench Press', 'pt-BR')).toBe('Supino reto');
+    expect(getExerciseDisplayName('Barbell bench press', 'pt-BR')).toBe('Supino reto com barra');
+    expect(getExerciseDisplayName('Lat Pulldown', 'pt-BR')).toBe('Puxada alta');
+    expect(getExerciseDisplayName('Leg extension', 'pt-BR')).toBe('Cadeira extensora');
+    expect(getExerciseDisplayName('Lying leg curl', 'pt-BR')).toBe('Mesa flexora');
+    expect(getExerciseDisplayName('Seated Cable Row', 'pt-BR')).toBe('Remada baixa');
+    expect(getExerciseDisplayName('Skullcrusher', 'pt-BR')).toBe('Tríceps testa');
+    expect(getExerciseDisplayName('Face Pull', 'pt-BR')).toBe('Face pull');
+    expect(getExerciseDisplayName('Squats · Barbell', 'pt-BR')).toBe('Agachamento · Barra');
+  });
+
   it('keeps English and unknown custom names unchanged', () => {
     expect(getExerciseDisplayName('Bench Press', 'en')).toBe('Bench Press');
     expect(getExerciseDisplayName('Шея зад · Misc', 'ru')).toBe('Шея зад · Misc');
@@ -61,6 +73,36 @@ describe('exercise name localization', () => {
     const missing = [...names].filter(
       (name) => getExerciseDisplayName(name, 'ru') === name,
     );
+    expect(missing).toEqual([]);
+  });
+
+  it('covers every built-in catalog exercise in Brazilian Portuguese', () => {
+    const missing = EXERCISE_CATALOG.map((exercise) => exercise.name).filter(
+      (name) => getExerciseDisplayName(name, 'pt-BR') === name,
+    );
+    expect(missing).toEqual([]);
+  });
+
+  it('covers every exercise used by built-in program templates in Brazilian Portuguese', () => {
+    const names = new Set(
+      programTemplates.flatMap((template) =>
+        template.program.workouts.flatMap((workout) =>
+          workout.exercises.map((exercise) => exercise.name),
+        ),
+      ),
+    );
+    const missing = [...names].filter((name) => getExerciseDisplayName(name, 'pt-BR') === name);
+    expect(missing).toEqual([]);
+  });
+
+  it('translates in Brazilian Portuguese every name another locale translates', () => {
+    const otherNames = new Set(
+      Object.entries(exerciseNameDictionaries)
+        .filter(([locale]) => locale !== 'pt-BR')
+        .flatMap(([, dictionary]) => Object.keys(dictionary ?? {})),
+    );
+    const brazilian = exerciseNameDictionaries['pt-BR'] ?? {};
+    const missing = [...otherNames].filter((name) => !(name in brazilian));
     expect(missing).toEqual([]);
   });
 

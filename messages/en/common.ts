@@ -63,10 +63,11 @@ export const common = {
   language: {
     label: 'Language',
     change: 'Change language',
-    description: 'Choose the language used by the GymCoach interface.',
+    description: 'Choose the language used by the GYM Peg interface.',
     english: 'English',
     french: 'French',
     russian: 'Russian',
+    portuguese: 'Portuguese (Brazil)',
     error: 'Could not change the language.',
   },
   theme: {

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { toast } from 'sonner';
 import { Camera, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -22,8 +23,10 @@ interface Props {
   photos: ProgressPhotoView[];
 }
 
-function shortDate(iso: string) {
-  return new Intl.DateTimeFormat('en-US', {
+// Formatted in the active UI locale but in the browser's own time zone, as
+// before: a photo's day must not shift with the server zone.
+function shortDate(iso: string, locale: string) {
+  return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'short',
     day: '2-digit',
@@ -39,6 +42,7 @@ function imageUrl(id: string) {
 // two photos side by side to see visual progress.
 export function PhotosCard({ photos }: Props) {
   const router = useRouter();
+  const locale = useLocale();
   const fileRef = useRef<HTMLInputElement>(null);
   const [note, setNote] = useState('');
   const [takenAt, setTakenAt] = useState('');
@@ -91,7 +95,7 @@ export function PhotosCard({ photos }: Props) {
   }
 
   async function deletePhoto(photo: ProgressPhotoView) {
-    if (!confirm(`Delete the photo of ${shortDate(photo.takenAt)}?`)) return;
+    if (!confirm(`Delete the photo of ${shortDate(photo.takenAt, locale)}?`)) return;
     setBusy(true);
     try {
       const res = await fetch(`/api/progress-photos/${photo.id}`, {
@@ -173,19 +177,19 @@ export function PhotosCard({ photos }: Props) {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={imageUrl(p.id)}
-                    alt={`Progress photo of ${shortDate(p.takenAt)}${p.note ? ` - ${p.note}` : ''}`}
+                    alt={`Progress photo of ${shortDate(p.takenAt, locale)}${p.note ? ` - ${p.note}` : ''}`}
                     className="aspect-square w-full rounded-md border object-cover"
                     loading="lazy"
                   />
                   <figcaption className="mt-1 truncate text-xs text-muted-foreground">
-                    {shortDate(p.takenAt)}
+                    {shortDate(p.takenAt, locale)}
                   </figcaption>
                   <Button
                     type="button"
                     variant="secondary"
                     size="icon"
                     className="absolute right-1 top-1 size-7 opacity-80"
-                    aria-label={`Delete photo of ${shortDate(p.takenAt)}`}
+                    aria-label={`Delete photo of ${shortDate(p.takenAt, locale)}`}
                     onClick={() => void deletePhoto(p)}
                     disabled={busy}
                   >
@@ -218,7 +222,7 @@ export function PhotosCard({ photos }: Props) {
                       >
                         {photos.map((p) => (
                           <option key={p.id} value={p.id}>
-                            {shortDate(p.takenAt)}
+                            {shortDate(p.takenAt, locale)}
                             {p.note ? ` - ${p.note}` : ''}
                           </option>
                         ))}
@@ -227,7 +231,7 @@ export function PhotosCard({ photos }: Props) {
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={imageUrl(photo.id)}
-                          alt={`${label} photo of ${shortDate(photo.takenAt)}`}
+                          alt={`${label} photo of ${shortDate(photo.takenAt, locale)}`}
                           className="w-full rounded-md border object-contain"
                         />
                       )}

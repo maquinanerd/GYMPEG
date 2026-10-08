@@ -66,10 +66,11 @@ export const common = {
   language: {
     label: 'Langue',
     change: 'Changer de langue',
-    description: 'Choisissez la langue de l’interface GymCoach.',
+    description: 'Choisissez la langue de l’interface GYM Peg.',
     english: 'Anglais',
     french: 'Français',
     russian: 'Russe',
+    portuguese: 'Portugais (Brésil)',
     error: 'Impossible de changer la langue.',
   },
   theme: {

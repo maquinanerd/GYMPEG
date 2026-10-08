@@ -342,6 +342,8 @@ export function HistoryCalendar({
   );
 }
 
+// Every other locale (en, pt-BR) starts the week on Sunday, the US and
+// Brazilian calendar convention.
 const MONDAY_FIRST_LOCALES = ['ru', 'fr'];
 const DATE_LABEL_FORMAT = {
   weekday: 'long',

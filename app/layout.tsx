@@ -10,14 +10,14 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('common.metadata');
 
   return {
-    title: 'GymCoach',
+    title: 'GYM Peg',
     description: t('description'),
-    applicationName: 'GymCoach',
+    applicationName: 'GYM Peg',
     manifest: '/manifest.json',
     appleWebApp: {
       capable: true,
       statusBarStyle: 'black-translucent',
-      title: 'GymCoach',
+      title: 'GYM Peg',
     },
     icons: {
       icon: [

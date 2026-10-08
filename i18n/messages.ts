@@ -4,6 +4,7 @@ import type englishMessages from '@/messages/en';
 type AppMessages = typeof englishMessages;
 
 const loaders = {
+  'pt-BR': () => import('@/messages/pt-BR').then((module) => module.default),
   en: () => import('@/messages/en').then((module) => module.default),
   fr: () => import('@/messages/fr').then((module) => module.default),
   ru: () => import('@/messages/ru').then((module) => module.default),

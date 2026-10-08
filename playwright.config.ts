@@ -17,6 +17,23 @@ export default defineConfig({
   use: {
     baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry',
+    // The app defaults to pt-BR; the specs assert English copy, so every
+    // context starts with the English locale cookie the language selector sets.
+    storageState: {
+      cookies: [
+        {
+          name: 'gymcoach.locale',
+          value: 'en',
+          domain: 'localhost',
+          path: '/',
+          expires: -1,
+          httpOnly: false,
+          secure: false,
+          sameSite: 'Lax',
+        },
+      ],
+      origins: [],
+    },
   },
   webServer: {
     // LLM_PROVIDER=demo serves canned coach responses, so the AI flows (chat,

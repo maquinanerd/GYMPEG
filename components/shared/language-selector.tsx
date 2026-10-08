@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 
 // Message key under common.language for each locale's translated name.
 const localeMessageKeys = {
+  'pt-BR': 'portuguese',
   en: 'english',
   fr: 'french',
   ru: 'russian',
