@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { verifySession, SESSION_COOKIE } from '@/lib/auth';
+import { verifySession, SESSION_COOKIE } from '@/lib/auth-token';
 
 // Routes reachable without a valid session.
 // /api/auth/logout is public: replaying it without a cookie does nothing
@@ -14,13 +14,17 @@ const PUBLIC_PATHS = new Set([
   '/api/auth/login',
   '/api/auth/register',
   '/api/auth/logout',
+  '/api/auth/session-expired',
 ]);
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isPublic = PUBLIC_PATHS.has(pathname);
   const token = req.cookies.get(SESSION_COOKIE)?.value;
-  const session = token ? await verifySession(token) : null;
+  const verified = token ? await verifySession(token) : null;
+  // Tokens issued before revocable sessions carry no session id: treat them as
+  // signed out here so they go straight to /login.
+  const session = verified?.sid ? verified : null;
 
   if (isPublic) {
     // Already signed in and visiting /login or /signup: send to the dashboard.

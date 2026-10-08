@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import bcrypt from 'bcrypt';
 import { z } from 'zod';
 import { db } from '@/lib/db';
-import { signSession, SESSION_COOKIE, SESSION_COOKIE_OPTIONS } from '@/lib/auth';
+import { SESSION_COOKIE, SESSION_COOKIE_OPTIONS } from '@/lib/auth-token';
+import { createAuthSession } from '@/lib/auth-session';
+import { verifyPassword } from '@/lib/password';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
 import { ApiError, AUTH_JSON_BODY_MAX_BYTES, readJsonBodyOrNull } from '@/lib/api';
 
@@ -35,10 +36,14 @@ export async function POST(req: Request) {
     const invalid = NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });
 
     if (!user) return invalid;
-    const ok = await bcrypt.compare(password, user.passwordHash);
+    const ok = await verifyPassword(password, user.passwordHash);
     if (!ok) return invalid;
 
-    const token = await signSession({ userId: user.id, email: user.email });
+    const { token } = await createAuthSession({
+      userId: user.id,
+      email: user.email,
+      userAgent: req.headers.get('user-agent'),
+    });
     (await cookies()).set(SESSION_COOKIE, token, SESSION_COOKIE_OPTIONS);
 
     return NextResponse.json({ ok: true });

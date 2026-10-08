@@ -146,6 +146,27 @@ export const settings = {
     fitImportDone:
       'Imported {sessions, plural, one {# session} other {# sessions}}{exercises, plural, =0 {} one {, # new exercise} other {, # new exercises}}{skipped, plural, =0 {.} one { (# file skipped).} other { (# files skipped).}}',
   },
+  security: {
+    title: 'Security',
+    passwordTitle: 'Change password',
+    currentPassword: 'Current password',
+    newPassword: 'New password',
+    confirmPassword: 'Confirm new password',
+    submit: 'Change password',
+    saving: 'Saving...',
+    tooShort: 'The new password must have at least {min} characters.',
+    mismatch: 'The new passwords do not match.',
+    wrongCurrent: 'Current password is incorrect, or the new one is not accepted.',
+    error: 'Something went wrong. Try again.',
+    changed:
+      '{count, plural, =0 {Password changed.} one {Password changed. # other device was signed out.} other {Password changed. # other devices were signed out.}}',
+    devicesTitle: 'Signed-in devices',
+    otherDevices:
+      '{count, plural, =0 {Only this device is signed in.} one {# other device is signed in.} other {# other devices are signed in.}}',
+    signOutOthers: 'Sign out other devices',
+    signedOut:
+      '{count, plural, =0 {No other device was signed in.} one {# device signed out.} other {# devices signed out.}}',
+  },
   mcp: {
     title: 'ChatGPT and MCP',
     description:

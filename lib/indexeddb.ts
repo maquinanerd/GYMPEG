@@ -84,6 +84,15 @@ export function getDB(): GymCoachDB {
   return _db;
 }
 
+// Deletes the whole local database (logout on a device with nothing left to
+// sync). The next getDB() call opens a fresh, empty one.
+export async function deleteLocalDB(): Promise<void> {
+  if (!_db && typeof window === 'undefined') return;
+  const db = getDB();
+  _db = null;
+  await db.delete();
+}
+
 // Generates a simple cuid client-side (good enough for localIds).
 // We use crypto.randomUUID if available, otherwise fall back to Math.random.
 export function generateLocalId(): string {

@@ -53,8 +53,25 @@ model User {
   gyms              Gym[]                                 @relation("GymOwner")
   mcpAccessTokens   McpAccessToken[]
   mcpBackfillAudits McpHistoricalEquipmentBackfillAudit[]
+  authSessions      AuthSession[]
   activeGymId       String?
   activeGym         Gym?                                  @relation("ActiveGym", fields: [activeGymId], references: [id], onDelete: SetNull)
+}
+
+// Login session behind the signed session cookie (claim `sid`). Revoking a row
+// (logout, "sign out other devices", password change) ends access on the next
+// request: server components and API routes re-check it.
+model AuthSession {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+  lastSeenAt DateTime  @default(now())
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  userAgent  String?
+
+  @@index([userId, revokedAt])
 }
 
 // Personal access tokens for remote MCP clients such as ChatGPT. Only a

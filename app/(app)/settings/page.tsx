@@ -8,12 +8,13 @@ import { ProfileSection } from '@/components/settings/profile-section';
 import { ImportSection } from '@/components/settings/import-section';
 import { GymProfilesSection } from '@/components/settings/gym-profiles-section';
 import { McpSection } from '@/components/settings/mcp-section';
+import { SecuritySection } from '@/components/settings/security-section';
 
 export default async function SettingsPage() {
   const t = await getTranslations('settings');
   const common = await getTranslations('common');
   const auth = await requireSession();
-  const [user, gyms, exercises, mcpTokens] = await Promise.all([
+  const [user, gyms, exercises, mcpTokens, otherSessions] = await Promise.all([
     db.user.findUnique({
       where: { id: auth.userId },
       select: {
@@ -48,6 +49,14 @@ export default async function SettingsPage() {
         lastUsedAt: true,
       },
     }),
+    db.authSession.count({
+      where: {
+        userId: auth.userId,
+        revokedAt: null,
+        expiresAt: { gt: new Date() },
+        ...(auth.sid ? { id: { not: auth.sid } } : {}),
+      },
+    }),
   ]);
 
   return (
@@ -69,6 +78,8 @@ export default async function SettingsPage() {
             </div>
           </CardContent>
         </Card>
+
+        <SecuritySection otherSessions={otherSessions} />
 
         <ProfileSection
           initial={{

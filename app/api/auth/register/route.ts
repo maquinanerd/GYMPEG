@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import bcrypt from 'bcrypt';
 import { db } from '@/lib/db';
-import { signSession, SESSION_COOKIE, SESSION_COOKIE_OPTIONS } from '@/lib/auth';
+import { SESSION_COOKIE, SESSION_COOKIE_OPTIONS } from '@/lib/auth-token';
+import { createAuthSession } from '@/lib/auth-session';
+import { hashPassword } from '@/lib/password';
 import { registerSchema } from '@/lib/schemas/auth';
 import { seedExerciseCatalog } from '@/lib/exercise-catalog';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
@@ -48,7 +49,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await hashPassword(password);
     const user = await db.user.create({
       data: { email, passwordHash, displayName: displayName ?? null },
     });
@@ -56,7 +57,11 @@ export async function POST(req: Request) {
     // Give the new account a starter catalog so the app is not empty.
     await seedExerciseCatalog(db, user.id);
 
-    const token = await signSession({ userId: user.id, email: user.email });
+    const { token } = await createAuthSession({
+      userId: user.id,
+      email: user.email,
+      userAgent: req.headers.get('user-agent'),
+    });
     (await cookies()).set(SESSION_COOKIE, token, SESSION_COOKIE_OPTIONS);
 
     return NextResponse.json({ ok: true });

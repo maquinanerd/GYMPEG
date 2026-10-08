@@ -150,6 +150,27 @@ export const settings = {
     fitImportDone:
       '{sessions, plural, one {# treino importado} other {# treinos importados}}{exercises, plural, =0 {} one {, # exercício novo} other {, # exercícios novos}}{skipped, plural, =0 {.} one { (# arquivo ignorado).} other { (# arquivos ignorados).}}',
   },
+  security: {
+    title: 'Segurança',
+    passwordTitle: 'Trocar senha',
+    currentPassword: 'Senha atual',
+    newPassword: 'Nova senha',
+    confirmPassword: 'Confirme a nova senha',
+    submit: 'Trocar senha',
+    saving: 'Salvando...',
+    tooShort: 'A nova senha precisa ter pelo menos {min} caracteres.',
+    mismatch: 'As novas senhas não coincidem.',
+    wrongCurrent: 'A senha atual está incorreta ou a nova senha não é aceita.',
+    error: 'Algo deu errado. Tente de novo.',
+    changed:
+      '{count, plural, =0 {Senha alterada.} one {Senha alterada. # outro dispositivo foi desconectado.} other {Senha alterada. # outros dispositivos foram desconectados.}}',
+    devicesTitle: 'Dispositivos conectados',
+    otherDevices:
+      '{count, plural, =0 {Só este dispositivo está conectado.} one {# outro dispositivo está conectado.} other {# outros dispositivos estão conectados.}}',
+    signOutOthers: 'Sair dos outros dispositivos',
+    signedOut:
+      '{count, plural, =0 {Nenhum outro dispositivo estava conectado.} one {# dispositivo desconectado.} other {# dispositivos desconectados.}}',
+  },
   mcp: {
     title: 'ChatGPT e MCP',
     description:
