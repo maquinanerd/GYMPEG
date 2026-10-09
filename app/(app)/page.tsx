@@ -8,6 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { getHomeInsight } from '@/lib/home-insight';
 import { getTrainingDisplayName } from '@/i18n/training-names';
+import { suggestNextWorkout } from '@/lib/next-workout-query';
+import { StartWorkoutButton } from '@/components/session/start-workout-button';
 
 const DAY_KEYS = [
   'monday',
@@ -54,6 +56,31 @@ export default async function DashboardPage() {
     where: { id: session.userId },
     select: { onboardedAt: true },
   });
+
+  // The next workout of the program (rotation or fixed days, epic 1.6).
+  const next =
+    !inProgressSession && activeProgram
+      ? await suggestNextWorkout(session.userId, activeProgram)
+      : null;
+  const nextWorkout = next
+    ? (activeProgram?.workouts.find((workout) => workout.id === next.workoutId) ?? null)
+    : null;
+  const lastWorkoutName =
+    next?.kind === 'rotation' && next.afterWorkoutId
+      ? activeProgram?.workouts.find((workout) => workout.id === next.afterWorkoutId)?.name
+      : undefined;
+  const nextReason = !next
+    ? null
+    : next.kind === 'today'
+      ? t('nextToday')
+      : next.kind === 'upcoming'
+        ? t('nextUpcoming', {
+            day: common(`days.${DAY_KEYS[next.dayOfWeek - 1]!}`),
+            count: next.inDays,
+          })
+        : lastWorkoutName
+          ? t('nextAfter', { name: getTrainingDisplayName(lastWorkoutName, locale) })
+          : t('nextFirst');
 
   return (
     <main className="flex-1 px-4 py-6">
@@ -148,24 +175,47 @@ export default async function DashboardPage() {
           </Card>
         ) : (
           <>
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">{t('startSession')}</CardTitle>
-                <CardDescription>
-                  {t('activeProgram', {
-                    name: getTrainingDisplayName(activeProgram.name, locale),
-                  })}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button asChild className="min-h-tap w-full text-base">
-                  <Link href="/session/new">
-                    <Play className="size-5" />
-                    <span className="ml-2">{t('chooseSession')}</span>
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
+            {nextWorkout ? (
+              <Card data-testid="next-workout">
+                <CardHeader className="pb-3">
+                  <CardDescription>{t('nextWorkout')}</CardDescription>
+                  <CardTitle className="text-xl">
+                    {getTrainingDisplayName(nextWorkout.name, locale)}
+                  </CardTitle>
+                  <CardDescription>
+                    {nextReason} ·{' '}
+                    {t('activeProgram', {
+                      name: getTrainingDisplayName(activeProgram.name, locale),
+                    })}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-2">
+                  <StartWorkoutButton workoutId={nextWorkout.id} />
+                  <Button asChild variant="ghost" className="min-h-tap">
+                    <Link href="/session/new">{t('chooseOther')}</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">{t('startSession')}</CardTitle>
+                  <CardDescription>
+                    {t('activeProgram', {
+                      name: getTrainingDisplayName(activeProgram.name, locale),
+                    })}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button asChild className="min-h-tap w-full text-base">
+                    <Link href="/session/new">
+                      <Play className="size-5" />
+                      <span className="ml-2">{t('chooseSession')}</span>
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
 
             <div>
               <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
@@ -185,6 +235,7 @@ export default async function DashboardPage() {
                               {getTrainingDisplayName(w.name, locale)}
                             </p>
                             <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+                              {w.id === nextWorkout?.id && <Badge>{t('nextBadge')}</Badge>}
                               {day && <Badge variant="secondary">{day}</Badge>}
                               <span>
                                 {common('counts.exercises', { count: w._count.exercises })}

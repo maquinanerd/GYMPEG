@@ -8,6 +8,7 @@ export const session = {
   noSessionDescription: 'Add at least one session with exercises before starting.',
   configureProgram: 'Configure program',
   startThis: 'Start this session',
+  suggested: 'Suggested',
   starting: 'Starting...',
   startError: 'Could not start the session.',
   offline: {

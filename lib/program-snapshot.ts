@@ -3,7 +3,7 @@
 // the database side lives in lib/program-revisions.
 
 import { z } from 'zod';
-import type { SetAutoregulationMode } from '@/lib/prisma-client';
+import type { ProgramSchedule, SetAutoregulationMode } from '@/lib/prisma-client';
 
 const snapshotExerciseSchema = z.object({
   id: z.string(),
@@ -38,6 +38,8 @@ export const programSnapshotSchema = z.object({
   name: z.string(),
   description: z.string().nullable(),
   phase: z.string(),
+  // Absent in versions recorded before schedules existed: a rotation.
+  scheduleMode: z.enum(['ROTATION', 'FIXED_DAYS']).default('ROTATION'),
   workouts: z.array(snapshotWorkoutSchema),
 });
 
@@ -50,6 +52,7 @@ export interface ProgramForSnapshot {
   name: string;
   description: string | null;
   phase: string;
+  scheduleMode: ProgramSchedule;
   workouts: Array<{
     id: string;
     name: string;
@@ -81,6 +84,7 @@ export function buildProgramSnapshot(program: ProgramForSnapshot): ProgramSnapsh
     name: program.name,
     description: program.description,
     phase: program.phase,
+    scheduleMode: program.scheduleMode,
     workouts: [...program.workouts]
       .sort((a, b) => a.order - b.order)
       .map((workout) => ({
@@ -119,6 +123,9 @@ export function snapshotContent(snapshot: ProgramSnapshot): string {
     name: snapshot.name,
     description: snapshot.description,
     phase: snapshot.phase,
+    // Only when not the default, so programs recorded before schedules
+    // existed keep their content hash.
+    ...(snapshot.scheduleMode !== 'ROTATION' ? { scheduleMode: snapshot.scheduleMode } : {}),
     workouts: snapshot.workouts.map((workout) => ({
       name: workout.name,
       dayOfWeek: workout.dayOfWeek,
@@ -175,7 +182,7 @@ export interface ProgramDiff {
   workoutsChanged: WorkoutChange[];
 }
 
-const PROGRAM_FIELDS = ['name', 'description', 'phase'] as const;
+const PROGRAM_FIELDS = ['name', 'description', 'phase', 'scheduleMode'] as const;
 const WORKOUT_FIELDS = ['dayOfWeek'] as const;
 const EXERCISE_FIELDS = [
   'targetSets',

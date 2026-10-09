@@ -11,6 +11,7 @@ export const session = {
   noSessionDescription: 'Перед началом добавьте хотя бы одну тренировку с упражнениями.',
   configureProgram: 'Настроить программу',
   startThis: 'Начать эту тренировку',
+  suggested: 'Рекомендуется',
   starting: 'Запуск...',
   startError: 'Не удалось начать тренировку.',
   offline: {

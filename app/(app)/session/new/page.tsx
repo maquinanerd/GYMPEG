@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { ReadinessCheckin } from '@/components/session/readiness-checkin';
 import { WorkoutStartList } from '@/components/session/workout-start-list';
 import { getTrainingDisplayName } from '@/i18n/training-names';
+import { suggestNextWorkout } from '@/lib/next-workout-query';
 
 const DAY_KEYS = [
   'monday',
@@ -43,6 +44,7 @@ export default async function NewSessionPage() {
       select: { id: true, name: true },
     }),
   ]);
+  const suggestion = activeProgram ? await suggestNextWorkout(session.userId, activeProgram) : null;
 
   return (
     <main className="flex-1 px-4 py-6">
@@ -95,6 +97,7 @@ export default async function NewSessionPage() {
             <WorkoutStartList
               activeGymId={user?.activeGymId ?? null}
               gyms={gyms}
+              suggestedId={suggestion?.workoutId ?? null}
               workouts={activeProgram.workouts.map((w) => {
                 const dayKey = w.dayOfWeek != null ? DAY_KEYS[w.dayOfWeek - 1] : null;
                 const day = dayKey ? common(`days.${dayKey}`) : null;

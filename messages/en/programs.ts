@@ -20,6 +20,14 @@ export const programs = {
   programNamePlaceholder: 'e.g. Hypertrophy 2026 - Phase 1',
   phase: 'Phase',
   phasePlaceholder: 'e.g. Hypertrophy, Strength, Metabolic stress',
+  schedule: {
+    label: 'Next workout',
+    ROTATION: 'In sequence (rotation)',
+    FIXED_DAYS: 'By weekday',
+    rotationHint:
+      'Workouts follow each other in order, whatever the day: after the last one comes the first again.',
+    fixedHint: 'Each workout has its weekday. On a day without one, the next scheduled day shows.',
+  },
   descriptionOptional: 'Description (optional)',
   createProgram: 'Create program',
   creating: 'Creating...',
@@ -193,6 +201,7 @@ export const programs = {
       autoregulationMode: 'Autoregulation',
       fatigueRate: 'Fatigue rate',
       loadAdjustmentPct: 'Load adjustment (%)',
+      scheduleMode: 'Next workout',
     },
     autoregulation: {
       PRESERVE_RIR: 'Keep RIR',

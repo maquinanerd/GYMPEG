@@ -24,6 +24,15 @@ export const programs = {
   programNamePlaceholder: 'ex. Hypertrophie 2026 - Phase 1',
   phase: 'Phase',
   phasePlaceholder: 'ex. Hypertrophie, Force, Stress métabolique',
+  schedule: {
+    label: 'Prochaine séance',
+    ROTATION: 'En séquence (rotation)',
+    FIXED_DAYS: 'Par jour de la semaine',
+    rotationHint:
+      'Les séances se suivent dans l’ordre, quel que soit le jour : après la dernière revient la première.',
+    fixedHint:
+      'Chaque séance a son jour. Un jour sans séance, la prochaine journée prévue s’affiche.',
+  },
   descriptionOptional: 'Description (facultatif)',
   createProgram: 'Créer le programme',
   creating: 'Création...',
@@ -200,6 +209,7 @@ export const programs = {
       autoregulationMode: 'Autorégulation',
       fatigueRate: 'Taux de fatigue',
       loadAdjustmentPct: 'Ajustement de charge (%)',
+      scheduleMode: 'Prochaine séance',
     },
     autoregulation: {
       PRESERVE_RIR: 'Garder le RIR',

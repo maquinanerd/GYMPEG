@@ -26,10 +26,13 @@ export function WorkoutStartList({
   workouts,
   gyms,
   activeGymId,
+  suggestedId = null,
 }: {
   workouts: WorkoutOption[];
   gyms: Array<{ id: string; name: string }>;
   activeGymId: string | null;
+  // The next workout of the program's schedule (lib/next-workout), if any.
+  suggestedId?: string | null;
 }) {
   const t = useTranslations('session');
   const common = useTranslations('common');
@@ -62,7 +65,10 @@ export function WorkoutStartList({
       <ul className="flex flex-col gap-3">
         {workouts.map((workout) => (
           <li key={workout.id}>
-            <Card>
+            <Card
+              data-suggested={workout.id === suggestedId || undefined}
+              className={workout.id === suggestedId ? 'border-primary/60 bg-primary/5' : undefined}
+            >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
@@ -71,7 +77,10 @@ export function WorkoutStartList({
                       {common('counts.exercises', { count: workout.exerciseCount })}
                     </CardDescription>
                   </div>
-                  {workout.day && <Badge variant="secondary">{workout.day}</Badge>}
+                  <div className="flex shrink-0 gap-1">
+                    {workout.id === suggestedId && <Badge>{t('suggested')}</Badge>}
+                    {workout.day && <Badge variant="secondary">{workout.day}</Badge>}
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="pt-0">

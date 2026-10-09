@@ -247,7 +247,12 @@ export async function restoreProgramRevision(
   await db.$transaction(async (tx) => {
     await tx.program.update({
       where: { id: programId, userId },
-      data: { name: snapshot.name, description: snapshot.description, phase: snapshot.phase },
+      data: {
+        name: snapshot.name,
+        description: snapshot.description,
+        phase: snapshot.phase,
+        scheduleMode: snapshot.scheduleMode,
+      },
     });
     const current = await tx.workout.findMany({
       where: { programId },

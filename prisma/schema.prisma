@@ -394,6 +394,9 @@ model Program {
   name        String
   description String?
   phase       String
+  // How the next workout is chosen (lib/next-workout): in sequence after the
+  // last one done, or by the weekday set on each workout.
+  scheduleMode ProgramSchedule @default(ROTATION)
   isActive    Boolean   @default(false)
   startDate   DateTime  @default(now())
   endDate     DateTime?
@@ -432,6 +435,11 @@ model ProgramRevision {
   sessions    Session[]
 
   @@unique([programId, version])
+}
+
+enum ProgramSchedule {
+  ROTATION
+  FIXED_DAYS
 }
 
 enum ProgramRevisionSource {

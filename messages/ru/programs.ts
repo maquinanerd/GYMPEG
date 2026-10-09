@@ -25,6 +25,14 @@ export const programs = {
   programNamePlaceholder: 'например: Гипертрофия 2026 - фаза 1',
   phase: 'Фаза',
   phasePlaceholder: 'например: гипертрофия, сила, метаболический стресс',
+  schedule: {
+    label: 'Следующая тренировка',
+    ROTATION: 'По очереди (ротация)',
+    FIXED_DAYS: 'По дням недели',
+    rotationHint: 'Тренировки идут по порядку независимо от дня: после последней снова первая.',
+    fixedHint:
+      'У каждой тренировки свой день недели. В день без тренировки показывается ближайший запланированный день.',
+  },
   descriptionOptional: 'Описание (необязательно)',
   createProgram: 'Создать программу',
   creating: 'Создание...',
@@ -200,6 +208,7 @@ export const programs = {
       autoregulationMode: 'Авторегуляция',
       fatigueRate: 'Скорость утомления',
       loadAdjustmentPct: 'Коррекция нагрузки (%)',
+      scheduleMode: 'Следующая тренировка',
     },
     autoregulation: {
       PRESERVE_RIR: 'Сохранять RIR',

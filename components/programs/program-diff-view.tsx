@@ -22,6 +22,7 @@ const FIELD_KEYS = [
   'name',
   'description',
   'phase',
+  'scheduleMode',
   'dayOfWeek',
   'targetSets',
   'targetRepsMin',
@@ -44,6 +45,7 @@ function isFieldKey(field: string): field is FieldKey {
 // Renders the difference between two program versions as plain lines.
 export function ProgramDiffView({ diff }: { diff: ProgramDiff }) {
   const t = useTranslations('programs.history');
+  const programs = useTranslations('programs');
   const common = useTranslations('common');
   const exerciseName = useExerciseName();
   const trainingName = useTrainingName();
@@ -60,6 +62,9 @@ export function ProgramDiffView({ diff }: { diff: ProgramDiff }) {
     }
     if (field === 'autoregulationMode' && (raw === 'PRESERVE_RIR' || raw === 'PRESERVE_REPS')) {
       return t(`autoregulation.${raw}`);
+    }
+    if (field === 'scheduleMode' && (raw === 'ROTATION' || raw === 'FIXED_DAYS')) {
+      return programs(`schedule.${raw}`);
     }
     if (field === 'name' || field === 'phase') return trainingName(String(raw));
     return String(raw);

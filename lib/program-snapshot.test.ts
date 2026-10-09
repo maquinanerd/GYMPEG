@@ -4,6 +4,7 @@ import {
   canonicalJson,
   diffProgramSnapshots,
   isEmptyDiff,
+  programSnapshotSchema,
   snapshotContent,
   type ProgramForSnapshot,
   type ProgramSnapshot,
@@ -43,6 +44,7 @@ function program(overrides: Partial<ProgramForSnapshot> = {}): ProgramForSnapsho
     name: 'Hypertrophy',
     description: null,
     phase: 'Base',
+    scheduleMode: 'ROTATION',
     workouts: [
       {
         id: 'w-upper',
@@ -104,6 +106,19 @@ describe('snapshotContent', () => {
     });
 
     expect(snapshotContent(heavier)).not.toBe(snapshotContent(base()));
+  });
+
+  it('keeps the hash of versions recorded before schedules existed', () => {
+    const legacy = programSnapshotSchema.parse({ ...base(), scheduleMode: undefined });
+    expect(legacy.scheduleMode).toBe('ROTATION');
+    expect(snapshotContent(legacy)).toBe(snapshotContent(base()));
+    const byDays = edit((snapshot) => {
+      snapshot.scheduleMode = 'FIXED_DAYS';
+    });
+    expect(snapshotContent(byDays)).not.toBe(snapshotContent(base()));
+    expect(diffProgramSnapshots(base(), byDays).fields).toEqual([
+      { field: 'scheduleMode', from: 'ROTATION', to: 'FIXED_DAYS' },
+    ]);
   });
 
   it('does not depend on key order (JSONB reorders keys)', () => {

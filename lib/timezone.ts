@@ -113,3 +113,10 @@ export function localCalendarDate(date: Date, timeZone: string): Date {
   const p = zonedParts(date, timeZone);
   return new Date(Date.UTC(p.year, p.month - 1, p.day));
 }
+
+// ISO weekday of the instant on the zone's calendar: 1 = Monday ... 7 =
+// Sunday (the convention of Workout.dayOfWeek).
+export function zonedIsoWeekday(date: Date, timeZone: string): number {
+  const day = localCalendarDate(date, timeZone).getUTCDay();
+  return day === 0 ? 7 : day;
+}

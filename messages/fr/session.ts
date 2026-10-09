@@ -11,6 +11,7 @@ export const session = {
   noSessionDescription: 'Ajoutez au moins une séance avec des exercices avant de démarrer.',
   configureProgram: 'Configurer le programme',
   startThis: 'Démarrer cette séance',
+  suggested: 'Suggérée',
   starting: 'Démarrage...',
   startError: 'Impossible de démarrer la séance.',
   offline: {

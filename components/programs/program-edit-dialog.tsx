@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import type { Program } from '@/lib/prisma-client';
@@ -18,6 +18,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { programInputSchema, type ProgramInput } from '@/lib/schemas/program';
 
 interface Props {
@@ -26,27 +33,26 @@ interface Props {
   program: Program;
 }
 
+function formValues(program: Program): ProgramInput {
+  return {
+    name: program.name,
+    phase: program.phase,
+    description: program.description ?? '',
+    scheduleMode: program.scheduleMode,
+  };
+}
+
 export function ProgramEditDialog({ open, onOpenChange, program }: Props) {
   const t = useTranslations('programs');
   const common = useTranslations('common');
   const router = useRouter();
   const form = useForm<ProgramInput>({
     resolver: zodResolver(programInputSchema),
-    defaultValues: {
-      name: program.name,
-      phase: program.phase,
-      description: program.description ?? '',
-    },
+    defaultValues: formValues(program),
   });
 
   useEffect(() => {
-    if (open) {
-      form.reset({
-        name: program.name,
-        phase: program.phase,
-        description: program.description ?? '',
-      });
-    }
+    if (open) form.reset(formValues(program));
   }, [open, program, form]);
 
   async function onSubmit(values: ProgramInput) {
@@ -63,6 +69,8 @@ export function ProgramEditDialog({ open, onOpenChange, program }: Props) {
     onOpenChange(false);
     router.refresh();
   }
+
+  const scheduleMode = form.watch('scheduleMode');
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -84,6 +92,27 @@ export function ProgramEditDialog({ open, onOpenChange, program }: Props) {
             {form.formState.errors.phase && (
               <p className="text-sm text-destructive">{form.formState.errors.phase.message}</p>
             )}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="scheduleMode">{t('schedule.label')}</Label>
+            <Controller
+              control={form.control}
+              name="scheduleMode"
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger id="scheduleMode">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ROTATION">{t('schedule.ROTATION')}</SelectItem>
+                    <SelectItem value="FIXED_DAYS">{t('schedule.FIXED_DAYS')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <p className="text-xs text-muted-foreground">
+              {scheduleMode === 'FIXED_DAYS' ? t('schedule.fixedHint') : t('schedule.rotationHint')}
+            </p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">{common('fields.description')}</Label>

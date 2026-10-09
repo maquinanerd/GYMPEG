@@ -18,6 +18,14 @@ export const dashboard = {
   startSession: 'Начать тренировку',
   activeProgram: 'Активная программа: {name}',
   chooseSession: 'Выбрать тренировку',
+  nextWorkout: 'Следующая тренировка',
+  nextFirst: 'Первая тренировка программы',
+  nextAfter: 'Идёт после {name}',
+  nextToday: 'Запланирована на сегодня',
+  nextUpcoming:
+    'Сегодня отдых · следующая: {day}, через {count, plural, one {# день} few {# дня} many {# дней} other {# дня}}',
+  chooseOther: 'Выбрать другую тренировку',
+  nextBadge: 'Следующая',
   programSessions: 'Тренировки программы',
   insight: {
     deloadTitle: 'Похоже, пора восстановиться',

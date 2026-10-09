@@ -15,6 +15,13 @@ export const dashboard = {
   startSession: 'Start a session',
   activeProgram: 'Active program: {name}',
   chooseSession: 'Choose a session',
+  nextWorkout: 'Next workout',
+  nextFirst: 'First workout of the program',
+  nextAfter: 'Comes after {name}',
+  nextToday: 'Scheduled for today',
+  nextUpcoming: 'Rest day today · next on {day}, in {count, plural, one {# day} other {# days}}',
+  chooseOther: 'Choose another workout',
+  nextBadge: 'Next',
   programSessions: 'Program sessions',
   insight: {
     deloadTitle: 'Recovery may be due',

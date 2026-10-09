@@ -48,6 +48,7 @@ export async function PUT(req: Request, props: Params) {
         name: data.name,
         phase: data.phase,
         description: data.description ?? null,
+        ...(data.scheduleMode ? { scheduleMode: data.scheduleMode } : {}),
       },
     });
     await recordProgramRevision(program.id, { source: 'USER' });
