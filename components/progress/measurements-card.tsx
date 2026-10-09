@@ -42,13 +42,16 @@ interface Props {
   unit: WeightUnit;
   // How many recent entries (for the selected site) get a list row.
   listLimit?: number;
+  // Body fat estimated from the latest tape measurements (epic 2.4), when the
+  // profile and the measurements allow it; `basedOn` is the oldest of them.
+  bodyFat?: { percent: number; basedOn: string; usesHips?: boolean } | null;
 }
 
 // Body-measurement card (issue #202), mirroring the bodyweight card (#99):
 // pick a site, quick-add a value in the display unit (cm in metric, inches in
 // imperial), see the latest value per site and a trend for the selected site,
 // delete bad entries. Storage is always cm; the unit only affects display.
-export function MeasurementsCard({ entries, unit, listLimit = 5 }: Props) {
+export function MeasurementsCard({ entries, unit, listLimit = 5, bodyFat = null }: Props) {
   const t = useTranslations('progress.measurements');
   const siteT = useTranslations('progress.measurements.sites');
   const common = useTranslations('common');
@@ -145,6 +148,19 @@ export function MeasurementsCard({ entries, unit, listLimit = 5 }: Props) {
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
+        {bodyFat && (
+          <div data-testid="body-fat" className="flex flex-col gap-0.5 text-sm">
+            <p className="font-medium">
+              {t('bodyFat', { percent: format.number(bodyFat.percent) })}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {t('bodyFatHint', {
+                hips: bodyFat.usesHips ? 'yes' : 'no',
+                date: shortDate(bodyFat.basedOn),
+              })}
+            </p>
+          </div>
+        )}
         {/* Site selector + quick add, in the display unit */}
         <form
           className="flex flex-wrap items-end gap-2"

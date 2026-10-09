@@ -105,3 +105,20 @@ describe('MeasurementsCard', () => {
     expect(screen.getByText(/log a second hips measurement/i)).toBeInTheDocument();
   });
 });
+
+describe('MeasurementsCard body fat (epic 2.4)', () => {
+  it('shows the estimate with the measurements it rests on, and nothing without one', () => {
+    const { rerender } = render(
+      <MeasurementsCard
+        entries={entries}
+        unit="KG"
+        bodyFat={{ percent: 16.6, basedOn: '2026-06-01T08:00:00Z', usesHips: false }}
+      />,
+    );
+    expect(screen.getByTestId('body-fat')).toHaveTextContent('Estimated body fat: 16.6%');
+    expect(screen.getByTestId('body-fat')).toHaveTextContent(/waist, neck and height/);
+
+    rerender(<MeasurementsCard entries={entries} unit="KG" bodyFat={null} />);
+    expect(screen.queryByTestId('body-fat')).not.toBeInTheDocument();
+  });
+});

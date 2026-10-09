@@ -22,6 +22,7 @@ import {
 } from '@/lib/stats';
 import { buildMuscleMap } from '@/lib/muscle-map';
 import { calculateMuscleVolume, muscleContributions } from '@/lib/training-engine/volume';
+import { calculateWeightTrend, estimateBodyFatNavy } from '@/lib/training-engine/body';
 import {
   DELOAD_READINESS_LOOKBACK,
   DELOAD_READINESS_MAX_AGE_DAYS,
@@ -44,6 +45,8 @@ interface SearchParams {
 }
 
 const RECENT_WEEKS = 12;
+// Enough history for the 90-day bodyweight change.
+const WEIGHT_TREND_LOOKBACK_DAYS = 100;
 
 export default async function ProgressPage(props: { searchParams: Promise<SearchParams> }) {
   const t = await getTranslations('progress');
@@ -84,6 +87,8 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
         weeklyFrequency: true,
         deloadUntil: true,
         timezone: true,
+        sex: true,
+        heightCm: true,
       },
     }),
   ]);
@@ -382,6 +387,50 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
     select: { id: true, site: true, valueCm: true, measuredAt: true },
   });
 
+  // Bodyweight trend (epic 2.4): daily values in the user's zone, a 7-day
+  // average and its change over 7/30/90 days, so the 90-day change needs a
+  // longer look-back than the chart window.
+  const weightTrend = calculateWeightTrend(
+    await db.bodyweightEntry.findMany({
+      where: {
+        userId: auth.userId,
+        measuredAt: { gte: new Date(Date.now() - WEIGHT_TREND_LOOKBACK_DAYS * 86_400_000) },
+      },
+      select: { weightKg: true, measuredAt: true },
+    }),
+    { timeZone },
+  );
+
+  // Body fat estimate (U.S. Navy method) from the latest tape measurements.
+  const latestSite = (site: 'WAIST' | 'NECK' | 'HIPS') =>
+    db.bodyMeasurement.findFirst({
+      where: { userId: auth.userId, site },
+      orderBy: { measuredAt: 'desc' },
+      select: { valueCm: true, measuredAt: true },
+    });
+  const [waist, neck, hips] = await Promise.all([
+    latestSite('WAIST'),
+    latestSite('NECK'),
+    latestSite('HIPS'),
+  ]);
+  const bodyFatPercent = estimateBodyFatNavy({
+    sex: user?.sex,
+    heightCm: user?.heightCm,
+    waistCm: waist?.valueCm,
+    neckCm: neck?.valueCm,
+    hipsCm: hips?.valueCm,
+  });
+  const bodyFat =
+    bodyFatPercent != null
+      ? {
+          percent: bodyFatPercent,
+          // The oldest of the measurements it rests on.
+          basedOn: [waist, neck, ...(user?.sex === 'FEMALE' ? [hips] : [])]
+            .map((entry) => entry!.measuredAt.getTime())
+            .reduce((oldest, time) => Math.min(oldest, time)),
+        }
+      : null;
+
   // Progress photos (issue #269): ALL of the user's photos (not just the
   // 12-week window - a before/after compare wants the full timeline), newest
   // first. Only metadata crosses the boundary; the bytes stay behind the
@@ -478,6 +527,15 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
             weightKg: e.weightKg,
             measuredAt: e.measuredAt.toISOString(),
           }))}
+          trend={{
+            averageKg: weightTrend.averageKg,
+            changeKg: weightTrend.changeKg,
+            ratePerWeekKg: weightTrend.ratePerWeekKg,
+            // The chart window only.
+            series: weightTrend.series.filter(
+              (point) => Date.parse(`${point.day}T12:00:00Z`) >= since.getTime(),
+            ),
+          }}
           unit={unit}
         />
 
@@ -488,6 +546,15 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
             valueCm: e.valueCm,
             measuredAt: e.measuredAt.toISOString(),
           }))}
+          bodyFat={
+            bodyFat
+              ? {
+                  percent: bodyFat.percent,
+                  basedOn: new Date(bodyFat.basedOn).toISOString(),
+                  usesHips: user?.sex === 'FEMALE',
+                }
+              : null
+          }
           unit={unit}
         />
 

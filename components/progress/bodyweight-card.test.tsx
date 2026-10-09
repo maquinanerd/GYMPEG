@@ -69,9 +69,7 @@ describe('BodyweightCard', () => {
     const user = userEvent.setup();
     render(<BodyweightCard entries={entries} unit="KG" />);
 
-    await user.click(
-      screen.getAllByRole('button', { name: /delete entry/i })[0] as HTMLElement,
-    );
+    await user.click(screen.getAllByRole('button', { name: /delete entry/i })[0] as HTMLElement);
 
     const [url, init] = lastFetchCall(fetchMock);
     expect(url).toBe('/api/bodyweight/b2');
@@ -83,5 +81,31 @@ describe('BodyweightCard', () => {
     render(<BodyweightCard entries={entries} unit="LB" />);
     // 80 kg = 176.4 lb.
     expect(screen.getByText(/176.4 lb/)).toBeInTheDocument();
+  });
+});
+
+describe('BodyweightCard trend (epic 2.4)', () => {
+  it('shows the 7-day average, its change per period and the weekly rate', () => {
+    render(
+      <BodyweightCard
+        entries={entries}
+        unit="KG"
+        trend={{
+          averageKg: 80.6,
+          changeKg: { d7: -0.4, d30: -1.2, d90: null },
+          ratePerWeekKg: -0.3,
+          series: [
+            { day: '2026-06-01', weightKg: 80, averageKg: 80 },
+            { day: '2026-06-08', weightKg: 81.2, averageKg: 80.6 },
+          ],
+        }}
+      />,
+    );
+    const trend = screen.getByTestId('bodyweight-trend');
+    expect(trend).toHaveTextContent('7-day average: 80.6 kg');
+    expect(trend).toHaveTextContent('7 days: −0.4 kg');
+    expect(trend).toHaveTextContent('30 days: −1.2 kg');
+    expect(trend).toHaveTextContent('90 days: not enough data');
+    expect(trend).toHaveTextContent('Rate over 30 days: −0.3 kg/week');
   });
 });
