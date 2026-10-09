@@ -94,7 +94,11 @@ Aba **Persistent Storage** → volume `gympeg-uploads` montado em `/app/uploads`
 
 ### Healthcheck
 
-Aba **Healthcheck** → habilitar, path `/api/health`, porta `3000`. A imagem também declara `HEALTHCHECK` próprio.
+Aba **Healthcheck** → habilitar, host **`127.0.0.1`**, path `/api/health`, porta `3000`. A imagem também declara `HEALTHCHECK` próprio.
+
+O host precisa ser `127.0.0.1`, não `localhost`: na imagem Alpine o `wget` resolve `localhost` para `::1` (IPv6), enquanto o Next.js escuta só em `0.0.0.0` (IPv4). Com `localhost`, o healthcheck recebe "connection refused", o Coolify marca o container como unhealthy e desfaz o deploy.
+
+Ao mudar uma variável pela API, envie o valor puro: o `real_value` devolvido pela API já vem entre aspas, e reenviá-lo duplica as aspas e quebra o `.env` do container.
 
 ## 4. Primeiro deploy
 
