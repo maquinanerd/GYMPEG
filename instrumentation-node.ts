@@ -1,5 +1,6 @@
 import { db } from '@/lib/db';
 import { syncGlobalCatalog } from '@/lib/catalog/sync';
+import { backfillProgramRevisions } from '@/lib/program-revisions';
 
 // Node-only startup work, imported by instrumentation.ts.
 //
@@ -22,4 +23,18 @@ async function syncCatalogAtStartup() {
   }
 }
 
+// Programs created before program versions existed get their baseline
+// version, so the first edit after the upgrade can still be compared and
+// undone. Programs that already have one cost a single query.
+async function backfillProgramRevisionsAtStartup() {
+  try {
+    const recorded = await backfillProgramRevisions();
+    if (recorded > 0)
+      console.info(`[programs] recorded the baseline version of ${recorded} programs`);
+  } catch (err) {
+    console.error('[programs] version backfill failed:', err);
+  }
+}
+
 await syncCatalogAtStartup();
+await backfillProgramRevisionsAtStartup();

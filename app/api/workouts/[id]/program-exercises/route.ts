@@ -4,6 +4,7 @@ import { programExerciseInputSchema } from '@/lib/schemas/program-exercise';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { defaultIntraSetConfig } from '@/lib/intra-set-autoregulation';
 import { usableExerciseWhere } from '@/lib/catalog/access';
+import { recordProgramRevision } from '@/lib/program-revisions';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -62,6 +63,7 @@ export async function POST(req: Request, props: Params) {
       },
       include: { exercise: true },
     });
+    await recordProgramRevision(workout.programId, { source: 'USER' });
     return NextResponse.json(created, { status: 201 });
   } catch (err) {
     return handleApiError(err);

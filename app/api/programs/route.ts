@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { programInputSchema } from '@/lib/schemas/program';
 import { handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
+import { recordProgramRevision } from '@/lib/program-revisions';
 
 export async function GET(req: Request) {
   try {
@@ -35,6 +36,7 @@ export async function POST(req: Request) {
         isActive: false,
       },
     });
+    await recordProgramRevision(program.id, { source: 'CREATED' });
     return NextResponse.json(program, { status: 201 });
   } catch (err) {
     return handleApiError(err);

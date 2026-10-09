@@ -14,6 +14,7 @@ import { ProgramEditDialog } from '@/components/programs/program-edit-dialog';
 import { ProgramDeleteButton } from '@/components/programs/program-delete-button';
 import { WorkoutCard } from '@/components/programs/workout-card';
 import { WorkoutFormDialog } from '@/components/programs/workout-form-dialog';
+import { ProgramHistory } from '@/components/programs/program-history';
 import { useTrainingName } from '@/components/shared/use-training-name';
 
 type ProgramExerciseWithExercise = ProgramExercise & { exercise: Exercise };
@@ -130,6 +131,8 @@ export function ProgramDetailView({ program, catalog }: Props) {
           ))}
         </div>
       )}
+
+      <ProgramHistory programId={program.id} />
 
       <ProgramEditDialog open={editOpen} onOpenChange={setEditOpen} program={program} />
       <WorkoutFormDialog

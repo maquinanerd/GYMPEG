@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { programInputSchema } from '@/lib/schemas/program';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
+import { recordProgramRevision } from '@/lib/program-revisions';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -49,6 +50,7 @@ export async function PUT(req: Request, props: Params) {
         description: data.description ?? null,
       },
     });
+    await recordProgramRevision(program.id, { source: 'USER' });
     return NextResponse.json(program);
   } catch (err) {
     return handleApiError(err);

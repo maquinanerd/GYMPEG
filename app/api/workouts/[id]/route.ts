@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { workoutInputSchema } from '@/lib/schemas/workout';
 import { handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
+import { recordProgramRevision } from '@/lib/program-revisions';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -20,6 +21,7 @@ export async function PUT(req: Request, props: Params) {
       where: { id: params.id, program: { userId } },
       data: { name: data.name, dayOfWeek: data.dayOfWeek ?? null },
     });
+    await recordProgramRevision(updated.programId, { source: 'USER' });
     return NextResponse.json(updated);
   } catch (err) {
     return handleApiError(err);
@@ -30,7 +32,8 @@ export async function DELETE(_req: Request, props: Params) {
   const params = await props.params;
   try {
     const userId = await requireApiUserId();
-    await db.workout.delete({ where: { id: params.id, program: { userId } } });
+    const deleted = await db.workout.delete({ where: { id: params.id, program: { userId } } });
+    await recordProgramRevision(deleted.programId, { source: 'USER' });
     return NextResponse.json({ ok: true });
   } catch (err) {
     return handleApiError(err);

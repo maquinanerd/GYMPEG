@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { workoutInputSchema } from '@/lib/schemas/workout';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
+import { recordProgramRevision } from '@/lib/program-revisions';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -36,6 +37,7 @@ export async function POST(req: Request, props: Params) {
         order: nextOrder,
       },
     });
+    await recordProgramRevision(params.id, { source: 'USER' });
     return NextResponse.json(workout, { status: 201 });
   } catch (err) {
     return handleApiError(err);

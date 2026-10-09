@@ -100,6 +100,8 @@ export function runnerPropsFromPack(
       userId: session.ownerId,
       programId: entry.workout.programId,
       workoutId: entry.workout.id,
+      // Assigned by the server when the start reaches it.
+      programRevisionId: null,
       gymId: gym?.id ?? null,
       startedAt: new Date(session.startedAt),
       finishedAt: session.finishedAt != null ? new Date(session.finishedAt) : null,

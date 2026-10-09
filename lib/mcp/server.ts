@@ -15,6 +15,7 @@ import {
   upsertOwnedGymEquipment,
 } from '@/lib/gym-equipment';
 import { addWorkoutToProgram, buildProgramFromGenerated } from '@/lib/program-generation';
+import { recordProgramRevision } from '@/lib/program-revisions';
 import {
   generatedExerciseSchema,
   generatedProgramSchema,
@@ -643,7 +644,7 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
     },
     async ({ program }) => {
       requireWrite(principal);
-      const id = await buildProgramFromGenerated(principal.userId, program);
+      const id = await buildProgramFromGenerated(principal.userId, program, 'MCP');
       return result({ ok: true, programId: id, active: false });
     },
   );
@@ -676,6 +677,7 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
           description: values.description ?? null,
         },
       });
+      await recordProgramRevision(programId, { source: 'MCP' });
       return result({ ok: true, program });
     },
   );
@@ -731,7 +733,7 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
       requireWrite(principal);
       const workout = await db.workout.findFirst({
         where: { id: workoutId, program: { userId: principal.userId } },
-        select: { id: true },
+        select: { id: true, programId: true },
       });
       if (!workout) throw new Error('Workout not found.');
 
@@ -770,6 +772,7 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
           include: { exercise: true },
         });
       });
+      await recordProgramRevision(workout.programId, { source: 'MCP' });
       return result({ ok: true, programExercise: created });
     },
   );
@@ -806,6 +809,7 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
       requireWrite(principal);
       const current = await db.programExercise.findFirst({
         where: { id: programExerciseId, workout: { program: { userId: principal.userId } } },
+        include: { workout: { select: { programId: true } } },
       });
       if (!current) throw new Error('Program exercise not found.');
 
@@ -819,6 +823,7 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
         data: patch,
         include: { exercise: true },
       });
+      await recordProgramRevision(current.workout.programId, { source: 'MCP' });
       return result({ ok: true, programExercise: updated });
     },
   );
@@ -840,10 +845,14 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
       requireWrite(principal);
       const current = await db.programExercise.findFirst({
         where: { id: programExerciseId, workout: { program: { userId: principal.userId } } },
-        include: { exercise: { select: { name: true } } },
+        include: {
+          exercise: { select: { name: true } },
+          workout: { select: { programId: true } },
+        },
       });
       if (!current) throw new Error('Program exercise not found.');
       await db.programExercise.delete({ where: { id: programExerciseId } });
+      await recordProgramRevision(current.workout.programId, { source: 'MCP' });
       return result({ ok: true, removedExercise: current.exercise.name });
     },
   );

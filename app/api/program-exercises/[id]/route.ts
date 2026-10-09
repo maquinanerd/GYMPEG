@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { programExerciseInputSchema } from '@/lib/schemas/program-exercise';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { usableExerciseWhere } from '@/lib/catalog/access';
+import { recordProgramRevision } from '@/lib/program-revisions';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -21,7 +22,7 @@ export async function PUT(req: Request, props: Params) {
     // the status code, not the security boundary.
     const owned = await db.programExercise.findFirst({
       where: { id: params.id, workout: { program: { userId } } },
-      select: { id: true },
+      select: { id: true, workout: { select: { programId: true } } },
     });
     if (!owned) throw new ApiError(404, 'Program exercise not found.');
 
@@ -54,6 +55,7 @@ export async function PUT(req: Request, props: Params) {
       },
       include: { exercise: true },
     });
+    await recordProgramRevision(owned.workout.programId, { source: 'USER' });
     return NextResponse.json(updated);
   } catch (err) {
     return handleApiError(err);
@@ -64,9 +66,11 @@ export async function DELETE(_req: Request, props: Params) {
   const params = await props.params;
   try {
     const userId = await requireApiUserId();
-    await db.programExercise.delete({
+    const deleted = await db.programExercise.delete({
       where: { id: params.id, workout: { program: { userId } } },
+      select: { workout: { select: { programId: true } } },
     });
+    await recordProgramRevision(deleted.workout.programId, { source: 'USER' });
     return NextResponse.json({ ok: true });
   } catch (err) {
     return handleApiError(err);

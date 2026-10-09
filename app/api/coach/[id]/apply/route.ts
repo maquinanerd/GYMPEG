@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { applyAdjustmentsSchema } from '@/lib/coach-adjustments';
+import { recordProgramRevision } from '@/lib/program-revisions';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -118,6 +119,12 @@ export async function POST(req: Request, props: Params) {
         ids.push(pe.id);
       }
       applied.push({ exerciseName: adj.exerciseName, programExerciseIds: ids });
+    }
+
+    // One version for the whole debrief, so it can be compared and undone as
+    // a unit from the program's history.
+    if (applied.length > 0) {
+      await recordProgramRevision(activeProgram.id, { source: 'COACH' });
     }
 
     // The write carries userId too (issue #317): marking a debrief applied

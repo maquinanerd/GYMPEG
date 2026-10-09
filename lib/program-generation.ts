@@ -7,9 +7,10 @@ import {
   type GeneratedWorkout,
 } from '@/lib/schemas/program-generation';
 import { defaultIntraSetConfig } from '@/lib/intra-set-autoregulation';
-import type { Prisma } from '@/lib/prisma-client';
+import type { Prisma, ProgramRevisionSource } from '@/lib/prisma-client';
 import { pickableExerciseWhere } from '@/lib/catalog/access';
 import { ensureUsableExercise } from '@/lib/catalog/resolve';
+import { recordProgramRevision } from '@/lib/program-revisions';
 
 // Generates a structured program draft from a natural-language goal. Does not
 // persist anything: the result is previewed (and edited) before saving.
@@ -63,12 +64,14 @@ export async function generateProgram(userId: string, goal: string): Promise<Gen
 
 // Persists a (possibly user-edited) generated program in a single transaction.
 // New exercises are created on the fly; existing ones are reused by name.
-// Returns the new program id. The program is created inactive.
+// Returns the new program id. The program is created inactive. Its first
+// version records where it came from (`source`).
 export async function buildProgramFromGenerated(
   userId: string,
   program: GeneratedProgram,
+  source: ProgramRevisionSource = 'AI_GENERATED',
 ): Promise<string> {
-  return db.$transaction(async (tx) => {
+  const programId = await db.$transaction(async (tx) => {
     const created = await tx.program.create({
       data: {
         userId,
@@ -86,6 +89,8 @@ export async function buildProgramFromGenerated(
 
     return created.id;
   });
+  await recordProgramRevision(programId, { source });
+  return programId;
 }
 
 // Appends one generated workout to an EXISTING program the user owns, after
@@ -97,8 +102,9 @@ export async function addWorkoutToProgram(
   userId: string,
   programId: string,
   workout: GeneratedWorkout,
+  source: ProgramRevisionSource = 'MCP',
 ): Promise<string> {
-  return db.$transaction(async (tx) => {
+  const workoutId = await db.$transaction(async (tx) => {
     const program = await tx.program.findFirst({
       where: { id: programId, userId },
       select: { id: true },
@@ -112,6 +118,8 @@ export async function addWorkoutToProgram(
     });
     return createGeneratedWorkout(tx, userId, programId, workout, (last?.order ?? 0) + 1);
   });
+  await recordProgramRevision(programId, { source });
+  return workoutId;
 }
 
 // Persists one workout and its exercises inside an open transaction. New

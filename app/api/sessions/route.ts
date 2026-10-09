@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { sessionStartSchema } from '@/lib/schemas/session';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { resolveStartedAt } from '@/lib/set-timing';
+import { currentProgramRevisionId } from '@/lib/program-revisions';
 import { Prisma } from '@/prisma/generated/client';
 
 export async function GET() {
@@ -83,6 +84,9 @@ export async function POST(req: Request) {
       }
     }
 
+    // The program version this session runs: the plan as it is right now.
+    const programRevisionId = await currentProgramRevisionId(workout.programId);
+
     try {
       const created = await db.session.create({
         data: {
@@ -90,6 +94,7 @@ export async function POST(req: Request) {
           userId,
           workoutId,
           programId: workout.programId,
+          programRevisionId,
           gymId: selectedGymId,
           startedAt: resolveStartedAt(startedAt, new Date()),
         },

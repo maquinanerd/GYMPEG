@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const userId = await requireApiUserId();
     const data = await parseJsonBody(req, generatedProgramSchema);
 
-    const programId = await buildProgramFromGenerated(userId, data);
+    const programId = await buildProgramFromGenerated(userId, data, 'TEMPLATE');
     await db.$transaction([
       db.program.updateMany({
         where: { userId, isActive: true, id: { not: programId } },

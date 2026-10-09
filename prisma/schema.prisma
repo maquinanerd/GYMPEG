@@ -401,8 +401,49 @@ model Program {
   updatedAt   DateTime  @updatedAt
   workouts    Workout[]
   sessions    Session[]
+  revisions   ProgramRevision[]
 
   @@index([userId])
+}
+
+// Immutable versions of a program's structure (lib/program-revisions). Every
+// write path records one after changing the program, workouts or
+// prescriptions; a restore writes a new version with old content, so no
+// version is ever destroyed. A burst of manual edits is coalesced into one
+// version until a session runs with it.
+model ProgramRevision {
+  id          String                @id @default(cuid())
+  programId   String
+  program     Program               @relation(fields: [programId], references: [id], onDelete: Cascade)
+  version     Int
+  source      ProgramRevisionSource
+  // Free-text note from the author (coach rationale, AI request), shown as is.
+  summary     String?
+  // Set on a RESTORE: the version whose content was brought back.
+  restoredFromVersion Int?
+  // ProgramSnapshot: program fields, workouts and prescriptions, with the
+  // exercise names so the version stays readable after an exercise changes.
+  snapshot    Json
+  // SHA-256 of the snapshot content without row ids: a write that changes
+  // nothing records nothing.
+  contentHash String
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  sessions    Session[]
+
+  @@unique([programId, version])
+}
+
+enum ProgramRevisionSource {
+  CREATED
+  USER
+  TEMPLATE
+  AI_GENERATED
+  COACH
+  MCP
+  IMPORT
+  RESTORE
+  SYSTEM
 }
 
 model Workout {
@@ -468,12 +509,17 @@ model Session {
   // not change the inventory used by an in-progress or historical workout.
   gymId      String?
   gym        Gym?      @relation(fields: [gymId], references: [id], onDelete: SetNull)
+  // The program version the session ran (set at start): the plan as it was,
+  // whatever edits came later.
+  programRevisionId String?
+  programRevision   ProgramRevision? @relation(fields: [programRevisionId], references: [id], onDelete: SetNull)
   sets       Set[]
 
   @@index([userId, startedAt])
   @@index([workoutId])
   @@index([programId])
   @@index([gymId])
+  @@index([programRevisionId])
 }
 
 model Gym {

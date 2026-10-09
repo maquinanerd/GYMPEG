@@ -13,6 +13,7 @@ import {
   WeightUnit,
 } from '@/lib/prisma-client';
 import { resolveSetType } from '@/lib/schemas/set';
+import { recordProgramRevision } from '@/lib/program-revisions';
 import { db } from '@/lib/db';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import {
@@ -1008,6 +1009,13 @@ export async function POST(req: Request) {
       },
       { timeout: 60_000 },
     );
+
+    // Restored programs start their history here (the backup does not carry
+    // versions).
+    const restoredPrograms = await db.program.findMany({ where: { userId }, select: { id: true } });
+    for (const program of restoredPrograms) {
+      await recordProgramRevision(program.id, { source: 'IMPORT' });
+    }
 
     return NextResponse.json({ ok: true });
   } catch (err) {
