@@ -24,9 +24,19 @@ const withPWA = require('@ducanh2912/next-pwa').default({
         // App pages: always from the network. The route exists so that a
         // failed navigation falls back to the offline page (next-pwa hooks
         // the fallback on runtime routes) instead of the browser's error page.
+        //
+        // NetworkFirst only because Workbox allows a network timeout on no
+        // other handler (gym wifi that connects but never answers must reach
+        // the offline page, not load forever). Nothing is ever stored: the
+        // cacheable-response rule requires a header no response carries.
         urlPattern: ({ request, url }) =>
           request.mode === 'navigate' && !url.pathname.startsWith('/api/'),
-        handler: 'NetworkOnly',
+        handler: 'NetworkFirst',
+        options: {
+          cacheName: 'pages-never-stored',
+          networkTimeoutSeconds: 10,
+          cacheableResponse: { headers: { 'x-gympeg-cache-page': 'never-set' } },
+        },
       },
       {
         // Static assets: CacheFirst (long-lived).

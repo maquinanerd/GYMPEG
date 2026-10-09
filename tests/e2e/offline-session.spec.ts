@@ -72,6 +72,22 @@ test('a lifter starts, logs and finishes a workout offline, and it syncs back on
   page,
   context,
 }) => {
+  // Offline behaviour lives in the service worker and IndexedDB: surface what
+  // the page and the worker report, so a CI failure explains itself.
+  page.on('console', (message) => {
+    if (message.type() === 'error' || message.type() === 'warning') {
+      console.log(`[page ${message.type()}] ${message.text()}`);
+    }
+  });
+  page.on('pageerror', (error) => console.log(`[page error] ${error.message}`));
+  page.on('requestfailed', (request) =>
+    console.log(
+      `[request failed] ${request.method()} ${request.url()} ${request.failure()?.errorText}`,
+    ),
+  );
+  page.on('framenavigated', (frame) => {
+    if (frame === page.mainFrame()) console.log(`[navigated] ${frame.url()}`);
+  });
   const register = await page.request.post('/api/auth/register', {
     headers: { 'x-forwarded-for': '10.111.0.21' },
     data: {
@@ -94,9 +110,13 @@ test('a lifter starts, logs and finishes a workout offline, and it syncs back on
   // Offline: start the workout from the page already on screen.
   await context.setOffline(true);
   await page.getByRole('button', { name: 'Start this session' }).click();
-  await expect(page).toHaveURL(/\/session\/[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-/);
+  await expect(page).toHaveURL(/\/session\/[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-/, {
+    timeout: 20_000,
+  });
   const sessionId = new URL(page.url()).pathname.split('/').pop()!;
-  await expect(page.getByText(/Exercise 1\/1 · E2E Offline Squat/)).toBeVisible();
+  await expect(page.getByText(/Exercise 1\/1 · E2E Offline Squat/)).toBeVisible({
+    timeout: 20_000,
+  });
 
   // Log one set (prefilled from the prescription) and finish.
   await page.getByRole('button', { name: /^confirm set 1$/i }).click();
