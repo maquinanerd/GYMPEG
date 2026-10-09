@@ -1,11 +1,14 @@
 import { chmod, mkdir, readFile, realpath, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { objectStorageFromEnv } from '@/lib/storage/config';
 
 // ============================================================
 // Progress-photo storage (issue #269)
 // ============================================================
-// Local-only file storage for progress photos, plus the content sniffing the
-// upload route relies on. Security posture:
+// Storage for progress photos, plus the content sniffing the upload route
+// relies on. The bytes go to the private object storage bucket when one is
+// configured (lib/storage/config, key "progress-photos/<stored path>"), else
+// to the local uploads dir. Security posture:
 // - The accepted formats are a hard ALLOWLIST (jpeg/png/webp), decided by the
 //   file's magic bytes only - the client-declared Content-Type is never
 //   trusted, so a disguised extension or spoofed header changes nothing.
@@ -28,12 +31,7 @@ export const MAX_PROGRESS_PHOTO_NOTE = 500;
 // text, or a truncated header - returns null and must be rejected.
 export function sniffImageType(bytes: Uint8Array): ProgressPhotoMime | null {
   // JPEG: FF D8 FF
-  if (
-    bytes.length >= 3 &&
-    bytes[0] === 0xff &&
-    bytes[1] === 0xd8 &&
-    bytes[2] === 0xff
-  ) {
+  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
     return 'image/jpeg';
   }
   // PNG: 89 50 4E 47 0D 0A 1A 0A
@@ -122,14 +120,31 @@ async function resolveInsideStorageDir(relPath: string): Promise<string> {
   return abs;
 }
 
+// Stored paths are server-generated ("<userId>/<photoId>.<ext>"); anything
+// else never reaches the bucket.
+const STORED_PATH = /^[A-Za-z0-9_-]{1,64}\/[A-Za-z0-9_-]{1,64}\.(jpg|png|webp)$/;
+const SAFE_SEGMENT = /^[A-Za-z0-9_-]{1,64}$/;
+const CONTENT_TYPES = { jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp' } as const;
+
+function objectKey(relPath: string): string {
+  if (!STORED_PATH.test(relPath)) throw new Error('Invalid progress-photo path.');
+  return `progress-photos/${relPath}`;
+}
+
+function contentTypeOf(relPath: string): string {
+  return CONTENT_TYPES[relPath.slice(relPath.lastIndexOf('.') + 1) as keyof typeof CONTENT_TYPES];
+}
+
 // Writes the photo bytes, creating the per-user dir as needed. Mode 0o600 on
 // the file and 0o700 on its dir: owner-only, never executable. The dir mode is
 // applied with an explicit chmod because mkdir's mode is masked by the process
 // umask and does not touch a dir created by an earlier version.
-export async function writePhotoFile(
-  relPath: string,
-  bytes: Uint8Array,
-): Promise<void> {
+export async function writePhotoFile(relPath: string, bytes: Uint8Array): Promise<void> {
+  const bucket = objectStorageFromEnv();
+  if (bucket) {
+    await bucket.put(objectKey(relPath), bytes, contentTypeOf(relPath));
+    return;
+  }
   const abs = await resolveInsideStorageDir(relPath);
   const dir = path.dirname(abs);
   await mkdir(dir, { recursive: true, mode: 0o700 });
@@ -137,9 +152,7 @@ export async function writePhotoFile(
   await writeFile(abs, bytes, { mode: 0o600 });
 }
 
-// Reads the photo bytes; null when the file is missing on disk (the serving
-// route turns that into a 404 rather than a 500).
-export async function readPhotoFile(relPath: string): Promise<Uint8Array | null> {
+async function readLocalPhoto(relPath: string): Promise<Uint8Array | null> {
   const abs = await resolveInsideStorageDir(relPath);
   try {
     return new Uint8Array(await readFile(abs));
@@ -149,19 +162,41 @@ export async function readPhotoFile(relPath: string): Promise<Uint8Array | null>
   }
 }
 
-// Removes the photo file; a missing file is fine (force: true), so deleting a
-// row whose file is already gone still succeeds. Anything else (EACCES, EIO)
-// throws, so the caller can keep the row rather than orphan the file.
+// Reads the photo bytes; null when the photo is missing (the serving route
+// turns that into a 404 rather than a 500). With a bucket, a photo written
+// before the bucket was configured is still on the local disk: it is copied
+// to the bucket on its first read (lazy migration, nothing to run by hand).
+export async function readPhotoFile(relPath: string): Promise<Uint8Array | null> {
+  const bucket = objectStorageFromEnv();
+  if (!bucket) return readLocalPhoto(relPath);
+  const key = objectKey(relPath);
+  const stored = await bucket.get(key);
+  if (stored) return stored;
+  const local = await readLocalPhoto(relPath);
+  if (local) await bucket.put(key, local, contentTypeOf(relPath));
+  return local;
+}
+
+// Removes the photo; a missing one is fine, so deleting a row whose file is
+// already gone still succeeds. Anything else (EACCES, EIO, a bucket error)
+// throws, so the caller can keep the row rather than orphan the file. With a
+// bucket, a local copy left from before it is removed too.
 export async function deletePhotoFile(relPath: string): Promise<void> {
+  const bucket = objectStorageFromEnv();
+  if (bucket) await bucket.delete(objectKey(relPath));
   const abs = await resolveInsideStorageDir(relPath);
   await rm(abs, { force: true });
 }
 
 // Removes a user's whole photo directory (account deletion), including files
-// no row points to any more. Same containment checks as a single file.
+// no row points to any more: in the bucket and on the local disk.
 export async function deleteUserPhotoDir(userId: string): Promise<void> {
-  if (!userId || userId.includes('/') || userId.includes('\\') || userId.startsWith('.')) {
+  if (!SAFE_SEGMENT.test(userId)) {
     throw new Error('Invalid user id for the photo directory.');
+  }
+  const bucket = objectStorageFromEnv();
+  if (bucket) {
+    for (const key of await bucket.list(`progress-photos/${userId}/`)) await bucket.delete(key);
   }
   const abs = await resolveInsideStorageDir(userId);
   await rm(abs, { recursive: true, force: true });

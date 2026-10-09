@@ -15,6 +15,7 @@ import {
   writePhotoFile,
 } from '@/lib/progress-photo';
 import { progressPhotoUploadQuerySchema } from '@/lib/schemas/progress-photo';
+import { ImageMetadataError, stripImageMetadata } from '@/lib/image-metadata';
 
 // Metadata the API exposes about a photo. storagePath (server filesystem
 // layout) and the bytes themselves are deliberately never returned here; the
@@ -69,13 +70,21 @@ export async function POST(req: Request) {
     }
     const { takenAt, note } = parsedQuery.data;
 
-    const bytes = await readBodyBytesWithCap(req, MAX_PROGRESS_PHOTO_BYTES);
-    if (bytes.length === 0) {
+    const received = await readBodyBytesWithCap(req, MAX_PROGRESS_PHOTO_BYTES);
+    if (received.length === 0) {
       throw new ApiError(400, 'Empty request body: send the image bytes.');
     }
-    const mime = sniffImageType(bytes);
+    const mime = sniffImageType(received);
     if (!mime) {
       throw new ApiError(415, 'Unsupported image type. Use JPEG, PNG or WebP.');
+    }
+    // GPS position, camera serial and timestamps never reach the storage.
+    let bytes: Uint8Array;
+    try {
+      bytes = stripImageMetadata(received, mime);
+    } catch (err) {
+      if (err instanceof ImageMetadataError) throw new ApiError(400, 'Unreadable image file.');
+      throw err;
     }
 
     // The id doubles as the filename, so it is generated up front. cuid ids

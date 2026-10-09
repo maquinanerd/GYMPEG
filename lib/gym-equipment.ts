@@ -2,6 +2,7 @@ import { Buffer } from 'node:buffer';
 import { ApiError } from '@/lib/api';
 import { db } from '@/lib/db';
 import { getExerciseMedia } from '@/lib/exercise-media';
+import { stripImageMetadata } from '@/lib/image-metadata';
 import { itemStackAppliesToExercise, itemStackStopsApplying } from '@/lib/gym-loads';
 import type { EquipmentType } from '@/lib/prisma-client';
 import { pickableExerciseWhere, usableExerciseWhere } from '@/lib/catalog/access';
@@ -539,8 +540,10 @@ export function decodeGymEquipmentImage(
   if (!matchesImageSignature(buffer, mimeType)) {
     throw new ApiError(400, 'Uploaded bytes do not match the declared image type.');
   }
-  const bytes = new Uint8Array(new ArrayBuffer(buffer.length));
-  bytes.set(buffer);
+  // No location, camera or time metadata is stored with the picture.
+  const stripped = stripImageMetadata(new Uint8Array(buffer), mimeType);
+  const bytes = new Uint8Array(new ArrayBuffer(stripped.length));
+  bytes.set(stripped);
   return { bytes, mimeType };
 }
 

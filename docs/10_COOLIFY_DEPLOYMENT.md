@@ -89,6 +89,11 @@ Marque os segredos apenas como **runtime** (não "build variable"), para não fi
 | `RESEND_API_KEY` | chave da Resend (domínio do remetente verificado lá) | com `resend` |
 | `EMAIL_FROM` | `GYM Peg <no-reply@seu-dominio>` | com `resend` |
 | `APP_URL` | origem pública usada nos links dos e-mails (padrão: `NEXTAUTH_URL`) | não |
+| `STORAGE_PROVIDER` | `s3` para guardar as fotos no bucket privado | quando houver bucket |
+| `S3_ENDPOINT` | ex.: `https://<conta>.r2.cloudflarestorage.com` | com `s3` |
+| `S3_BUCKET` | nome do bucket privado | com `s3` |
+| `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` | token de API do R2 com leitura e escrita só nesse bucket | com `s3` |
+| `S3_REGION` | `auto` no R2 (padrão) | não |
 
 Sem `EMAIL_PROVIDER`, a tela "Esqueceu a senha?" informa que o reset por e-mail não está disponível.
 
@@ -96,7 +101,7 @@ Sem `EMAIL_PROVIDER`, a tela "Esqueceu a senha?" informa que o reset por e-mail 
 
 ### Armazenamento persistente (provisório)
 
-Aba **Persistent Storage** → volume `gympeg-uploads` montado em `/app/uploads`. As fotos de progresso ainda ficam em disco até o storage S3 privado ser implementado (G3). O backup do Coolify **não cobre** esse volume.
+Aba **Persistent Storage** → volume `gympeg-uploads` montado em `/app/uploads`. As fotos de progresso ficam neste volume enquanto `STORAGE_PROVIDER` não estiver configurado; com o bucket, as novas vão direto para ele e as antigas migram na primeira leitura. O backup do Coolify **não cobre** esse volume.
 
 ### Healthcheck
 
