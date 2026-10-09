@@ -25,6 +25,7 @@ export const dashboard = {
     sessions: '{done} из {planned} запланированных тренировок',
     sessionsLabel: 'Выполнено запланированных тренировок за неделю',
     sets: '{done} из {prescribed} назначенных подходов в этих тренировках',
+    report: 'Отчёт за прошлую неделю',
   },
   records: {
     title: 'Новые рекорды',

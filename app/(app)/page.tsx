@@ -281,6 +281,12 @@ export default async function DashboardPage() {
                       })}
                     </p>
                   )}
+                  <Link
+                    href="/progress/report"
+                    className="self-start text-sm font-medium text-primary underline-offset-4 hover:underline"
+                  >
+                    {t('adherence.report')}
+                  </Link>
                 </CardContent>
               </Card>
             )}

@@ -25,6 +25,7 @@ export const dashboard = {
     sessions: '{done} séances sur {planned} prévues',
     sessionsLabel: 'Séances prévues faites cette semaine',
     sets: '{done} séries sur {prescribed} prescrites dans ces séances',
+    report: 'Bilan de la semaine dernière',
   },
   records: {
     title: 'Records récents',

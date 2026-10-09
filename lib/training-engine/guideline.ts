@@ -1,13 +1,16 @@
-// Parameters of the deterministic training engine (ADR-007), versioned so a
-// persisted recommendation always says which rules produced it. A change of
-// any value below is a new version.
+// Parameters of the deterministic training engine (ADR-007, epic 2.6): the
+// single place for them, versioned so a persisted recommendation or report
+// always says which rules produced it. A change of any value below is a new
+// version (and a new `updatedAt`). Served read-only by GET
+// /api/training-guideline so the coach can cite the rules it is explaining.
 
 import type { ExerciseCategory, WeightUnit } from '@/lib/prisma-client';
 
 export const TRAINING_GUIDELINE = {
-  version: 'engine-v2.2.2026-10-09',
+  version: 'engine-v2.3.2026-10-09',
+  updatedAt: '2026-10-09',
   source:
-    'Double progression on the prescribed rep range; one loadable step down below the range; 10% deload; readiness may only hold or lower the load.',
+    'GYM Peg training engine: double progression on the prescribed rep range, one loadable step down below it, 10% deloads; readiness only holds or lowers the load; volume landmarks are general hypertrophy heuristics (MEV/MRV), not prescriptions.',
   // Load step per exercise category, in the lifter's own unit, so a pound
   // user progresses by plates they actually have.
   increments: {
@@ -36,6 +39,24 @@ export const TRAINING_GUIDELINE = {
   // many reps in reserve or fewer, or this RPE or more; unrated sets count.
   effectiveSetMaxRIR: 4,
   effectiveSetMinRPE: 6,
+  // Default weekly effective-set band per muscle group (MEV-MRV), overridable
+  // per muscle by the lifter (VolumeTarget). A general hypertrophy heuristic.
+  weeklySetsMEV: 10,
+  weeklySetsMRV: 20,
+  // Stall: the best e1RM does not improve by more than this share over the
+  // last sessions, which must also span this many days.
+  stallLookbackSessions: 3,
+  stallTolerance: 0.005,
+  stallMinSpanDays: 10,
+  // Deload recommendation: stalled lifts, chronically low readiness (average
+  // of the latest check-ins, fresh ones only) or a long block without one.
+  deloadStalledLiftsMin: 2,
+  deloadReadinessLookback: 5,
+  deloadReadinessMinCheckins: 3,
+  deloadReadinessMaxAgeDays: 14,
+  deloadLongBlockWeeks: 8,
+  deloadLongBlockTrainedShare: 0.75,
+  deloadDurationDays: 7,
 } as const;
 
 export type TrainingGuideline = typeof TRAINING_GUIDELINE;

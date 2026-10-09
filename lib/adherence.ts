@@ -8,6 +8,20 @@ import { deloadPrescription, isDeloadWeek, programCycle } from '@/lib/program-cy
 import { isoWeekStart } from '@/lib/stats';
 import { calculateAdherence, type Adherence } from '@/lib/training-engine/volume';
 
+// Sessions the plan expects in a week: its fixed weekdays, or the weekly
+// frequency the lifter set (else one round of the rotation).
+export function plannedSessionsPerWeek(
+  program: {
+    scheduleMode: 'ROTATION' | 'FIXED_DAYS';
+    workouts: { dayOfWeek: number | null }[];
+  },
+  weeklyFrequency: number | null,
+): number {
+  return program.scheduleMode === 'FIXED_DAYS'
+    ? program.workouts.filter((workout) => workout.dayOfWeek != null).length
+    : (weeklyFrequency ?? program.workouts.length);
+}
+
 export async function weeklyAdherence(
   userId: string,
   program: {
@@ -20,10 +34,7 @@ export async function weeklyAdherence(
   },
   options: { now: Date; timeZone: string; weeklyFrequency: number | null },
 ): Promise<Adherence> {
-  const sessionsPlanned =
-    program.scheduleMode === 'FIXED_DAYS'
-      ? program.workouts.filter((workout) => workout.dayOfWeek != null).length
-      : (options.weeklyFrequency ?? program.workouts.length);
+  const sessionsPlanned = plannedSessionsPerWeek(program, options.weeklyFrequency);
 
   const sessions = await db.session.findMany({
     where: {

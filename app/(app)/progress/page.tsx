@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { TrendingUp } from 'lucide-react';
 import { safeTimeZone } from '@/lib/timezone';
 import { getTranslations } from 'next-intl/server';
@@ -518,9 +519,15 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
   return (
     <main className="flex-1 px-4 py-6">
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <TrendingUp className="size-6" />
           <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
+          <Link
+            href="/progress/report"
+            className="ml-auto text-sm font-medium text-primary underline-offset-4 hover:underline"
+          >
+            {t('report.link')}
+          </Link>
         </div>
 
         <BodyweightCard

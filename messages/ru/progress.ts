@@ -46,6 +46,31 @@ export const progress = {
     stalledBadge: 'Без прогресса',
     deltaLoad: 'Δ вес',
   },
+  report: {
+    title: 'Недельный отчёт',
+    link: 'Отчёт за неделю',
+    range: 'с {start} по {end}',
+    navigation: 'Недели',
+    previous: 'Предыдущая неделя',
+    next: 'Следующая неделя',
+    empty: 'На этой неделе нет завершённых тренировок.',
+    summary: 'Итоги',
+    sessions: '{done} из {planned} запланированных тренировок',
+    sessionsDone:
+      '{done, plural, one {# тренировка} few {# тренировки} many {# тренировок} other {# тренировки}}',
+    sets: '{effective} эффективных подходов из {working} рабочих',
+    records:
+      '{count, plural, =0 {Новых рекордов нет} one {# новый рекорд} few {# новых рекорда} many {# новых рекордов} other {# новых рекорда}}',
+    tonnage: 'Тоннаж: {weight}',
+    muscles: 'Эффективные подходы по мышцам в сравнении с прошлой неделей',
+    muscleSets: '{sets} подх.',
+    newMuscle: 'новое',
+    bestProgress: 'Лучший прогресс: {exercise}, расчётный 1ПМ {from} → {to}',
+    bodyweight: 'Средний вес: {from} → {to}',
+    bodyweightOnly: 'Средний вес: {weight}',
+    footer:
+      'Рассчитано тренировочным движком ({version}). Тренер может прокомментировать, но не меняет цифры.',
+  },
   bodyweight: {
     title: 'Вес тела',
     current: 'Текущий: {weight}',

@@ -1,6 +1,7 @@
 import type { Set } from '@/lib/prisma-client';
 import { localCalendarDate, localDayKey, zonedStartOfDay } from '@/lib/timezone';
 import { isCardioSet } from '@/lib/cardio';
+import { TRAINING_GUIDELINE } from '@/lib/training-engine/guideline';
 
 // ============================================================
 // Training stats - volume, estimated 1RM, weekly aggregation
@@ -191,16 +192,16 @@ export function exerciseProgress(
 // How many of the most recent sessions to judge a stall over. A lift is
 // flagged when, across these sessions, the best estimated 1RM never improves
 // on the prior best (within tolerance). Defined once so it lives in one place.
-export const STALL_LOOKBACK_SESSIONS = 3;
+export const STALL_LOOKBACK_SESSIONS = TRAINING_GUIDELINE.stallLookbackSessions;
 
 // Relative tolerance: an e1RM counts as an improvement only when it exceeds the
 // prior best by more than this fraction (0.5%). Keeps rounding/noise from
 // masking a genuine plateau.
-export const STALL_TOLERANCE = 0.005;
+export const STALL_TOLERANCE = TRAINING_GUIDELINE.stallTolerance;
 
 // The stall window must also span this many days (epic 2.5): three sessions
 // in one week say little about a plateau.
-export const STALL_MIN_SPAN_DAYS = 10;
+export const STALL_MIN_SPAN_DAYS = TRAINING_GUIDELINE.stallMinSpanDays;
 
 // Stall test over exerciseProgress points (dated, oldest first): the e1RM
 // test below, over a window of sessions that also spans STALL_MIN_SPAN_DAYS.
@@ -310,8 +311,8 @@ export function weeklyVolumeByMuscleGroup(
 //   typically too low to drive progress.
 // - MRV (maximum recoverable volume): the ceiling above which fatigue tends to
 //   outpace recovery.
-export const WEEKLY_SETS_MEV = 10;
-export const WEEKLY_SETS_MRV = 20;
+export const WEEKLY_SETS_MEV = TRAINING_GUIDELINE.weeklySetsMEV;
+export const WEEKLY_SETS_MRV = TRAINING_GUIDELINE.weeklySetsMRV;
 
 // A resolved MEV/MRV band for one muscle group, plus whether it came from the
 // user's own VolumeTarget (issue #211) or the global defaults above.

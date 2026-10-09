@@ -1,4 +1,5 @@
 import { READINESS_HOLD_AT_OR_BELOW } from '@/lib/progression';
+import { TRAINING_GUIDELINE } from '@/lib/training-engine/guideline';
 
 // ============================================================
 // Deload-week recommendation (program-level fatigue signal)
@@ -10,21 +11,21 @@ import { READINESS_HOLD_AT_OR_BELOW } from '@/lib/progression';
 
 // How many stalled lifts (per lib/stats.ts isStalled) it takes to read the
 // plateau as systemic fatigue rather than a single lift needing a tweak.
-export const DELOAD_STALLED_LIFTS_MIN = 2;
+export const DELOAD_STALLED_LIFTS_MIN = TRAINING_GUIDELINE.deloadStalledLiftsMin;
 
 // How many of the most recent readiness check-ins the chronic-fatigue test
 // averages over.
-export const DELOAD_READINESS_LOOKBACK = 5;
+export const DELOAD_READINESS_LOOKBACK = TRAINING_GUIDELINE.deloadReadinessLookback;
 
 // Minimum number of check-ins in the window before the readiness trigger can
 // fire. One bad morning is noise; a short consistent run of low scores is not.
-export const DELOAD_READINESS_MIN_CHECKINS = 3;
+export const DELOAD_READINESS_MIN_CHECKINS = TRAINING_GUIDELINE.deloadReadinessMinCheckins;
 
 // Check-ins older than this are dead data for a "chronic, current" fatigue
 // signal: the caller must not feed them in. Two weeks keeps the trigger about
 // the present block, mirroring how lib/progression.ts bounds a single
 // check-in's relevance with READINESS_RECENCY_HOURS.
-export const DELOAD_READINESS_MAX_AGE_DAYS = 14;
+export const DELOAD_READINESS_MAX_AGE_DAYS = TRAINING_GUIDELINE.deloadReadinessMaxAgeDays;
 
 // Average readiness (1 drained - 5 primed) at or below which recovery counts
 // as chronically poor. Reuses the per-session "hold the load" boundary from
@@ -34,13 +35,13 @@ export const DELOAD_READINESS_THRESHOLD = READINESS_HOLD_AT_OR_BELOW;
 
 // Length of a one-tap planned deload week (issue #112): POST /api/deload sets
 // User.deloadUntil this many days ahead.
-export const DELOAD_DURATION_DAYS = 7;
+export const DELOAD_DURATION_DAYS = TRAINING_GUIDELINE.deloadDurationDays;
 
 // A long block without any deload (epic 2.5): this many weeks since the last
 // deload (taken, or the planned week of the program cycle), trained in at least
 // this share of them, recommends one even without stalls or low readiness.
-export const DELOAD_LONG_BLOCK_WEEKS = 8;
-export const DELOAD_LONG_BLOCK_TRAINED_SHARE = 0.75;
+export const DELOAD_LONG_BLOCK_WEEKS = TRAINING_GUIDELINE.deloadLongBlockWeeks;
+export const DELOAD_LONG_BLOCK_TRAINED_SHARE = TRAINING_GUIDELINE.deloadLongBlockTrainedShare;
 
 export interface TrainingBlock {
   // Whole weeks since the last deload (or since training started).
