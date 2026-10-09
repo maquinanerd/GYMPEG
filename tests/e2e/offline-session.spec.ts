@@ -195,9 +195,13 @@ test('a set deleted offline is removed from the server once back online', async 
   await expect(page.getByRole('button', { name: 'Undo set 2' })).toHaveCount(0);
   await expect(page.getByRole('button', { name: /^confirm set 2$/i })).toBeVisible();
 
+  // Back online the outbox delivers the deletion (the page may have moved to
+  // the offline screen meanwhile; the outbox runs there too).
   await context.setOffline(false);
-  await page.evaluate(() => window.dispatchEvent(new Event('online')));
   await expect.poll(serverSets, { timeout: 30_000 }).toBe(1);
-  // Still deleted on the device after the round trip.
+
+  // Reopened online, the session shows the one remaining set.
+  await page.goto(`/session/${sessionId}`);
+  await expect(page.getByRole('button', { name: 'Undo set 1' })).toBeVisible({ timeout: 20_000 });
   await expect(page.getByRole('button', { name: 'Undo set 2' })).toHaveCount(0);
 });
