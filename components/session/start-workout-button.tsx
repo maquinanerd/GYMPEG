@@ -7,6 +7,7 @@ import { Play } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { startSession } from '@/lib/session-lifecycle';
+import { offlineAwareHref } from '@/lib/offline-navigation';
 
 export function StartWorkoutButton({
   workoutId,
@@ -30,9 +31,9 @@ export function StartWorkoutButton({
           router.push(path);
           router.refresh();
         } else {
-          // Offline: a full navigation, answered by the service worker's
-          // offline page, which runs the session from the device.
-          window.location.assign(path);
+          // Offline: the offline page (precached) runs the session from the
+          // device; online but not synced yet, the server page does.
+          window.location.assign(offlineAwareHref(path));
         }
       } catch {
         toast.error(t('startError'));

@@ -12,6 +12,7 @@ import { getDB } from '@/lib/indexeddb';
 import { getOutboxOwner } from '@/lib/outbox-owner';
 import { startSession } from '@/lib/session-lifecycle';
 import { countUnsyncedItems } from '@/lib/sync';
+import { offlineAwareHref } from '@/lib/offline-navigation';
 
 // Home of the offline page: resume the workout in progress on this device or
 // start one of the stored program's workouts, all without a network.
@@ -55,11 +56,15 @@ export function OfflineHome() {
     return entry ? trainingName(entry.workout.name) : null;
   };
 
+  function open(sessionId: string) {
+    window.location.assign(offlineAwareHref(`/session/${encodeURIComponent(sessionId)}`));
+  }
+
   function start(workoutId: string) {
     startTransition(async () => {
       try {
         const started = await startSession({ workoutId, gymId: null });
-        window.location.assign(`/session/${encodeURIComponent(started.id)}`);
+        open(started.id);
       } catch {
         toast.error(session('startError'));
       }
@@ -102,11 +107,13 @@ export function OfflineHome() {
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
                   {data.open.map((item) => (
-                    <Button key={item.id} asChild className="min-h-tap justify-between">
-                      <a href={`/session/${encodeURIComponent(item.id)}`}>
-                        <span>{workoutName(item.workoutId) ?? t('resumeTitle')}</span>
-                        <span>{t('resume')}</span>
-                      </a>
+                    <Button
+                      key={item.id}
+                      onClick={() => open(item.id)}
+                      className="min-h-tap justify-between"
+                    >
+                      <span>{workoutName(item.workoutId) ?? t('resumeTitle')}</span>
+                      <span>{t('resume')}</span>
                     </Button>
                   ))}
                 </CardContent>

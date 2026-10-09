@@ -93,9 +93,6 @@ describe('LocalSessionRunner', () => {
     render(<LocalSessionRunner sessionId={SESSION_ID} />);
 
     expect(await screen.findByText('Workout not available offline')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Go to the home screen' })).toHaveAttribute(
-      'href',
-      '/',
-    );
+    expect(screen.getByRole('button', { name: 'Go to the home screen' })).toBeInTheDocument();
   });
 });

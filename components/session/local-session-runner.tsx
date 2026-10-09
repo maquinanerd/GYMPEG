@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +9,7 @@ import { SessionRunner } from '@/components/session/session-runner';
 import { getDB } from '@/lib/indexeddb';
 import { getOutboxOwner } from '@/lib/outbox-owner';
 import { runnerPropsFromPack, type PackRunnerProps } from '@/lib/training-pack';
+import { offlineAwareHref } from '@/lib/offline-navigation';
 
 type State =
   | { kind: 'loading' }
@@ -62,11 +62,8 @@ export function LocalSessionRunner({
           <CardDescription>{t(`${state.kind}Description`)}</CardDescription>
         </CardHeader>
         <CardContent>
-          {/* Offline, the router falls back to a full navigation, which the
-              service worker answers with the offline page's home. */}
-          <Button asChild>
-            <Link href="/">{t('home')}</Link>
-          </Button>
+          {/* Offline, the home screen is the offline page's (precached). */}
+          <Button onClick={() => window.location.assign(offlineAwareHref('/'))}>{t('home')}</Button>
         </CardContent>
       </Card>
     </main>

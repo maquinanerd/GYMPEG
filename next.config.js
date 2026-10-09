@@ -19,6 +19,9 @@ const withPWA = require('@ducanh2912/next-pwa').default({
     clientsClaim: true,
     // Do not pre-cache API routes: too volatile and auth-dependent.
     exclude: [/middleware-manifest\.json$/, /app-build-manifest\.json$/],
+    // /~offline?to=<screen> (lib/offline-navigation) is served from the
+    // precached offline page; `to` must not defeat the precache match.
+    ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^to$/],
     runtimeCaching: [
       {
         // App pages: always from the network. The route exists so that a

@@ -54,6 +54,7 @@ import {
 } from '@/lib/sync';
 import { hydrateFromServerSets } from '@/lib/sync-hydration';
 import { finishSession, rememberSession } from '@/lib/session-lifecycle';
+import { offlineAwareHref } from '@/lib/offline-navigation';
 import { ExerciseCard } from '@/components/session/exercise-card';
 import {
   SessionExerciseMenu,
@@ -631,8 +632,13 @@ export function SessionRunner({
       );
       if (synced) toast.success(t('finished'));
       else toast.info(t('finishedOffline'));
-      router.replace('/');
-      router.refresh();
+      if (navigator.onLine) {
+        router.replace('/');
+        router.refresh();
+      } else {
+        // The home screen offline is the offline page's (precached).
+        window.location.assign(offlineAwareHref('/'));
+      }
     } catch {
       toast.error(t('finishError'));
     } finally {

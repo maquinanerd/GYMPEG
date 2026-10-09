@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { Dumbbell } from 'lucide-react';
 import { OfflineIndicator } from '@/components/shared/offline-indicator';
 import { LocalSessionRunner } from '@/components/session/local-session-runner';
 import { OfflineHome } from '@/components/offline/offline-home';
 import { bindAutoSync } from '@/lib/sync';
+import { OFFLINE_PAGE, offlineAwareHref, offlineTarget } from '@/lib/offline-navigation';
 
 // The URL the browser asked for, captured when this module loads, before the
 // router hydrates: the page was rendered for /~offline and the router may
@@ -16,26 +16,39 @@ const requested =
     ? { path: window.location.pathname, search: window.location.search }
     : null;
 
-// The offline page (app/~offline): the service worker answers every page
-// navigation that cannot reach the server with it, whatever the URL. It
-// reads the URL itself: a session URL runs that session from the device,
-// anything else shows the offline home (resume or start a workout).
+type Screen = { path: string; search: string };
+
+// The screen to show. Reached two ways:
+// - the app sent the lifter here while offline: /~offline?to=<screen>;
+// - the service worker answered a navigation it could not deliver with this
+//   page: the address bar already holds the screen.
+function resolveScreen(current: Screen): Screen {
+  if (current.path !== OFFLINE_PAGE) return current;
+  const url = new URL(offlineTarget(current.search) ?? '/', window.location.origin);
+  return { path: url.pathname, search: url.search };
+}
+
+// The offline page (app/~offline). A session URL runs that session from the
+// device, anything else shows the offline home (resume or start a workout).
 // The outbox keeps flushing from here when the connection comes back.
 export function OfflineApp() {
-  const [location, setLocation] = useState<{ path: string; search: string } | null>(null);
+  const [screen, setScreen] = useState<Screen | null>(null);
 
   useEffect(() => {
-    const target = requested ?? { path: window.location.pathname, search: window.location.search };
-    // Keep the address the lifter is on (a reload must reopen the session).
-    if (window.location.pathname !== target.path) {
+    const target = resolveScreen(
+      requested ?? { path: window.location.pathname, search: window.location.search },
+    );
+    // Show the screen's own address: a reload must reopen it (from the
+    // server when online, through the service worker fallback when not).
+    if (window.location.pathname + window.location.search !== target.path + target.search) {
       window.history.replaceState(window.history.state, '', target.path + target.search);
     }
-    setLocation(target);
+    setScreen(target);
     return bindAutoSync();
   }, []);
 
-  if (!location) return null;
-  const sessionMatch = /^\/session\/([^/]+)\/?$/.exec(location.path);
+  if (!screen) return null;
+  const sessionMatch = /^\/session\/([^/]+)\/?$/.exec(screen.path);
   const sessionId =
     sessionMatch && sessionMatch[1] !== 'new' ? decodeURIComponent(sessionMatch[1]!) : null;
 
@@ -43,10 +56,14 @@ export function OfflineApp() {
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
         <div className="flex items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => window.location.assign(offlineAwareHref('/'))}
+            className="flex items-center gap-2"
+          >
             <Dumbbell className="size-5" />
             <span className="text-base font-semibold">GYM Peg</span>
-          </Link>
+          </button>
           <OfflineIndicator />
         </div>
       </header>
@@ -54,7 +71,7 @@ export function OfflineApp() {
         <LocalSessionRunner
           sessionId={sessionId}
           initialProgramExerciseId={
-            new URLSearchParams(location.search).get('programExerciseId') ?? undefined
+            new URLSearchParams(screen.search).get('programExerciseId') ?? undefined
           }
         />
       ) : (
