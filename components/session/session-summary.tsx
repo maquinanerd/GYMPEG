@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { toast } from 'sonner';
 import type { PendingSet } from '@/lib/indexeddb';
 import { formatWeight } from '@/lib/units';
 import { detectPRs, type PRType } from '@/lib/records';
@@ -29,7 +28,8 @@ interface Props {
   // Previous-session sets per exercise; absent entries mean no prior history.
   priorSets?: PriorSets;
   onBack: () => void;
-  onFinish: () => Promise<void> | void;
+  // Receives the notes to save with the finish, or null when unchanged.
+  onFinish: (notes: string | null) => Promise<void> | void;
   finishing: boolean;
 }
 
@@ -145,19 +145,9 @@ export function SessionSummary({
   });
 
   async function handleClose() {
-    // Save the notes before closing if they changed.
-    if (notes && notes !== (session.notes ?? '')) {
-      const res = await fetch(`/api/sessions/${session.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ notes }),
-      });
-      if (!res.ok) {
-        toast.error(t('noteSaveError'));
-        return;
-      }
-    }
-    await onFinish();
+    // Changed notes travel with the finish (through the offline outbox), so
+    // closing works without a network.
+    await onFinish(notes && notes !== (session.notes ?? '') ? notes : null);
   }
 
   return (

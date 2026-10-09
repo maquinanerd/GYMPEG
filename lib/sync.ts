@@ -1,17 +1,21 @@
 // ============================================================
-// Sync queue: flush the pending sets to the API
+// Sync outbox: flush what this device recorded to the API (ADR-004)
 // ============================================================
 // Strategy:
-// 1. When a set is validated locally, we write it to IndexedDB
-//    (status='pending') and trigger a flush.
-// 2. flushPendingSets() takes each pending one in order, attempts the POST
-//    and marks it according to the result.
-// 3. On app startup + on the 'online' event, we call flushPendingSets().
-// 4. No aggressive retry: we wait for the next trigger (online, validation,
+// 1. Starting a session, validating a set and finishing a session write to
+//    IndexedDB first (status 'pending') and trigger a flush.
+// 2. flushPendingSets() sends, in this order: the session starts, the sets,
+//    then the finishes. A set waits for its session to exist on the server;
+//    a finish waits until every set of its session is sent.
+// 3. Only the items of the signed-in account are sent (lib/outbox-owner).
+// 4. On app startup + on the 'online' event, we call flushPendingSets().
+// 5. No aggressive retry: we wait for the next trigger (online, validation,
 //    startup). If you cut the wifi in the middle, the app will retry when
 //    the network comes back. No background timer, to save battery.
 
-import { getDB, type PendingSet } from '@/lib/indexeddb';
+import { getDB, type LocalSession, type PendingSet } from '@/lib/indexeddb';
+import { getOutboxOwner, ownedBy } from '@/lib/outbox-owner';
+import { refreshTrainingPack } from '@/lib/training-pack';
 
 export type PendingSetUpdateState = 'missing' | 'failed' | 'synced' | 'queued';
 
@@ -75,15 +79,135 @@ function timeoutSignal(): AbortSignal | undefined {
     : undefined;
 }
 
+// 400/404/409 will not change on a retry (workout or session gone, id taken):
+// the item is marked failed instead of being resent forever.
+function isFatalStatus(status: number): boolean {
+  return status === 400 || status === 404 || status === 409;
+}
+
+async function errorMessage(res: Response): Promise<string> {
+  const data = (await res.json().catch(() => null)) as { error?: string } | null;
+  return data?.error ?? `HTTP ${res.status}`;
+}
+
 async function doFlush(): Promise<FlushResult> {
+  const owner = getOutboxOwner();
+  await flushSessionStarts(owner);
+  const result = await flushSets(owner);
+  await flushSessionFinishes(owner);
+  return result;
+}
+
+async function ownedSessions(owner: string | null): Promise<LocalSession[]> {
+  if (!owner) return [];
+  return getDB().localSessions.where('ownerId').equals(owner).toArray();
+}
+
+// Sessions started on this device while offline: created on the server with
+// the device id, so the sets queued against that id land in it.
+async function flushSessionStarts(owner: string | null): Promise<void> {
+  const db = getDB();
+  const starts = (await ownedSessions(owner))
+    .filter((session) => session.createStatus === 'pending')
+    .sort((a, b) => a.startedAt - b.startedAt);
+
+  for (const session of starts) {
+    if (!navigator.onLine) break;
+    try {
+      const res = await fetch('/api/sessions', {
+        method: 'POST',
+        signal: timeoutSignal(),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: session.id,
+          workoutId: session.workoutId,
+          gymId: session.gymId,
+          startedAt: session.startedAt,
+        }),
+      });
+      if (res.ok) {
+        await db.localSessions.update(session.id, { createStatus: 'synced', lastError: null });
+      } else {
+        await db.localSessions.update(session.id, {
+          createStatus: isFatalStatus(res.status) ? 'failed' : 'pending',
+          attempts: session.attempts + 1,
+          lastError: await errorMessage(res),
+        });
+      }
+    } catch (err) {
+      await db.localSessions.update(session.id, {
+        attempts: session.attempts + 1,
+        lastError: err instanceof Error ? err.message : 'network',
+      });
+    }
+  }
+}
+
+// Finishes recorded on this device, sent once every set of the session has
+// reached the server (a finish first would make the server refuse sets
+// performed after the server-side finish time).
+async function flushSessionFinishes(owner: string | null): Promise<void> {
+  const db = getDB();
+  const finishes = (await ownedSessions(owner)).filter(
+    (session) => session.finishStatus === 'pending' && session.createStatus === 'synced',
+  );
+
+  for (const session of finishes) {
+    if (!navigator.onLine) break;
+    const unsentSets = await db.pendingSets
+      .where('sessionId')
+      .equals(session.id)
+      .filter((row) => row.status === 'pending' || row.status === 'syncing')
+      .count();
+    if (unsentSets > 0) continue;
+    try {
+      const res = await fetch(`/api/sessions/${encodeURIComponent(session.id)}`, {
+        method: 'PUT',
+        signal: timeoutSignal(),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          finish: true,
+          ...(session.finishedAt != null ? { finishedAt: session.finishedAt } : {}),
+          ...(session.notes != null ? { notes: session.notes } : {}),
+        }),
+      });
+      if (res.ok) {
+        await db.localSessions.update(session.id, { finishStatus: 'synced', lastError: null });
+      } else {
+        await db.localSessions.update(session.id, {
+          finishStatus: isFatalStatus(res.status) ? 'failed' : 'pending',
+          attempts: session.attempts + 1,
+          lastError: await errorMessage(res),
+        });
+      }
+    } catch (err) {
+      await db.localSessions.update(session.id, {
+        attempts: session.attempts + 1,
+        lastError: err instanceof Error ? err.message : 'network',
+      });
+    }
+  }
+}
+
+async function flushSets(owner: string | null): Promise<FlushResult> {
   const db = getDB();
   // 'syncing' rows are included: a tab closed mid-request leaves them stuck in
   // that state forever otherwise. Re-sending is safe because the server
   // deduplicates on clientMutationId (POST) and a PATCH is idempotent.
-  const pending = await db.pendingSets
+  const queued = await db.pendingSets
     .where('status')
     .anyOf(['pending', 'failed', 'syncing'])
     .sortBy('createdAt');
+  // A set of a session whose start has not reached the server yet waits for
+  // it (the start is retried first on every flush).
+  const sessionsNotOnServer = new Set(
+    (await ownedSessions(owner))
+      .filter((session) => session.createStatus === 'pending')
+      .map((session) => session.id),
+  );
+  const pending = queued.filter(
+    (item) => ownedBy(owner, item) && !sessionsNotOnServer.has(item.sessionId),
+  );
 
   let flushed = 0;
   let failed = 0;
@@ -247,6 +371,7 @@ export async function queueSet(
   const db = getDB();
   const record: PendingSet = {
     ...set,
+    ownerId: getOutboxOwner(),
     createdAt: Date.now(),
     status: 'pending',
     serverId: null,
@@ -318,16 +443,53 @@ export async function pruneSyncedSets(maxAgeMs = 7 * 24 * 60 * 60 * 1000): Promi
     .delete();
 }
 
+// Drops sessions whose start and finish both reached the server more than
+// `maxAgeMs` ago (same retention as the synced sets).
+export async function pruneSyncedSessions(maxAgeMs = 7 * 24 * 60 * 60 * 1000): Promise<number> {
+  const db = getDB();
+  const cutoff = Date.now() - maxAgeMs;
+  return db.localSessions
+    .filter(
+      (session) =>
+        session.createStatus === 'synced' &&
+        session.finishStatus === 'synced' &&
+        (session.finishedAt ?? 0) < cutoff,
+    )
+    .delete();
+}
+
+// Everything on this device that has not reached the server, whatever the
+// account: what a logout must not throw away. Failed items count too: they
+// are the user's training and stay visible until resolved.
+export async function countUnsyncedItems(): Promise<number> {
+  const db = getDB();
+  const sets = await db.pendingSets.where('status').anyOf('pending', 'failed', 'syncing').count();
+  const sessions = await db.localSessions
+    .filter(
+      (session) =>
+        session.createStatus !== 'synced' ||
+        session.finishStatus === 'pending' ||
+        session.finishStatus === 'failed',
+    )
+    .count();
+  return sets + sessions;
+}
+
 // Hook event listener to start/stop the auto-sync on online/offline.
+// After each flush, the training pack is refreshed if it aged out (or was
+// marked stale by a finish): the flush first, so the pack's last-time values
+// include what was just delivered.
 export function bindAutoSync(): () => void {
   if (typeof window === 'undefined') return () => {};
-  const onOnline = () => {
-    void flushPendingSets();
+  const sync = () => {
+    void flushPendingSets()
+      .catch(() => undefined)
+      .then(() => refreshTrainingPack());
   };
-  window.addEventListener('online', onOnline);
+  window.addEventListener('online', sync);
   // First flush on mount (in case some sets remain from the previous session).
   if (navigator.onLine) {
-    void flushPendingSets();
+    sync();
   }
-  return () => window.removeEventListener('online', onOnline);
+  return () => window.removeEventListener('online', sync);
 }

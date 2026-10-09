@@ -13,6 +13,31 @@ export const session = {
   startThis: 'Démarrer cette séance',
   starting: 'Démarrage...',
   startError: 'Impossible de démarrer la séance.',
+  offline: {
+    title: 'Pas de connexion',
+    description:
+      'Vous pouvez vous entraîner normalement : tout est enregistré sur cet appareil et envoyé au retour d’internet.',
+    loading: 'Chargement de la séance...',
+    resumeTitle: 'Séance en cours',
+    resume: 'Reprendre',
+    startTitle: 'Commencer une séance',
+    start: 'Commencer',
+    noPack:
+      'Aucune séance enregistrée sur cet appareil. Ouvrez l’app une fois avec internet pour l’utiliser hors ligne.',
+    signedOut: 'Connectez-vous avec internet pour utiliser l’app hors ligne.',
+    pending:
+      '{count, plural, one {# élément en attente d’envoi} other {# éléments en attente d’envoi}}',
+    reconnect: 'Revenir à l’app',
+    retry: 'Réessayer',
+    missingTitle: 'Séance introuvable sur cet appareil',
+    missingDescription: 'Elle n’a pas été commencée ici, ou elle a été supprimée.',
+    finishedTitle: 'Séance terminée sur cet appareil',
+    finishedDescription: 'Elle sera envoyée au retour de la connexion.',
+    unavailableTitle: 'Séance indisponible hors ligne',
+    unavailableDescription:
+      'Ouvrez l’app une fois avec internet pour que cet appareil garde vos séances hors ligne.',
+    home: 'Aller à l’accueil',
+  },
   trainingGym: 'Salle pour cette séance',
   trainingGymDescription:
     'L’inventaire sélectionné reste attaché à cette séance même si vous changez de salle ensuite.',
@@ -35,8 +60,8 @@ export const session = {
   setDeleteError: 'Impossible de supprimer la série.',
   finished: 'Séance terminée.',
   finishError: 'Impossible de terminer la séance.',
-  finishPending:
-    '{count, plural, one {# série n’est pas encore synchronisée.} other {# séries ne sont pas encore synchronisées.}} Connectez-vous à internet et réessayez.',
+  finishedOffline:
+    'Séance terminée sur cet appareil. Elle sera synchronisée au retour de la connexion.',
   equipmentDropped:
     'Série enregistrée, mais le matériel n’a pas été associé : il n’est plus disponible dans cette salle.',
   rest: {
@@ -149,7 +174,6 @@ export const session = {
     exerciseProgress: 'Progression par exercice',
     note: 'Note de séance (facultatif)',
     notePlaceholder: 'Ressenti global, douleurs, points à travailler...',
-    noteSaveError: 'Impossible d’enregistrer les notes.',
     setProgress: '{done}/{target} séries',
     maxWeight: ' · max {weight}',
     finishing: 'Clôture...',

@@ -10,6 +10,30 @@ export const session = {
   startThis: 'Start this session',
   starting: 'Starting...',
   startError: 'Could not start the session.',
+  offline: {
+    title: 'No connection',
+    description:
+      'You can train as usual: everything is saved on this device and sent when the internet is back.',
+    loading: 'Loading the workout...',
+    resumeTitle: 'Workout in progress',
+    resume: 'Resume',
+    startTitle: 'Start a workout',
+    start: 'Start',
+    noPack:
+      'No workout is stored on this device yet. Open the app once with internet to use it offline.',
+    signedOut: 'Sign in with internet to use the app offline.',
+    pending: '{count, plural, one {# item waiting to be sent} other {# items waiting to be sent}}',
+    reconnect: 'Back to the app',
+    retry: 'Try again',
+    missingTitle: 'Workout not found on this device',
+    missingDescription: 'It was not started here, or it was deleted.',
+    finishedTitle: 'Workout finished on this device',
+    finishedDescription: 'It will be sent when the connection is back.',
+    unavailableTitle: 'Workout not available offline',
+    unavailableDescription:
+      'Open the app once with internet so this device stores your workouts for offline use.',
+    home: 'Go to the home screen',
+  },
   trainingGym: 'Gym for this session',
   trainingGymDescription:
     'The selected inventory stays attached to this workout even if you switch gyms later.',
@@ -32,8 +56,7 @@ export const session = {
   setDeleteError: 'Could not delete the set.',
   finished: 'Session finished.',
   finishError: 'Could not finish the session.',
-  finishPending:
-    '{count, plural, one {# set has not synced yet.} other {# sets have not synced yet.}} Connect to the internet and try again.',
+  finishedOffline: 'Session finished on this device. It will sync when you are back online.',
   equipmentDropped:
     'Set saved, but the equipment was not attached: it is no longer available in this gym.',
   rest: {
@@ -140,7 +163,6 @@ export const session = {
     exerciseProgress: 'Progress per exercise',
     note: 'Session note (optional)',
     notePlaceholder: 'Overall feel, pain, points to work on...',
-    noteSaveError: 'Could not save the notes.',
     setProgress: '{done}/{target} sets',
     maxWeight: ' · max {weight}',
     finishing: 'Finishing...',

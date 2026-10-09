@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Play } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { startSession } from '@/lib/session-lifecycle';
 
 export function StartWorkoutButton({
   workoutId,
@@ -22,18 +23,20 @@ export function StartWorkoutButton({
 
   function handleStart() {
     startTransition(async () => {
-      const res = await fetch('/api/sessions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ workoutId, gymId }),
-      });
-      if (!res.ok) {
+      try {
+        const started = await startSession({ workoutId, gymId: gymId ?? null });
+        const path = `/session/${started.id}`;
+        if (started.synced && navigator.onLine) {
+          router.push(path);
+          router.refresh();
+        } else {
+          // Offline: a full navigation, answered by the service worker's
+          // offline page, which runs the session from the device.
+          window.location.assign(path);
+        }
+      } catch {
         toast.error(t('startError'));
-        return;
       }
-      const session = (await res.json()) as { id: string };
-      router.push(`/session/${session.id}`);
-      router.refresh();
     });
   }
 

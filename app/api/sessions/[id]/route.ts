@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { sessionUpdateSchema } from '@/lib/schemas/session';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
+import { resolveFinishedAt } from '@/lib/set-timing';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -46,11 +47,21 @@ export async function PUT(req: Request, props: Params) {
     if (!session) throw new ApiError(404, 'Session not found.');
     const data = await parseJsonBody(req, sessionUpdateSchema);
 
+    // A finish keeps the first finishedAt: the offline outbox may replay it,
+    // and a second device must not move it. A finish queued offline carries
+    // the device time.
+    const finishedAt =
+      data.finish && !session.finishedAt
+        ? resolveFinishedAt(data.finishedAt, {
+            now: new Date(),
+            sessionStartedAt: session.startedAt,
+          })
+        : session.finishedAt;
     const updated = await db.session.update({
       where: { id: params.id, userId },
       data: {
         notes: data.notes ?? session.notes,
-        finishedAt: data.finish ? new Date() : session.finishedAt,
+        finishedAt,
       },
     });
     return NextResponse.json(updated);

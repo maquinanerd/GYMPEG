@@ -23,9 +23,10 @@ Base: auditoria de 2026-10-08 ([00_OPEN_SOURCE_AUDIT.md](00_OPEN_SOURCE_AUDIT.md
 | 2026-10-09 | Sync offline idempotente: `clientMutationId`, horário do aparelho, série tardia aceita, hidratação sem duplicar, finalizar só com fila vazia | `d0ee1bc` |
 | 2026-10-09 | Catálogo global curado (229 exercícios, 19 músculos), busca pt-BR por aliases, ficha do exercício, fusão das cópias por conta (M5) | `1aa05a5` |
 | 2026-10-09 | Onboarding em 5 passos: objetivo, experiência, disponibilidade, academia e equipamentos, músculos prioritários, exercícios a evitar, dados opcionais (M2) | `9c83af1` |
-| 2026-10-09 | Logger único: a tabela de séries é o fluxo principal, já preenchida com a progressão do motor (pirâmides deslocadas pela mudança de carga do dia); `Set.type` (aquecimento, trabalho, drop, AMRAP, falha, back-off), RPE opcional, alvo congelado na série, peso corporal no registro; aquecimentos fora da numeração; backup e import preservam os campos novos (M7 parcial) | este commit |
+| 2026-10-09 | Logger único: a tabela de séries é o fluxo principal, já preenchida com a progressão do motor (pirâmides deslocadas pela mudança de carga do dia); `Set.type` (aquecimento, trabalho, drop, AMRAP, falha, back-off), RPE opcional, alvo congelado na série, peso corporal no registro; aquecimentos fora da numeração; backup e import preservam os campos novos (M7 parcial) | `1a4355b` |
+| 2026-10-09 | Treino sem rede (1.4 parte 2): iniciar e finalizar offline com id UUIDv7 do aparelho (início e fim idempotentes no servidor, horários do aparelho limitados); outbox por usuário (sessão → séries → fim, fim só depois das séries); pacote de treino no IndexedDB; página offline do service worker que roda a sessão a partir do aparelho; SW sem cache de HTML nem de `/api` autenticados (M6) | este commit |
 
-Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (nonce); iniciar/finalizar treino offline e outbox por usuário; substituir exercício só nesta sessão; aquecimento gerado como séries WARMUP.
+Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (nonce); substituir exercício só nesta sessão; aquecimento gerado como séries WARMUP; exclusões com tombstone e push por agregado com resultado por item (ADR-004).
 
 ## Fundação e plataforma
 
@@ -49,7 +50,7 @@ Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (n
 | Backup com cópia S3 + restore testado | Só local | 7d/4s/6m + S3 + teste de restore | Configurar S3 no Coolify + script de restore | P1 | S | A |
 | Ambiente staging | — | Banco/bucket/chaves separados | Novo ambiente Coolify | P1 | S | M |
 | Logs estruturados | `console.error` cru | JSON com request_id, user hash, sem PII | Logger + middleware | P1 | M | M |
-| Next 16 + Serwist | Next 15.5 + next-pwa | Next 16, Serwist, sem cache de `/api` autenticado | Upgrade + trocar plugin PWA | P1 | L | M |
+| Next 16 + Serwist | Next 15.5 + next-pwa | Next 16, Serwist, sem cache de `/api` autenticado | Upgrade + trocar plugin PWA (o cache de `/api` e de HTML já saiu no 1.4) | P1 | L | M |
 | Zod 4 / Tailwind 4 / ESLint 9 | v3 / v3 / v8 | Versões atuais | Upgrades | P1 | M | B |
 
 ## Exercícios e mídia
@@ -94,9 +95,9 @@ Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (n
 |---|---|---|---|---|---|---|
 | Registrar série em 2-3 toques | 1 toque, mas 2 loggers divergentes | Um logger, sugestão do motor pré-preenchida | ✓ tabela como fluxo principal; cartão detalhado (atalhos, IA) recolhido | P0 | M | M |
 | `WorkoutSet` completo | weight, reps, rir Int, isWarmup/isDropSet | + type, rpe, clientMutationId, performedAt, alvo×realizado | ✓ `type`, `rpe`, alvo, `bodyweightKgSnapshot` (flags legadas em sincronia até o *contract*) | P0 | M | A |
-| Sync offline idempotente | Sem idempotência (O1-O7) | Outbox, UUIDv7 do cliente, dedupe no servidor, resultado por item | Reescrever `lib/sync.ts` | P0 | L | A |
-| Iniciar/finalizar offline | Exige rede | Sessão criada no cliente | Parte do novo sync | P0 | M | A |
-| Logout limpa dados locais | Não limpa | Limpar IndexedDB + Cache Storage | Ajuste | P0 | S | A |
+| Sync offline idempotente | Sem idempotência (O1-O7) | Outbox, UUIDv7 do cliente, dedupe no servidor, resultado por item | ✓ outbox por usuário, `clientMutationId` nas séries, UUIDv7 nas sessões; falta push por agregado e tombstones | P0 | L | A |
+| Iniciar/finalizar offline | Exige rede | Sessão criada no cliente | ✓ `localSessions` + pacote de treino + página offline (`app/~offline`) | P0 | M | A |
+| Logout limpa dados locais | Não limpa | Limpar IndexedDB + Cache Storage | ✓ (o outbox pendente fica, escopado ao dono; o pacote de treino sai sempre) | P0 | S | A |
 | Timer de descanso | Automático, ±15 s, vibra; perde-se ao navegar | Persistido, notificação em segundo plano | Persistir `endsAt` + Notification API | P1 | M | B |
 | Calculadora de anilhas / aquecimento | Existe (exibição) | Aquecimento gerado como séries WARMUP | Pequeno | P1 | S | B |
 | Mídia "Ver execução" | Dialog existe (sem mídia) | Bottom sheet com imagens licenciadas | Depende da mídia | P1 | S | B |

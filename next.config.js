@@ -1,12 +1,19 @@
 // PWA via @ducanh2912/next-pwa (the maintained successor to next-pwa, which
-// did not support Next 15). Same NetworkFirst/CacheFirst strategy as before;
-// the workbox-level options (runtimeCaching, buildExcludes, skipWaiting) now
-// live under workboxOptions.
+// did not support Next 15). The workbox-level options (runtimeCaching,
+// buildExcludes, skipWaiting) live under workboxOptions.
+//
+// Offline model (ADR-004): the service worker never stores authenticated
+// HTML or API responses. A page navigation that cannot reach the server gets
+// the precached offline page (app/~offline), which runs the workout from the
+// device's IndexedDB (outbox + training pack). Only static assets are cached.
 const withPWA = require('@ducanh2912/next-pwa').default({
   dest: 'public',
   register: true,
   // Disabled in dev to avoid aggressive caching during hot-reload.
   disable: process.env.NODE_ENV === 'development',
+  // The start URL is the signed-in dashboard: not cached either.
+  cacheStartUrl: false,
+  fallbacks: { document: '/~offline' },
   workboxOptions: {
     skipWaiting: true,
     clientsClaim: true,
@@ -14,26 +21,12 @@ const withPWA = require('@ducanh2912/next-pwa').default({
     exclude: [/middleware-manifest\.json$/, /app-build-manifest\.json$/],
     runtimeCaching: [
       {
-        // App pages: NetworkFirst, fall back to cache when offline.
+        // App pages: always from the network. The route exists so that a
+        // failed navigation falls back to the offline page (next-pwa hooks
+        // the fallback on runtime routes) instead of the browser's error page.
         urlPattern: ({ request, url }) =>
           request.mode === 'navigate' && !url.pathname.startsWith('/api/'),
-        handler: 'NetworkFirst',
-        options: {
-          cacheName: 'pages',
-          networkTimeoutSeconds: 4,
-          expiration: { maxEntries: 50, maxAgeSeconds: 7 * 24 * 60 * 60 },
-        },
-      },
-      {
-        // GET API: NetworkFirst (programs, sessions, exercises change over time).
-        urlPattern: ({ url, request }) =>
-          url.pathname.startsWith('/api/') && request.method === 'GET',
-        handler: 'NetworkFirst',
-        options: {
-          cacheName: 'api-get',
-          networkTimeoutSeconds: 4,
-          expiration: { maxEntries: 100, maxAgeSeconds: 24 * 60 * 60 },
-        },
+        handler: 'NetworkOnly',
       },
       {
         // Static assets: CacheFirst (long-lived).

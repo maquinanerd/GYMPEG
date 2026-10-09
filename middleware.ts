@@ -4,9 +4,12 @@ import { verifySession, SESSION_COOKIE } from '@/lib/auth-token';
 // Routes reachable without a valid session.
 // /api/auth/logout is public: replaying it without a cookie does nothing
 // harmful and lets the client clear state even if the JWT has expired.
+// /~offline is the service worker's offline page: precached at install, it
+// carries no account data (it reads only this device's IndexedDB).
 const PUBLIC_PATHS = new Set([
   '/login',
   '/signup',
+  '/~offline',
   '/mcp',
   '/mcp/health',
   '/api/health',
@@ -57,6 +60,8 @@ export const config = {
     // through a cookie-less internal request. Redirecting that request to
     // /login handed the optimizer an HTML page and every optimized frame
     // (the live-session strip thumbnails) came back as a 400 in production.
-    '/((?!_next/static|_next/image|exercise-media/|icons|manifest.json|favicon.ico|sw.js|workbox-).*)',
+    // fallback-*.js is the service worker's offline-fallback script: imported
+    // during install, which also happens on /login, before any session.
+    '/((?!_next/static|_next/image|exercise-media/|icons|manifest.json|favicon.ico|sw.js|workbox-|fallback-).*)',
   ],
 };

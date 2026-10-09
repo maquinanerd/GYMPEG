@@ -53,6 +53,7 @@ import {
   queueSet,
 } from '@/lib/sync';
 import { hydrateFromServerSets } from '@/lib/sync-hydration';
+import { finishSession, rememberSession } from '@/lib/session-lifecycle';
 import { ExerciseCard } from '@/components/session/exercise-card';
 import {
   SessionExerciseMenu,
@@ -104,7 +105,7 @@ type LiveEquipmentEdits = {
   weightOptions: Record<string, number[]>;
 };
 
-type SessionRunnerProps = {
+export type SessionRunnerProps = {
   session: Session & {
     workout:
       | (Workout & {
@@ -272,6 +273,13 @@ export function SessionRunner({
       await hydrateFromServerSets(session.id, session.sets);
       setHydrated(true);
     })();
+    // So a reload without a network can still run this session (offline page).
+    void rememberSession({
+      id: session.id,
+      workoutId: session.workoutId,
+      gymId: session.gymId,
+      startedAt: new Date(session.startedAt).getTime(),
+    }).catch(() => undefined);
     void acquireWakeLock();
     const cleanupVisibility = bindWakeLockToVisibility();
     const cleanupSync = bindAutoSync();
@@ -606,37 +614,27 @@ export function SessionRunner({
     }
   }
 
-  async function handleFinishSession() {
+  async function handleFinishSession(notes: string | null) {
     setClosing(true);
     try {
-      // Attempt one last flush before closing, to minimize the residual queue.
-      if (typeof navigator !== 'undefined' && navigator.onLine) {
-        await flushPendingSets();
-      }
-      // Finishing while sets are still queued used to strand them: the server
-      // refused them once the session was closed. Close only when the queue of
-      // this session is empty (permanently failed rows do not block).
-      const unsynced = await getDB()
-        .pendingSets.where('sessionId')
-        .equals(session.id)
-        .filter((row) => row.status === 'pending' || row.status === 'syncing')
-        .count();
-      if (unsynced > 0) {
-        toast.error(t('finishPending', { count: unsynced }));
-        return;
-      }
-      const res = await fetch(`/api/sessions/${session.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ finish: true }),
-      });
-      if (!res.ok) {
-        toast.error(t('finishError'));
-        return;
-      }
-      toast.success(t('finished'));
+      // The finish goes through the outbox (works offline). It reaches the
+      // server only after every set of this session did, so queued sets are
+      // never refused by an already closed session.
+      const { synced } = await finishSession(
+        {
+          id: session.id,
+          workoutId: session.workoutId,
+          gymId: session.gymId,
+          startedAt: new Date(session.startedAt).getTime(),
+        },
+        notes,
+      );
+      if (synced) toast.success(t('finished'));
+      else toast.info(t('finishedOffline'));
       router.replace('/');
       router.refresh();
+    } catch {
+      toast.error(t('finishError'));
     } finally {
       setClosing(false);
     }

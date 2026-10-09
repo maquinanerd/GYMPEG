@@ -6,12 +6,15 @@ import { SyncBootstrap } from '@/components/shared/sync-bootstrap';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { LanguageSelector } from '@/components/shared/language-selector';
 import Link from 'next/link';
+import { getCurrentSession } from '@/lib/auth';
 
 // Layout for protected routes (post-login).
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  // Cached per request (React cache): the page's own requireSession() reuses it.
+  const auth = await getCurrentSession();
   return (
     <div className="flex min-h-screen flex-col">
-      <SyncBootstrap />
+      <SyncBootstrap ownerId={auth?.userId ?? null} />
       <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur">
         <div className="flex items-center justify-between px-4 py-3">
           <Link href="/" className="flex items-center gap-2">

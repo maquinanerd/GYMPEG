@@ -18,6 +18,24 @@ export function resolvePerformedAt(
   return new Date(performedAtMs);
 }
 
+// When a session started on the device. A start queued offline reaches the
+// server late; a clock ahead of the server is capped at "now".
+export function resolveStartedAt(startedAtMs: number | undefined, now: Date): Date {
+  if (startedAtMs === undefined || startedAtMs > now.getTime()) return now;
+  return new Date(startedAtMs);
+}
+
+// When a session was finished on the device: never in the future and never
+// before the session started.
+export function resolveFinishedAt(
+  finishedAtMs: number | undefined,
+  context: { now: Date; sessionStartedAt: Date },
+): Date {
+  if (finishedAtMs === undefined || finishedAtMs > context.now.getTime()) return context.now;
+  if (finishedAtMs < context.sessionStartedAt.getTime()) return context.sessionStartedAt;
+  return new Date(finishedAtMs);
+}
+
 // A finished session still accepts a set logged offline BEFORE it was
 // finished (the "finish" may have come from another device, or the queue
 // drained after a reconnect). It must carry an idempotency key, so a replay

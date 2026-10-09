@@ -3,7 +3,9 @@ import {
   acceptsSetAfterFinish,
   MAX_BEFORE_SESSION_MS,
   MAX_FUTURE_SKEW_MS,
+  resolveFinishedAt,
   resolvePerformedAt,
+  resolveStartedAt,
 } from './set-timing';
 
 const now = new Date('2026-10-09T12:00:00Z');
@@ -29,6 +31,34 @@ describe('resolvePerformedAt', () => {
   it('pulls absurdly old timestamps back to the session start', () => {
     const tooOld = sessionStartedAt.getTime() - MAX_BEFORE_SESSION_MS - 1;
     expect(resolvePerformedAt(tooOld, ctx)).toEqual(sessionStartedAt);
+  });
+});
+
+describe('resolveStartedAt', () => {
+  it('uses the server clock when the client sends nothing or a future time', () => {
+    expect(resolveStartedAt(undefined, now)).toEqual(now);
+    expect(resolveStartedAt(now.getTime() + 1, now)).toEqual(now);
+  });
+
+  it('keeps the device time of a start queued offline', () => {
+    const t = Date.parse('2026-10-08T18:00:00Z');
+    expect(resolveStartedAt(t, now).getTime()).toBe(t);
+  });
+});
+
+describe('resolveFinishedAt', () => {
+  it('uses the server clock when the client sends nothing or a future time', () => {
+    expect(resolveFinishedAt(undefined, ctx)).toEqual(now);
+    expect(resolveFinishedAt(now.getTime() + 60_000, ctx)).toEqual(now);
+  });
+
+  it('keeps the device time of a finish queued offline', () => {
+    const t = Date.parse('2026-10-09T11:15:00Z');
+    expect(resolveFinishedAt(t, ctx).getTime()).toBe(t);
+  });
+
+  it('never finishes before the session started', () => {
+    expect(resolveFinishedAt(sessionStartedAt.getTime() - 1, ctx)).toEqual(sessionStartedAt);
   });
 });
 

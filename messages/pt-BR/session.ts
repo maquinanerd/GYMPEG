@@ -13,6 +13,30 @@ export const session = {
   startThis: 'Iniciar este treino',
   starting: 'Iniciando...',
   startError: 'Não foi possível iniciar o treino.',
+  offline: {
+    title: 'Sem conexão',
+    description:
+      'Você pode treinar normalmente: tudo fica salvo neste aparelho e é enviado quando a internet voltar.',
+    loading: 'Carregando o treino...',
+    resumeTitle: 'Treino em andamento',
+    resume: 'Retomar',
+    startTitle: 'Iniciar um treino',
+    start: 'Iniciar',
+    noPack:
+      'Nenhum treino salvo neste aparelho ainda. Abra o app uma vez com internet para usar offline.',
+    signedOut: 'Entre na sua conta com internet para usar o app offline.',
+    pending: '{count, plural, one {# item aguardando envio} other {# itens aguardando envio}}',
+    reconnect: 'Voltar ao app',
+    retry: 'Tentar de novo',
+    missingTitle: 'Treino não encontrado neste aparelho',
+    missingDescription: 'Ele não foi iniciado aqui, ou foi apagado.',
+    finishedTitle: 'Treino concluído neste aparelho',
+    finishedDescription: 'Ele será enviado quando a conexão voltar.',
+    unavailableTitle: 'Treino indisponível sem conexão',
+    unavailableDescription:
+      'Abra o app uma vez com internet para este aparelho guardar seus treinos para uso offline.',
+    home: 'Ir para o início',
+  },
   trainingGym: 'Academia deste treino',
   trainingGymDescription:
     'O inventário selecionado continua vinculado a este treino mesmo se você trocar de academia depois.',
@@ -35,8 +59,8 @@ export const session = {
   setDeleteError: 'Não foi possível excluir a série.',
   finished: 'Treino concluído.',
   finishError: 'Não foi possível concluir o treino.',
-  finishPending:
-    '{count, plural, one {# série ainda não foi sincronizada.} other {# séries ainda não foram sincronizadas.}} Conecte-se à internet e tente de novo.',
+  finishedOffline:
+    'Treino concluído neste aparelho. Ele será sincronizado quando a conexão voltar.',
   equipmentDropped:
     'Série salva, mas o equipamento não foi vinculado: ele não está mais disponível nesta academia.',
   rest: {
@@ -147,7 +171,6 @@ export const session = {
     exerciseProgress: 'Progresso por exercício',
     note: 'Observação do treino (opcional)',
     notePlaceholder: 'Sensação geral, dores, pontos a melhorar...',
-    noteSaveError: 'Não foi possível salvar as observações.',
     setProgress: '{done}/{target} séries',
     maxWeight: ' · máx. {weight}',
     finishing: 'Concluindo...',

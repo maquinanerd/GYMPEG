@@ -1,9 +1,14 @@
 // ============================================================
-// Dexie: IndexedDB for the offline queue
+// Dexie: IndexedDB for the offline outbox (ADR-004)
 // ============================================================
-// A single table for the MVP: the sets waiting to sync.
-// The other data (programs, exercises, sessions GET) is handled
-// by the service worker (HTTP cache), no need for IndexedDB.
+// - pendingSets: the sets logged on this device, synced or waiting.
+// - localSessions: sessions started or finished on this device, so both
+//   work without a network; the outbox sends the start, then the sets, then
+//   the finish.
+// - trainingPacks: the data needed to run the active program's workouts
+//   offline (lib/training-pack).
+// Every item records the account that queued it (ownerId): the outbox is
+// scoped per user.
 //
 // IMPORTANT: this module must NEVER be imported server-side.
 // The Dexie instance is only created client-side. Components
@@ -12,6 +17,7 @@
 
 import Dexie, { type Table } from 'dexie';
 import type { SetType } from '@/lib/prisma-client';
+import type { SessionPack } from '@/app/api/session-pack/route';
 
 export type PendingSetStatus = 'pending' | 'syncing' | 'synced' | 'failed';
 
@@ -65,10 +71,44 @@ export interface PendingSet {
   // gone for good. Cleared by `drainDroppedEquipment` once it has been shown.
   // Optional, so rows written before this field stay valid.
   equipmentDroppedNotice?: string | null;
+  // Account that queued the set. Absent on rows written before the outbox
+  // was scoped per user.
+  ownerId?: string | null;
+}
+
+export type OutboxStatus = 'pending' | 'synced' | 'failed';
+
+export interface LocalSession {
+  // Device-generated UUIDv7, also the server id once the start syncs.
+  id: string;
+  ownerId: string;
+  workoutId: string;
+  gymId: string | null;
+  startedAt: number; // epoch ms, device clock
+  finishedAt: number | null; // set when finished on this device
+  notes: string | null;
+  // Server state of the start. A session that already exists on the server
+  // (started online, or before this table existed) is 'synced'.
+  createStatus: OutboxStatus;
+  // Server state of the finish; 'none' while the session is open here.
+  finishStatus: 'none' | OutboxStatus;
+  attempts: number;
+  lastError: string | null;
+}
+
+// What the device needs to start and run a workout offline (the response of
+// GET /api/session-pack), one record per account. Health data: dropped on
+// logout even when the outbox is kept.
+export interface StoredTrainingPack {
+  ownerId: string;
+  savedAt: number; // epoch ms
+  pack: SessionPack;
 }
 
 class GymCoachDB extends Dexie {
   pendingSets!: Table<PendingSet, string>;
+  localSessions!: Table<LocalSession, string>;
+  trainingPacks!: Table<StoredTrainingPack, string>;
 
   constructor() {
     super('GymCoachDB');
@@ -76,6 +116,13 @@ class GymCoachDB extends Dexie {
       // Primary key: localId. Secondary indexes: sessionId (to filter
       // a session's sets), status (to scan the pending ones).
       pendingSets: 'localId, sessionId, status, createdAt',
+    });
+    this.version(2).stores({
+      pendingSets: 'localId, sessionId, status, createdAt, ownerId',
+      localSessions: 'id, ownerId, workoutId',
+    });
+    this.version(3).stores({
+      trainingPacks: 'ownerId',
     });
   }
 }
