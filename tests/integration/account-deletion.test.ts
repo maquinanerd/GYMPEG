@@ -108,6 +108,18 @@ async function seedEverything(email: string) {
       finishedAt: new Date(),
     },
   });
+  await db.trainingRecommendation.create({
+    data: {
+      userId,
+      sessionId: session.id,
+      exerciseId: exercise.id,
+      action: 'HOLD',
+      valueKg: 60,
+      reason: 'within-range',
+      inputs: {},
+      guidelineVersion: 'test',
+    },
+  });
   await db.set.create({
     data: {
       sessionId: session.id,

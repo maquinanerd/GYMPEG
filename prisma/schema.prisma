@@ -70,6 +70,7 @@ model User {
   mcpBackfillAudits McpHistoricalEquipmentBackfillAudit[]
   authSessions      AuthSession[]
   passwordResets    PasswordResetToken[]
+  trainingRecommendations TrainingRecommendation[]
   activeGymId       String?
   activeGym         Gym?                                  @relation("ActiveGym", fields: [activeGymId], references: [id], onDelete: SetNull)
 }
@@ -514,9 +515,43 @@ model ProgramExercise {
   // derived from exercise category and muscle group.
   fatigueRate        Float?
   loadAdjustmentPct  Float?
+  recommendations    TrainingRecommendation[]
 
   @@index([workoutId, order])
   @@index([exerciseId])
+}
+
+enum RecommendationAction {
+  INCREASE
+  HOLD
+  DECREASE
+  DELOAD
+  INSUFFICIENT_DATA
+}
+
+// Next-load decision of the training engine for one prescription line, taken
+// when a session starts (ADR-007, lib/training-recommendations): the action,
+// the load, the reason, every input it used and the guideline version, so the
+// decision can be audited and explained (also by the AI) later.
+model TrainingRecommendation {
+  id                String               @id @default(cuid())
+  userId            String
+  user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionId         String
+  session           Session              @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  // The prescription line; kept as history if the line is later removed.
+  programExerciseId String?
+  programExercise   ProgramExercise?     @relation(fields: [programExerciseId], references: [id], onDelete: SetNull)
+  exerciseId        String
+  action            RecommendationAction
+  valueKg           Float?
+  reason            String
+  inputs            Json
+  guidelineVersion  String
+  createdAt         DateTime             @default(now())
+
+  @@index([sessionId])
+  @@index([userId, exerciseId, createdAt])
 }
 
 enum SetAutoregulationMode {
@@ -551,6 +586,7 @@ model Session {
   cycleWeek     Int?
   sets       Set[]
   setTombstones SetTombstone[]
+  recommendations TrainingRecommendation[]
 
   @@index([userId, startedAt])
   @@index([workoutId])

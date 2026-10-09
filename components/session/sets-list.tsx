@@ -66,15 +66,7 @@ export function SetsList({ programExercise, sets, isInputActive, onDeleteSet, pr
   );
 }
 
-function RowDone({
-  set,
-  prs,
-  onDelete,
-}: {
-  set: PendingSet;
-  prs: PRType[];
-  onDelete: () => void;
-}) {
+function RowDone({ set, prs, onDelete }: { set: PendingSet; prs: PRType[]; onDelete: () => void }) {
   const t = useTranslations('session.setsList');
   const weightLabel = set.weight === 0 ? t('bodyweight') : `${set.weight} kg`;
   // Cardio sets (issue #133) render as duration/distance, never weight x reps.
@@ -127,8 +119,7 @@ function SyncIcon({ status }: { status: PendingSet['status'] }) {
   if (status === 'synced') return <Check className="size-4 flex-shrink-0 text-primary" />;
   if (status === 'syncing')
     return <Loader2 className="size-4 flex-shrink-0 animate-spin text-muted-foreground" />;
-  if (status === 'failed')
-    return <CloudOff className="size-4 flex-shrink-0 text-amber-500" />;
+  if (status === 'failed') return <CloudOff className="size-4 flex-shrink-0 text-amber-500" />;
   // 'pending'
   return <CloudOff className="size-4 flex-shrink-0 text-muted-foreground" />;
 }

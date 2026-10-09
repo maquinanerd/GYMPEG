@@ -49,6 +49,7 @@ async function buildSessionPack(userId: string, now: Date) {
     (program?.workouts ?? []).map(async (workout) => ({
       workout,
       ...(await loadWorkoutContext(userId, {
+        workoutId: workout.id,
         programExercises: workout.exercises,
         excludeSessionId: null,
         now,

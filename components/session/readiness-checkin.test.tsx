@@ -16,10 +16,7 @@ function lastFetchBody(fetchMock: ReturnType<typeof vi.fn>) {
 
 describe('ReadinessCheckin', () => {
   beforeEach(() => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }),
-    );
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }));
   });
   afterEach(() => {
     vi.unstubAllGlobals();
@@ -33,9 +30,7 @@ describe('ReadinessCheckin', () => {
     // is unchanged; only the artificial inter-event delay is dropped.
     const user = userEvent.setup({ delay: null });
     render(<ReadinessCheckin />);
-    await user.click(
-      screen.getByRole('button', { name: /readiness check-in \(optional\)/i }),
-    );
+    await user.click(screen.getByRole('button', { name: /readiness check-in \(optional\)/i }));
     return user;
   }
 
@@ -77,9 +72,7 @@ describe('ReadinessCheckin', () => {
 
     await user.click(screen.getByRole('button', { name: 'Overall readiness: 5' }));
     await user.click(screen.getByRole('button', { name: 'Sleep quality: 4' }));
-    await user.click(
-      screen.getByRole('button', { name: /add soreness \/ note \(optional\)/i }),
-    );
+    await user.click(screen.getByRole('button', { name: /add soreness \/ note \(optional\)/i }));
 
     // Rate only two groups; the rest stay unrated and must be absent.
     await user.click(screen.getByRole('button', { name: 'Chest soreness: 3' }));
@@ -101,9 +94,7 @@ describe('ReadinessCheckin', () => {
 
     await user.click(screen.getByRole('button', { name: 'Overall readiness: 2' }));
     await user.click(screen.getByRole('button', { name: 'Sleep quality: 2' }));
-    await user.click(
-      screen.getByRole('button', { name: /add soreness \/ note \(optional\)/i }),
-    );
+    await user.click(screen.getByRole('button', { name: /add soreness \/ note \(optional\)/i }));
 
     const chest3 = screen.getByRole('button', { name: 'Chest soreness: 3' });
     await user.click(chest3); // set

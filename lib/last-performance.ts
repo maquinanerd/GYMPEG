@@ -13,35 +13,44 @@ export interface LastPerformance {
   // an averaged heart rate across the session's cardio sets. Null for strength
   // exercises (no cardio sets), so the session UI can branch on `cardio`.
   cardio: { durationSec: number; distanceM: number; avgHr: number | null } | null;
+  // True when it comes from the same workout (the same prescription line,
+  // ADR-007); false when that workout has no history yet and the exercise's
+  // latest session anywhere stands in.
+  sameWorkout: boolean;
 }
 
 // Fetches the previous performances for a list of exerciseIds, excluding the
-// current session. For each exercise, we take the most recent session that
-// contains it, then pull up all of its non-warmup sets.
+// current session. Progression is per prescription (ADR-007): with a
+// `workoutId`, the latest session of that workout wins, so a heavy day and a
+// light day of the same exercise do not drive each other; without one (or
+// with no history there yet), the exercise's latest session anywhere. Then all
+// of that session's non-warmup sets of the exercise.
 export async function getLastPerformances(
   userId: string,
   exerciseIds: string[],
   excludeSessionId: string | null,
+  options: { workoutId?: string | null } = {},
 ): Promise<Map<string, LastPerformance>> {
   if (exerciseIds.length === 0) return new Map();
 
   const result = new Map<string, LastPerformance>();
 
-  // For each exercise: find the most recent set (excluding the current session,
-  // excluding warmups), get its sessionId, then all the sets of that session
-  // for this exercise.
+  const latestSet = (exerciseId: string, workoutId?: string) =>
+    db.set.findFirst({
+      where: {
+        exerciseId,
+        isWarmup: false,
+        ...(excludeSessionId ? { sessionId: { not: excludeSessionId } } : {}),
+        session: { userId, ...(workoutId ? { workoutId } : {}) },
+      },
+      orderBy: { completedAt: 'desc' },
+      include: { session: { select: { startedAt: true, id: true } } },
+    });
+
   await Promise.all(
     exerciseIds.map(async (exerciseId) => {
-      const lastSet = await db.set.findFirst({
-        where: {
-          exerciseId,
-          isWarmup: false,
-          ...(excludeSessionId ? { sessionId: { not: excludeSessionId } } : {}),
-          session: { userId },
-        },
-        orderBy: { completedAt: 'desc' },
-        include: { session: { select: { startedAt: true, id: true } } },
-      });
+      const fromWorkout = options.workoutId ? await latestSet(exerciseId, options.workoutId) : null;
+      const lastSet = fromWorkout ?? (await latestSet(exerciseId));
       if (!lastSet) return;
 
       const rows = await db.set.findMany({
@@ -92,6 +101,7 @@ export async function getLastPerformances(
         maxWeight,
         repsAtMaxWeight,
         cardio,
+        sameWorkout: fromWorkout != null,
       });
     }),
   );

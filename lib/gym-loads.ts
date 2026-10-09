@@ -9,6 +9,34 @@ export interface GymLoadConstraints {
   weightOptions?: number[];
 }
 
+export interface GymLoadInventory {
+  dumbbellWeights: number[];
+  plateWeights: number[];
+  barWeights: number[];
+  exerciseConfigs: { exerciseId: string; isAvailable: boolean; weightOptions: number[] }[];
+}
+
+// The loads an exercise can take at a gym: the gym's inventory plus the
+// exercise's own configuration there. Shared by the session screen and the
+// server-side recommendation record so both snap to the same loads.
+// `weightOptions` overrides the saved stack (an edit made during the session).
+export function gymLoadConstraintsFor(
+  gym: GymLoadInventory | null | undefined,
+  exercise: { id: string; equipmentType: EquipmentType },
+  weightOptions?: number[],
+): GymLoadConstraints | null {
+  if (!gym) return null;
+  const config = gym.exerciseConfigs.find((item) => item.exerciseId === exercise.id);
+  return {
+    equipmentType: exercise.equipmentType,
+    isAvailable: config?.isAvailable ?? true,
+    dumbbellWeights: gym.dumbbellWeights,
+    plateWeights: gym.plateWeights,
+    barWeights: gym.barWeights,
+    weightOptions: weightOptions ?? config?.weightOptions ?? [],
+  };
+}
+
 // Item types whose saved weight options describe a real stack, in the same
 // sense gymWeightOptions reads them below.
 const STACK_BEARING_EQUIPMENT_TYPES: readonly EquipmentType[] = ['MACHINE', 'CABLE', 'OTHER'];

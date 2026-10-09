@@ -1,24 +1,26 @@
-import type { Exercise, MuscleGroup, ProgramExercise, Set } from '@/lib/prisma-client';
-import { constrainGymWeight, type GymLoadConstraints } from '@/lib/gym-loads';
+import type { Exercise, MuscleGroup, ProgramExercise, Set, WeightUnit } from '@/lib/prisma-client';
+import type { GymLoadConstraints } from '@/lib/gym-loads';
+import { TRAINING_GUIDELINE } from '@/lib/training-engine/guideline';
+import { loadStepKg, recommendNextLoad } from '@/lib/training-engine/progression';
 
 // ============================================================
-// Load suggestion - double progression
+// Load suggestion of the session UI (double progression)
 // ============================================================
-// Rule: if every working set of the last session reached the top of the
-// target rep range, we increase the load (+2.5 kg compound, +1 kg isolation).
-// Otherwise we keep the load and beat the reps.
+// Thin adapter over the training engine v2 (lib/training-engine): the
+// session screens keep this compact shape while the engine owns the rules.
+// Every working set at the top of the rep range adds one step (2.5 kg / 5 lb
+// compound, 1 kg / 2.5 lb isolation); most sets below the range take one step
+// off; otherwise the load stays and the reps are beaten.
 //
-// Auto-regulation (issue #53): a recent readiness/soreness check-in can make
-// the suggestion more conservative - it may HOLD the load (skip the increment)
-// or apply a single step-down when recovery is very poor. It can NEVER raise the
-// load beyond the normal progression rule (safety; avoids gaming the check-in).
-// With no readiness data in the recency window the output is identical to the
-// rule above.
+// Auto-regulation (issue #53): a recent readiness/soreness check-in may hold
+// the load or apply a single step-down, never raise it. A planned deload week
+// takes the working load 10% down.
 
 export type SuggestionReason =
   | 'no-history'
   | 'same-as-last'
   | 'progression'
+  | 'below-range'
   | 'readiness-hold'
   | 'readiness-deload'
   | 'planned-deload';
@@ -28,42 +30,22 @@ export interface SuggestionResult {
   reason: SuggestionReason;
   // Reference load taken from the last session (max non-warmup weight).
   workingWeight?: number;
-  // Increment applied when progressing (kg).
+  // Change applied when progressing or stepping down (kg).
   delta?: number;
   // Top of the rep range used as the progression threshold.
   targetRepsMax?: number;
 }
 
-// ------------------------------------------------------------
-// Readiness thresholds (named constants with rationale)
-// ------------------------------------------------------------
-// Recency window: a check-in only auto-regulates today's suggestion if it is
-// fresh. 36h covers "logged last night or this morning" without letting a stale
-// reading from days ago silently hold the load.
-export const READINESS_RECENCY_HOURS = 36;
-// Overall readiness is rated 1 (drained) to 5 (primed). At or below this we hold
-// the load instead of adding weight.
-export const READINESS_HOLD_AT_OR_BELOW = 2;
-// The lowest readiness rating - "drained". Treated as very poor recovery and
-// triggers a conservative step-down rather than just a hold.
-export const READINESS_DELOAD_AT_OR_BELOW = 1;
-// Per-muscle soreness is rated 1 (none) to 5 (severe). At or above this for the
-// exercise's primary muscle group we hold the load.
-export const SORENESS_HOLD_AT_OR_ABOVE = 4;
-// Severe soreness ("can barely move it") - triggers a step-down.
-export const SORENESS_DELOAD_AT_OR_ABOVE = 5;
-// Conservative single step-down, expressed as a fraction of the working load.
-// 10% is a light, evidence-informed deload that protects a fatigued muscle
-// without throwing away the training block.
-export const READINESS_DELOAD_FRACTION = 0.1;
-// The step-down math above relies on weights being >= 0 (the Zod input
-// schemas and both CSV importers clamp them): reducing a negative load by a
-// fraction would shrink assistance and make the set HARDER, not easier
-// (issue #118).
+// Readiness thresholds, from the versioned engine guideline.
+export const READINESS_RECENCY_HOURS = TRAINING_GUIDELINE.readinessRecencyHours;
+export const READINESS_HOLD_AT_OR_BELOW = TRAINING_GUIDELINE.readinessHoldAtOrBelow;
+export const READINESS_DELOAD_AT_OR_BELOW = TRAINING_GUIDELINE.readinessDeloadAtOrBelow;
+export const SORENESS_HOLD_AT_OR_ABOVE = TRAINING_GUIDELINE.sorenessHoldAtOrAbove;
+export const SORENESS_DELOAD_AT_OR_ABOVE = TRAINING_GUIDELINE.sorenessDeloadAtOrAbove;
+export const READINESS_DELOAD_FRACTION = TRAINING_GUIDELINE.deloadFraction;
 
 // A recent readiness check-in, shaped for pure progression logic. The caller
-// resolves recency by passing `ageHours` (how old the check-in is), keeping this
-// module free of clock access and fully deterministic.
+// resolves recency by passing `ageHours`, keeping this module clock-free.
 export interface ReadinessSignal {
   // Overall readiness to train, 1 (drained) to 5 (primed).
   readiness: number;
@@ -73,11 +55,9 @@ export interface ReadinessSignal {
   ageHours: number;
 }
 
-// Applies the user's auto-regulation preference (issue #61) to a readiness
-// signal before it reaches suggestNextWeight. When the preference is off, the
-// signal is dropped (returns null), so the suggestion follows pure programmed
-// progression - identical to the pre-#55 behavior. When on, the signal passes
-// through unchanged. Kept pure so the gate is unit-testable on its own.
+// Applies the user's auto-regulation preference (issue #61): when it is off,
+// the readiness signal is dropped and the suggestion follows the programmed
+// progression only.
 export function readinessForSuggestion(
   readiness: ReadinessSignal | null,
   autoRegulationEnabled: boolean,
@@ -89,148 +69,45 @@ export function suggestNextWeight(
   programExercise: ProgramExercise & { exercise: Exercise },
   lastSets: Pick<Set, 'weight' | 'reps' | 'rir'>[],
   readiness?: ReadinessSignal | null,
-  // True while the user runs a planned deload week (issue #112). The caller
-  // resolves User.deloadUntil against the clock (lib/deload.ts isDeloadActive)
-  // so this module stays deterministic.
+  // True while a planned deload runs (lib/deload.ts isDeloadActive or the
+  // program cycle's deload week), resolved by the caller against the clock.
   plannedDeload?: boolean,
   loadConstraints?: GymLoadConstraints | null,
+  unit: WeightUnit = 'KG',
 ): SuggestionResult {
-  if (lastSets.length === 0) {
-    return { weight: null, reason: 'no-history' };
-  }
-
-  const targetRepsMax = programExercise.targetRepsMax;
-  const workingWeight = Math.max(...lastSets.map((s) => s.weight));
-
-  // We only consider the sets performed at the working load. Any drop sets
-  // (lighter loads) are ignored when deciding on progression.
-  const workingSets = lastSets.filter((s) => s.weight === workingWeight);
-  const allHitTopRange = workingSets.every((s) => s.reps >= targetRepsMax);
-
-  // Baseline (readiness-unaware) suggestion - identical to the original rule.
-  const delta = weightIncrement(programExercise.exercise.category);
-  const baseline: SuggestionResult = allHitTopRange
-    ? {
-        weight: +(workingWeight + delta).toFixed(2),
-        reason: 'progression',
-        workingWeight,
-        delta,
-        targetRepsMax,
-      }
-    : {
-        weight: workingWeight,
-        reason: 'same-as-last',
-        workingWeight,
-        targetRepsMax,
-      };
-
-  // Planned deload week (issue #112): one conservative step-down from the
-  // working load, taking precedence over a programmed increment and over a
-  // readiness hold. A simultaneous readiness deload is the SAME single 10%
-  // reduction (both use READINESS_DELOAD_FRACTION of the working load), so the
-  // two never stack - the larger single reduction is applied, never both.
-  if (plannedDeload) {
-    return constrainSuggestion(
-      {
-        weight: +(workingWeight * (1 - READINESS_DELOAD_FRACTION)).toFixed(2),
-        reason: 'planned-deload',
-        workingWeight,
-        targetRepsMax,
-      },
-      workingWeight,
-      programExercise.exercise.category,
-      loadConstraints,
-    );
-  }
-
-  const recovery = assessRecovery(readiness, programExercise.exercise.muscleGroup);
-  if (recovery === 'ok') {
-    return constrainSuggestion(
-      baseline,
-      workingWeight,
-      programExercise.exercise.category,
-      loadConstraints,
-    );
-  }
-
-  // Readiness may only hold or reduce. A step-down goes below the working load;
-  // a hold keeps the working load (never above it).
-  if (recovery === 'deload') {
-    const reduced = +(workingWeight * (1 - READINESS_DELOAD_FRACTION)).toFixed(2);
-    return constrainSuggestion(
-      {
-        weight: reduced,
-        reason: 'readiness-deload',
-        workingWeight,
-        targetRepsMax,
-      },
-      workingWeight,
-      programExercise.exercise.category,
-      loadConstraints,
-    );
-  }
-
-  // hold: keep the working load, drop any progression increment.
-  return constrainSuggestion(
-    {
-      weight: workingWeight,
-      reason: 'readiness-hold',
-      workingWeight,
-      targetRepsMax,
-    },
-    workingWeight,
-    programExercise.exercise.category,
+  const decision = recommendNextLoad({
+    prescription: programExercise,
+    exercise: programExercise.exercise,
+    lastSets,
+    unit,
+    readiness,
+    plannedDeload,
     loadConstraints,
-  );
-}
+  });
+  if (decision.action === 'INSUFFICIENT_DATA') return { weight: null, reason: 'no-history' };
 
-function constrainSuggestion(
-  suggestion: SuggestionResult,
-  referenceWeight: number,
-  category: Exercise['category'],
-  constraints?: GymLoadConstraints | null,
-): SuggestionResult {
-  if (suggestion.weight == null) return suggestion;
-  const weight = constrainGymWeight(suggestion.weight, referenceWeight, constraints);
-  return {
-    ...suggestion,
-    weight,
-    ...(suggestion.reason === 'progression'
-      ? { delta: +(weight - referenceWeight).toFixed(2) }
-      : {}),
+  const base = {
+    weight: decision.valueKg,
+    workingWeight: decision.inputs.workingWeightKg ?? undefined,
+    targetRepsMax: programExercise.targetRepsMax,
   };
+  switch (decision.reason) {
+    case 'top-of-range':
+      return { ...base, reason: 'progression', delta: decision.deltaKg ?? 0 };
+    case 'below-range':
+      return { ...base, reason: 'below-range', delta: decision.deltaKg ?? 0 };
+    case 'planned-deload':
+    case 'readiness-deload':
+    case 'readiness-hold':
+      return { ...base, reason: decision.reason };
+    default:
+      return { ...base, reason: 'same-as-last' };
+  }
 }
 
-type Recovery = 'ok' | 'hold' | 'deload';
-
-// Decides whether a recent check-in should make the suggestion more
-// conservative. Returns 'ok' (no change) when there is no usable, in-window
-// signal, so the no-data path is byte-for-byte identical to the base rule.
-function assessRecovery(
-  readiness: ReadinessSignal | null | undefined,
-  muscleGroup: MuscleGroup,
-): Recovery {
-  if (!readiness) return 'ok';
-  // Out-of-window check-ins are ignored (stale signal must not hold the load).
-  if (!(readiness.ageHours <= READINESS_RECENCY_HOURS)) return 'ok';
-
-  const groupSoreness = readiness.soreness?.[muscleGroup];
-
-  const veryPoor =
-    readiness.readiness <= READINESS_DELOAD_AT_OR_BELOW ||
-    (typeof groupSoreness === 'number' && groupSoreness >= SORENESS_DELOAD_AT_OR_ABOVE);
-  if (veryPoor) return 'deload';
-
-  const poor =
-    readiness.readiness <= READINESS_HOLD_AT_OR_BELOW ||
-    (typeof groupSoreness === 'number' && groupSoreness >= SORENESS_HOLD_AT_OR_ABOVE);
-  if (poor) return 'hold';
-
-  return 'ok';
-}
-
-// Standard increment for the +/- buttons depending on the exercise category.
-// Compound: 2.5 kg, isolation: 1 kg.
-export function weightIncrement(category: Exercise['category']): number {
-  return category === 'COMPOUND' ? 2.5 : 1;
+// Standard increment for the +/- buttons and the progression step, in kg,
+// for the category in the lifter's unit (2.5 kg or 5 lb compound, 1 kg or
+// 2.5 lb isolation).
+export function weightIncrement(category: Exercise['category'], unit: WeightUnit = 'KG'): number {
+  return loadStepKg(category, unit);
 }

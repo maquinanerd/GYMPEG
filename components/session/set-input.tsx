@@ -104,6 +104,7 @@ export function SetInput({
     recommendation,
     returnRecommendation,
     loadConstraints,
+    unit,
   );
   const [form, setForm] = useState<FormState>(initial);
   const [submitting, setSubmitting] = useState(false);
@@ -129,6 +130,7 @@ export function SetInput({
         recommendation,
         returnRecommendation,
         loadConstraints,
+        unit,
       ),
     );
     setQuickEntry('');
@@ -639,6 +641,7 @@ function computeInitial(
   recommendation: IntraSetRecommendation | null = null,
   returnRecommendation: ReturnRecommendation | null = null,
   loadConstraints: GymLoadConstraints | null = null,
+  unit: WeightUnit = 'KG',
 ): FormState {
   // Cardio exercises (issue #133): prefill the duration/distance from the
   // last cardio set of this session, otherwise leave the inputs empty. The
@@ -688,9 +691,13 @@ function computeInitial(
         readiness,
         deloadActive,
         loadConstraints,
+        unit,
       );
       weight = ordinary.weight ?? lastPerf.maxWeight;
-      if (returnRecommendation.weightCeiling != null && weight > returnRecommendation.weightCeiling) {
+      if (
+        returnRecommendation.weightCeiling != null &&
+        weight > returnRecommendation.weightCeiling
+      ) {
         weight = constrainGymWeightAtOrBelow(returnRecommendation.weightCeiling, loadConstraints);
       }
     }
@@ -717,6 +724,7 @@ function computeInitial(
       readiness,
       deloadActive,
       loadConstraints,
+      unit,
     );
     const initialReps =
       suggestion.reason === 'progression' ? pe.targetRepsMin : lastPerf.repsAtMaxWeight;

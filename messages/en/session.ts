@@ -333,6 +333,8 @@ export const session = {
       plannedDeload:
         'This is a planned deload week, so the load is about 10% lighter than {weight}.',
       hold: 'Keep the same load and beat your reps. Increase after all sets reach {reps} reps.',
+      belowRange:
+        'Most sets at {weight} stayed under {reps} reps: the load drops by {delta} so every set lands in the range.',
     },
   },
 };

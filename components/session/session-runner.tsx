@@ -75,7 +75,7 @@ import { ReturnToTrainingNotice } from '@/components/session/return-to-training-
 import { SessionExerciseStrip } from '@/components/session/session-exercise-strip';
 import { useExerciseName } from '@/components/shared/use-exercise-name';
 import { useTrainingName } from '@/components/shared/use-training-name';
-import type { GymLoadConstraints } from '@/lib/gym-loads';
+import { gymLoadConstraintsFor, type GymLoadConstraints } from '@/lib/gym-loads';
 import type { ReturnRecommendation } from '@/lib/return-to-training';
 import {
   exerciseDetailPath,
@@ -412,16 +412,7 @@ export function SessionRunner({
   }
 
   function loadConstraintsFor(pe: ProgramExerciseWithExercise): GymLoadConstraints | null {
-    if (!session.gym) return null;
-    const config = session.gym.exerciseConfigs.find((item) => item.exerciseId === pe.exerciseId);
-    return {
-      equipmentType: pe.exercise.equipmentType,
-      isAvailable: config?.isAvailable ?? true,
-      dumbbellWeights: session.gym.dumbbellWeights,
-      plateWeights: session.gym.plateWeights,
-      barWeights: session.gym.barWeights,
-      weightOptions: liveWeightOptions?.[pe.exerciseId] ?? config?.weightOptions ?? [],
-    };
+    return gymLoadConstraintsFor(session.gym, pe.exercise, liveWeightOptions?.[pe.exerciseId]);
   }
 
   function handleEquipmentWeightsUpdated(equipment: LiveEquipmentOption) {

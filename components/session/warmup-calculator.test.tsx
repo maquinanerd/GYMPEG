@@ -26,9 +26,7 @@ describe('WarmupCalculator', () => {
 
     await user.click(screen.getByRole('button', { name: /warm-up calculator/i }));
 
-    expect(
-      await screen.findByText(/at or below the bar/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/at or below the bar/i)).toBeInTheDocument();
     expect(screen.queryByRole('list', { name: /warm-up sets/i })).toBeNull();
   });
 });

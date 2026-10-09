@@ -144,6 +144,7 @@ export function initialDraft(
   readiness: ReadinessSignal | null,
   deloadActive: boolean,
   loadConstraints: GymLoadConstraints | null,
+  unit: WeightUnit = 'KG',
 ): DraftSet {
   const workingSets = sets.filter((set) => !set.isWarmup);
   const previousRows = lastPerformance?.sets ?? [];
@@ -161,6 +162,7 @@ export function initialDraft(
       readiness,
       deloadActive,
       loadConstraints,
+      unit,
     );
     if (suggestion.weight != null) offset = suggestion.weight - lastPerformance.maxWeight;
   }
@@ -210,7 +212,15 @@ export function EditableSetsTable({
   const locale = useLocale();
   const [metrics, setMetrics] = useState<SetTableMetric[]>(['1RM']);
   const [draft, setDraft] = useState<DraftSet>(() =>
-    initialDraft(programExercise, sets, lastPerformance, readiness, deloadActive, loadConstraints),
+    initialDraft(
+      programExercise,
+      sets,
+      lastPerformance,
+      readiness,
+      deloadActive,
+      loadConstraints,
+      unit,
+    ),
   );
   const [submitting, setSubmitting] = useState(false);
   const [editingSet, setEditingSet] = useState<{ set: PendingSet; draft: DraftSet } | null>(null);
@@ -305,6 +315,7 @@ export function EditableSetsTable({
           readiness,
           deloadActive,
           loadConstraints,
+          unit,
         ),
       );
     }

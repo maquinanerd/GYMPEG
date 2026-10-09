@@ -2,7 +2,14 @@
 
 import { useState } from 'react';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
-import { ChevronDown, ChevronUp, HelpCircle, Lightbulb, MoreHorizontal, TrendingUp } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  HelpCircle,
+  Lightbulb,
+  MoreHorizontal,
+  TrendingUp,
+} from 'lucide-react';
 import type { Exercise, ProgramExercise, WeightUnit } from '@/lib/prisma-client';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -79,6 +86,7 @@ export function ExerciseCard({
     readiness,
     deloadActive,
     loadConstraints,
+    unit,
   );
   const groupSoreness = readiness?.soreness?.[exo.muscleGroup];
   const sorenessHigh =
@@ -107,15 +115,25 @@ export function ExerciseCard({
             locale,
           }),
         })
-      : suggestion.reason === 'readiness-hold'
-        ? t('help.readinessHold', { weight: working })
-        : suggestion.reason === 'readiness-deload'
-          ? t('help.readinessDeload', { weight: working })
-          : suggestion.reason === 'planned-deload'
-            ? t('help.plannedDeload', { weight: working })
-            : t('help.hold', {
-                reps: suggestion.targetRepsMax ?? programExercise.targetRepsMax,
-              });
+      : suggestion.reason === 'below-range'
+        ? t('help.belowRange', {
+            reps: programExercise.targetRepsMin,
+            weight: working,
+            delta: formatWeight(Math.abs(suggestion.delta ?? 0), unit, {
+              decimals: 2,
+              group: false,
+              locale,
+            }),
+          })
+        : suggestion.reason === 'readiness-hold'
+          ? t('help.readinessHold', { weight: working })
+          : suggestion.reason === 'readiness-deload'
+            ? t('help.readinessDeload', { weight: working })
+            : suggestion.reason === 'planned-deload'
+              ? t('help.plannedDeload', { weight: working })
+              : t('help.hold', {
+                  reps: suggestion.targetRepsMax ?? programExercise.targetRepsMax,
+                });
   const lastDate = lastPerformance
     ? format.dateTime(new Date(lastPerformance.sessionStartedAt), {
         day: '2-digit',

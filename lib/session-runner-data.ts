@@ -66,6 +66,7 @@ export async function loadRunnerProfile(userId: string, now: Date) {
 export async function loadWorkoutContext(
   userId: string,
   input: {
+    workoutId: string | null;
     programExercises: Parameters<typeof getReturnToTrainingRecommendations>[0]['programExercises'];
     excludeSessionId: string | null;
     now: Date;
@@ -78,7 +79,10 @@ export async function loadWorkoutContext(
 }> {
   const exerciseIds = input.programExercises.map((pe) => pe.exerciseId);
   const [lastPerformances, returnRecommendations] = await Promise.all([
-    getLastPerformances(userId, exerciseIds, input.excludeSessionId),
+    // The workout's last session is each prescription's history (ADR-007).
+    getLastPerformances(userId, exerciseIds, input.excludeSessionId, {
+      workoutId: input.workoutId,
+    }),
     getReturnToTrainingRecommendations({
       userId,
       programExercises: input.programExercises,
@@ -99,7 +103,7 @@ export async function loadWorkoutContext(
 // suggestion. We only forward an in-window check-in; a stale one is dropped here
 // so the client never has to reason about clocks (and the suggestion stays
 // identical to the no-data path). Returns null when there is no usable signal.
-function buildReadinessSignal(
+export function buildReadinessSignal(
   checkin: {
     readiness: number;
     soreness: unknown;

@@ -38,6 +38,8 @@ export const USER_OWNED_MODELS = {
   // Rows cascade; the image files on disk are removed by the deletion.
   ProgressPhoto: { delegate: 'progressPhoto', erase: 'cascade' },
   ReadinessCheckin: { delegate: 'readinessCheckin', erase: 'cascade' },
+  // Engine decisions with their inputs (ADR-007); also cascade with sessions.
+  TrainingRecommendation: { delegate: 'trainingRecommendation', erase: 'cascade' },
 } as const satisfies Record<string, { delegate: string; erase: Erasure }>;
 
 export type UserOwnedModel = keyof typeof USER_OWNED_MODELS;

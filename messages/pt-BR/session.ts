@@ -341,6 +341,8 @@ export const session = {
       plannedDeload:
         'Esta é uma semana de deload planejada, então a carga fica cerca de 10% mais leve que {weight}.',
       hold: 'Mantenha a mesma carga e supere suas repetições. Aumente quando todas as séries chegarem a {reps} reps.',
+      belowRange:
+        'A maioria das séries com {weight} ficou abaixo de {reps} reps: a carga cai {delta} para todas as séries caberem na faixa.',
     },
   },
 } satisfies MessageShape<typeof english>;

@@ -6,6 +6,7 @@ import { resolveStartedAt } from '@/lib/set-timing';
 import { currentProgramRevisionId } from '@/lib/program-revisions';
 import { cycleWeekAt, programCycle } from '@/lib/program-cycle';
 import { getUserTimeZone } from '@/lib/user-timezone';
+import { recordSessionRecommendations } from '@/lib/training-recommendations';
 import { Prisma } from '@/prisma/generated/client';
 
 export async function GET() {
@@ -111,6 +112,14 @@ export async function POST(req: Request) {
           startedAt: sessionStart,
         },
       });
+      // The engine's decisions for this session, kept for audit (ADR-007).
+      // Best effort: the session exists already, a failure here must not fail
+      // the start (the offline outbox would retry it).
+      try {
+        await recordSessionRecommendations(userId, created.id);
+      } catch (recordErr) {
+        console.error('[sessions] recommendation record failed:', recordErr);
+      }
       return NextResponse.json(created, { status: 201 });
     } catch (err) {
       // Two concurrent starts with the same id (two tabs, a retry racing the

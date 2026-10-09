@@ -348,6 +348,8 @@ export const session = {
       plannedDeload:
         'C’est une semaine de décharge planifiée, la charge est donc environ 10 % plus légère que {weight}.',
       hold: 'Gardez la même charge et battez vos reps. Augmentez quand toutes les séries atteignent {reps} reps.',
+      belowRange:
+        'La plupart des séries à {weight} sont restées sous {reps} reps : la charge baisse de {delta} pour que chaque série tienne dans la fourchette.',
     },
   },
 } satisfies MessageShape<typeof english>;

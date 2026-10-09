@@ -81,6 +81,7 @@ export default async function SessionRunPage(props: Props) {
   const now = new Date();
   const profile = await loadRunnerProfile(auth.userId, now);
   const context = await loadWorkoutContext(auth.userId, {
+    workoutId: session.workoutId,
     programExercises: workout.exercises,
     excludeSessionId: session.id,
     now: session.startedAt,
