@@ -11,6 +11,7 @@
 import { getDB, type LocalSession, type StoredTrainingPack } from '@/lib/indexeddb';
 import { getOutboxOwner } from '@/lib/outbox-owner';
 import { READINESS_RECENCY_HOURS } from '@/lib/progression';
+import { applyExerciseSwaps } from '@/lib/session-swaps';
 import type { SessionPack } from '@/app/api/session-pack/route';
 import type { SessionRunnerProps } from '@/components/session/session-runner';
 
@@ -94,6 +95,19 @@ export function runnerPropsFromPack(
       ? { ...pack.readiness, ageHours: pack.readiness.ageHours + packAgeHours }
       : null;
 
+  // Exercises replaced only for this session, from the catalog the pack
+  // carries (the fields the runner reads).
+  const catalog = new Map(
+    pack.catalog.map((exercise) => [
+      exercise.id,
+      exercise as unknown as (typeof entry.workout.exercises)[number]['exercise'],
+    ]),
+  );
+  const workout = {
+    ...entry.workout,
+    exercises: applyExerciseSwaps(entry.workout.exercises, session.exerciseSwaps ?? {}, catalog),
+  };
+
   return {
     session: {
       id: session.id,
@@ -106,7 +120,8 @@ export function runnerPropsFromPack(
       startedAt: new Date(session.startedAt),
       finishedAt: session.finishedAt != null ? new Date(session.finishedAt) : null,
       notes: session.notes,
-      workout: entry.workout,
+      exerciseSwaps: session.exerciseSwaps ?? null,
+      workout,
       // The sets of a local session live in IndexedDB; the runner reads them there.
       sets: [],
       gym,

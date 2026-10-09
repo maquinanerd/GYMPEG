@@ -274,10 +274,10 @@ export const session = {
   exerciseMenu: {
     actions: 'Ações do exercício',
     actionsDescription:
-      'Estas ações alteram seu programa salvo, então também valem para os próximos treinos deste dia.',
+      'A substituição pode valer só para este treino. Adicionar e remover alteram seu programa salvo, também para os próximos treinos deste dia.',
     replace: 'Substituir exercício',
     replaceDescription:
-      'Escolha outro exercício. Ele substitui este no seu programa salvo, neste treino e nos próximos.',
+      'Escolha outro exercício. Depois decida: só neste treino ou também no seu programa salvo.',
     addExercises: 'Adicionar exercício',
     addDescription:
       'Adicione um exercício ao final deste treino. Ele também é salvo no seu programa para os próximos treinos.',
@@ -285,20 +285,24 @@ export const session = {
     removeDescription: 'Remova este exercício do seu programa salvo, neste treino e nos próximos.',
     searchExercises: 'Buscar exercícios',
     noExercises: 'Nenhum exercício encontrado.',
+    replaceChoice: 'Substituir {previous} por {name}',
+    replaceSessionOnly: 'Só neste treino',
+    replaceSessionOnlyHint: 'Só neste treino: seu programa salvo continua como está.',
     replaceConfirm:
-      'Isso substitui o exercício no seu programa salvo, então os próximos treinos também mudam. Substituir?',
+      'No programa: substitui o exercício no seu programa salvo, então os próximos treinos também mudam.',
     replaceLoggedWarning:
-      'As séries já registradas neste treino continuam no seu histórico com o exercício original, mas deixam de aparecer nesta tela. Seu programa salvo também muda para os próximos treinos. Substituir?',
+      'As séries já registradas neste treino continuam no seu histórico com o exercício original, mas deixam de aparecer nesta tela. No programa: os próximos treinos também mudam.',
     removeLoggedWarning:
       'As séries já registradas continuam no histórico, mas deixam de aparecer nesta tela. O exercício é removido do seu programa salvo, também para os próximos treinos.',
     removeConfirm:
       'Remover este exercício do seu programa salvo? Os próximos treinos também mudam.',
     removeLastBlocked:
       'Este é o único exercício do treino, então não pode ser removido aqui. Substitua-o.',
-    confirmReplace: 'Substituir por {name}',
+    confirmReplace: 'Substituir por {name} no programa',
     cancel: 'Cancelar',
     back: 'Voltar',
     replaced: 'Exercício substituído.',
+    swapped: 'Substituído neste treino.',
     replaceError: 'Não foi possível substituir o exercício.',
     added: 'Exercício adicionado.',
     addError: 'Não foi possível adicionar o exercício.',

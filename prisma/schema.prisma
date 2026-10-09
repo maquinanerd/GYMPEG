@@ -521,6 +521,9 @@ model Session {
   // whatever edits came later.
   programRevisionId String?
   programRevision   ProgramRevision? @relation(fields: [programRevisionId], references: [id], onDelete: SetNull)
+  // Exercises replaced only for this session (lib/session-swaps): a map of
+  // ProgramExercise id -> Exercise id. The saved program does not change.
+  exerciseSwaps Json?
   sets       Set[]
 
   @@index([userId, startedAt])

@@ -53,7 +53,8 @@ import {
   queueSet,
 } from '@/lib/sync';
 import { hydrateFromServerSets } from '@/lib/sync-hydration';
-import { finishSession, rememberSession } from '@/lib/session-lifecycle';
+import { finishSession, rememberSession, swapExerciseForSession } from '@/lib/session-lifecycle';
+import { parseExerciseSwaps } from '@/lib/session-swaps';
 import { offlineAwareHref } from '@/lib/offline-navigation';
 import { ExerciseCard } from '@/components/session/exercise-card';
 import {
@@ -179,10 +180,24 @@ export function SessionRunner({
     [serverEquipment, activeEquipmentEdits],
   );
   const liveWeightOptions = activeEquipmentEdits?.weightOptions;
+  // Exercises replaced only for this session from this screen: shown at once,
+  // online or not. The server applies its stored swaps to the props, so once
+  // a refresh lands an entry here matches its row and changes nothing.
+  const [localSwaps, setLocalSwaps] = useState<Record<string, SessionCatalogExercise>>({});
+  const workoutExercises = useMemo(
+    () =>
+      workout.exercises.map((pe) => {
+        const swap = localSwaps[pe.id];
+        return swap && swap.id !== pe.exerciseId
+          ? { ...pe, exerciseId: swap.id, exercise: swap as unknown as Exercise }
+          : pe;
+      }),
+    [workout.exercises, localSwaps],
+  );
   // Supersets (issue #146, slice 1): run the workout in presentation order -
   // members of a superset group come consecutively with A1/A2 labels. For a
   // workout without supersets this is exactly the stored order.
-  const supersetView = useMemo(() => buildSupersetView(workout.exercises), [workout.exercises]);
+  const supersetView = useMemo(() => buildSupersetView(workoutExercises), [workoutExercises]);
   const programExercises = supersetView.ordered;
 
   const effectiveProgramExercises = useMemo<ProgramExerciseWithExercise[]>(
@@ -280,6 +295,7 @@ export function SessionRunner({
       workoutId: session.workoutId,
       gymId: session.gymId,
       startedAt: new Date(session.startedAt).getTime(),
+      exerciseSwaps: parseExerciseSwaps(session.exerciseSwaps),
     }).catch(() => undefined);
     void acquireWakeLock();
     const cleanupVisibility = bindWakeLockToVisibility();
@@ -615,6 +631,23 @@ export function SessionRunner({
     }
   }
 
+  // Replaces the exercise of a row for this session only; the saved program
+  // stays as it is. Online, a refresh then brings the new exercise's history.
+  async function handleSwapForSession(programExerciseId: string, exercise: SessionCatalogExercise) {
+    const { synced } = await swapExerciseForSession(
+      {
+        id: session.id,
+        workoutId: session.workoutId,
+        gymId: session.gymId,
+        startedAt: new Date(session.startedAt).getTime(),
+      },
+      programExerciseId,
+      exercise.id,
+    );
+    setLocalSwaps((current) => ({ ...current, [programExerciseId]: exercise }));
+    if (synced) router.refresh();
+  }
+
   async function handleFinishSession(notes: string | null) {
     setClosing(true);
     try {
@@ -847,6 +880,7 @@ export function SessionRunner({
           programExercises={programExercises}
           catalog={catalog}
           loggedSetCount={currentSets.length}
+          onSwapForSession={(exercise) => handleSwapForSession(currentPE.id, exercise)}
           onChanged={(options) => {
             setExerciseMenuOpen(false);
             if (options?.selectProgramExerciseId) {

@@ -266,10 +266,10 @@ export const session = {
   exerciseMenu: {
     actions: 'Exercise actions',
     actionsDescription:
-      'These actions change your saved program, so they also apply to future sessions of this workout.',
+      'Replacing can apply to this workout only. Adding and removing change your saved program, for future sessions of this workout too.',
     replace: 'Replace exercise',
     replaceDescription:
-      'Choose another exercise. It replaces this one in your saved program, for this and future sessions.',
+      'Choose another exercise. Then decide: only in this workout, or in your saved program too.',
     addExercises: 'Add exercise',
     addDescription:
       'Add an exercise to the end of this workout. It is saved to your program for future sessions too.',
@@ -278,19 +278,23 @@ export const session = {
       'Remove this exercise from your saved program, for this and future sessions.',
     searchExercises: 'Search exercises',
     noExercises: 'No matching exercises.',
+    replaceChoice: 'Replace {previous} with {name}',
+    replaceSessionOnly: 'Only in this workout',
+    replaceSessionOnlyHint: 'Only in this workout: your saved program stays as it is.',
     replaceConfirm:
-      'This replaces the exercise in your saved program, so future sessions change too. Replace it?',
+      'In the program: it replaces the exercise in your saved program, so future sessions change too.',
     replaceLoggedWarning:
-      'Sets already logged in this session stay in your history under the original exercise, but they are no longer shown on this screen. Your saved program changes for future sessions too. Replace it?',
+      'Sets already logged in this session stay in your history under the original exercise, but they are no longer shown on this screen. In the program: future sessions change too.',
     removeLoggedWarning:
       'Sets already logged remain in history, but they are no longer shown on this screen. The exercise is removed from your saved program, for future sessions too.',
     removeConfirm: 'Remove this exercise from your saved program? Future sessions change too.',
     removeLastBlocked:
       'This is the only exercise in the workout, so it cannot be removed here. Replace it instead.',
-    confirmReplace: 'Replace with {name}',
+    confirmReplace: 'Replace with {name} in the program',
     cancel: 'Cancel',
     back: 'Back',
     replaced: 'Exercise replaced.',
+    swapped: 'Replaced in this workout.',
     replaceError: 'Could not replace the exercise.',
     added: 'Exercise added.',
     addError: 'Could not add the exercise.',

@@ -94,6 +94,52 @@ describe('runnerPropsFromPack', () => {
     expect(daysLater.readiness).toBeNull();
   });
 
+  it('applies the exercises replaced only for this session, from the pack catalog', () => {
+    const withRow = pack({
+      catalog: [
+        {
+          id: 'exercise-incline',
+          name: 'Incline press',
+          muscleGroup: 'CHEST',
+          category: 'COMPOUND',
+          usesBodyweight: false,
+          defaultRestSec: 120,
+          equipmentType: 'DUMBBELL',
+        },
+      ],
+      workouts: [
+        {
+          workout: {
+            id: 'workout-1',
+            programId: 'program-1',
+            name: 'Push',
+            exercises: [
+              {
+                id: 'pe-1',
+                exerciseId: 'exercise-bench',
+                exercise: { id: 'exercise-bench', name: 'Bench' },
+              },
+            ],
+          },
+          lastPerformances: {},
+          returnRecommendations: {},
+        },
+      ] as unknown as SessionPack['workouts'],
+    });
+
+    const props = runnerPropsFromPack(
+      stored(withRow),
+      localSession({ exerciseSwaps: { 'pe-1': 'exercise-incline' } }),
+      GENERATED_AT,
+    )!;
+
+    expect(props.session.workout!.exercises[0]).toMatchObject({
+      id: 'pe-1',
+      exerciseId: 'exercise-incline',
+      exercise: { name: 'Incline press', equipmentType: 'DUMBBELL' },
+    });
+  });
+
   it('returns null when the pack does not hold the workout', () => {
     expect(
       runnerPropsFromPack(stored(), localSession({ workoutId: 'workout-new' }), GENERATED_AT),

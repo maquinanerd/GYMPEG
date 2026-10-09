@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { UUID_V7_PATTERN } from '@/lib/uuidv7';
+import { exerciseSwapsSchema } from '@/lib/session-swaps';
 
 export const sessionStartSchema = z.object({
   workoutId: z.string().min(1),
@@ -22,6 +23,9 @@ export const sessionUpdateSchema = z.object({
   finish: z.boolean().optional(),
   // When the lifter finished on the device (epoch ms). Bounded server-side.
   finishedAt: z.number().int().positive().optional(),
+  // Exercises replaced only for this session (lib/session-swaps). The whole
+  // map: it replaces the stored one.
+  exerciseSwaps: exerciseSwapsSchema.optional(),
 });
 
 export type SessionStart = z.infer<typeof sessionStartSchema>;

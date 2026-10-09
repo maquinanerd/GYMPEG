@@ -93,9 +93,52 @@ async function errorMessage(res: Response): Promise<string> {
 async function doFlush(): Promise<FlushResult> {
   const owner = getOutboxOwner();
   await flushSessionStarts(owner);
+  // Before the sets: a set of a replaced exercise takes its row's targets.
+  await flushSessionSwaps(owner);
   const result = await flushSets(owner);
   await flushSessionFinishes(owner);
   return result;
+}
+
+// Exercises replaced only for a session, sent as the session's whole map.
+async function flushSessionSwaps(owner: string | null): Promise<void> {
+  const db = getDB();
+  const pending = (await ownedSessions(owner)).filter(
+    (session) => session.swapsStatus === 'pending' && session.createStatus === 'synced',
+  );
+  for (const session of pending) {
+    if (!navigator.onLine) break;
+    const sent = session.exerciseSwaps ?? {};
+    try {
+      const res = await fetch(`/api/sessions/${encodeURIComponent(session.id)}`, {
+        method: 'PUT',
+        signal: timeoutSignal(),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ exerciseSwaps: sent }),
+      });
+      if (res.ok) {
+        // A newer swap made while this request was in flight stays pending.
+        await db.transaction('rw', db.localSessions, async () => {
+          const latest = await db.localSessions.get(session.id);
+          const unchanged = JSON.stringify(latest?.exerciseSwaps ?? {}) === JSON.stringify(sent);
+          if (unchanged) {
+            await db.localSessions.update(session.id, { swapsStatus: 'synced', lastError: null });
+          }
+        });
+      } else {
+        await db.localSessions.update(session.id, {
+          swapsStatus: isFatalStatus(res.status) ? 'failed' : 'pending',
+          attempts: session.attempts + 1,
+          lastError: await errorMessage(res),
+        });
+      }
+    } catch (err) {
+      await db.localSessions.update(session.id, {
+        attempts: session.attempts + 1,
+        lastError: err instanceof Error ? err.message : 'network',
+      });
+    }
+  }
 }
 
 async function ownedSessions(owner: string | null): Promise<LocalSession[]> {
@@ -469,7 +512,9 @@ export async function countUnsyncedItems(): Promise<number> {
       (session) =>
         session.createStatus !== 'synced' ||
         session.finishStatus === 'pending' ||
-        session.finishStatus === 'failed',
+        session.finishStatus === 'failed' ||
+        session.swapsStatus === 'pending' ||
+        session.swapsStatus === 'failed',
     )
     .count();
   return sets + sessions;

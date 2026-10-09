@@ -4,6 +4,8 @@ import { requireSession } from '@/lib/auth';
 import { SessionRunner } from '@/components/session/session-runner';
 import { LocalSessionRunner } from '@/components/session/local-session-runner';
 import { liveSessionGymInclude } from '@/lib/session-gym-selection';
+import { usableExerciseWhere } from '@/lib/catalog/access';
+import { applyExerciseSwaps, parseExerciseSwaps } from '@/lib/session-swaps';
 import {
   loadRunnerProfile,
   loadWorkoutContext,
@@ -47,10 +49,29 @@ export default async function SessionRunPage(props: Props) {
   }
   if (!session.workout) notFound();
 
+  // Exercises replaced only for this session take their row's place, so the
+  // last-time values and suggestions follow the exercise actually done.
+  const swaps = parseExerciseSwaps(session.exerciseSwaps);
+  const swapIds = Object.values(swaps);
+  const swappedExercises =
+    swapIds.length > 0
+      ? await db.exercise.findMany({
+          where: { id: { in: swapIds }, ...usableExerciseWhere(auth.userId) },
+        })
+      : [];
+  const workout = {
+    ...session.workout,
+    exercises: applyExerciseSwaps(
+      session.workout.exercises,
+      swaps,
+      new Map(swappedExercises.map((exercise) => [exercise.id, exercise])),
+    ),
+  };
+
   const now = new Date();
   const profile = await loadRunnerProfile(auth.userId, now);
   const context = await loadWorkoutContext(auth.userId, {
-    programExercises: session.workout.exercises,
+    programExercises: workout.exercises,
     excludeSessionId: session.id,
     now: session.startedAt,
     bodyweight: profile.bodyweight,
@@ -59,7 +80,7 @@ export default async function SessionRunPage(props: Props) {
 
   return (
     <SessionRunner
-      session={session}
+      session={{ ...session, workout }}
       lastPerformances={context.lastPerformances}
       returnRecommendations={context.returnRecommendations}
       readiness={profile.readiness}

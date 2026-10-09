@@ -61,11 +61,14 @@ const nextProgramExercise = {
   exercise: row,
 } as ProgramExercise & { exercise: Exercise };
 
+const swapForSession = vi.fn(async () => undefined);
+
 function renderMenu(loggedSetCount = 0, onChanged = vi.fn()) {
   return render(
     <SessionExerciseMenu
       open
       onOpenChange={vi.fn()}
+      onSwapForSession={swapForSession}
       programExercise={programExercise}
       programExercises={[programExercise, nextProgramExercise]}
       catalog={[bench, incline, row]}
@@ -77,6 +80,7 @@ function renderMenu(loggedSetCount = 0, onChanged = vi.fn()) {
 
 beforeEach(() => {
   vi.restoreAllMocks();
+  swapForSession.mockClear();
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true } as Response));
 });
 
@@ -113,6 +117,7 @@ describe('SessionExerciseMenu', () => {
       <SessionExerciseMenu
         open
         onOpenChange={vi.fn()}
+        onSwapForSession={swapForSession}
         programExercise={programExercise}
         programExercises={[programExercise, declineProgramExercise, nextProgramExercise]}
         catalog={[bench, incline, decline, row]}
@@ -145,6 +150,21 @@ describe('SessionExerciseMenu', () => {
     // The menu goes back to its action list, so reopening it does not land on
     // the replacement picker of the exercise that was just swapped in.
     expect(await screen.findByRole('button', { name: 'Add exercise' })).toBeInTheDocument();
+  });
+
+  it('replaces only for this workout without touching the saved program', async () => {
+    const onChanged = vi.fn();
+    renderMenu(0, onChanged);
+    fireEvent.click(screen.getByRole('button', { name: 'Replace exercise' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Incline Press' }));
+
+    expect(screen.getByText('Replace Bench Press with Incline Press')).toBeInTheDocument();
+    expect(screen.getByText(/your saved program stays as it is/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Only in this workout' }));
+
+    await waitFor(() => expect(swapForSession).toHaveBeenCalledWith(incline));
+    expect(fetch).not.toHaveBeenCalled();
+    expect(onChanged).not.toHaveBeenCalled();
   });
 
   it('requires confirmation when replacement would leave logged sets on the original exercise', async () => {
@@ -204,6 +224,7 @@ describe('SessionExerciseMenu', () => {
       <SessionExerciseMenu
         open
         onOpenChange={vi.fn()}
+        onSwapForSession={swapForSession}
         programExercise={programExercise}
         programExercises={[programExercise, nextProgramExercise]}
         catalog={[bench, bike, row]}
@@ -250,6 +271,7 @@ describe('SessionExerciseMenu', () => {
       <SessionExerciseMenu
         open
         onOpenChange={vi.fn()}
+        onSwapForSession={swapForSession}
         programExercise={tuned}
         programExercises={[tuned, nextProgramExercise]}
         catalog={[bench, incline, row]}
@@ -297,6 +319,7 @@ describe('SessionExerciseMenu', () => {
       <SessionExerciseMenu
         open
         onOpenChange={vi.fn()}
+        onSwapForSession={swapForSession}
         programExercise={programExercise}
         programExercises={[programExercise, nextProgramExercise]}
         catalog={[bench, chestCardio, row]}
@@ -323,6 +346,7 @@ describe('SessionExerciseMenu', () => {
       <SessionExerciseMenu
         open
         onOpenChange={vi.fn()}
+        onSwapForSession={swapForSession}
         programExercise={programExercise}
         programExercises={[programExercise]}
         catalog={[bench, incline, row]}

@@ -13,11 +13,13 @@ import { Input } from '@/components/ui/input';
 import { matchesExerciseQuery } from '@/lib/catalog/search-index';
 
 type SessionProgramExercise = ProgramExercise & { exercise: Exercise };
-// The catalog fields this menu reads. The session page selects exactly these,
-// so the rest of each exercise row (notes, owner id) stays on the server.
+// The catalog fields the session reads: this menu, and an exercise replaced
+// only for this session while offline (equipmentType drives the load
+// constraints). The session page selects exactly these, so the rest of each
+// exercise row (notes, owner id) stays on the server.
 export type SessionCatalogExercise = Pick<
   Exercise,
-  'id' | 'name' | 'muscleGroup' | 'category' | 'usesBodyweight' | 'defaultRestSec'
+  'id' | 'name' | 'muscleGroup' | 'category' | 'usesBodyweight' | 'defaultRestSec' | 'equipmentType'
 >;
 type View = 'actions' | 'replace' | 'add' | 'removeConfirm';
 
@@ -28,6 +30,9 @@ interface Props {
   programExercises: SessionProgramExercise[];
   catalog: SessionCatalogExercise[];
   loggedSetCount: number;
+  // Replaces the exercise for this session only (the saved program does not
+  // change). Rejects when it could not be recorded.
+  onSwapForSession: (exercise: SessionCatalogExercise) => Promise<void>;
   onChanged: (options?: {
     selectProgramExerciseId?: string;
     removedProgramExerciseId?: string;
@@ -90,6 +95,7 @@ export function SessionExerciseMenu({
   programExercises,
   catalog,
   loggedSetCount,
+  onSwapForSession,
   onChanged,
 }: Props) {
   const t = useTranslations('session.exerciseMenu');
@@ -183,8 +189,28 @@ export function SessionExerciseMenu({
     }
   }
 
-  // A replace rewrites the saved program row, so it always asks first; the
-  // wording depends on whether sets were already logged on the old exercise.
+  async function swapForSession(exercise: SessionCatalogExercise) {
+    if (inFlight.current) return;
+    inFlight.current = true;
+    setBusy(true);
+    try {
+      await onSwapForSession(exercise);
+      toast.success(t('swapped'));
+      onOpenChange(false);
+      setView('actions');
+      setPendingReplacement(null);
+      setQuery('');
+    } catch {
+      toast.error(t('replaceError'));
+    } finally {
+      inFlight.current = false;
+      setBusy(false);
+    }
+  }
+
+  // A replace always asks first, and where it applies: this session only, or
+  // the saved program too. The wording depends on whether sets were already
+  // logged on the old exercise.
   function requestReplacement(exercise: SessionCatalogExercise) {
     setPendingReplacement(exercise);
   }
@@ -335,26 +361,42 @@ export function SessionExerciseMenu({
 
         {(view === 'replace' || view === 'add') && pendingReplacement ? (
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              {loggedSetCount > 0 ? t('replaceLoggedWarning') : t('replaceConfirm')}
+            <p className="text-sm font-medium">
+              {t('replaceChoice', {
+                name: exerciseName(pendingReplacement.name),
+                previous: exerciseName(programExercise.exercise.name),
+              })}
             </p>
-            <div className="flex justify-end gap-2">
+            <ul className="space-y-1 text-sm text-muted-foreground">
+              <li>{t('replaceSessionOnlyHint')}</li>
+              <li>{loggedSetCount > 0 ? t('replaceLoggedWarning') : t('replaceConfirm')}</li>
+            </ul>
+            <div className="flex flex-col gap-2">
+              <Button
+                type="button"
+                className="min-h-tap"
+                disabled={busy}
+                onClick={() => void swapForSession(pendingReplacement)}
+              >
+                {t('replaceSessionOnly')}
+              </Button>
               <Button
                 type="button"
                 className="min-h-tap"
                 variant="outline"
                 disabled={busy}
-                onClick={() => setPendingReplacement(null)}
+                onClick={() => void replaceExercise(pendingReplacement)}
               >
-                {t('cancel')}
+                {t('confirmReplace', { name: exerciseName(pendingReplacement.name) })}
               </Button>
               <Button
                 type="button"
                 className="min-h-tap"
+                variant="ghost"
                 disabled={busy}
-                onClick={() => void replaceExercise(pendingReplacement)}
+                onClick={() => setPendingReplacement(null)}
               >
-                {t('confirmReplace', { name: exerciseName(pendingReplacement.name) })}
+                {t('cancel')}
               </Button>
             </div>
           </div>

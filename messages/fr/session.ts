@@ -279,10 +279,10 @@ export const session = {
   exerciseMenu: {
     actions: 'Actions de l’exercice',
     actionsDescription:
-      'Ces actions modifient votre programme enregistré : elles s’appliquent aussi aux prochaines séances.',
+      'Le remplacement peut ne valoir que pour cette séance. Ajouter et retirer modifient votre programme enregistré, aussi pour les prochaines séances.',
     replace: 'Remplacer l’exercice',
     replaceDescription:
-      'Choisissez un autre exercice. Il remplace celui-ci dans votre programme enregistré, pour cette séance et les suivantes.',
+      'Choisissez un autre exercice. Puis décidez : seulement pour cette séance, ou aussi dans votre programme enregistré.',
     addExercises: 'Ajouter un exercice',
     addDescription:
       'Ajoutez un exercice à la fin de cette séance. Il est enregistré dans votre programme, pour les prochaines séances aussi.',
@@ -291,20 +291,25 @@ export const session = {
       'Supprimez cet exercice de votre programme enregistré, pour cette séance et les suivantes.',
     searchExercises: 'Rechercher des exercices',
     noExercises: 'Aucun exercice correspondant.',
+    replaceChoice: 'Remplacer {previous} par {name}',
+    replaceSessionOnly: 'Seulement pour cette séance',
+    replaceSessionOnlyHint:
+      'Seulement pour cette séance : votre programme enregistré reste tel quel.',
     replaceConfirm:
-      'L’exercice sera remplacé dans votre programme enregistré : les prochaines séances changent aussi. Le remplacer ?',
+      'Dans le programme : l’exercice est remplacé dans votre programme enregistré, les prochaines séances changent aussi.',
     replaceLoggedWarning:
-      'Les séries déjà enregistrées pendant la séance en cours restent dans votre historique, liées à l’exercice d’origine, mais ne sont plus affichées sur cet écran. Votre programme enregistré change aussi pour les prochaines séances. Le remplacer ?',
+      'Les séries déjà enregistrées pendant la séance en cours restent dans votre historique, liées à l’exercice d’origine, mais ne sont plus affichées sur cet écran. Dans le programme : les prochaines séances changent aussi.',
     removeLoggedWarning:
       'Les séries déjà enregistrées restent dans l’historique, mais ne sont plus affichées sur cet écran. L’exercice est supprimé de votre programme enregistré, pour les prochaines séances aussi.',
     removeConfirm:
       'Supprimer cet exercice de votre programme enregistré ? Les prochaines séances changent aussi.',
     removeLastBlocked:
       'C’est le seul exercice de la séance : il ne peut pas être supprimé ici. Remplacez-le plutôt.',
-    confirmReplace: 'Remplacer par {name}',
+    confirmReplace: 'Remplacer par {name} dans le programme',
     cancel: 'Annuler',
     back: 'Retour',
     replaced: 'Exercice remplacé.',
+    swapped: 'Remplacé pour cette séance.',
     replaceError: 'Impossible de remplacer l’exercice.',
     added: 'Exercice ajouté.',
     addError: 'Impossible d’ajouter l’exercice.',

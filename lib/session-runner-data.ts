@@ -44,6 +44,7 @@ export async function loadRunnerProfile(userId: string, now: Date) {
         category: true,
         usesBodyweight: true,
         defaultRestSec: true,
+        equipmentType: true,
       },
     }),
   ]);

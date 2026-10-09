@@ -26,9 +26,10 @@ Base: auditoria de 2026-10-08 ([00_OPEN_SOURCE_AUDIT.md](00_OPEN_SOURCE_AUDIT.md
 | 2026-10-09 | Logger único: a tabela de séries é o fluxo principal, já preenchida com a progressão do motor (pirâmides deslocadas pela mudança de carga do dia); `Set.type` (aquecimento, trabalho, drop, AMRAP, falha, back-off), RPE opcional, alvo congelado na série, peso corporal no registro; aquecimentos fora da numeração; backup e import preservam os campos novos (M7 parcial) | `1a4355b` |
 | 2026-10-09 | Treino sem rede (1.4 parte 2): iniciar e finalizar offline com id UUIDv7 do aparelho (início e fim idempotentes no servidor, horários do aparelho limitados); outbox por usuário (sessão → séries → fim, fim só depois das séries); pacote de treino no IndexedDB; página offline do service worker que roda a sessão a partir do aparelho; SW sem cache de HTML nem de `/api` autenticados (M6) | `45fd4a8`, `3f38b85` |
 | 2026-10-09 | Versões de programa (1.6 fatia A): `ProgramRevision` com snapshot e hash de conteúdo, gravada por todo caminho de escrita (REST, template, IA, coach, MCP, backup; trava em teste), edições em sequência agrupadas até um treino usar a versão, diff entre versões, restaurar como nova versão sem apagar histórico, treino ligado à versão que executou, linha de base para programas antigos na inicialização (M8 parcial) | `a54c278` |
-| 2026-10-09 | Próximo treino (1.6 fatia B): modo de agenda do programa (rotação em sequência ou por dia da semana no fuso do usuário), cartão "Próximo treino" no painel com início direto e motivo, treino sugerido em `/session/new`; o modo entra nas versões do programa | este commit |
+| 2026-10-09 | Próximo treino (1.6 fatia B): modo de agenda do programa (rotação em sequência ou por dia da semana no fuso do usuário), cartão "Próximo treino" no painel com início direto e motivo, treino sugerido em `/session/new`; o modo entra nas versões do programa | `60157ce` |
+| 2026-10-09 | Substituir só nesta sessão (1.6 fatia C): no menu do exercício, "Só neste treino" ou "também no programa"; a troca vale na hora, inclusive sem rede (outbox: início → trocas → séries → fim), últimos valores seguem o exercício novo e a série congela o alvo da linha substituída; programa e versões intactos | este commit |
 
-Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (nonce); substituir exercício só nesta sessão; aquecimento gerado como séries WARMUP; exclusões com tombstone e push por agregado com resultado por item (ADR-004).
+Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (nonce); aquecimento gerado como séries WARMUP; exclusões com tombstone e push por agregado com resultado por item (ADR-004).
 
 ## Fundação e plataforma
 
@@ -87,7 +88,7 @@ Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (n
 | `ProgramRevision` | Ausente (sobrescreve) | Versões imutáveis, diff, rollback | ✓ snapshot por versão em todo caminho de escrita (trava em teste), diff, restaurar como nova versão, `Session.programRevisionId` | P0 | M | A |
 | Próximo treino / rotação | Escolha manual | Sequência rotativa ou dias fixos | ✓ `Program.scheduleMode` (rotação ou dia da semana, no fuso do usuário), cartão "Próximo treino" no painel, sugestão em `/session/new` | P0 | M | M |
 | Prescrição completa | sets, faixa, RIR, descanso, tempo, superset | + RPE, %1RM, AMRAP, drop/warm-up planejados, giant set | Campos + UI | P1 | M | B |
-| Substituir só nesta sessão | Sempre altera o programa | `WorkoutExercise` da sessão | Nova entidade | P0 | M | M |
+| Substituir só nesta sessão | Sempre altera o programa | `WorkoutExercise` da sessão | ✓ `Session.exerciseSwaps` (linha do programa → exercício), funciona offline pelo outbox; a série herda o alvo da linha | P0 | M | M |
 | Onboarding | Perfil mínimo | Objetivo, experiência, disponibilidade, academia, preferências, evitados | Fluxo + `UserProfile`/`UserPreference` | P0 | M | B |
 | Templates de programa | 11, nomes divergentes do catálogo | Templates por `exerciseId` | Reescrever referências | P1 | S | M |
 

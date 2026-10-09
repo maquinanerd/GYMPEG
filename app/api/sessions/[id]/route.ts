@@ -3,6 +3,8 @@ import { db } from '@/lib/db';
 import { sessionUpdateSchema } from '@/lib/schemas/session';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { resolveFinishedAt } from '@/lib/set-timing';
+import { usableExerciseWhere } from '@/lib/catalog/access';
+import type { ExerciseSwaps } from '@/lib/session-swaps';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -57,17 +59,57 @@ export async function PUT(req: Request, props: Params) {
             sessionStartedAt: session.startedAt,
           })
         : session.finishedAt;
+    const exerciseSwaps =
+      data.exerciseSwaps !== undefined
+        ? await validatedSwaps(userId, session.workoutId, data.exerciseSwaps)
+        : undefined;
     const updated = await db.session.update({
       where: { id: params.id, userId },
       data: {
         notes: data.notes ?? session.notes,
         finishedAt,
+        ...(exerciseSwaps !== undefined ? { exerciseSwaps } : {}),
       },
     });
     return NextResponse.json(updated);
   } catch (err) {
     return handleApiError(err);
   }
+}
+
+// Replaced exercises must point from a row of the session's workout to an
+// exercise the user can use. A swap back to the row's own exercise is not a
+// swap and is dropped.
+async function validatedSwaps(
+  userId: string,
+  workoutId: string | null,
+  swaps: ExerciseSwaps,
+): Promise<ExerciseSwaps> {
+  const entries = Object.entries(swaps);
+  if (entries.length === 0) return {};
+  if (!workoutId) throw new ApiError(400, 'This session has no workout to change.');
+  const [rows, exercises] = await Promise.all([
+    db.programExercise.findMany({
+      where: { workoutId, id: { in: entries.map(([rowId]) => rowId) } },
+      select: { id: true, exerciseId: true },
+    }),
+    db.exercise.findMany({
+      where: {
+        id: { in: entries.map(([, exerciseId]) => exerciseId) },
+        ...usableExerciseWhere(userId),
+      },
+      select: { id: true },
+    }),
+  ]);
+  const rowExercise = new Map(rows.map((row) => [row.id, row.exerciseId]));
+  const usable = new Set(exercises.map((exercise) => exercise.id));
+  const normalized: ExerciseSwaps = {};
+  for (const [rowId, exerciseId] of entries) {
+    if (!rowExercise.has(rowId)) throw new ApiError(400, 'Unknown exercise row in this session.');
+    if (!usable.has(exerciseId)) throw new ApiError(400, 'Invalid exercise.');
+    if (rowExercise.get(rowId) !== exerciseId) normalized[rowId] = exerciseId;
+  }
+  return normalized;
 }
 
 export async function DELETE(_req: Request, props: Params) {

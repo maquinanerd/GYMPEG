@@ -9,6 +9,7 @@ import { resolveSetEquipmentSnapshot } from '@/lib/set-equipment';
 import { acceptsSetAfterFinish, resolvePerformedAt } from '@/lib/set-timing';
 import { Prisma } from '@/prisma/generated/client';
 import { usableExerciseWhere } from '@/lib/catalog/access';
+import { parseExerciseSwaps } from '@/lib/session-swaps';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -75,9 +76,16 @@ export async function POST(req: Request, props: Params) {
 
     // Target x actual: the prescription of this exercise in the session's
     // workout, frozen on the set so later program edits do not rewrite it.
+    // An exercise replaced only for this session takes its row's targets.
+    const swappedRowId = Object.entries(parseExerciseSwaps(session.exerciseSwaps)).find(
+      ([, exerciseId]) => exerciseId === data.exerciseId,
+    )?.[0];
     const prescription = session.workoutId
       ? await db.programExercise.findFirst({
-          where: { workoutId: session.workoutId, exerciseId: data.exerciseId },
+          where: {
+            workoutId: session.workoutId,
+            ...(swappedRowId ? { id: swappedRowId } : { exerciseId: data.exerciseId }),
+          },
           orderBy: { order: 'asc' },
           select: { targetRepsMin: true, targetRepsMax: true, targetRIR: true },
         })

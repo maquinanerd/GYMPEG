@@ -94,6 +94,10 @@ export interface LocalSession {
   finishStatus: 'none' | OutboxStatus;
   attempts: number;
   lastError: string | null;
+  // Exercises replaced only for this session (lib/session-swaps), and the
+  // server state of that map. Optional: records written before swaps existed.
+  exerciseSwaps?: Record<string, string>;
+  swapsStatus?: 'none' | OutboxStatus;
 }
 
 // What the device needs to start and run a workout offline (the response of

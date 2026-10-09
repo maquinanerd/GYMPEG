@@ -168,20 +168,35 @@ async function recordServerSession(server: ServerSession, ownerId: string, worko
   });
 }
 
-// Records a session the server rendered (started online, on another device,
-// or before local sessions existed), so a reload without a network can still
-// run it from the training pack. Leaves an existing record untouched.
-export async function rememberSession(session: {
+type SessionRef = {
   id: string;
   workoutId: string | null;
   gymId: string | null;
   startedAt: number;
-}): Promise<void> {
+};
+
+// Records a session the server rendered (started online, on another device,
+// or before local sessions existed), so a reload without a network can still
+// run it from the training pack. An existing record keeps its own state; its
+// replaced exercises follow the server's unless a change of its own is still
+// waiting to be sent.
+export async function rememberSession(
+  session: SessionRef & { exerciseSwaps?: Record<string, string> },
+): Promise<void> {
   const ownerId = getOutboxOwner();
   if (!ownerId || !session.workoutId) return;
   const db = getDB();
   await db.transaction('rw', db.localSessions, async () => {
-    if (await db.localSessions.get(session.id)) return;
+    const existing = await db.localSessions.get(session.id);
+    if (existing) {
+      if (session.exerciseSwaps && existing.swapsStatus !== 'pending') {
+        await db.localSessions.update(session.id, {
+          exerciseSwaps: session.exerciseSwaps,
+          swapsStatus: 'synced',
+        });
+      }
+      return;
+    }
     await db.localSessions.add({
       id: session.id,
       ownerId,
@@ -194,8 +209,47 @@ export async function rememberSession(session: {
       finishStatus: 'none',
       attempts: 0,
       lastError: null,
+      exerciseSwaps: session.exerciseSwaps ?? {},
+      swapsStatus: 'synced',
     });
   });
+}
+
+// Replaces the exercise of one row for this session only (lib/session-swaps).
+// Works offline: the map goes through the outbox, after the session's start
+// and before its sets. Returns whether the server already has it.
+export async function swapExerciseForSession(
+  session: SessionRef,
+  programExerciseId: string,
+  exerciseId: string,
+): Promise<{ synced: boolean }> {
+  const ownerId = requireOwner();
+  const db = getDB();
+  await db.transaction('rw', db.localSessions, async () => {
+    const existing = await db.localSessions.get(session.id);
+    const exerciseSwaps = { ...(existing?.exerciseSwaps ?? {}), [programExerciseId]: exerciseId };
+    if (existing) {
+      await db.localSessions.update(session.id, { exerciseSwaps, swapsStatus: 'pending' });
+      return;
+    }
+    await db.localSessions.add({
+      id: session.id,
+      ownerId,
+      workoutId: session.workoutId ?? '',
+      gymId: session.gymId,
+      startedAt: session.startedAt,
+      finishedAt: null,
+      notes: null,
+      createStatus: 'synced',
+      finishStatus: 'none',
+      attempts: 0,
+      lastError: null,
+      exerciseSwaps,
+      swapsStatus: 'pending',
+    });
+  });
+  if (online()) await flushPendingSets();
+  return { synced: (await db.localSessions.get(session.id))?.swapsStatus === 'synced' };
 }
 
 // Finishes a session on this device. The finish reaches the server once all

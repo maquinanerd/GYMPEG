@@ -80,6 +80,50 @@ afterEach(() => {
 });
 
 describe('offline outbox', () => {
+  it('sends replaced exercises after the start and before the sets', async () => {
+    await getDB().localSessions.add(
+      localSession({ exerciseSwaps: { 'pe-1': 'exercise-2' }, swapsStatus: 'pending' }),
+    );
+    await getDB().pendingSets.add(pendingSet({ exerciseId: 'exercise-2' }));
+    const calls = stubServer((route) =>
+      route.endsWith('/sets') ? ok({ id: 'server-set-1' }) : ok(),
+    );
+
+    await flushPendingSets();
+
+    expect(calls.map((call) => call.route)).toEqual([
+      'POST /api/sessions',
+      `PUT /api/sessions/${SESSION_ID}`,
+      `POST /api/sessions/${SESSION_ID}/sets`,
+    ]);
+    expect(calls[1]!.body).toEqual({ exerciseSwaps: { 'pe-1': 'exercise-2' } });
+    expect((await getDB().localSessions.get(SESSION_ID))?.swapsStatus).toBe('synced');
+  });
+
+  it('keeps a swap made while the previous one was being sent waiting', async () => {
+    await getDB().localSessions.add(
+      localSession({
+        createStatus: 'synced',
+        exerciseSwaps: { 'pe-1': 'exercise-2' },
+        swapsStatus: 'pending',
+      }),
+    );
+    stubServer(() => ok());
+    const fetchMock = vi.mocked(fetch);
+    const original = fetchMock.getMockImplementation()!;
+    fetchMock.mockImplementationOnce(async (...args) => {
+      // A second swap lands while the first PUT is in flight.
+      await getDB().localSessions.update(SESSION_ID, {
+        exerciseSwaps: { 'pe-1': 'exercise-2', 'pe-2': 'exercise-3' },
+      });
+      return original(...args);
+    });
+
+    await flushPendingSets();
+
+    expect((await getDB().localSessions.get(SESSION_ID))?.swapsStatus).toBe('pending');
+  });
+
   it('creates a session started offline before its sets, and finishes it after them', async () => {
     await getDB().localSessions.add(
       localSession({ finishedAt: 5_000, notes: 'felt strong', finishStatus: 'pending' }),
