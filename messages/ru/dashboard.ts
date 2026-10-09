@@ -2,6 +2,9 @@ import { dashboard as english } from '../en/dashboard';
 import type { MessageShape } from '@/i18n/message-types';
 
 export const dashboard = {
+  onboardingTitle: 'Настройте тренировки за 2 минуты',
+  onboardingDescription:
+    'Укажите цель, сколько раз в неделю можете тренироваться и что есть в вашем зале, чтобы план подошёл именно вам.',
   activeSession: 'Активная тренировка',
   sessionFallback: 'Тренировка',
   startedOn: '{name}, начало: {date}',

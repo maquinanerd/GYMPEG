@@ -10,7 +10,8 @@ export const exercises = {
   emptyDescription:
     'Le catalogue est vide. Ajoutez votre premier exercice pour pouvoir l’utiliser dans un programme.',
   noMatchTitle: 'Aucun exercice trouvé',
-  noMatchDescription: 'Aucun nom d’exercice ne correspond à « {query} ». Essayez une autre recherche.',
+  noMatchDescription:
+    'Aucun nom d’exercice ne correspond à « {query} ». Essayez une autre recherche.',
   restSeconds: 'repos {seconds} s',
   editTitle: 'Modifier l’exercice',
   catalogBadge: 'Catalogue',

@@ -22,6 +22,7 @@ Base: auditoria de 2026-10-08 ([00_OPEN_SOURCE_AUDIT.md](00_OPEN_SOURCE_AUDIT.md
 | 2026-10-09 | Fuso horário do usuário em semanas, streaks, PRs, coach e datas (M2 parcial) | `0347b01` |
 | 2026-10-09 | Sync offline idempotente: `clientMutationId`, horário do aparelho, série tardia aceita, hidratação sem duplicar, finalizar só com fila vazia | `d0ee1bc` |
 | 2026-10-09 | Catálogo global curado (229 exercícios, 19 músculos), busca pt-BR por aliases, ficha do exercício, fusão das cópias por conta (M5) | `1aa05a5` |
+| 2026-10-09 | Onboarding em 5 passos: objetivo, experiência, disponibilidade, academia e equipamentos, músculos prioritários, exercícios a evitar, dados opcionais (M2) | este commit |
 
 Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (nonce); iniciar/finalizar treino offline e outbox por usuário; `Set.type`/`rpe`/alvo.
 

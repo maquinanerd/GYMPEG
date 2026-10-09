@@ -2,6 +2,9 @@ import { dashboard as english } from '../en/dashboard';
 import type { MessageShape } from '@/i18n/message-types';
 
 export const dashboard = {
+  onboardingTitle: 'Configurez votre entraînement en 2 minutes',
+  onboardingDescription:
+    'Indiquez votre objectif, votre disponibilité et l’équipement de votre salle pour un plan qui vous correspond.',
   activeSession: 'Séance en cours',
   sessionFallback: 'Séance',
   startedOn: '{name} démarrée le {date}',
@@ -22,7 +25,8 @@ export const dashboard = {
     stalledDetail:
       '{count, plural, one {{names} n’a pas progressé récemment. Un petit changement de charge, de répétitions ou de technique peut relancer la progression.} other {{names} n’ont pas progressé récemment. Consultez la page Progrès pour savoir quoi ajuster.}}',
     prTitle: 'Nouveau record personnel',
-    prWeightDetail: 'Votre dernière séance a établi une nouvelle charge maximale sur {name}. Bravo.',
+    prWeightDetail:
+      'Votre dernière séance a établi une nouvelle charge maximale sur {name}. Bravo.',
     prOneRmDetail:
       'Votre dernière séance a établi un nouveau meilleur 1RM estimé sur {name}. Bravo.',
     consistentTitle: 'Vous vous entraînez régulièrement',

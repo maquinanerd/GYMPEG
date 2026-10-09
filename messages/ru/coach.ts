@@ -50,8 +50,7 @@ export const coach = {
     stalled: 'Без прогресса: {names}.',
     noStalled: 'Упражнений без прогресса не обнаружено.',
     deloadActive: 'Идёт плановая неделя разгрузки.',
-    deloadRecommended:
-      'Рекомендована разгрузка{reasons, select, none {.} other {: {reasons}.}}',
+    deloadRecommended: 'Рекомендована разгрузка{reasons, select, none {.} other {: {reasons}.}}',
     noDeload: 'Разгрузка не требуется.',
     conditioningSummary:
       'На этой неделе: {minutes} мин{km, select, none {} other { · {km} км}} · {sessions, plural, one {# тренировка} few {# тренировки} many {# тренировок} other {# тренировки}} (цель {target} мин/нед.)',

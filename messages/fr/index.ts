@@ -5,6 +5,7 @@ import { dashboard } from './dashboard';
 import { exercises } from './exercises';
 import { history } from './history';
 import { navigation } from './navigation';
+import { onboarding } from './onboarding';
 import { programs } from './programs';
 import { progress } from './progress';
 import { session } from './session';
@@ -18,6 +19,7 @@ const messages = {
   exercises,
   history,
   navigation,
+  onboarding,
   programs,
   progress,
   session,

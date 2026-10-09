@@ -33,6 +33,7 @@ const COVERED_ELSEWHERE: Record<string, string> = {
   'app/api/progress-photos/[id]/route.ts': 'tests/integration/progress-photos-route.test.ts',
   'app/api/progress-photos/[id]/image/route.ts': 'tests/integration/progress-photos-route.test.ts',
   'app/api/goals/route.ts': 'tests/integration/goals-route.test.ts',
+  'app/api/onboarding/route.ts': 'tests/integration/onboarding-route.test.ts',
 };
 
 // Routes that take a resource id in the request body AND are not already
@@ -47,6 +48,7 @@ const BODY_ADDRESSED_ROUTES: string[] = [
   'app/api/sets/parse/route.ts', // exerciseId
   'app/api/coach/chat/route.ts', // conversationId
   'app/api/gyms/route.ts', // exerciseConfigs[].exerciseId
+  'app/api/onboarding/route.ts', // avoidExerciseIds / preferExerciseIds
 ];
 
 function findParameterizedRoutes(dir: string): string[] {

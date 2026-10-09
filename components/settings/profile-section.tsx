@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Loader2, Save, User } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Sex, TrainingGoal, WeightUnit } from '@/lib/prisma-client';
+import { trainingGoalMessageKeys } from '@/i18n/enum-keys';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -33,13 +34,7 @@ interface Props {
 }
 
 const SEX_OPTIONS: Sex[] = ['MALE', 'FEMALE', 'OTHER'];
-const GOAL_OPTIONS: TrainingGoal[] = [
-  'HYPERTROPHY',
-  'STRENGTH',
-  'FAT_LOSS',
-  'RECOMP',
-  'GENERAL_FITNESS',
-];
+const GOAL_OPTIONS = Object.keys(trainingGoalMessageKeys) as TrainingGoal[];
 const UNIT_OPTIONS: WeightUnit[] = ['KG', 'LB'];
 
 function numOrEmpty(n: number | null): string {
@@ -220,15 +215,7 @@ export function ProfileSection({ initial }: Props) {
             <SelectContent>
               {GOAL_OPTIONS.map((option) => (
                 <SelectItem key={option} value={option}>
-                  {option === 'HYPERTROPHY'
-                    ? t('hypertrophy')
-                    : option === 'STRENGTH'
-                      ? t('strength')
-                      : option === 'FAT_LOSS'
-                        ? t('fatLoss')
-                        : option === 'RECOMP'
-                          ? t('recomp')
-                          : t('generalFitness')}
+                  {t(trainingGoalMessageKeys[option])}
                 </SelectItem>
               ))}
             </SelectContent>

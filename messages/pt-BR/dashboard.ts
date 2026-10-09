@@ -2,6 +2,9 @@ import { dashboard as english } from '../en/dashboard';
 import type { MessageShape } from '@/i18n/message-types';
 
 export const dashboard = {
+  onboardingTitle: 'Configure seu treino em 2 minutos',
+  onboardingDescription:
+    'Conte seu objetivo, quantas vezes pode treinar e o que sua academia tem, para o plano caber na sua rotina.',
   activeSession: 'Treino em andamento',
   sessionFallback: 'Treino',
   startedOn: '{name} iniciado em {date}',

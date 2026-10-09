@@ -87,6 +87,8 @@ export const settings = {
     fatLoss: 'Perte de gras',
     recomp: 'Recomposition',
     generalFitness: 'Forme générale',
+    maintenance: 'Maintien',
+    returnToTraining: 'Reprise de l’entraînement',
     kilograms: 'Kilogrammes (kg)',
     pounds: 'Livres (lb)',
   },

@@ -87,6 +87,8 @@ export const settings = {
     fatLoss: 'Снижение веса',
     recomp: 'Рекомпозиция',
     generalFitness: 'Общая физическая форма',
+    maintenance: 'Поддержание формы',
+    returnToTraining: 'Возвращение к тренировкам',
     kilograms: 'Килограммы (кг)',
     pounds: 'Фунты (lb)',
   },

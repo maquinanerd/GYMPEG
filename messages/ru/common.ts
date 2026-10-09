@@ -50,12 +50,10 @@ export const common = {
   counts: {
     exercises:
       '{count, plural, =0 {Нет упражнений} one {# упражнение} few {# упражнения} many {# упражнений} other {# упражнения}}',
-    pending:
-      '{count, plural, one {# ожидает} few {# ожидают} many {# ожидают} other {# ожидают}}',
+    pending: '{count, plural, one {# ожидает} few {# ожидают} many {# ожидают} other {# ожидают}}',
     sessions:
       '{count, plural, =0 {Нет тренировок} one {# тренировка} few {# тренировки} many {# тренировок} other {# тренировки}}',
-    sets:
-      '{count, plural, =0 {Нет подходов} one {# подход} few {# подхода} many {# подходов} other {# подхода}}',
+    sets: '{count, plural, =0 {Нет подходов} one {# подход} few {# подхода} many {# подходов} other {# подхода}}',
     workouts:
       '{count, plural, =0 {Нет тренировок} one {# тренировка} few {# тренировки} many {# тренировок} other {# тренировки}}',
   },

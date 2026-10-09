@@ -121,7 +121,8 @@ export const progress = {
       'Jours d’entraînement par semaine sur les {weeks} dernières semaines{target, select, none {.} other { (objectif {target}/semaine).}}',
     streak: 'série en cours ({weeks, plural, one {# semaine} other {# semaines}})',
     aria: 'Jours d’entraînement par semaine',
-    weekTitle: '{week} : {days, plural, one {# jour d’entraînement} other {# jours d’entraînement}}',
+    weekTitle:
+      '{week} : {days, plural, one {# jour d’entraînement} other {# jours d’entraînement}}',
   },
   goal: {
     title: 'Objectif - {exercise}',
@@ -180,6 +181,7 @@ export const progress = {
     },
     regionLabel: '{name} : {sets, plural, one {# série} other {# séries}} cette semaine, {status}',
     hint: 'Touchez un muscle pour les détails.',
-    empty: 'Aucune série effective cette semaine-là ; enregistrez une séance et le corps s’illumine.',
+    empty:
+      'Aucune série effective cette semaine-là ; enregistrez une séance et le corps s’illumine.',
   },
 } satisfies MessageShape<typeof english>;

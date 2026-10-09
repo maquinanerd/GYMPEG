@@ -1,4 +1,7 @@
 export const dashboard = {
+  onboardingTitle: 'Set up your training in 2 minutes',
+  onboardingDescription:
+    'Tell us your goal, how often you can train and what your gym has, so your plan fits you.',
   activeSession: 'Active session',
   sessionFallback: 'Session',
   startedOn: '{name} started on {date}',

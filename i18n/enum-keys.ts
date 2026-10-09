@@ -3,7 +3,27 @@ import type {
   EquipmentType,
   ExerciseCategory,
   MuscleGroup,
+  TrainingExperience,
+  TrainingGoal,
 } from '@/lib/prisma-client';
+
+// Keys under settings.profile.
+export const trainingGoalMessageKeys = {
+  HYPERTROPHY: 'hypertrophy',
+  STRENGTH: 'strength',
+  FAT_LOSS: 'fatLoss',
+  RECOMP: 'recomp',
+  GENERAL_FITNESS: 'generalFitness',
+  MAINTENANCE: 'maintenance',
+  RETURN_TO_TRAINING: 'returnToTraining',
+} as const satisfies Record<TrainingGoal, string>;
+
+// Keys under onboarding.experience.
+export const trainingExperienceMessageKeys = {
+  BEGINNER: 'beginner',
+  INTERMEDIATE: 'intermediate',
+  ADVANCED: 'advanced',
+} as const satisfies Record<TrainingExperience, string>;
 
 export const muscleGroupMessageKeys = {
   CHEST: 'chest',

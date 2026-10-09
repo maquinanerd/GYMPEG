@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Dumbbell, Play, AlertCircle, Lightbulb } from 'lucide-react';
+import { Dumbbell, Play, AlertCircle, Lightbulb, Sparkles } from 'lucide-react';
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
@@ -49,16 +49,36 @@ export default async function DashboardPage() {
   // call; null on a brand-new account with no history.
   const insight = await getHomeInsight(session.userId, new Date(), locale);
 
+  // New accounts are invited (not forced) to set up their training profile.
+  const profile = await db.user.findUnique({
+    where: { id: session.userId },
+    select: { onboardedAt: true },
+  });
+
   return (
     <main className="flex-1 px-4 py-6">
       <div className="mx-auto flex max-w-2xl flex-col gap-6">
         <div className="flex items-center gap-3">
           <Dumbbell className="size-8" />
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">GymCoach</h1>
+            <h1 className="text-2xl font-bold tracking-tight">GYM Peg</h1>
             <p className="text-xs text-muted-foreground">{session.email}</p>
           </div>
         </div>
+
+        {profile && !profile.onboardedAt && (
+          <Link href="/onboarding" className="block">
+            <Card className="border-primary/40 bg-primary/5 transition-colors hover:bg-primary/10">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Sparkles className="size-4 text-primary" />
+                  {t('onboardingTitle')}
+                </CardTitle>
+                <CardDescription>{t('onboardingDescription')}</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+        )}
 
         {insight && (
           <Link href={insight.href} className="block">

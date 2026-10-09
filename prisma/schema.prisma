@@ -41,6 +41,19 @@ model User {
   // only and correctable by the user. Null = no note (backward-safe additive
   // column); the set/clear route bounds it to 500 chars.
   coachNote         String?
+  // Onboarding (spec §4): everything optional except what the user picks.
+  // Self-declared experience; later partly inferred from history.
+  experience            TrainingExperience?
+  birthDate             DateTime?
+  // Availability: minutes per session and preferred weekdays (0 = Sunday).
+  sessionMinutes        Int?
+  trainingDays          Int[]                 @default([])
+  // "morning" | "afternoon" | "evening", free text kept short by the API.
+  preferredTrainingTime String?
+  priorityMuscles       MuscleGroup[]         @default([])
+  // Set when the onboarding flow is completed (or skipped on purpose).
+  onboardedAt           DateTime?
+  exercisePreferences   ExercisePreference[]
   createdAt         DateTime                              @default(now())
   programs          Program[]
   sessions          Session[]
@@ -130,6 +143,34 @@ enum TrainingGoal {
   FAT_LOSS
   RECOMP
   GENERAL_FITNESS
+  MAINTENANCE
+  RETURN_TO_TRAINING
+}
+
+enum TrainingExperience {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum ExercisePreferenceKind {
+  PREFER
+  AVOID
+}
+
+// Exercises the user likes or wants to avoid (onboarding, AI planner input).
+// AVOID is a preference or a self-reported limitation, never a diagnosis.
+model ExercisePreference {
+  userId     String
+  user       User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId String
+  exercise   Exercise               @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  kind       ExercisePreferenceKind
+  reason     String?
+  createdAt  DateTime               @default(now())
+
+  @@id([userId, exerciseId])
+  @@index([exerciseId])
 }
 
 // Conversational AI coach: a thread of messages with the trainee.
@@ -205,6 +246,7 @@ model Exercise {
   gymEquipmentLinks  GymEquipmentExercise[]
   aliases            ExerciseAlias[]
   muscles            ExerciseMuscle[]
+  preferences        ExercisePreference[]
 
   @@unique([userId, name])
   @@index([userId, active])
@@ -433,6 +475,10 @@ model Gym {
   dumbbellWeights Float[]             @default([])
   plateWeights    Float[]             @default([])
   barWeights      Float[]             @default([])
+  // Equipment categories this gym has (catalog equipment tags such as
+  // barbell, smith_machine, cable, leg_press). Exercise selection and the AI
+  // planner never pick an exercise that needs something missing here.
+  availableEquipment String[]         @default([])
   createdAt       DateTime            @default(now())
   updatedAt       DateTime            @updatedAt
   activeForUsers  User[]              @relation("ActiveGym")
