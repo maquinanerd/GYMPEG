@@ -12,7 +12,7 @@ Auditoria, decisão de fork, gap matrix, ADR-001..010, arquitetura, schema atual
 - `/api/health` e imagem que aplica migrations sozinha (pronta para o Coolify);
 - remoção das imagens de exercício não licenciadas.
 
-## G1 — Core funcional (MVP)
+## G1 — Core funcional (MVP) ✓ em código (2026-10-09)
 
 Ordem pensada para manter produção estável e atacar primeiro o risco de dados.
 
@@ -29,7 +29,7 @@ Ordem pensada para manter produção estável e atacar primeiro o risco de dados
 
 Critério de saída do G1: os itens 1-9 e 15 do MVP funcionando em produção, CI verde e testes de offline (retry, reload, duas abas, aba fechada, finalizar com pendências).
 
-## G2 — Inteligência determinística
+## G2 — Inteligência determinística ✓ (2026-10-09)
 
 | # | Épico | MVP |
 |---|---|---|

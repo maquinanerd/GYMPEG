@@ -69,3 +69,19 @@ describe('buildMuscleMap', () => {
     expect(byId.get('ham-right')).toBe('back');
   });
 });
+
+describe('exerciseMuscleMap (epic 2.7)', () => {
+  it('marks primary and secondary regions and leaves the rest untouched', async () => {
+    const { exerciseMuscleMap } = await import('./muscle-map');
+    const regions = exerciseMuscleMap([
+      { group: 'CHEST', share: 1 },
+      { group: 'TRICEPS', share: 0.5 },
+    ]);
+    const role = (id: string) => regions.find((region) => region.regionId === id)?.role;
+    expect(role('chest-left')).toBe('primary');
+    expect(role('chest-right')).toBe('primary');
+    expect(role('triceps-left')).toBe('secondary');
+    expect(role('quad-left')).toBe('none');
+    expect(regions.every((region) => region.group !== 'OTHER')).toBe(true);
+  });
+});

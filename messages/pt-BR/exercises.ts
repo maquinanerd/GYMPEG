@@ -59,6 +59,13 @@ export const exercises = {
   detail: {
     primaryMuscles: 'Músculos principais',
     secondaryMuscles: 'Músculos secundários',
+    bodyMap: {
+      front: 'Frente',
+      back: 'Costas',
+      primary: 'Principal',
+      secondary: 'Secundário',
+      regionLabel: '{name}: {role}',
+    },
     howTo: 'Como executar',
     commonMistakes: 'Erros comuns',
     back: 'Voltar aos exercícios',

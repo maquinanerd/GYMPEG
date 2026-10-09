@@ -20,6 +20,9 @@ import {
 import { estimate1RM } from '@/lib/stats';
 import { formatWeight } from '@/lib/units';
 import { ExerciseMediaDialog } from '@/components/exercises/exercise-media-dialog';
+import { ExerciseBodyMap } from '@/components/exercises/exercise-body-map';
+import { exerciseMuscleMap } from '@/lib/muscle-map';
+import { muscleContributions } from '@/lib/training-engine/volume';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { safeSessionReturnPath } from '@/lib/session-exercise-navigation';
@@ -151,6 +154,14 @@ export default async function ExerciseDetailPage({ params, searchParams }: Props
               {exercise.notes}
             </p>
           )}
+          <ExerciseBodyMap
+            regions={exerciseMuscleMap(
+              muscleContributions({
+                muscleGroup: exercise.muscleGroup,
+                muscles: exercise.muscles.map((m) => ({ role: m.role, group: m.muscle.group })),
+              }),
+            )}
+          />
           {primaryMuscles.length > 0 && (
             <dl className="grid gap-x-4 gap-y-3 text-sm sm:grid-cols-2">
               <div>

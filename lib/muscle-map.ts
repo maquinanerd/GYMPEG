@@ -78,3 +78,34 @@ export function buildMuscleMap(
     }));
   });
 }
+
+// ============================================================
+// Muscles of one exercise (epic 2.7)
+// ============================================================
+
+// How a region reads on an exercise's body map: worked as a primary muscle,
+// as a secondary one, or not at all.
+export type ExerciseMuscleRole = 'primary' | 'secondary' | 'none';
+
+export interface ExerciseMapRegion {
+  regionId: string;
+  group: MuscleGroup;
+  view: BodyView;
+  role: ExerciseMuscleRole;
+}
+
+// Every silhouette region, marked by the exercise's muscle contributions
+// (lib/training-engine/volume muscleContributions: a share of 1 is primary,
+// anything above 0 secondary).
+export function exerciseMuscleMap(
+  contributions: { group: MuscleGroup; share: number }[],
+): ExerciseMapRegion[] {
+  const shares = new Map(contributions.map((c) => [c.group, c.share]));
+  return (Object.keys(MUSCLE_REGIONS) as MuscleGroup[]).flatMap((group) => {
+    const mapping = MUSCLE_REGIONS[group];
+    if (!mapping) return [];
+    const share = shares.get(group) ?? 0;
+    const role: ExerciseMuscleRole = share >= 1 ? 'primary' : share > 0 ? 'secondary' : 'none';
+    return mapping.regionIds.map((regionId) => ({ regionId, group, view: mapping.view, role }));
+  });
+}

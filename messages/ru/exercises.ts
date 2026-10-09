@@ -58,6 +58,13 @@ export const exercises = {
   detail: {
     primaryMuscles: 'Основные мышцы',
     secondaryMuscles: 'Вспомогательные мышцы',
+    bodyMap: {
+      front: 'Спереди',
+      back: 'Сзади',
+      primary: 'Основная',
+      secondary: 'Вспомогательная',
+      regionLabel: '{name}: {role}',
+    },
     howTo: 'Техника выполнения',
     commonMistakes: 'Частые ошибки',
     back: 'Назад к упражнениям',
