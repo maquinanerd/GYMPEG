@@ -10,13 +10,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 type FormValues = { email: string; password: string };
 
@@ -112,9 +106,7 @@ export function LoginForm() {
               aria-invalid={errors.email ? 'true' : 'false'}
               {...register('email')}
             />
-            {errors.email && (
-              <p className="text-sm text-destructive">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-2">
@@ -129,6 +121,14 @@ export function LoginForm() {
             {errors.password && (
               <p className="text-sm text-destructive">{errors.password.message}</p>
             )}
+            <p className="text-right text-sm">
+              <Link
+                href="/forgot-password"
+                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                {t('login.forgotPassword')}
+              </Link>
+            </p>
           </div>
 
           {serverError && (
@@ -137,11 +137,7 @@ export function LoginForm() {
             </p>
           )}
 
-          <Button
-            type="submit"
-            className="min-h-tap w-full text-base"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" className="min-h-tap w-full text-base" disabled={isSubmitting}>
             {isSubmitting ? t('login.submitting') : t('login.submit')}
           </Button>
 

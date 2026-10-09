@@ -85,6 +85,12 @@ Marque os segredos apenas como **runtime** (não "build variable"), para não fi
 | `GEMINI_API_KEY` | chave do Google AI Studio | para IA real |
 | `AI_FALLBACK_PROVIDER` | `deepseek` | opcional |
 | `DEEPSEEK_API_KEY` | chave DeepSeek | se houver fallback |
+| `EMAIL_PROVIDER` | `resend` | para reset de senha por e-mail |
+| `RESEND_API_KEY` | chave da Resend (domínio do remetente verificado lá) | com `resend` |
+| `EMAIL_FROM` | `GYM Peg <no-reply@seu-dominio>` | com `resend` |
+| `APP_URL` | origem pública usada nos links dos e-mails (padrão: `NEXTAUTH_URL`) | não |
+
+Sem `EMAIL_PROVIDER`, a tela "Esqueceu a senha?" informa que o reset por e-mail não está disponível.
 
 `NODE_ENV`, `PORT`, `HOSTNAME` e `UPLOADS_DIR=/app/uploads` já vêm da imagem.
 

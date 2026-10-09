@@ -69,6 +69,7 @@ model User {
   mcpAccessTokens   McpAccessToken[]
   mcpBackfillAudits McpHistoricalEquipmentBackfillAudit[]
   authSessions      AuthSession[]
+  passwordResets    PasswordResetToken[]
   activeGymId       String?
   activeGym         Gym?                                  @relation("ActiveGym", fields: [activeGymId], references: [id], onDelete: SetNull)
 }
@@ -87,6 +88,21 @@ model AuthSession {
   userAgent  String?
 
   @@index([userId, revokedAt])
+}
+
+// One-time password reset link sent by e-mail (lib/password-reset). Only a
+// SHA-256 hash of the token is stored; it expires quickly, works once, and a
+// new request replaces the user's earlier unused links.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  createdAt DateTime  @default(now())
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  @@index([userId, usedAt])
 }
 
 // Personal access tokens for remote MCP clients such as ChatGPT. Only a

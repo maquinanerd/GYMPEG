@@ -28,3 +28,23 @@ test('a new user can sign up, log out and sign back in', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page).toHaveURL('/');
 });
+
+// The CI server has no e-mail provider: the reset screen says so instead of
+// pretending to send a link.
+test('the login page leads to password reset, unavailable without e-mail', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByRole('link', { name: 'Forgot your password?' }).click();
+  await expect(page).toHaveURL(/\/forgot-password$/);
+  await expect(page.getByRole('status')).toHaveText(
+    'Password reset by e-mail is not set up on this server.',
+  );
+  await page.getByRole('link', { name: 'Back to sign in' }).click();
+  await expect(page).toHaveURL(/\/login$/);
+
+  await page.goto('/reset-password?token=not-a-real-token');
+  await expect(page).toHaveURL(/\/reset-password$/);
+  await page.getByLabel('New password', { exact: true }).fill('brand-new-password');
+  await page.getByLabel('Repeat the new password').fill('brand-new-password');
+  await page.getByRole('button', { name: 'Save new password' }).click();
+  await expect(page.getByRole('status')).toContainText('This link is invalid');
+});

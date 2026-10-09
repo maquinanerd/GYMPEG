@@ -12,6 +12,8 @@ export type Erasure = 'cascade' | 'explicit';
 
 export const USER_OWNED_MODELS = {
   AuthSession: { delegate: 'authSession', erase: 'cascade' },
+  // Only token hashes, dropped from the export like every credential hash.
+  PasswordResetToken: { delegate: 'passwordResetToken', erase: 'cascade' },
   McpAccessToken: { delegate: 'mcpAccessToken', erase: 'cascade' },
   McpHistoricalEquipmentBackfillAudit: {
     delegate: 'mcpHistoricalEquipmentBackfillAudit',

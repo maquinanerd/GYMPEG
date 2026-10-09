@@ -10,6 +10,8 @@ import { buildContentSecurityPolicy, generateNonce, NONCE_HEADER } from '@/lib/c
 const PUBLIC_PATHS = new Set([
   '/login',
   '/signup',
+  '/forgot-password',
+  '/reset-password',
   '/~offline',
   '/mcp',
   '/mcp/health',
@@ -17,6 +19,8 @@ const PUBLIC_PATHS = new Set([
   '/api/locale',
   '/api/auth/login',
   '/api/auth/register',
+  '/api/auth/password-reset',
+  '/api/auth/password-reset/confirm',
   '/api/auth/logout',
   '/api/auth/session-expired',
 ]);

@@ -34,9 +34,10 @@ Base: auditoria de 2026-10-08 ([00_OPEN_SOURCE_AUDIT.md](00_OPEN_SOURCE_AUDIT.md
 | 2026-10-09 | Exclusão de conta e export (1.7, LGPD): excluir conta com senha e e-mail digitado, apagando todas as linhas e as fotos em disco e guardando só um registro anônimo (hash do id e contagens); export ZIP com `data.json` de todas as tabelas do usuário, CSVs e imagens, sem hashes de credenciais; registro único dos modelos do usuário com trava em teste (M4) | `bfa1be7` |
 | 2026-10-09 | Histórico com filtros (1.8): programa, academia, exercício e músculo, combináveis, preservados ao trocar de mês e ao voltar do detalhe; um só parser para página, calendário e CSV; CSV com os mesmos filtros (exercício/músculo exportam só as linhas deles) e mês e data no fuso do usuário | `46c42e1` |
 | 2026-10-09 | Aquecimento no logger: rampa até a primeira série de trabalho (barra vazia, 40/60/80%) em anilhas carregáveis na unidade do usuário, cada passo registrado com um toque como série WARMUP (fora da numeração), oferta some ao registrar a primeira série de trabalho; descanso após aquecimento limitado a 60 s | `fa33199` |
-| 2026-10-09 | CSP completa com nonce por requisição: `script-src 'self' 'nonce-…' 'strict-dynamic'` sem `unsafe-inline`/`unsafe-eval` em produção, `default-src`/`connect-src 'self'`, nonce aplicado pelo Next e pelo script de tema; E2E falha em qualquer violação | este commit |
+| 2026-10-09 | CSP completa com nonce por requisição: `script-src 'self' 'nonce-…' 'strict-dynamic'` sem `unsafe-inline`/`unsafe-eval` em produção, `default-src`/`connect-src 'self'`, nonce aplicado pelo Next e pelo script de tema; E2E falha em qualquer violação | `0496db7` |
+| 2026-10-09 | Reset de senha por e-mail: link de uso único (token de 256 bits, só o hash no banco, 30 min, pedido novo invalida o anterior), resposta igual com ou sem conta, limite por IP e por endereço, nova senha encerra todas as sessões; provedor de e-mail plugável (`EMAIL_PROVIDER=resend`, `log` só fora de produção), link montado só com `APP_URL`/`NEXTAUTH_URL` | este commit |
 
-Pendentes nos mesmos épicos: reset de senha por e-mail; exclusões com tombstone e push por agregado com resultado por item (ADR-004).
+Pendentes nos mesmos épicos: exclusões com tombstone e push por agregado com resultado por item (ADR-004).
 
 ## Fundação e plataforma
 
@@ -45,7 +46,7 @@ Pendentes nos mesmos épicos: reset de senha por e-mail; exclusões com tombston
 | Idioma pt-BR padrão | en/fr/ru | pt-BR padrão, en em paridade | ⏳ catálogos pt-BR + default | P0 | M | B |
 | Fuso horário do usuário | UTC/servidor nas agregações | `User.timezone`, semanas/streak/PR no fuso local | Campo + refatorar `lib/stats.ts`, `records.ts` | P0 | M | M |
 | Sessão revogável | JWT 30 d stateless | Sessões em banco, logout real, "sair de todos" | Tabela `Session`/`AuthSession`, middleware | P0 | M | A |
-| Troca/reset de senha | Ausente | Troca autenticada + reset por e-mail | Fluxos + provedor de e-mail | P0 | M | M |
+| Troca/reset de senha ✓ | Troca autenticada; reset por e-mail (falta configurar o provedor em produção) | Troca autenticada + reset por e-mail | Fluxos + provedor de e-mail | P0 | M | M |
 | Controle de cadastro | Aberto | Convite/allowlist até o lançamento | Flag `SIGNUP_MODE` | P0 | S | A |
 | Exclusão de conta (LGPD) | Ausente; FKs RESTRICT | Exclusão completa e auditável | ✓ `lib/account-deletion` (ordem explícita onde não há cascade, fotos em disco, `AccountDeletion` anônimo) | P0 | M | A |
 | Export completo (LGPD) | Parcial | Todos os dados em JSON/CSV | ✓ `GET /api/account/export`: ZIP com todas as tabelas do usuário, CSVs e imagens | P1 | M | M |

@@ -140,6 +140,13 @@ async function seedEverything(email: string) {
   await db.mcpAccessToken.create({
     data: { userId, name: 'Assistant', tokenHash: `secret-hash-${email}`, tokenPrefix: 'gp_abc' },
   });
+  await db.passwordResetToken.create({
+    data: {
+      userId,
+      tokenHash: `reset-hash-${email}`,
+      expiresAt: new Date(Date.now() + 1_800_000),
+    },
+  });
   await db.mcpHistoricalEquipmentBackfillAudit.create({
     data: {
       userId,
@@ -273,6 +280,7 @@ describe('account export', () => {
     const everything = strFromU8(files['data.json']!);
     expect(everything).not.toContain('passwordHash');
     expect(everything).not.toContain('secret-hash-export@test.dev');
+    expect(everything).not.toContain('reset-hash-export@test.dev');
     expect(everything).not.toContain('stranger@test.dev');
 
     const photoNames = Object.keys(files).filter((name) => name.startsWith('photos/'));
