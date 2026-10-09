@@ -3,6 +3,7 @@ import { db } from '@/lib/db';
 import { exerciseInputSchema } from '@/lib/schemas/exercise';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { usableExerciseWhere } from '@/lib/catalog/access';
+import { catalogNameClash } from '@/lib/catalog/resolve';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -31,6 +32,17 @@ export async function PUT(req: Request, props: Params) {
   try {
     const userId = await requireApiUserId();
     const data = await parseJsonBody(req, exerciseInputSchema);
+    // Only a rename can clash with the catalog: saving other fields of an
+    // exercise created before the catalog existed must keep working.
+    const current = await db.exercise.findFirst({
+      where: { id: params.id, userId },
+      select: { name: true },
+    });
+    if (!current) throw new ApiError(404, 'Exercise not found.');
+    const renamed = current.name.trim().toLowerCase() !== data.name.trim().toLowerCase();
+    if (renamed && (await catalogNameClash(db, data.name))) {
+      throw new ApiError(409, 'This exercise already exists in the catalog.');
+    }
     const updated = await db.exercise.update({
       where: { id: params.id, userId },
       data: { ...data, notes: data.notes ?? null },
@@ -57,10 +69,7 @@ export async function DELETE(_req: Request, props: Params) {
     });
     if (!usage) throw new ApiError(404, 'Exercise not found.');
     if (usage._count.programExercises > 0 || usage._count.sets > 0) {
-      throw new ApiError(
-        409,
-        'Exercise used in a program or in history. Remove it first.',
-      );
+      throw new ApiError(409, 'Exercise used in a program or in history. Remove it first.');
     }
 
     await db.exercise.delete({ where: { id: params.id, userId } });

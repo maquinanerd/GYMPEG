@@ -192,7 +192,9 @@ export async function GET() {
         deloadUntil: user.deloadUntil?.toISOString() ?? null,
         activeGymName: gyms.find((gym) => gym.id === user.activeGymId)?.name ?? null,
       },
-      exercises: exercises.map((e) => ({
+      // One entry per name (references below are by name): the user's own
+      // exercise wins over a catalog one with the same name.
+      exercises: uniqueByName(exercises).map((e) => ({
         name: e.name,
         muscleGroup: e.muscleGroup,
         category: e.category,
@@ -684,7 +686,16 @@ export async function POST(req: Request) {
 
         // 3. Recreate the exercises; we keep a name -> id index to link them.
         const exerciseIdByName = new Map<string, string>();
+        // Sets, goals and program lines reference exercises by name, so a name
+        // listed twice is ambiguous: refuse the file (the transaction rolls
+        // back) instead of silently merging the two entries.
+        const seenNames = new Set<string>();
         for (const e of payload.exercises) {
+          const key = e.name.trim().toLowerCase();
+          if (seenNames.has(key)) {
+            throw new ApiError(409, `Conflict: the backup lists exercise "${e.name}" twice.`);
+          }
+          seenNames.add(key);
           // Catalog exercises are linked, not copied: the user's own exercises
           // were purged above, so a match here is a global one.
           const known = await findUsableExerciseByName(tx, userId, e.name);
@@ -982,4 +993,14 @@ export async function POST(req: Request) {
   } catch (err) {
     return handleApiError(err);
   }
+}
+
+function uniqueByName<T extends { name: string; userId: string | null }>(rows: T[]): T[] {
+  const byName = new Map<string, T>();
+  for (const row of rows) {
+    const key = row.name.trim().toLowerCase();
+    const kept = byName.get(key);
+    if (!kept || (kept.userId === null && row.userId !== null)) byName.set(key, row);
+  }
+  return rows.filter((row) => byName.get(row.name.trim().toLowerCase()) === row);
 }

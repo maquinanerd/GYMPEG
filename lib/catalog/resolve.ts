@@ -73,3 +73,22 @@ export async function ensureUsableExercise(
   });
   return { exercise, created: true };
 }
+
+// A custom exercise may not take the name of a catalog exercise: names are how
+// imports, backups and the AI refer to exercises, so a twin would be ambiguous
+// (and the next catalog sync would fold it into the global one anyway).
+export async function catalogNameClash(db: Db, name: string): Promise<Exercise | null> {
+  const trimmed = name.trim();
+  if (!trimmed) return null;
+  const byName = await db.exercise.findFirst({
+    where: { userId: null, name: { equals: trimmed, mode: 'insensitive' } },
+  });
+  if (byName) return byName;
+  const normalized = normalizeExerciseText(trimmed);
+  if (!normalized) return null;
+  const alias = await db.exerciseAlias.findFirst({
+    where: { normalized, isLegacy: false, exercise: { userId: null } },
+    include: { exercise: true },
+  });
+  return alias?.exercise ?? null;
+}

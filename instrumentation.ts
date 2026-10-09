@@ -1,23 +1,11 @@
-// Runs once when the Next.js server starts (Node runtime only).
+// Runs once when the Next.js server starts.
 //
-// Syncs the curated global exercise catalog (data/catalog) into the database.
-// The sync compares a content hash and does nothing when the catalog did not
-// change, so a normal restart costs one query. Set CATALOG_SYNC=off to skip it
-// (e.g. a read replica). A failure is logged, never fatal: the app keeps
-// serving with the catalog already in the database.
+// Next compiles this file for the edge runtime too, so Node-only work (Prisma,
+// pg) lives in instrumentation-node.ts and is imported only inside the
+// NEXT_RUNTIME === 'nodejs' branch: Next inlines NEXT_RUNTIME at build time
+// and drops that import from the edge bundle.
 export async function register() {
-  if (process.env.NEXT_RUNTIME !== 'nodejs') return;
-  if (process.env.CATALOG_SYNC === 'off') return;
-  const { db } = await import('@/lib/db');
-  const { syncGlobalCatalog } = await import('@/lib/catalog/sync');
-  try {
-    const report = await syncGlobalCatalog(db);
-    if (!report.skipped) {
-      console.info(
-        `[catalog] synced ${report.upserted} exercises, retired ${report.retired}, merged ${report.merged} legacy copies`,
-      );
-    }
-  } catch (err) {
-    console.error('[catalog] sync failed:', err);
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    await import('./instrumentation-node');
   }
 }
