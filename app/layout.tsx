@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from 'next';
+import { headers } from 'next/headers';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/shared/theme-provider';
 import { PwaUpdateManager } from '@/components/shared/pwa-update-manager';
+import { NONCE_HEADER } from '@/lib/csp';
 import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -40,6 +42,9 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
   const messages = await getMessages();
+  // Per-request CSP nonce from the middleware (lib/csp), for the inline theme
+  // script of next-themes.
+  const nonce = (await headers()).get(NONCE_HEADER) ?? undefined;
 
   // Dark mode by default (locker rooms), togglable via next-themes (/settings page
   // or button in the header).
@@ -47,7 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang={locale} suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <NextIntlClientProvider messages={messages}>
-          <ThemeProvider>
+          <ThemeProvider nonce={nonce}>
             <PwaUpdateManager />
             {children}
             <Toaster richColors position="top-center" />

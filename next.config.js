@@ -57,14 +57,9 @@ const withPWA = require('@ducanh2912/next-pwa').default({
 });
 const withNextIntl = require('next-intl/plugin')('./i18n/request.ts');
 
-// Baseline security headers for every response. The CSP only carries the
-// directives that cannot break Next.js inline scripts (no script-src yet: a
-// nonce-based policy is planned with the Next 16 upgrade).
+// Baseline security headers for every response. The Content-Security-Policy
+// is set by middleware.ts with a per-request script nonce (lib/csp.ts).
 const securityHeaders = [
-  {
-    key: 'Content-Security-Policy',
-    value: "frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
-  },
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },

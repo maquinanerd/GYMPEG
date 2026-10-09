@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { verifySession, SESSION_COOKIE } from '@/lib/auth-token';
+import { buildContentSecurityPolicy, generateNonce, NONCE_HEADER } from '@/lib/csp';
 
 // Routes reachable without a valid session.
 // /api/auth/logout is public: replaying it without a cookie does nothing
@@ -29,27 +30,44 @@ export async function middleware(req: NextRequest) {
   // signed out here so they go straight to /login.
   const session = verified?.sid ? verified : null;
 
+  // A fresh nonce per request (lib/csp). The request copy lets Next.js and the
+  // root layout stamp it on their scripts; the response copy is enforced.
+  const nonce = generateNonce();
+  const policy = buildContentSecurityPolicy(nonce, {
+    dev: process.env.NODE_ENV === 'development',
+  });
+  const withPolicy = (res: NextResponse) => {
+    res.headers.set('Content-Security-Policy', policy);
+    return res;
+  };
+  const pass = () => {
+    const headers = new Headers(req.headers);
+    headers.set(NONCE_HEADER, nonce);
+    headers.set('Content-Security-Policy', policy);
+    return withPolicy(NextResponse.next({ request: { headers } }));
+  };
+
   if (isPublic) {
     // Already signed in and visiting /login or /signup: send to the dashboard.
     if (session && (pathname === '/login' || pathname === '/signup')) {
       const url = req.nextUrl.clone();
       url.pathname = '/';
-      return NextResponse.redirect(url);
+      return withPolicy(NextResponse.redirect(url));
     }
-    return NextResponse.next();
+    return pass();
   }
 
   if (!session) {
     // API: 401 JSON. Pages: redirect to /login.
     if (pathname.startsWith('/api/')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return withPolicy(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }));
     }
     const url = req.nextUrl.clone();
     url.pathname = '/login';
-    return NextResponse.redirect(url);
+    return withPolicy(NextResponse.redirect(url));
   }
 
-  return NextResponse.next();
+  return pass();
 }
 
 export const config = {
