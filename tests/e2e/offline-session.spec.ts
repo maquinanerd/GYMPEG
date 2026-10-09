@@ -148,3 +148,55 @@ test('a lifter starts, logs and finishes a workout offline, and it syncs back on
     )
     .toEqual({ finished: true, sets: 1 });
 });
+
+// Deleting offline (ADR-004 tombstone): a set already on the server is undone
+// with the network cut. It disappears at once, stays deleted, and the server
+// drops it when the connection comes back.
+test('a set deleted offline is removed from the server once back online', async ({
+  page,
+  context,
+}) => {
+  const register = await page.request.post('/api/auth/register', {
+    headers: { 'x-forwarded-for': '10.111.0.22' },
+    data: {
+      displayName: 'Offline Delete E2E',
+      email: `e2e-offline-delete-${Date.now()}@test.dev`,
+      password: 'supersecret',
+    },
+  });
+  expect(register.ok()).toBeTruthy();
+  await seedWorkout(page);
+
+  await page.goto('/session/new');
+  await page.getByRole('button', { name: 'Start this session' }).click();
+  await expect(page).toHaveURL(/\/session\/[^/?]+$/, { timeout: 20_000 });
+  const sessionId = new URL(page.url()).pathname.split('/').pop()!;
+  await expect(page.getByText(/Exercise 1\/1 · E2E Offline Squat/)).toBeVisible({
+    timeout: 20_000,
+  });
+
+  const serverSets = async () => {
+    const res = await page.request.get('/api/sessions');
+    if (!res.ok()) return null;
+    const sessions = (await res.json()) as Array<{ id: string; _count: { sets: number } }>;
+    return sessions.find((session) => session.id === sessionId)?._count.sets ?? null;
+  };
+
+  for (const number of [1, 2]) {
+    await page.getByRole('button', { name: new RegExp(`^confirm set ${number}$`, 'i') }).click();
+    await page.getByRole('button', { name: /skip/i }).click();
+  }
+  await expect.poll(serverSets, { timeout: 30_000 }).toBe(2);
+
+  await context.setOffline(true);
+  await page.getByRole('button', { name: 'Undo set 2' }).click();
+  await expect(page.getByText('Set deleted.')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Undo set 2' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /^confirm set 2$/i })).toBeVisible();
+
+  await context.setOffline(false);
+  await page.evaluate(() => window.dispatchEvent(new Event('online')));
+  await expect.poll(serverSets, { timeout: 30_000 }).toBe(1);
+  // Still deleted on the device after the round trip.
+  await expect(page.getByRole('button', { name: 'Undo set 2' })).toHaveCount(0);
+});

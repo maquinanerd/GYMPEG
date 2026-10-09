@@ -7,14 +7,25 @@
 // 2. flushPendingSets() sends, in this order: the session starts, the sets,
 //    then the finishes. A set waits for its session to exist on the server;
 //    a finish waits until every set of its session is sent.
-// 3. Only the items of the signed-in account are sent (lib/outbox-owner).
-// 4. On app startup + on the 'online' event, we call flushPendingSets().
-// 5. No aggressive retry: we wait for the next trigger (online, validation,
+// 3. The set changes of a session (creates, corrections, deletions) go in one
+//    batched request with a result per item, so one refused set never holds
+//    back the others (POST /api/sessions/[id]/sets/batch).
+// 4. A deletion is a tombstone: the row is hidden at once and removed from
+//    the device only after the server confirms, so deleting works offline.
+// 5. Only the items of the signed-in account are sent (lib/outbox-owner).
+// 6. On app startup + on the 'online' event, we call flushPendingSets().
+// 7. No aggressive retry: we wait for the next trigger (online, validation,
 //    startup). If you cut the wifi in the middle, the app will retry when
 //    the network comes back. No background timer, to save battery.
 
 import { getDB, type LocalSession, type PendingSet } from '@/lib/indexeddb';
 import { getOutboxOwner, ownedBy } from '@/lib/outbox-owner';
+import {
+  isFatalItemStatus,
+  MAX_BATCH_ITEMS,
+  type BatchItem,
+  type BatchItemResult,
+} from '@/lib/set-batch';
 import { refreshTrainingPack } from '@/lib/training-pack';
 
 export type PendingSetUpdateState = 'missing' | 'failed' | 'synced' | 'queued';
@@ -58,11 +69,24 @@ export function onEquipmentDropped(listener: DroppedEquipmentListener): () => vo
 }
 
 let inFlight: Promise<FlushResult> | null = null;
+let rerunRequested = false;
 
 export async function flushPendingSets(): Promise<FlushResult> {
-  // Re-entrancy: if a flush is already running, we return its promise.
-  if (inFlight) return inFlight;
-  inFlight = doFlush();
+  // Re-entrancy: a flush asked for while one runs (a set logged, corrected or
+  // deleted meanwhile) shares its promise and makes it run once more at the
+  // end, so that change does not wait for the next trigger.
+  if (inFlight) {
+    rerunRequested = true;
+    return inFlight;
+  }
+  inFlight = (async () => {
+    let result: FlushResult;
+    do {
+      rerunRequested = false;
+      result = await doFlush();
+    } while (rerunRequested && navigator.onLine);
+    return result;
+  })();
   try {
     return await inFlight;
   } finally {
@@ -235,8 +259,9 @@ async function flushSessionFinishes(owner: string | null): Promise<void> {
 async function flushSets(owner: string | null): Promise<FlushResult> {
   const db = getDB();
   // 'syncing' rows are included: a tab closed mid-request leaves them stuck in
-  // that state forever otherwise. Re-sending is safe because the server
-  // deduplicates on clientMutationId (POST) and a PATCH is idempotent.
+  // that state forever otherwise. Re-sending is safe: the server deduplicates
+  // creates on clientMutationId, corrections are idempotent and deleting
+  // something already gone succeeds.
   const queued = await db.pendingSets
     .where('status')
     .anyOf(['pending', 'failed', 'syncing'])
@@ -248,160 +273,233 @@ async function flushSets(owner: string | null): Promise<FlushResult> {
       .filter((session) => session.createStatus === 'pending')
       .map((session) => session.id),
   );
-  const pending = queued.filter(
-    (item) => ownedBy(owner, item) && !sessionsNotOnServer.has(item.sessionId),
-  );
+  // One batch per session, in the order the changes were made.
+  const bySession = new Map<string, PendingSet[]>();
+  for (const item of queued) {
+    if (!ownedBy(owner, item) || sessionsNotOnServer.has(item.sessionId)) continue;
+    const group = bySession.get(item.sessionId);
+    if (group) group.push(item);
+    else bySession.set(item.sessionId, [item]);
+  }
 
-  let flushed = 0;
-  let failed = 0;
-  const droppedEquipment: DroppedEquipment[] = [];
-
-  for (const item of pending) {
-    if (!navigator.onLine) {
+  const totals: FlushResult = { flushed: 0, failed: 0, pending: 0, droppedEquipment: [] };
+  sessions: for (const [sessionId, items] of bySession) {
+    for (let start = 0; start < items.length; start += MAX_BATCH_ITEMS) {
       // No point trying if we know we are offline.
-      break;
+      if (!navigator.onLine) break sessions;
+      await pushBatch(sessionId, items.slice(start, start + MAX_BATCH_ITEMS), totals);
     }
-    await db.pendingSets.update(item.localId, { status: 'syncing' });
+  }
 
-    try {
-      const existingServerId = item.serverId;
-      const updatesExistingSet = existingServerId != null;
-      const sentPatch = {
-        weight: item.weight,
-        reps: item.reps,
-        rir: item.rir,
-        // Absent on rows queued before RPE existed: the server keeps its value.
-        ...(item.rpe !== undefined ? { rpe: item.rpe } : {}),
-      };
-      let res: Response;
-      let sentEquipmentId: string | null = null;
+  totals.pending = await db.pendingSets.where('status').anyOf(['pending', 'failed']).count();
+  if (totals.droppedEquipment.length > 0) {
+    for (const listener of droppedEquipmentListeners) {
+      listener(totals.droppedEquipment);
+    }
+  }
+  return totals;
+}
 
-      if (existingServerId != null) {
-        res = await fetch(`/api/sets/${encodeURIComponent(existingServerId)}`, {
-          method: 'PATCH',
-          signal: timeoutSignal(),
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(sentPatch),
-        });
-      } else {
-        const payload = {
-          exerciseId: item.exerciseId,
-          gymEquipmentId: item.gymEquipmentId ?? null,
-          setNumber: item.setNumber,
-          weight: item.weight,
-          reps: item.reps,
-          rir: item.rir,
-          durationSec: item.durationSec ?? null,
-          distanceM: item.distanceM ?? null,
-          notes: item.notes,
-          isWarmup: item.isWarmup,
-          isDropSet: item.isDropSet,
-          ...(item.type ? { type: item.type } : {}),
-          ...(item.rpe != null ? { rpe: item.rpe } : {}),
-          // Idempotency key: a retry of this very set returns the stored row.
-          clientMutationId: item.localId,
-          // When it was performed on the device, not when it reached the server.
-          performedAt: item.createdAt,
-        };
-        const post = (gymEquipmentId: string | null) =>
-          fetch(`/api/sessions/${item.sessionId}/sets`, {
-            method: 'POST',
-            signal: timeoutSignal(),
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...payload, gymEquipmentId }),
-          });
+// Rows hydrated from the server (srv_*) were not logged under their local id.
+function isDeviceKey(localId: string): boolean {
+  return !localId.startsWith('srv_');
+}
 
-        sentEquipmentId = payload.gymEquipmentId;
-        res = await post(sentEquipmentId);
-        // Equipment is optional metadata. If a server version rejects a stale
-        // reference with 400, retry once without it so the actual queued set is
-        // never stranded by an inventory decoration.
-        if (res.status === 400 && sentEquipmentId) {
-          res = await post(null);
-        }
-      }
+function correctionOf(item: PendingSet) {
+  return {
+    weight: item.weight,
+    reps: item.reps,
+    rir: item.rir,
+    // Absent on rows queued before RPE existed: the server keeps its value.
+    ...(item.rpe !== undefined ? { rpe: item.rpe } : {}),
+  };
+}
 
-      if (!res.ok) {
-        const data = (await res.json().catch(() => null)) as { error?: string } | null;
-        // If the session is closed or the exercise invalid, retrying is
-        // pointless: we mark it failed so we do not loop. The user can manually
-        // purge the queue later if needed.
-        const fatal = res.status === 400 || res.status === 404;
-        await db.pendingSets.update(item.localId, {
-          status: fatal ? 'failed' : 'pending',
-          attempts: (item.attempts ?? 0) + 1,
-          lastError: data?.error ?? `HTTP ${res.status}`,
-        });
-        failed += 1;
-        continue;
-      }
+function batchItemFor(item: PendingSet, withoutEquipment: boolean): BatchItem {
+  if (item.deletedAt != null) {
+    return {
+      op: 'delete',
+      key: item.localId,
+      ...(item.serverId ? { setId: item.serverId } : {}),
+      ...(isDeviceKey(item.localId) ? { clientMutationId: item.localId } : {}),
+    };
+  }
+  if (item.serverId != null) {
+    return { op: 'update', key: item.localId, setId: item.serverId, patch: correctionOf(item) };
+  }
+  return {
+    op: 'create',
+    key: item.localId,
+    set: {
+      exerciseId: item.exerciseId,
+      gymEquipmentId: withoutEquipment ? null : (item.gymEquipmentId ?? null),
+      setNumber: item.setNumber,
+      weight: item.weight,
+      reps: item.reps,
+      rir: item.rir,
+      durationSec: item.durationSec ?? null,
+      distanceM: item.distanceM ?? null,
+      notes: item.notes,
+      isWarmup: item.isWarmup,
+      isDropSet: item.isDropSet,
+      ...(item.type ? { type: item.type } : {}),
+      ...(item.rpe != null ? { rpe: item.rpe } : {}),
+      // Idempotency key: a retry of this very set returns the stored row.
+      clientMutationId: item.localId,
+      // When it was performed on the device, not when it reached the server.
+      performedAt: item.createdAt,
+    },
+  };
+}
 
-      const saved = (await res.json()) as { id: string; gymEquipmentId?: string | null };
-      // Equipment metadata only applies when creating a new set. Editing an
-      // existing row preserves the equipment reference already stored server-side.
-      const equipmentDropped =
-        !updatesExistingSet && sentEquipmentId !== null && !saved.gymEquipmentId;
+async function pushBatch(
+  sessionId: string,
+  items: PendingSet[],
+  totals: FlushResult,
+  withoutEquipment = false,
+): Promise<void> {
+  const db = getDB();
+  await db.transaction('rw', db.pendingSets, async () => {
+    for (const item of items) await db.pendingSets.update(item.localId, { status: 'syncing' });
+  });
+  const sent = items.map((item) => batchItemFor(item, withoutEquipment));
 
-      if (updatesExistingSet) {
-        // A newer local edit may land while this PATCH is in flight. Compare
-        // the current row and update its status inside one IndexedDB write
-        // transaction so another edit cannot slip between the check and the
-        // status write. Newer values stay pending for the next flush.
-        await db.transaction('rw', db.pendingSets, async () => {
-          const latest = await db.pendingSets.get(item.localId);
-          const patchStillCurrent =
-            latest != null &&
-            latest.serverId === existingServerId &&
-            latest.weight === sentPatch.weight &&
-            latest.reps === sentPatch.reps &&
-            latest.rir === sentPatch.rir &&
-            (latest.rpe ?? null) === (item.rpe ?? null);
-          await db.pendingSets.update(
-            item.localId,
-            patchStillCurrent
-              ? { status: 'synced', serverId: saved.id, syncedAt: Date.now(), lastError: null }
-              : { status: 'pending', serverId: saved.id, lastError: null },
-          );
-        });
-      } else {
-        await db.pendingSets.update(item.localId, {
-          status: 'synced',
-          serverId: saved.id,
-          syncedAt: Date.now(),
-          lastError: null,
-          // Written before the broadcast below, so a listener that drains
-          // immediately still finds the record it is being told about.
-          ...(equipmentDropped
-            ? { gymEquipmentId: null, equipmentDroppedNotice: sentEquipmentId }
-            : {}),
-        });
-      }
-      if (equipmentDropped && sentEquipmentId !== null) {
-        droppedEquipment.push({
-          localId: item.localId,
-          sessionId: item.sessionId,
-          gymEquipmentId: sentEquipmentId,
-        });
-      }
-      flushed += 1;
-    } catch (err) {
-      // Network error (offline, timeout): we keep 'pending' to retry later.
+  let res: Response;
+  try {
+    res = await fetch(`/api/sessions/${encodeURIComponent(sessionId)}/sets/batch`, {
+      method: 'POST',
+      signal: timeoutSignal(),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: sent }),
+    });
+  } catch (err) {
+    // Network error (offline, timeout): everything stays pending.
+    const lastError = err instanceof Error ? err.message : 'network';
+    for (const item of items) {
       await db.pendingSets.update(item.localId, {
         status: 'pending',
         attempts: (item.attempts ?? 0) + 1,
-        lastError: err instanceof Error ? err.message : 'network',
+        lastError,
       });
-      failed += 1;
     }
+    totals.failed += items.length;
+    return;
   }
 
-  const remaining = await db.pendingSets.where('status').anyOf(['pending', 'failed']).count();
-  if (droppedEquipment.length > 0) {
-    for (const listener of droppedEquipmentListeners) {
-      listener(droppedEquipment);
+  if (!res.ok) {
+    // The whole batch was refused (session gone, signed out, server down).
+    const lastError = await errorMessage(res);
+    const fatal = isFatalStatus(res.status);
+    for (const item of items) {
+      // Nothing of this session is left to delete for this account.
+      if (fatal && item.deletedAt != null) {
+        await db.pendingSets.delete(item.localId);
+        continue;
+      }
+      await db.pendingSets.update(item.localId, {
+        status: fatal ? 'failed' : 'pending',
+        attempts: (item.attempts ?? 0) + 1,
+        lastError,
+      });
     }
+    totals.failed += items.length;
+    return;
   }
-  return { flushed, failed, pending: remaining, droppedEquipment };
+
+  const body = (await res.json().catch(() => null)) as { results?: BatchItemResult[] } | null;
+  const byKey = new Map((body?.results ?? []).map((result) => [result.key, result]));
+  const retryWithoutEquipment: PendingSet[] = [];
+  for (const [index, item] of items.entries()) {
+    const op = sent[index]!;
+    const result = byKey.get(item.localId);
+    // Equipment is optional metadata. If a server version rejects a stale
+    // reference with 400, the set is resent once without it so the training
+    // itself is never stranded by an inventory decoration.
+    if (
+      op.op === 'create' &&
+      result?.status === 400 &&
+      !withoutEquipment &&
+      item.gymEquipmentId != null
+    ) {
+      retryWithoutEquipment.push(item);
+      continue;
+    }
+    await applyItemResult(item, op, result, totals);
+  }
+  if (retryWithoutEquipment.length > 0) {
+    await pushBatch(sessionId, retryWithoutEquipment, totals, true);
+  }
+}
+
+async function applyItemResult(
+  item: PendingSet,
+  op: BatchItem,
+  result: BatchItemResult | undefined,
+  totals: FlushResult,
+): Promise<void> {
+  const db = getDB();
+  const status = result?.status ?? 0;
+  const done = status >= 200 && status < 300;
+
+  // Deleted on the server (or already gone): the row leaves the device. A
+  // create answered 410 was deleted meanwhile (another tab, another device).
+  if ((op.op === 'delete' && (done || status === 404)) || (op.op === 'create' && status === 410)) {
+    await db.pendingSets.delete(item.localId);
+    totals.flushed += 1;
+    return;
+  }
+
+  const saved = result?.set;
+  if (!done || (op.op !== 'delete' && !saved)) {
+    // A refused item that a retry cannot fix (closed session, unknown
+    // exercise, set gone) is marked failed so it does not loop.
+    await db.pendingSets.update(item.localId, {
+      status: isFatalItemStatus(status) ? 'failed' : 'pending',
+      attempts: (item.attempts ?? 0) + 1,
+      lastError: result?.error ?? (result ? `HTTP ${status}` : 'No result for this set.'),
+    });
+    totals.failed += 1;
+    return;
+  }
+  if (!saved) return;
+
+  // Equipment is only sent on a create. The server records a stale reference
+  // as null (issue #326): cleared here and reported.
+  const sentEquipmentId = op.op === 'create' ? (item.gymEquipmentId ?? null) : null;
+  const equipmentDropped = sentEquipmentId !== null && !saved.gymEquipmentId;
+
+  // A newer edit or a deletion may land while the batch is in flight. Compare
+  // with the current row inside one IndexedDB write transaction so nothing
+  // slips between the check and the status write; a change made meanwhile
+  // stays pending for the next push, now aimed at the stored row.
+  await db.transaction('rw', db.pendingSets, async () => {
+    const latest = await db.pendingSets.get(item.localId);
+    if (!latest) return;
+    const unchanged =
+      latest.deletedAt == null &&
+      latest.weight === item.weight &&
+      latest.reps === item.reps &&
+      latest.rir === item.rir &&
+      (latest.rpe ?? null) === (item.rpe ?? null);
+    await db.pendingSets.update(item.localId, {
+      serverId: saved.id,
+      lastError: null,
+      ...(unchanged ? { status: 'synced', syncedAt: Date.now() } : { status: 'pending' }),
+      // Written before the broadcast, so a listener that drains immediately
+      // still finds the record it is being told about.
+      ...(equipmentDropped
+        ? { gymEquipmentId: null, equipmentDroppedNotice: sentEquipmentId }
+        : {}),
+    });
+  });
+  if (equipmentDropped && sentEquipmentId !== null) {
+    totals.droppedEquipment.push({
+      localId: item.localId,
+      sessionId: item.sessionId,
+      gymEquipmentId: sentEquipmentId,
+    });
+  }
+  totals.flushed += 1;
 }
 
 // Helper: adds a set to the queue (status pending) and triggers a flush.
@@ -426,6 +524,26 @@ export async function queueSet(
   // Kick off the flush in the background (not awaited so as not to block the UI).
   void flushPendingSets();
   return record;
+}
+
+// Deletes a set on this device at once, offline included: the row becomes a
+// tombstone (hidden everywhere) until the server confirms the deletion, then
+// it leaves the device. The server keeps its own tombstone, so a create of
+// that set still in flight cannot bring it back.
+export async function queueSetDeletion(localId: string): Promise<void> {
+  const db = getDB();
+  await db.pendingSets.update(localId, {
+    deletedAt: Date.now(),
+    status: 'pending',
+    attempts: 0,
+    lastError: null,
+  });
+  void flushPendingSets();
+}
+
+// Rows the lifter sees: everything but the deletions waiting for the server.
+export function visibleSets<T extends Pick<PendingSet, 'deletedAt'>>(rows: T[]): T[] {
+  return rows.filter((row) => row.deletedAt == null);
 }
 
 // Returns the equipment drops recorded for `sessionId` that nobody has shown

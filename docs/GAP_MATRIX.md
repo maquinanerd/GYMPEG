@@ -35,9 +35,10 @@ Base: auditoria de 2026-10-08 ([00_OPEN_SOURCE_AUDIT.md](00_OPEN_SOURCE_AUDIT.md
 | 2026-10-09 | Histórico com filtros (1.8): programa, academia, exercício e músculo, combináveis, preservados ao trocar de mês e ao voltar do detalhe; um só parser para página, calendário e CSV; CSV com os mesmos filtros (exercício/músculo exportam só as linhas deles) e mês e data no fuso do usuário | `46c42e1` |
 | 2026-10-09 | Aquecimento no logger: rampa até a primeira série de trabalho (barra vazia, 40/60/80%) em anilhas carregáveis na unidade do usuário, cada passo registrado com um toque como série WARMUP (fora da numeração), oferta some ao registrar a primeira série de trabalho; descanso após aquecimento limitado a 60 s | `fa33199` |
 | 2026-10-09 | CSP completa com nonce por requisição: `script-src 'self' 'nonce-…' 'strict-dynamic'` sem `unsafe-inline`/`unsafe-eval` em produção, `default-src`/`connect-src 'self'`, nonce aplicado pelo Next e pelo script de tema; E2E falha em qualquer violação | `0496db7` |
-| 2026-10-09 | Reset de senha por e-mail: link de uso único (token de 256 bits, só o hash no banco, 30 min, pedido novo invalida o anterior), resposta igual com ou sem conta, limite por IP e por endereço, nova senha encerra todas as sessões; provedor de e-mail plugável (`EMAIL_PROVIDER=resend`, `log` só fora de produção), link montado só com `APP_URL`/`NEXTAUTH_URL` | este commit |
+| 2026-10-09 | Reset de senha por e-mail: link de uso único (token de 256 bits, só o hash no banco, 30 min, pedido novo invalida o anterior), resposta igual com ou sem conta, limite por IP e por endereço, nova senha encerra todas as sessões; provedor de e-mail plugável (`EMAIL_PROVIDER=resend`, `log` só fora de produção), link montado só com `APP_URL`/`NEXTAUTH_URL` | `ebb1a6c` |
+| 2026-10-09 | Sync por agregado e exclusões com tombstone (ADR-004 completo): um lote por sessão com resultado por item, regras de série num serviço único, excluir funciona sem rede (some na hora, sai do aparelho quando o servidor confirma), `SetTombstone` no servidor impede que um create atrasado ressuscite a série; E2E de exclusão offline | este commit |
 
-Pendentes nos mesmos épicos: exclusões com tombstone e push por agregado com resultado por item (ADR-004).
+Pendentes do G1: nenhum item de código; falta configurar o provedor de e-mail em produção.
 
 ## Fundação e plataforma
 

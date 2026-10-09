@@ -13,14 +13,15 @@ const SESSION_ID = '0199c2f4-5a3b-7c4d-8e5f-6a7b8c9d0e1f';
 type Call = { route: string; body: Record<string, unknown> | null };
 type Reply = { status: number; body?: unknown } | 'network-error';
 
-function stubServer(reply: (route: string) => Reply) {
+function stubServer(reply: (route: string, body: Record<string, unknown> | null) => Reply) {
   const calls: Call[] = [];
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string, init: RequestInit = {}) => {
       const route = `${init.method ?? 'GET'} ${url}`;
-      calls.push({ route, body: init.body ? JSON.parse(String(init.body)) : null });
-      const answer = reply(route);
+      const body = init.body ? JSON.parse(String(init.body)) : null;
+      calls.push({ route, body });
+      const answer = reply(route, body);
       if (answer === 'network-error') throw new TypeError('Failed to fetch');
       return new Response(JSON.stringify(answer.body ?? {}), { status: answer.status });
     }),
@@ -70,6 +71,17 @@ function pendingSet(overrides: Partial<PendingSet> = {}): PendingSet {
 
 const ok = (body: unknown = {}): Reply => ({ status: 200, body });
 
+// Batched set push: every item is stored, under `server-<key>`.
+const batchOk = (body: Record<string, unknown> | null): Reply =>
+  ok({
+    results: ((body?.items ?? []) as { key: string }[]).map((item) => ({
+      key: item.key,
+      status: 201,
+      set: { id: `server-${item.key}` },
+    })),
+  });
+const isBatch = (route: string) => route.endsWith('/sets/batch');
+
 beforeEach(async () => {
   await deleteLocalDB();
   setOutboxOwner('user-1');
@@ -85,16 +97,14 @@ describe('offline outbox', () => {
       localSession({ exerciseSwaps: { 'pe-1': 'exercise-2' }, swapsStatus: 'pending' }),
     );
     await getDB().pendingSets.add(pendingSet({ exerciseId: 'exercise-2' }));
-    const calls = stubServer((route) =>
-      route.endsWith('/sets') ? ok({ id: 'server-set-1' }) : ok(),
-    );
+    const calls = stubServer((route, body) => (isBatch(route) ? batchOk(body) : ok()));
 
     await flushPendingSets();
 
     expect(calls.map((call) => call.route)).toEqual([
       'POST /api/sessions',
       `PUT /api/sessions/${SESSION_ID}`,
-      `POST /api/sessions/${SESSION_ID}/sets`,
+      `POST /api/sessions/${SESSION_ID}/sets/batch`,
     ]);
     expect(calls[1]!.body).toEqual({ exerciseSwaps: { 'pe-1': 'exercise-2' } });
     expect((await getDB().localSessions.get(SESSION_ID))?.swapsStatus).toBe('synced');
@@ -129,15 +139,13 @@ describe('offline outbox', () => {
       localSession({ finishedAt: 5_000, notes: 'felt strong', finishStatus: 'pending' }),
     );
     await getDB().pendingSets.add(pendingSet());
-    const calls = stubServer((route) =>
-      route === `POST /api/sessions/${SESSION_ID}/sets` ? ok({ id: 'server-set-1' }) : ok(),
-    );
+    const calls = stubServer((route, body) => (isBatch(route) ? batchOk(body) : ok()));
 
     await flushPendingSets();
 
     expect(calls.map((call) => call.route)).toEqual([
       'POST /api/sessions',
-      `POST /api/sessions/${SESSION_ID}/sets`,
+      `POST /api/sessions/${SESSION_ID}/sets/batch`,
       `PUT /api/sessions/${SESSION_ID}`,
     ]);
     expect(calls[0]!.body).toEqual({
@@ -151,7 +159,7 @@ describe('offline outbox', () => {
     expect(stored).toMatchObject({ createStatus: 'synced', finishStatus: 'synced' });
     expect(await getDB().pendingSets.get('loc_set00000001')).toMatchObject({
       status: 'synced',
-      serverId: 'server-set-1',
+      serverId: 'server-loc_set00000001',
     });
   });
 
@@ -179,7 +187,9 @@ describe('offline outbox', () => {
 
     await flushPendingSets();
 
-    expect(calls.map((call) => call.route)).toEqual([`POST /api/sessions/${SESSION_ID}/sets`]);
+    expect(calls.map((call) => call.route)).toEqual([
+      `POST /api/sessions/${SESSION_ID}/sets/batch`,
+    ]);
     expect((await getDB().localSessions.get(SESSION_ID))?.finishStatus).toBe('pending');
   });
 
@@ -193,7 +203,7 @@ describe('offline outbox', () => {
     await flushPendingSets();
 
     expect(calls.map((call) => call.route)).toEqual([
-      `POST /api/sessions/${SESSION_ID}/sets`,
+      `POST /api/sessions/${SESSION_ID}/sets/batch`,
       `PUT /api/sessions/${SESSION_ID}`,
     ]);
     expect((await getDB().pendingSets.get('loc_set00000001'))?.status).toBe('failed');
@@ -217,12 +227,14 @@ describe('offline outbox', () => {
       pendingSet({ localId: 'loc_other0000001', ownerId: 'user-2' }),
       pendingSet({ localId: 'loc_legacy000001', sessionId: 'server-session', ownerId: undefined }),
     ]);
-    const calls = stubServer(() => ok({ id: 'server-set' }));
+    const calls = stubServer((route, body) => (isBatch(route) ? batchOk(body) : ok()));
 
     await flushPendingSets();
 
     // The row queued before the outbox was scoped goes to whoever is signed in.
-    expect(calls.map((call) => call.route)).toEqual(['POST /api/sessions/server-session/sets']);
+    expect(calls.map((call) => call.route)).toEqual([
+      'POST /api/sessions/server-session/sets/batch',
+    ]);
     expect((await getDB().pendingSets.get('loc_other0000001'))?.status).toBe('pending');
     expect((await getDB().localSessions.get(SESSION_ID))?.createStatus).toBe('pending');
     // A logout must keep them: they are counted whatever the account.

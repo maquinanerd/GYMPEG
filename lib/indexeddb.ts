@@ -74,6 +74,10 @@ export interface PendingSet {
   // Account that queued the set. Absent on rows written before the outbox
   // was scoped per user.
   ownerId?: string | null;
+  // Deleted on this device (epoch ms) and waiting for the server to confirm
+  // (lib/sync queueSetDeletion): hidden from every view, removed once the
+  // server answers. Optional, so earlier rows stay valid.
+  deletedAt?: number | null;
 }
 
 export type OutboxStatus = 'pending' | 'synced' | 'failed';

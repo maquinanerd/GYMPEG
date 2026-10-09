@@ -550,12 +550,26 @@ model Session {
   // program has one.
   cycleWeek     Int?
   sets       Set[]
+  setTombstones SetTombstone[]
 
   @@index([userId, startedAt])
   @@index([workoutId])
   @@index([programId])
   @@index([gymId])
   @@index([programRevisionId])
+}
+
+// A deleted set, remembered by the device key it was logged with (ADR-004).
+// A late replay of its creation (lost response, another tab, a delete that
+// overtook the create) is refused instead of bringing the set back.
+model SetTombstone {
+  id               String   @id @default(cuid())
+  sessionId        String
+  session          Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  clientMutationId String
+  deletedAt        DateTime @default(now())
+
+  @@unique([sessionId, clientMutationId])
 }
 
 model Gym {

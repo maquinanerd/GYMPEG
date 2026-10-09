@@ -52,6 +52,8 @@ import {
   onEquipmentDropped,
   pendingSetUpdateState,
   queueSet,
+  queueSetDeletion,
+  visibleSets,
 } from '@/lib/sync';
 import { hydrateFromServerSets } from '@/lib/sync-hydration';
 import { finishSession, rememberSession, swapExerciseForSession } from '@/lib/session-lifecycle';
@@ -335,7 +337,9 @@ export function SessionRunner({
   const liveSets = useLiveQuery(
     async () => {
       const db = getDB();
-      const items = await db.pendingSets.where('sessionId').equals(session.id).toArray();
+      const items = visibleSets(
+        await db.pendingSets.where('sessionId').equals(session.id).toArray(),
+      );
       items.sort((a, b) => a.exerciseId.localeCompare(b.exerciseId) || a.setNumber - b.setNumber);
       return items;
     },
@@ -608,27 +612,11 @@ export function SessionRunner({
     }
   }
 
+  // The deletion goes through the outbox (works offline): the set disappears
+  // now and the server is told when it can be reached.
   async function handleDeleteSet(set: PendingSet): Promise<boolean> {
-    const db = getDB();
     try {
-      let current = (await db.pendingSets.get(set.localId)) ?? set;
-      if (!current.serverId && (current.status === 'pending' || current.status === 'syncing')) {
-        await flushPendingSets();
-        current = (await db.pendingSets.get(set.localId)) ?? current;
-      }
-
-      // Once a server id exists, delete the persisted row first. A failed
-      // request leaves the local row intact so undo never loses data silently.
-      if (current.serverId) {
-        const res = await fetch(`/api/sets/${encodeURIComponent(current.serverId)}`, {
-          method: 'DELETE',
-        });
-        if (!res.ok && res.status !== 404) {
-          toast.error(t('setDeleteError'));
-          return false;
-        }
-      }
-      await db.pendingSets.delete(current.localId);
+      await queueSetDeletion(set.localId);
       toast.success(t('setDeleted'));
       return true;
     } catch {

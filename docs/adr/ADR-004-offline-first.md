@@ -1,6 +1,6 @@
 # ADR-004 — Offline-first
 
-- **Status:** Aceito; implementado em grande parte no G1 (ver "Implementação")
+- **Status:** Aceito; implementado no G1 (ver "Implementação")
 - **Data:** 2026-10-08
 
 ## Contexto
@@ -30,4 +30,6 @@ O sync do GymCoach (`lib/sync.ts`) cobre só séries numa sessão já aberta e n
 - **Outbox:** `localSessions` e `pendingSets` no Dexie, cada item com `ownerId`; o flush envia início → séries → fim, e só os itens do usuário logado (`lib/sync.ts`, `lib/outbox-owner.ts`, `lib/session-lifecycle.ts`).
 - **Sem rede:** pacote de treino (`GET /api/session-pack`, guardado por usuário no IndexedDB) e página offline `app/~offline`, servida pelo service worker a qualquer navegação sem rede, que roda a sessão a partir do aparelho.
 - **Service worker:** navegações em `NetworkOnly` (só para acionar o fallback), nenhum cache de HTML nem de `/api`; só assets estáticos e o precache do build.
-- **Pendente:** push por agregado com resultado por item; exclusões com tombstone.
+- **Push por agregado:** as mudanças de séries de uma sessão (criar, corrigir, excluir) vão num lote só (`POST /api/sessions/[id]/sets/batch`, até 100 itens), aplicadas em ordem, com resultado por item: um item recusado não derruba os outros. Regras únicas em `lib/set-mutations.ts`, usadas também pelas rotas de série individual.
+- **Exclusões com tombstone:** no aparelho, excluir marca `deletedAt` (a série some na hora, inclusive sem rede) e a linha só sai do IndexedDB quando o servidor confirma. No servidor, `SetTombstone (sessionId, clientMutationId)`: excluir por id ou pela chave do aparelho é idempotente, e um create repetido depois da exclusão (resposta perdida, outra aba, exclusão que passou à frente do create) recebe 410 em vez de ressuscitar a série.
+- **Nova rodada:** um flush pedido enquanto outro roda faz o atual rodar mais uma vez no fim, então uma mudança feita durante o envio não espera o próximo gatilho.

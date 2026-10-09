@@ -60,6 +60,8 @@ vi.mock('@/lib/sync', () => ({
   onEquipmentDropped: () => () => undefined,
   pendingSetUpdateState: vi.fn(),
   queueSet: vi.fn().mockResolvedValue(undefined),
+  queueSetDeletion: vi.fn().mockResolvedValue(undefined),
+  visibleSets: <T,>(rows: T[]) => rows,
 }));
 vi.mock('@/lib/sync-hydration', () => ({ hydrateFromServerSets: async () => undefined }));
 vi.mock('@/lib/wake-lock', () => ({
