@@ -22,7 +22,7 @@ const bodySchema = z.object({
 export async function POST(req: Request) {
   try {
     const userId = await requireApiUserId();
-    const rl = rateLimit(`set-parse:${userId}`, 20, 60_000);
+    const rl = await rateLimit(`set-parse:${userId}`, 20, 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: 'Too many parse requests. Please wait a moment.' },

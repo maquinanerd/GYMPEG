@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   try {
     const userId = await requireApiUserId();
 
-    const rl = rateLimit(`import:${userId}`, 10, 60_000);
+    const rl = await rateLimit(`import:${userId}`, 10, 60_000);
     if (!rl.ok) {
       throw new ApiError(429, `Too many import requests. Retry in ${rl.retryAfterSec}s.`);
     }
@@ -129,9 +129,7 @@ export async function POST(req: Request) {
           avgHr: activity.avgHr,
           maxHr: activity.maxHr,
           // The downsampled pace/HR track (issue #259), when the file had one.
-          ...(activity.track
-            ? { track: activity.track as unknown as Prisma.InputJsonValue }
-            : {}),
+          ...(activity.track ? { track: activity.track as unknown as Prisma.InputJsonValue } : {}),
           completedAt: finishedAt,
         },
       });

@@ -556,6 +556,17 @@ model TrainingRecommendation {
   @@index([userId, exerciseId, createdAt])
 }
 
+// Shared fixed-window rate limit buckets (G3, lib/rate-limit), used when
+// RATE_LIMIT_STORE=postgres so every app instance counts the same requests.
+// The key is a SHA-256 of the limiter key (some contain an e-mail).
+model RateLimitBucket {
+  keyHash String   @id
+  count   Int
+  resetAt DateTime
+
+  @@index([resetAt])
+}
+
 enum DeloadTrigger {
   RECOMMENDED
   MANUAL

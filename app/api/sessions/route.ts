@@ -8,6 +8,7 @@ import { cycleWeekAt, programCycle } from '@/lib/program-cycle';
 import { getUserTimeZone } from '@/lib/user-timezone';
 import { recordSessionRecommendations } from '@/lib/training-recommendations';
 import { Prisma } from '@/prisma/generated/client';
+import { log } from '@/lib/log';
 
 export async function GET() {
   try {
@@ -118,7 +119,7 @@ export async function POST(req: Request) {
       try {
         await recordSessionRecommendations(userId, created.id);
       } catch (recordErr) {
-        console.error('[sessions] recommendation record failed:', recordErr);
+        log.error('sessions.recommendation_record_failed', { err: recordErr });
       }
       return NextResponse.json(created, { status: 201 });
     } catch (err) {

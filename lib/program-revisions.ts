@@ -21,6 +21,7 @@ import {
   type ProgramDiff,
   type ProgramSnapshot,
 } from '@/lib/program-snapshot';
+import { log } from '@/lib/log';
 
 // Manual edits arrive one field at a time (add an exercise, change its sets,
 // rename the day...). Within this window they amend the latest version
@@ -70,7 +71,7 @@ export async function recordProgramRevision(
   try {
     return await recordWithRetry(programId, options);
   } catch (err) {
-    console.error('[program-revisions] could not record a version:', err);
+    log.error('program_revisions.record_failed', { err });
     return null;
   }
 }

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { Prisma } from '@/prisma/generated/client';
 import { getCurrentUserId } from '@/lib/auth';
+import { log } from '@/lib/log';
 
 // ============================================================
 // Helpers for the API routes
@@ -126,6 +127,6 @@ export function handleApiError(err: unknown): NextResponse {
     }
   }
 
-  console.error('[api] unhandled error:', err);
+  log.error('api.unhandled_error', { err });
   return NextResponse.json({ error: 'Server error.' }, { status: 500 });
 }

@@ -10,6 +10,7 @@ import {
   deleteSessionSetByMutationId,
   updateOwnedSet,
 } from '@/lib/set-mutations';
+import { log } from '@/lib/log';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -69,7 +70,7 @@ export async function POST(req: Request, props: Params) {
         if (err instanceof ApiError) {
           results.push({ key: item.key, status: err.status, error: err.message });
         } else {
-          console.error('[sets/batch] item failed:', err);
+          log.error('sets.batch.item_failed', { err });
           results.push({ key: item.key, status: 500, error: 'Server error.' });
         }
       }

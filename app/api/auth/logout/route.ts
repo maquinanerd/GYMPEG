@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { SESSION_COOKIE, verifySession } from '@/lib/auth-token';
 import { revokeAuthSession } from '@/lib/auth-session';
+import { log } from '@/lib/log';
 
 // POST /api/auth/logout: revokes this device's session server-side, so a
 // copied cookie stops working too, then clears the cookie. Public: replaying it
@@ -15,7 +16,7 @@ export async function POST() {
       await revokeAuthSession(claims.sid, claims.userId);
     } catch (err) {
       // Still clear the cookie: the user asked to leave this device.
-      console.error('[logout] revoke failed:', err);
+      log.error('auth.logout.revoke_failed', { err });
     }
   }
   jar.delete(SESSION_COOKIE);

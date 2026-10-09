@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
     // Shared "import:" bucket: GPX shares the same per-user import budget as the
     // CSV and TCX imports so a single user cannot fan out across formats.
-    const rl = rateLimit(`import:${userId}`, 10, 60_000);
+    const rl = await rateLimit(`import:${userId}`, 10, 60_000);
     if (!rl.ok) {
       throw new ApiError(429, `Too many import requests. Retry in ${rl.retryAfterSec}s.`);
     }
@@ -128,9 +128,7 @@ export async function POST(req: Request) {
           distanceM: activity.distanceM,
           avgHr: activity.avgHr,
           // The downsampled pace/HR track (issue #259), when the file had one.
-          ...(activity.track
-            ? { track: activity.track as unknown as Prisma.InputJsonValue }
-            : {}),
+          ...(activity.track ? { track: activity.track as unknown as Prisma.InputJsonValue } : {}),
           completedAt: finishedAt,
         },
       });

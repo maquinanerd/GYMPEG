@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   try {
     const userId = await requireApiUserId();
 
-    const rl = rateLimit(`chat:${userId}`, 30, 60_000);
+    const rl = await rateLimit(`chat:${userId}`, 30, 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: 'Too many messages. Please slow down.' },
@@ -93,8 +93,7 @@ export async function POST(req: Request) {
             controller.enqueue(encoder.encode(chunk));
           }
         } catch (err) {
-          const msg =
-            err instanceof LlmError ? err.message : 'The coach is unavailable right now.';
+          const msg = err instanceof LlmError ? err.message : 'The coach is unavailable right now.';
           controller.enqueue(encoder.encode(`\n\n[error] ${msg}`));
         } finally {
           if (assistant.trim()) {

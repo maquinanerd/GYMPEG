@@ -8,12 +8,13 @@ import { registerSchema } from '@/lib/schemas/auth';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
 import { isSignupAllowed } from '@/lib/signup-policy';
 import { ApiError, AUTH_JSON_BODY_MAX_BYTES, readJsonBodyOrNull } from '@/lib/api';
+import { log } from '@/lib/log';
 
 // POST /api/auth/register: creates an account, seeds the default exercise
 // catalog for it, and signs the user in. Public route (see middleware).
 export async function POST(req: Request) {
   try {
-    const rl = rateLimit(`register:${clientIp(req)}`, 5, 60_000);
+    const rl = await rateLimit(`register:${clientIp(req)}`, 5, 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: 'Too many attempts. Please try again later.' },
@@ -73,7 +74,7 @@ export async function POST(req: Request) {
     if (err instanceof ApiError) {
       return NextResponse.json({ error: err.message }, { status: err.status });
     }
-    console.error('[register] error:', err);
+    log.error('auth.register.failed', { err });
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }

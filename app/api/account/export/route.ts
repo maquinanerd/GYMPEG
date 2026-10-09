@@ -9,7 +9,7 @@ import { buildAccountExport } from '@/lib/account-export';
 export async function GET() {
   try {
     const userId = await requireApiUserId();
-    const rl = rateLimit(`account-export:${userId}`, 5, 60 * 60_000);
+    const rl = await rateLimit(`account-export:${userId}`, 5, 60 * 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: 'Too many exports. Please try again later.' },

@@ -16,7 +16,7 @@ const confirmSchema = z.object({
 // password from a reset link and signs the account out on every device.
 export async function POST(req: Request) {
   try {
-    const rl = rateLimit(`password-reset-confirm:${clientIp(req)}`, 10, 15 * 60_000);
+    const rl = await rateLimit(`password-reset-confirm:${clientIp(req)}`, 10, 15 * 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: 'Too many attempts. Please try again later.' },

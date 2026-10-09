@@ -6,6 +6,7 @@ import { resolveFinishedAt } from '@/lib/set-timing';
 import { usableExerciseWhere } from '@/lib/catalog/access';
 import { recordSessionPersonalRecords } from '@/lib/personal-records';
 import type { ExerciseSwaps } from '@/lib/session-swaps';
+import { log } from '@/lib/log';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -78,7 +79,7 @@ export async function PUT(req: Request, props: Params) {
       try {
         await recordSessionPersonalRecords(userId, updated.id);
       } catch (recordErr) {
-        console.error('[sessions] personal record update failed:', recordErr);
+        log.error('sessions.personal_records_failed', { err: recordErr });
       }
     }
     return NextResponse.json(updated);

@@ -94,6 +94,7 @@ Marque os segredos apenas como **runtime** (não "build variable"), para não fi
 | `S3_BUCKET` | nome do bucket privado | com `s3` |
 | `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` | token de API do R2 com leitura e escrita só nesse bucket | com `s3` |
 | `S3_REGION` | `auto` no R2 (padrão) | não |
+| `RATE_LIMIT_STORE` | `postgres` ao rodar mais de uma réplica (limites compartilhados) | com réplicas |
 
 Sem `EMAIL_PROVIDER`, a tela "Esqueceu a senha?" informa que o reset por e-mail não está disponível.
 

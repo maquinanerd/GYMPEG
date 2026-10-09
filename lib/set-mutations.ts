@@ -24,6 +24,7 @@ import { parseExerciseSwaps } from '@/lib/session-swaps';
 import { resolveSetEquipmentSnapshot } from '@/lib/set-equipment';
 import { acceptsSetAfterFinish, resolvePerformedAt } from '@/lib/set-timing';
 import { effectiveWeight } from '@/lib/stats';
+import { log } from '@/lib/log';
 
 export const SET_DELETED_MESSAGE = 'This set was deleted.';
 
@@ -155,7 +156,7 @@ export async function createSessionSet(
   try {
     await stampGoalIfAchieved(userId, exercise, created);
   } catch (stampErr) {
-    console.error('[sets] goal achievement stamping failed:', stampErr);
+    log.error('sets.goal_stamp_failed', { err: stampErr });
   }
   return { set: created, replayed: false };
 }

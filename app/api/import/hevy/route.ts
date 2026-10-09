@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     const userId = await requireApiUserId();
 
     // Shared budget with the Strong route: one import allowance per user.
-    const rl = rateLimit(`import:${userId}`, 10, 60_000);
+    const rl = await rateLimit(`import:${userId}`, 10, 60_000);
     if (!rl.ok) {
       throw new ApiError(429, `Too many import requests. Retry in ${rl.retryAfterSec}s.`);
     }
@@ -118,9 +118,7 @@ export async function POST(req: Request) {
         sessions: plan.sessions.length,
         sets: plan.totalSets,
         newExercises: plan.newExerciseNames,
-        existingSessionDates: [...existingSessionDates]
-          .filter((d) => dateKeys.includes(d))
-          .sort(),
+        existingSessionDates: [...existingSessionDates].filter((d) => dateKeys.includes(d)).sort(),
         ...common,
       });
     }

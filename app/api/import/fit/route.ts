@@ -97,9 +97,7 @@ async function confirmOne(userId: string, activity: FitActivity) {
         avgHr: activity.avgHr,
         maxHr: activity.maxHr,
         // The downsampled pace/HR track (issue #254), when the file carried one.
-        ...(activity.track
-          ? { track: activity.track as unknown as Prisma.InputJsonValue }
-          : {}),
+        ...(activity.track ? { track: activity.track as unknown as Prisma.InputJsonValue } : {}),
         completedAt: finishedAt,
       },
     });
@@ -124,7 +122,7 @@ export async function POST(req: Request) {
     const userId = await requireApiUserId();
 
     // Shared "import:" bucket: one charge per request (a batch counts once).
-    const rl = rateLimit(`import:${userId}`, 10, 60_000);
+    const rl = await rateLimit(`import:${userId}`, 10, 60_000);
     if (!rl.ok) {
       throw new ApiError(429, `Too many import requests. Retry in ${rl.retryAfterSec}s.`);
     }

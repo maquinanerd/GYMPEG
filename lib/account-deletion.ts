@@ -6,6 +6,7 @@
 import { createHash } from 'node:crypto';
 import { db } from '@/lib/db';
 import { deleteUserPhotoDir } from '@/lib/progress-photo';
+import { log } from '@/lib/log';
 
 export type DeletionCounts = Record<string, number>;
 
@@ -47,7 +48,7 @@ export async function deleteAccount(userId: string): Promise<DeletionCounts> {
   try {
     await deleteUserPhotoDir(userId);
   } catch (err) {
-    console.error('[account-deletion] photo files left on disk:', err);
+    log.error('account.deletion.photo_files_left', { err });
   }
   return counts;
 }

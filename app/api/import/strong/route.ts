@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   try {
     const userId = await requireApiUserId();
 
-    const rl = rateLimit(`import:${userId}`, 10, 60_000);
+    const rl = await rateLimit(`import:${userId}`, 10, 60_000);
     if (!rl.ok) {
       throw new ApiError(429, `Too many import requests. Retry in ${rl.retryAfterSec}s.`);
     }
@@ -116,9 +116,7 @@ export async function POST(req: Request) {
         sessions: plan.sessions.length,
         sets: plan.totalSets,
         newExercises: plan.newExerciseNames,
-        existingSessionDates: [...existingSessionDates]
-          .filter((d) => dateKeys.includes(d))
-          .sort(),
+        existingSessionDates: [...existingSessionDates].filter((d) => dateKeys.includes(d)).sort(),
         ...common,
       });
     }
@@ -131,10 +129,10 @@ export async function POST(req: Request) {
     // A multi-year export creates hundreds of sessions in sequential writes,
     // so the 5 s Prisma default timeout would abort exactly the imports this
     // feature exists for.
-    const result = await db.$transaction(
-      async (tx) => executeStrongImport(tx, userId, plan),
-      { timeout: 60_000, maxWait: 5_000 },
-    );
+    const result = await db.$transaction(async (tx) => executeStrongImport(tx, userId, plan), {
+      timeout: 60_000,
+      maxWait: 5_000,
+    });
 
     return NextResponse.json({
       mode: 'confirm',

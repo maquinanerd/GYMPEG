@@ -6,11 +6,7 @@ import { rateLimit } from '@/lib/rate-limit';
 import { generateProgram } from '@/lib/program-generation';
 
 const bodySchema = z.object({
-  goal: z
-    .string()
-    .trim()
-    .min(10, 'Describe your goal in a bit more detail.')
-    .max(2000),
+  goal: z.string().trim().min(10, 'Describe your goal in a bit more detail.').max(2000),
 });
 
 // POST /api/programs/generate: returns a structured program draft for the
@@ -18,7 +14,7 @@ const bodySchema = z.object({
 export async function POST(req: Request) {
   try {
     const userId = await requireApiUserId();
-    const rl = rateLimit(`generate:${userId}`, 10, 60_000);
+    const rl = await rateLimit(`generate:${userId}`, 10, 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: 'Too many generations. Please wait a moment.' },

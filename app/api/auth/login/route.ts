@@ -7,6 +7,7 @@ import { createAuthSession } from '@/lib/auth-session';
 import { verifyPassword } from '@/lib/password';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
 import { ApiError, AUTH_JSON_BODY_MAX_BYTES, readJsonBodyOrNull } from '@/lib/api';
+import { log } from '@/lib/log';
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -15,7 +16,7 @@ const loginSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    const rl = rateLimit(`login:${clientIp(req)}`, 10, 60_000);
+    const rl = await rateLimit(`login:${clientIp(req)}`, 10, 60_000);
     if (!rl.ok) {
       return NextResponse.json(
         { error: 'Too many attempts. Please try again later.' },
@@ -51,7 +52,7 @@ export async function POST(req: Request) {
     if (err instanceof ApiError) {
       return NextResponse.json({ error: err.message }, { status: err.status });
     }
-    console.error('[login] error:', err);
+    log.error('auth.login.failed', { err });
     return NextResponse.json({ error: 'Server error.' }, { status: 500 });
   }
 }

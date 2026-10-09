@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { rateLimit, resetRateLimits } from './rate-limit';
+import { rateLimitInMemory as rateLimit, resetRateLimits } from './rate-limit';
 
 beforeEach(() => resetRateLimits());
 
