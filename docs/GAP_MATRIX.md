@@ -27,7 +27,8 @@ Base: auditoria de 2026-10-08 ([00_OPEN_SOURCE_AUDIT.md](00_OPEN_SOURCE_AUDIT.md
 | 2026-10-09 | Treino sem rede (1.4 parte 2): iniciar e finalizar offline com id UUIDv7 do aparelho (início e fim idempotentes no servidor, horários do aparelho limitados); outbox por usuário (sessão → séries → fim, fim só depois das séries); pacote de treino no IndexedDB; página offline do service worker que roda a sessão a partir do aparelho; SW sem cache de HTML nem de `/api` autenticados (M6) | `45fd4a8`, `3f38b85` |
 | 2026-10-09 | Versões de programa (1.6 fatia A): `ProgramRevision` com snapshot e hash de conteúdo, gravada por todo caminho de escrita (REST, template, IA, coach, MCP, backup; trava em teste), edições em sequência agrupadas até um treino usar a versão, diff entre versões, restaurar como nova versão sem apagar histórico, treino ligado à versão que executou, linha de base para programas antigos na inicialização (M8 parcial) | `a54c278` |
 | 2026-10-09 | Próximo treino (1.6 fatia B): modo de agenda do programa (rotação em sequência ou por dia da semana no fuso do usuário), cartão "Próximo treino" no painel com início direto e motivo, treino sugerido em `/session/new`; o modo entra nas versões do programa | `60157ce` |
-| 2026-10-09 | Substituir só nesta sessão (1.6 fatia C): no menu do exercício, "Só neste treino" ou "também no programa"; a troca vale na hora, inclusive sem rede (outbox: início → trocas → séries → fim), últimos valores seguem o exercício novo e a série congela o alvo da linha substituída; programa e versões intactos | este commit |
+| 2026-10-09 | Substituir só nesta sessão (1.6 fatia C): no menu do exercício, "Só neste treino" ou "também no programa"; a troca vale na hora, inclusive sem rede (outbox: início → trocas → séries → fim), últimos valores seguem o exercício novo e a série congela o alvo da linha substituída; programa e versões intactos | `2916626` |
+| 2026-10-09 | Templates por catálogo (1.6 fatia D): os 32 exercícios usados nos 11 templates apontam para `slug` do catálogo, resolvido antes do nome ao montar o programa; o programa gerado aceita `catalogSlug` | este commit |
 
 Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (nonce); aquecimento gerado como séries WARMUP; exclusões com tombstone e push por agregado com resultado por item (ADR-004).
 
@@ -90,7 +91,7 @@ Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (n
 | Prescrição completa | sets, faixa, RIR, descanso, tempo, superset | + RPE, %1RM, AMRAP, drop/warm-up planejados, giant set | Campos + UI | P1 | M | B |
 | Substituir só nesta sessão | Sempre altera o programa | `WorkoutExercise` da sessão | ✓ `Session.exerciseSwaps` (linha do programa → exercício), funciona offline pelo outbox; a série herda o alvo da linha | P0 | M | M |
 | Onboarding | Perfil mínimo | Objetivo, experiência, disponibilidade, academia, preferências, evitados | Fluxo + `UserProfile`/`UserPreference` | P0 | M | B |
-| Templates de programa | 11, nomes divergentes do catálogo | Templates por `exerciseId` | Reescrever referências | P1 | S | M |
+| Templates de programa | 11, nomes divergentes do catálogo | Templates por `exerciseId` | ✓ cada exercício dos 11 templates aponta para um `slug` do catálogo (teste garante), resolvido antes do nome | P1 | S | M |
 
 ## Treino ativo e offline
 

@@ -23,6 +23,14 @@ import { MAX_SUPERSET_GROUP, MIN_SUPERSET_GROUP } from '@/lib/supersets';
 export const generatedExerciseSchema = z
   .object({
     name: z.string().trim().min(1).max(120),
+    // The global catalog exercise this entry is (data/catalog slug). Resolved
+    // first when the program is built; the name is the fallback. Templates
+    // always carry it.
+    catalogSlug: z
+      .string()
+      .max(80)
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+      .optional(),
     muscleGroup: z.nativeEnum(MuscleGroup),
     category: z.nativeEnum(ExerciseCategory),
     equipmentType: z.nativeEnum(EquipmentType).optional(),

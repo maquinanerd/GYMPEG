@@ -142,17 +142,28 @@ async function createGeneratedWorkout(
 
   let exerciseOrder = 1;
   for (const ex of w.exercises) {
-    // Catalog exercises are reused by name (pt-BR, aliases, legacy names);
-    // only unknown names become the user's custom exercise.
-    const { exercise } = await ensureUsableExercise(tx, userId, {
-      name: ex.name,
-      muscleGroup: ex.muscleGroup,
-      // A CARDIO machine is always logged as cardio (duration/distance),
-      // whatever category the model picked.
-      category: ex.equipmentType === 'CARDIO' ? 'CARDIO' : ex.category,
-      equipmentType: ex.equipmentType ?? 'OTHER',
-      defaultRestSec: ex.restSec,
-    });
+    // A catalog slug (templates) names the exercise exactly. Otherwise, or
+    // when the slug is retired, catalog exercises are reused by name (pt-BR,
+    // aliases, legacy names); only unknown names become the user's custom
+    // exercise.
+    const fromCatalog = ex.catalogSlug
+      ? await tx.exercise.findFirst({
+          where: { slug: ex.catalogSlug, userId: null, active: true },
+        })
+      : null;
+    const exercise =
+      fromCatalog ??
+      (
+        await ensureUsableExercise(tx, userId, {
+          name: ex.name,
+          muscleGroup: ex.muscleGroup,
+          // A CARDIO machine is always logged as cardio (duration/distance),
+          // whatever category the model picked.
+          category: ex.equipmentType === 'CARDIO' ? 'CARDIO' : ex.category,
+          equipmentType: ex.equipmentType ?? 'OTHER',
+          defaultRestSec: ex.restSec,
+        })
+      ).exercise;
 
     const autoregDefaults = defaultIntraSetConfig(exercise);
     await tx.programExercise.create({

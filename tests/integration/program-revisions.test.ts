@@ -157,6 +157,52 @@ describe('recording program versions', () => {
     expect(ranSnapshot.workouts[0]!.exercises[0]!.targetSets).toBe(3);
   });
 
+  it('builds template exercises on the catalog row named by their slug', async () => {
+    const user = await db.user.create({ data: { email: 'slug@test.dev', passwordHash: 'x' } });
+    mockUserId.mockResolvedValue(user.id);
+    const catalogSquat = await db.exercise.create({
+      data: {
+        userId: null,
+        slug: 'agachamento-livre-barra',
+        name: 'Barbell back squat',
+        muscleGroup: 'QUADS',
+        category: 'COMPOUND',
+      },
+    });
+
+    const { id } = await (
+      await fromTemplate(
+        jsonReq('POST', {
+          name: 'Slugged',
+          phase: 'Base',
+          workouts: [
+            {
+              name: 'Day A',
+              exercises: [
+                {
+                  // A name the catalog does not know: only the slug can match.
+                  name: 'Squat (template wording)',
+                  catalogSlug: 'agachamento-livre-barra',
+                  muscleGroup: 'QUADS',
+                  category: 'COMPOUND',
+                  targetSets: 3,
+                  targetRepsMin: 5,
+                  targetRepsMax: 8,
+                  targetRIR: 2,
+                  restSec: 180,
+                },
+              ],
+            },
+          ],
+        }),
+      )
+    ).json();
+
+    const rows = await db.programExercise.findMany({ where: { workout: { programId: id } } });
+    expect(rows.map((row) => row.exerciseId)).toEqual([catalogSquat.id]);
+    expect(await db.exercise.count({ where: { userId: user.id } })).toBe(0);
+  });
+
   it('labels the first version of a program built from a template', async () => {
     const user = await db.user.create({ data: { email: 'template@test.dev', passwordHash: 'x' } });
     mockUserId.mockResolvedValue(user.id);

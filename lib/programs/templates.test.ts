@@ -1,11 +1,26 @@
 import { describe, it, expect } from 'vitest';
-import {
-  programTemplates,
-  getTemplateBySlug,
-} from './templates';
+import { programTemplates, getTemplateBySlug, TEMPLATE_CATALOG_SLUGS } from './templates';
+import catalogData from '@/data/catalog/exercises.json';
 import { generatedProgramSchema } from '@/lib/schemas/program-generation';
 
 describe('program templates', () => {
+  it('points every exercise to an exercise of the curated catalog', () => {
+    const catalogSlugs = new Set(catalogData.exercises.map((exercise) => exercise.slug));
+    for (const template of programTemplates) {
+      for (const workout of template.program.workouts) {
+        for (const exercise of workout.exercises) {
+          expect(
+            exercise.catalogSlug && catalogSlugs.has(exercise.catalogSlug),
+            `${template.slug} / ${exercise.name}: "${exercise.catalogSlug}" is not in data/catalog`,
+          ).toBe(true);
+        }
+      }
+    }
+    expect(new Set(Object.values(TEMPLATE_CATALOG_SLUGS)).size).toBe(
+      Object.keys(TEMPLATE_CATALOG_SLUGS).length,
+    );
+  });
+
   it('ships at least the four required established programs', () => {
     // Issue #37 asks for 5/3/1, GZCLP, a PPL split and an Upper/Lower split.
     expect(programTemplates.length).toBeGreaterThanOrEqual(4);
