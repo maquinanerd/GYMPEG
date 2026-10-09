@@ -1,6 +1,16 @@
 # 10 — Deploy no Coolify
 
-Ambiente atual: Coolify 4.3.23, servidor `localhost`, GitHub App `git-arrobapeg` com acesso a `maquinanerd/GYMPEG`.
+Ambiente atual: Coolify 4.4.3, servidor `localhost`, GitHub App `git-arrobapeg` com acesso a `maquinanerd/GYMPEG`.
+
+## Recursos criados (2026-10-09, pela API do Coolify)
+
+| Recurso | Nome | UUID |
+|---|---|---|
+| Projeto | GYM Peg (ambiente `production`) | `nraby31za1qalujxlubbjwnc` |
+| Banco | `gympeg-postgres` (postgres:17-alpine, sem porta pública) | `ukxflpotnfj7e8xvbwxcobqk` |
+| Aplicação | `gympeg` → https://gympeg.62.171.164.224.sslip.io | `1cvbajtvdg1jgoa0lp9l8ki7` |
+
+Tudo abaixo já está configurado nesses recursos: as variáveis da tabela (com `DATABASE_URL` e `JWT_SECRET` só em runtime), o volume `/app/uploads`, o healthcheck, os 3 agendamentos de backup e o deploy automático a cada push em `main`. A injeção de variáveis como build args está desligada, porque o build não precisa de segredo. O MCP do Coolify só lê e faz deploy; criar recursos exige a API com um token de escrita.
 
 ## Topologia
 
