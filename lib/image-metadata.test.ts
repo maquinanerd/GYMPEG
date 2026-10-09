@@ -101,6 +101,30 @@ describe('stripImageMetadata: JPEG', () => {
   });
 });
 
+describe('stripImageMetadata: nothing to remove', () => {
+  it('returns the original bytes untouched', () => {
+    const plain = Uint8Array.from([0xff, 0xd8, ...jfif, ...scan]);
+    expect(stripImageMetadata(plain, 'image/jpeg')).toBe(plain);
+    // A WebP whose RIFF size is off is still not rewritten when nothing is removed.
+    const webp = Uint8Array.from([
+      ...ascii('RIFF'),
+      99,
+      0,
+      0,
+      0,
+      ...ascii('WEBP'),
+      ...ascii('VP8 '),
+      2,
+      0,
+      0,
+      0,
+      1,
+      2,
+    ]);
+    expect(stripImageMetadata(webp, 'image/webp')).toBe(webp);
+  });
+});
+
 describe('stripImageMetadata: PNG', () => {
   const chunk = (type: string, data: number[]) => [
     0,

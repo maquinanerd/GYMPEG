@@ -39,6 +39,7 @@ function stripJpeg(bytes: Uint8Array): Uint8Array {
   if (bytes[0] !== 0xff || bytes[1] !== 0xd8) throw new ImageMetadataError('Not a JPEG.');
   const kept: Uint8Array[] = [bytes.subarray(0, 2)];
   let orientation: number | null = null;
+  let changed = false;
   let offset = 2;
   while (offset < bytes.length) {
     // Past what can be parsed, the rest is kept as it is.
@@ -80,11 +81,16 @@ function stripJpeg(bytes: Uint8Array): Uint8Array {
     const segment = bytes.subarray(offset, end);
     if (marker === APP1) {
       orientation ??= exifOrientation(segment.subarray(4));
-    } else if (marker !== APP13 && marker !== COM) {
+      changed = true;
+    } else if (marker === APP13 || marker === COM) {
+      changed = true;
+    } else {
       kept.push(segment);
     }
     offset = end;
   }
+  // Nothing to remove: the original bytes, untouched.
+  if (!changed) return bytes;
   if (orientation != null && orientation !== 1) {
     // Right after SOI (and JFIF when present), as EXIF is expected to sit.
     const at = kept.length > 1 && kept[1]![1] === 0xe0 ? 2 : 1;
@@ -162,6 +168,7 @@ const PNG_DROPPED = new Set(['tEXt', 'zTXt', 'iTXt', 'eXIf', 'tIME']);
 
 function stripPng(bytes: Uint8Array): Uint8Array {
   const kept: Uint8Array[] = [bytes.subarray(0, 8)];
+  let changed = false;
   let offset = 8;
   while (offset < bytes.length) {
     if (offset + 12 > bytes.length) {
@@ -180,11 +187,12 @@ function stripPng(bytes: Uint8Array): Uint8Array {
       kept.push(bytes.subarray(offset));
       break;
     }
-    if (!PNG_DROPPED.has(type)) kept.push(bytes.subarray(offset, end));
+    if (PNG_DROPPED.has(type)) changed = true;
+    else kept.push(bytes.subarray(offset, end));
     offset = end;
     if (type === 'IEND') break;
   }
-  return concat(kept);
+  return changed ? concat(kept) : bytes;
 }
 
 // ---------- WebP ----------
@@ -195,6 +203,7 @@ const VP8X_XMP_FLAG = 0x04;
 function stripWebp(bytes: Uint8Array): Uint8Array {
   if (bytes.length < 12) return bytes;
   const kept: Uint8Array[] = [];
+  let changed = false;
   let offset = 12;
   while (offset + 8 <= bytes.length) {
     const type = String.fromCharCode(...bytes.subarray(offset, offset + 4));
@@ -207,12 +216,15 @@ function stripWebp(bytes: Uint8Array): Uint8Array {
     const end = offset + 8 + size + (size % 2);
     if (offset + 8 + size > bytes.length) break;
     const chunk = bytes.slice(offset, Math.min(end, bytes.length));
-    if (type === 'VP8X' && chunk.length > 8) {
+    if (type === 'VP8X' && chunk.length > 8 && chunk[8]! & (VP8X_EXIF_FLAG | VP8X_XMP_FLAG)) {
       chunk[8] = chunk[8]! & ~(VP8X_EXIF_FLAG | VP8X_XMP_FLAG);
+      changed = true;
     }
-    if (type !== 'EXIF' && type !== 'XMP ') kept.push(chunk);
+    if (type === 'EXIF' || type === 'XMP ') changed = true;
+    else kept.push(chunk);
     offset = end;
   }
+  if (!changed) return bytes;
   if (offset < bytes.length) kept.push(bytes.subarray(offset));
   const body = concat(kept);
   const riffSize = body.length + 4; // "WEBP" + chunks
