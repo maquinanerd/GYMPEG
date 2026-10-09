@@ -5,9 +5,14 @@
 # Uses `output: 'standalone'` from next.config.js, completed by a full production
 # node_modules (the Prisma 7 client and its migration CLI pull a dependency
 # closure that standalone tracing does not capture).
+#
+# The official Node image comes through the AWS ECR Public mirror of Docker
+# Official Images (same image): anonymous pulls from Docker Hub hit its rate
+# limit on shared CI runners. Override NODE_IMAGE to use another registry.
+ARG NODE_IMAGE=public.ecr.aws/docker/library/node:22-alpine
 
 # ---- Stage 1: deps (full install for the build) ----
-FROM node:22-alpine AS deps
+FROM ${NODE_IMAGE} AS deps
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
@@ -15,7 +20,7 @@ COPY package.json package-lock.json* ./
 RUN npm ci
 
 # ---- Stage 2: builder ----
-FROM node:22-alpine AS builder
+FROM ${NODE_IMAGE} AS builder
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
@@ -44,14 +49,14 @@ RUN npm run build
 # bcrypt #127 image bug recur), so the runner gets a real `npm ci --omit=dev`
 # tree: app runtime deps + the Prisma CLI + tsx (the demo reseed). bcrypt's
 # native binding is built here for the alpine target too.
-FROM node:22-alpine AS prod-deps
+FROM ${NODE_IMAGE} AS prod-deps
 RUN apk add --no-cache libc6-compat openssl python3 make g++
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci --omit=dev
 
 # ---- Stage 4: runner ----
-FROM node:22-alpine AS runner
+FROM ${NODE_IMAGE} AS runner
 RUN apk add --no-cache openssl
 WORKDIR /app
 
