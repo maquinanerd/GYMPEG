@@ -156,3 +156,13 @@ export async function deletePhotoFile(relPath: string): Promise<void> {
   const abs = await resolveInsideStorageDir(relPath);
   await rm(abs, { force: true });
 }
+
+// Removes a user's whole photo directory (account deletion), including files
+// no row points to any more. Same containment checks as a single file.
+export async function deleteUserPhotoDir(userId: string): Promise<void> {
+  if (!userId || userId.includes('/') || userId.includes('\\') || userId.startsWith('.')) {
+    throw new Error('Invalid user id for the photo directory.');
+  }
+  const abs = await resolveInsideStorageDir(userId);
+  await rm(abs, { recursive: true, force: true });
+}

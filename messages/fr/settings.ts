@@ -175,6 +175,34 @@ export const settings = {
     signedOut:
       '{count, plural, =0 {Aucun autre appareil n’était connecté.} one {# appareil déconnecté.} other {# appareils déconnectés.}}',
   },
+  privacy: {
+    title: 'Données et confidentialité',
+    exportTitle: 'Télécharger vos données',
+    exportDescription:
+      'Un ZIP avec tout ce que contient votre compte : profil, programmes et leurs versions, séances et séries, données corporelles, photos de progression, conversations et appareils. JSON pour les programmes, CSV pour les tableurs.',
+    exportAction: 'Télécharger mes données (ZIP)',
+    deleteTitle: 'Supprimer le compte',
+    deleteDescription:
+      'Efface votre compte et toutes ses données. Irréversible : téléchargez vos données avant si vous voulez les garder.',
+    deleteAction: 'Supprimer mon compte',
+    confirmTitle: 'Supprimer définitivement votre compte ?',
+    confirmDescription: 'Tout ce qui suit est effacé immédiatement et ne peut pas être récupéré.',
+    consequenceData:
+      'Programmes, séances, séries, objectifs, poids, mensurations et conversations.',
+    consequencePhotos: 'Photos de progression et images des équipements.',
+    consequenceDevices: 'Vous êtes déconnecté sur tous les appareils.',
+    passwordLabel: 'Mot de passe actuel',
+    emailLabel: 'Saisissez votre e-mail ({email}) pour confirmer',
+    confirmAction: 'Tout supprimer',
+    deleting: 'Suppression...',
+    cancel: 'Annuler',
+    emailMismatch: 'L’e-mail ne correspond pas à votre compte.',
+    wrongPassword: 'Le mot de passe est incorrect.',
+    tooManyAttempts: 'Trop de tentatives. Réessayez dans quelques minutes.',
+    deleteError: 'Impossible de supprimer le compte. Réessayez.',
+    readme:
+      'GYM Peg - vos données\n\ndata.json : tout ce que contient votre compte (profil, programmes avec leurs versions, séances avec leurs séries, objectifs, poids, mensurations, check-ins, conversations avec le coach, appareils et jetons d’assistant). Les mots de passe et secrets des jetons ne sont jamais inclus.\ncsv/ : votre historique d’entraînement, poids et mensurations, pour les tableurs.\nphotos/ : vos photos de progression.\ngym-equipment/ : les images des équipements de vos salles.\n',
+  },
   mcp: {
     title: 'ChatGPT et MCP',
     description:

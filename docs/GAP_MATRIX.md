@@ -29,7 +29,9 @@ Base: auditoria de 2026-10-08 ([00_OPEN_SOURCE_AUDIT.md](00_OPEN_SOURCE_AUDIT.md
 | 2026-10-09 | Próximo treino (1.6 fatia B): modo de agenda do programa (rotação em sequência ou por dia da semana no fuso do usuário), cartão "Próximo treino" no painel com início direto e motivo, treino sugerido em `/session/new`; o modo entra nas versões do programa | `60157ce` |
 | 2026-10-09 | Substituir só nesta sessão (1.6 fatia C): no menu do exercício, "Só neste treino" ou "também no programa"; a troca vale na hora, inclusive sem rede (outbox: início → trocas → séries → fim), últimos valores seguem o exercício novo e a série congela o alvo da linha substituída; programa e versões intactos | `2916626` |
 | 2026-10-09 | Templates por catálogo (1.6 fatia D): os 32 exercícios usados nos 11 templates apontam para `slug` do catálogo, resolvido antes do nome ao montar o programa; o programa gerado aceita `catalogSlug` | `0fa2e30` |
-| 2026-10-09 | Mesociclo (1.6 fatia E): ciclo de 2 a 12 semanas por calendário no fuso do usuário, "estou na semana X" posiciona o ciclo, semana de descarga com metade das séries, RIR +2 e carga reduzida; o treino guarda a semana, a série congela o alvo da descarga, o pacote offline aplica o mesmo; ciclo nas versões; semana atual no painel e no programa | este commit |
+| 2026-10-09 | Mesociclo (1.6 fatia E): ciclo de 2 a 12 semanas por calendário no fuso do usuário, "estou na semana X" posiciona o ciclo, semana de descarga com metade das séries, RIR +2 e carga reduzida; o treino guarda a semana, a série congela o alvo da descarga, o pacote offline aplica o mesmo; ciclo nas versões; semana atual no painel e no programa | `3885d4a` |
+| 2026-10-09 | App em produção no Coolify: projeto, PostgreSQL sem porta pública com 3 backups agendados, app com healthcheck, volume das fotos e deploy automático por push (criados pela API do Coolify) | `36824e8`, `79cf379` |
+| 2026-10-09 | Exclusão de conta e export (1.7, LGPD): excluir conta com senha e e-mail digitado, apagando todas as linhas e as fotos em disco e guardando só um registro anônimo (hash do id e contagens); export ZIP com `data.json` de todas as tabelas do usuário, CSVs e imagens, sem hashes de credenciais; registro único dos modelos do usuário com trava em teste (M4) | este commit |
 
 Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (nonce); aquecimento gerado como séries WARMUP; exclusões com tombstone e push por agregado com resultado por item (ADR-004).
 
@@ -42,8 +44,8 @@ Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (n
 | Sessão revogável | JWT 30 d stateless | Sessões em banco, logout real, "sair de todos" | Tabela `Session`/`AuthSession`, middleware | P0 | M | A |
 | Troca/reset de senha | Ausente | Troca autenticada + reset por e-mail | Fluxos + provedor de e-mail | P0 | M | M |
 | Controle de cadastro | Aberto | Convite/allowlist até o lançamento | Flag `SIGNUP_MODE` | P0 | S | A |
-| Exclusão de conta (LGPD) | Ausente; FKs RESTRICT | Exclusão completa e auditável | Migrar FKs para Cascade + rota + storage | P0 | M | A |
-| Export completo (LGPD) | Parcial | Todos os dados em JSON/CSV | Incluir medidas, fotos, metas, notas, track | P1 | M | M |
+| Exclusão de conta (LGPD) | Ausente; FKs RESTRICT | Exclusão completa e auditável | ✓ `lib/account-deletion` (ordem explícita onde não há cascade, fotos em disco, `AccountDeletion` anônimo) | P0 | M | A |
+| Export completo (LGPD) | Parcial | Todos os dados em JSON/CSV | ✓ `GET /api/account/export`: ZIP com todas as tabelas do usuário, CSVs e imagens | P1 | M | M |
 | Consentimento IA/dados de saúde | Ausente | Consentimento versionado antes de enviar dados à IA | `Consent` + gate nas rotas de IA | P1 | S | A |
 | Headers de segurança/CSP | Ausente | CSP, HSTS, frame-ancestors, Referrer-Policy | `headers()` no Next | P1 | S | M |
 | Limite de corpo JSON | Só em algumas rotas | `maxBytes` obrigatório | Tornar obrigatório em `parseJsonBody` | P1 | S | M |

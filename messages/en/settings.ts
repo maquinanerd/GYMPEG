@@ -172,6 +172,33 @@ export const settings = {
     signedOut:
       '{count, plural, =0 {No other device was signed in.} one {# device signed out.} other {# devices signed out.}}',
   },
+  privacy: {
+    title: 'Data and privacy',
+    exportTitle: 'Download your data',
+    exportDescription:
+      'A ZIP with everything your account holds: profile, programs and their versions, workouts and sets, body data, progress photos, conversations and devices. JSON for programs, CSV for spreadsheets.',
+    exportAction: 'Download my data (ZIP)',
+    deleteTitle: 'Delete account',
+    deleteDescription:
+      'Erases your account and every piece of data in it. This cannot be undone: download your data first if you want to keep it.',
+    deleteAction: 'Delete my account',
+    confirmTitle: 'Delete your account for good?',
+    confirmDescription: 'Everything below is erased right away and cannot be recovered.',
+    consequenceData: 'Programs, workouts, sets, goals, bodyweight, measurements and conversations.',
+    consequencePhotos: 'Progress photos and gym equipment images.',
+    consequenceDevices: 'You are signed out on every device.',
+    passwordLabel: 'Current password',
+    emailLabel: 'Type your e-mail ({email}) to confirm',
+    confirmAction: 'Delete everything',
+    deleting: 'Deleting...',
+    cancel: 'Cancel',
+    emailMismatch: 'The e-mail does not match your account.',
+    wrongPassword: 'The password is incorrect.',
+    tooManyAttempts: 'Too many attempts. Try again in a few minutes.',
+    deleteError: 'Could not delete the account. Try again.',
+    readme:
+      'GYM Peg - your data\n\ndata.json: everything your account holds (profile, programs with their versions, workouts with their sets, goals, bodyweight, measurements, check-ins, coach conversations, devices and assistant tokens). Passwords and token secrets are never included.\ncsv/: your training log, bodyweight and measurements, for spreadsheets.\nphotos/: your progress photos.\ngym-equipment/: the images of your gym equipment.\n',
+  },
   mcp: {
     title: 'ChatGPT and MCP',
     description:

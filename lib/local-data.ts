@@ -1,5 +1,5 @@
 import { countUnsyncedItems, flushPendingSets } from '@/lib/sync';
-import { deleteLocalDB } from '@/lib/indexeddb';
+import { deleteLocalDB, getDB } from '@/lib/indexeddb';
 import { setOutboxOwner } from '@/lib/outbox-owner';
 import { deleteTrainingPacks } from '@/lib/training-pack';
 
@@ -39,4 +39,29 @@ export async function clearLocalUserData(): Promise<{ keptPendingSets: number }>
   }
   setOutboxOwner(null);
   return { keptPendingSets };
+}
+
+// After the account was erased on the server: its outbox items have nowhere
+// to go any more, so they are dropped with the rest of its local data.
+// Another account's pending items on the same device stay.
+export async function clearDeletedAccountData(ownerId: string): Promise<void> {
+  if (typeof window === 'undefined') return;
+
+  if ('caches' in window) {
+    const keys = await caches.keys();
+    await Promise.all(
+      keys.filter((key) => !key.startsWith(PRECACHE_PREFIX)).map((key) => caches.delete(key)),
+    );
+  }
+
+  try {
+    const db = getDB();
+    await db.pendingSets.where('ownerId').equals(ownerId).delete();
+    await db.localSessions.where('ownerId').equals(ownerId).delete();
+    await db.trainingPacks.delete(ownerId);
+    if ((await countUnsyncedItems()) === 0) await deleteLocalDB();
+  } catch {
+    // IndexedDB unavailable (private mode, blocked): nothing stored to clear.
+  }
+  setOutboxOwner(null);
 }

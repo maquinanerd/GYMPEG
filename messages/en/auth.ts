@@ -9,6 +9,7 @@ export const auth = {
     noAccount: 'No account yet?',
     createAccount: 'Create one',
     error: 'Login error.',
+    accountDeleted: 'Your account and all its data were deleted.',
   },
   signup: {
     title: 'Create account',

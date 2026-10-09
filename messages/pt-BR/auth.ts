@@ -12,6 +12,7 @@ export const auth = {
     noAccount: 'Ainda não tem conta?',
     createAccount: 'Criar conta',
     error: 'Erro ao entrar.',
+    accountDeleted: 'Sua conta e todos os dados dela foram excluídos.',
   },
   signup: {
     title: 'Criar conta',

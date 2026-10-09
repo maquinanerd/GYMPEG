@@ -17,6 +17,8 @@ const NOT_STRUCTURAL: Record<string, string> = {
   'app/api/programs/[id]/activate/route.ts': 'only flips isActive, which is not part of a version',
   'app/api/programs/from-template/route.ts':
     'activates the program; buildProgramFromGenerated records its first version',
+  'lib/account-deletion.ts':
+    'erases the whole account: its programs go together with their versions (LGPD)',
   'lib/catalog/sync.ts':
     'points prescriptions from a merged legacy copy to the catalog exercise (same exercise)',
 };

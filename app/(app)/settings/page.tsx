@@ -9,6 +9,7 @@ import { ImportSection } from '@/components/settings/import-section';
 import { GymProfilesSection } from '@/components/settings/gym-profiles-section';
 import { McpSection } from '@/components/settings/mcp-section';
 import { SecuritySection } from '@/components/settings/security-section';
+import { PrivacySection } from '@/components/settings/privacy-section';
 import { DEFAULT_TIME_ZONE } from '@/lib/timezone';
 import { pickableExerciseWhere } from '@/lib/catalog/access';
 
@@ -114,6 +115,8 @@ export default async function SettingsPage() {
         />
 
         <SettingsClient />
+
+        <PrivacySection email={auth.email} />
       </div>
     </main>
   );

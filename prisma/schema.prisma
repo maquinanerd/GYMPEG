@@ -799,6 +799,16 @@ model ProgressPhoto {
   @@index([userId, takenAt])
 }
 
+// Proof that an account was erased (LGPD), keeping nothing about the person:
+// a one-way hash of the deleted user id, when, and how many rows of each kind
+// were removed (lib/account-deletion).
+model AccountDeletion {
+  id          String   @id @default(cuid())
+  subjectHash String   @unique
+  deletedAt   DateTime @default(now())
+  counts      Json
+}
+
 model CoachSession {
   id        String    @id @default(cuid())
   userId    String

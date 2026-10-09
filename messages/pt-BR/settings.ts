@@ -176,6 +176,33 @@ export const settings = {
     signedOut:
       '{count, plural, =0 {Nenhum outro dispositivo estava conectado.} one {# dispositivo desconectado.} other {# dispositivos desconectados.}}',
   },
+  privacy: {
+    title: 'Dados e privacidade',
+    exportTitle: 'Baixar seus dados',
+    exportDescription:
+      'Um ZIP com tudo o que sua conta guarda: perfil, programas e suas versões, treinos e séries, dados corporais, fotos de progresso, conversas e aparelhos. JSON para programas, CSV para planilhas.',
+    exportAction: 'Baixar meus dados (ZIP)',
+    deleteTitle: 'Excluir conta',
+    deleteDescription:
+      'Apaga sua conta e todos os dados dela. Não dá para desfazer: baixe seus dados antes se quiser guardá-los.',
+    deleteAction: 'Excluir minha conta',
+    confirmTitle: 'Excluir sua conta de vez?',
+    confirmDescription: 'Tudo abaixo é apagado na hora e não pode ser recuperado.',
+    consequenceData: 'Programas, treinos, séries, metas, peso, medidas e conversas.',
+    consequencePhotos: 'Fotos de progresso e imagens dos equipamentos.',
+    consequenceDevices: 'Você sai da conta em todos os aparelhos.',
+    passwordLabel: 'Senha atual',
+    emailLabel: 'Digite seu e-mail ({email}) para confirmar',
+    confirmAction: 'Excluir tudo',
+    deleting: 'Excluindo...',
+    cancel: 'Cancelar',
+    emailMismatch: 'O e-mail não confere com o da sua conta.',
+    wrongPassword: 'A senha está incorreta.',
+    tooManyAttempts: 'Muitas tentativas. Tente de novo em alguns minutos.',
+    deleteError: 'Não foi possível excluir a conta. Tente de novo.',
+    readme:
+      'GYM Peg - seus dados\n\ndata.json: tudo o que sua conta guarda (perfil, programas com suas versões, treinos com suas séries, metas, peso, medidas, check-ins, conversas com o coach, aparelhos e tokens de assistente). Senhas e segredos de tokens nunca são incluídos.\ncsv/: seu histórico de treino, peso e medidas, para planilhas.\nphotos/: suas fotos de progresso.\ngym-equipment/: as imagens dos equipamentos das suas academias.\n',
+  },
   mcp: {
     title: 'ChatGPT e MCP',
     description:

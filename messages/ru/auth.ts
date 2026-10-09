@@ -12,6 +12,7 @@ export const auth = {
     noAccount: 'Ещё нет аккаунта?',
     createAccount: 'Создать',
     error: 'Не удалось войти.',
+    accountDeleted: 'Ваш аккаунт и все его данные удалены.',
   },
   signup: {
     title: 'Создание аккаунта',
