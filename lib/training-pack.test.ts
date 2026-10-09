@@ -140,6 +140,42 @@ describe('runnerPropsFromPack', () => {
     });
   });
 
+  it('runs the deload week of the program cycle lighter', () => {
+    const cycled = pack({
+      timeZone: 'UTC',
+      workouts: [
+        {
+          workout: {
+            id: 'workout-1',
+            programId: 'program-1',
+            name: 'Push',
+            program: {
+              id: 'program-1',
+              name: 'Block',
+              cycleWeeks: 4,
+              cycleDeloadWeek: 4,
+              // Week 1 started on Monday 2026-09-14: 2026-10-09 is in week 4.
+              cycleAnchor: '2026-09-14T00:00:00.000Z',
+            },
+            exercises: [{ id: 'pe-1', exerciseId: 'bench', targetSets: 4, targetRIR: 2 }],
+          },
+          lastPerformances: {},
+          returnRecommendations: {},
+        },
+      ] as unknown as SessionPack['workouts'],
+    });
+
+    const props = runnerPropsFromPack(
+      stored(cycled),
+      localSession({ startedAt: Date.parse('2026-10-09T10:00:00Z') }),
+      GENERATED_AT,
+    )!;
+
+    expect(props.session.cycleWeek).toBe(4);
+    expect(props.deloadActive).toBe(true);
+    expect(props.session.workout!.exercises[0]).toMatchObject({ targetSets: 2, targetRIR: 4 });
+  });
+
   it('returns null when the pack does not hold the workout', () => {
     expect(
       runnerPropsFromPack(stored(), localSession({ workoutId: 'workout-new' }), GENERATED_AT),

@@ -9,6 +9,8 @@ import { db } from '@/lib/db';
 import { ApiError } from '@/lib/api';
 import { usableExerciseWhere } from '@/lib/catalog/access';
 import { findUsableExerciseByName } from '@/lib/catalog/resolve';
+import { anchorForCurrentWeek } from '@/lib/program-cycle';
+import { getUserTimeZone } from '@/lib/user-timezone';
 import { Prisma } from '@/prisma/generated/client';
 import type { ProgramRevision, ProgramRevisionSource } from '@/lib/prisma-client';
 import {
@@ -243,6 +245,15 @@ export async function restoreProgramRevision(
   if (!revision) throw new ApiError(404, 'Version not found.');
   const snapshot = programSnapshotSchema.parse(revision.snapshot);
   const exerciseIds = await resolveSnapshotExercises(userId, snapshot);
+  // The cycle's position on the calendar is not part of a version: a
+  // restored cycle keeps the current anchor, or starts at week 1 this week.
+  const program = await db.program.findUniqueOrThrow({
+    where: { id: programId },
+    select: { cycleAnchor: true },
+  });
+  const cycleAnchor = !snapshot.cycleWeeks
+    ? null
+    : (program.cycleAnchor ?? anchorForCurrentWeek(1, new Date(), await getUserTimeZone(userId)));
 
   await db.$transaction(async (tx) => {
     await tx.program.update({
@@ -252,6 +263,9 @@ export async function restoreProgramRevision(
         description: snapshot.description,
         phase: snapshot.phase,
         scheduleMode: snapshot.scheduleMode,
+        cycleWeeks: snapshot.cycleWeeks,
+        cycleDeloadWeek: snapshot.cycleDeloadWeek,
+        cycleAnchor,
       },
     });
     const current = await tx.workout.findMany({

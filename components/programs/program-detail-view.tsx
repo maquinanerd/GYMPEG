@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -15,6 +15,7 @@ import { ProgramDeleteButton } from '@/components/programs/program-delete-button
 import { WorkoutCard } from '@/components/programs/workout-card';
 import { WorkoutFormDialog } from '@/components/programs/workout-form-dialog';
 import { ProgramHistory } from '@/components/programs/program-history';
+import { cycleWeekAt, isDeloadWeek, programCycle } from '@/lib/program-cycle';
 import { useTrainingName } from '@/components/shared/use-training-name';
 
 type ProgramExerciseWithExercise = ProgramExercise & { exercise: Exercise };
@@ -34,6 +35,15 @@ export function ProgramDetailView({ program, catalog }: Props) {
   const [editOpen, setEditOpen] = useState(false);
   const [addWorkoutOpen, setAddWorkoutOpen] = useState(false);
   const [activating, setActivating] = useState(false);
+  const cycle = programCycle(program);
+  // Computed after mount: the server and the device may sit in other zones.
+  const [cycleWeek, setCycleWeek] = useState<number | null>(null);
+  useEffect(() => {
+    if (!cycle) return;
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+    setCycleWeek(cycleWeekAt(cycle, new Date(), zone));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [program.cycleWeeks, program.cycleAnchor]);
 
   async function toggleActive() {
     setActivating(true);
@@ -69,6 +79,13 @@ export function ProgramDetailView({ program, catalog }: Props) {
             <div className="min-w-0">
               <CardTitle className="text-xl">{trainingName(program.name)}</CardTitle>
               <CardDescription>{program.phase}</CardDescription>
+              {cycle && (
+                <p data-testid="program-cycle" className="mt-1 text-sm text-muted-foreground">
+                  {cycleWeek && isDeloadWeek(cycle, cycleWeek)
+                    ? t('cycle.statusDeload', { week: cycleWeek, weeks: cycle.weeks })
+                    : t('cycle.status', { week: cycleWeek ?? 1, weeks: cycle.weeks })}
+                </p>
+              )}
             </div>
             {program.isActive && <Badge>{t('active')}</Badge>}
           </div>

@@ -25,6 +25,21 @@ export const programs = {
   programNamePlaceholder: 'например: Гипертрофия 2026 - фаза 1',
   phase: 'Фаза',
   phasePlaceholder: 'например: гипертрофия, сила, метаболический стресс',
+  cycle: {
+    label: 'Цикл (мезоцикл)',
+    none: 'Без цикла',
+    noneHint: 'Каждую неделю одинаковые назначения.',
+    weeks: '{count, plural, one {# неделя} few {# недели} many {# недель} other {# недели}}',
+    currentWeek: 'Текущая неделя',
+    week: 'Неделя {week}',
+    deloadWeek: 'Разгрузочная неделя',
+    noDeload: 'Нет',
+    hint: 'Программа повторяется каждые {count} недель.',
+    hintDeload:
+      'Программа повторяется каждые {count} недель. В разгрузочную неделю: вдвое меньше подходов, на 2 повторения больше в запасе и меньший вес.',
+    status: 'Неделя {week} из {weeks}',
+    statusDeload: 'Неделя {week} из {weeks} · разгрузка',
+  },
   schedule: {
     label: 'Следующая тренировка',
     ROTATION: 'По очереди (ротация)',
@@ -209,6 +224,8 @@ export const programs = {
       fatigueRate: 'Скорость утомления',
       loadAdjustmentPct: 'Коррекция нагрузки (%)',
       scheduleMode: 'Следующая тренировка',
+      cycleWeeks: 'Цикл (недели)',
+      cycleDeloadWeek: 'Разгрузочная неделя',
     },
     autoregulation: {
       PRESERVE_RIR: 'Сохранять RIR',

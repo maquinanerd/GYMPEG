@@ -6,6 +6,7 @@ import { LocalSessionRunner } from '@/components/session/local-session-runner';
 import { liveSessionGymInclude } from '@/lib/session-gym-selection';
 import { usableExerciseWhere } from '@/lib/catalog/access';
 import { applyExerciseSwaps, parseExerciseSwaps } from '@/lib/session-swaps';
+import { isDeloadWeek, prescriptionsForWeek, programCycle } from '@/lib/program-cycle';
 import {
   loadRunnerProfile,
   loadWorkoutContext,
@@ -59,12 +60,21 @@ export default async function SessionRunPage(props: Props) {
           where: { id: { in: swapIds }, ...usableExerciseWhere(auth.userId) },
         })
       : [];
+  // The deload week of the program's cycle runs every prescription lighter
+  // and steps the suggested load down (planned-deload rule).
+  const cycle = programCycle(session.workout.program);
+  const deloadWeek =
+    cycle != null && session.cycleWeek != null && isDeloadWeek(cycle, session.cycleWeek);
   const workout = {
     ...session.workout,
-    exercises: applyExerciseSwaps(
-      session.workout.exercises,
-      swaps,
-      new Map(swappedExercises.map((exercise) => [exercise.id, exercise])),
+    exercises: prescriptionsForWeek(
+      applyExerciseSwaps(
+        session.workout.exercises,
+        swaps,
+        new Map(swappedExercises.map((exercise) => [exercise.id, exercise])),
+      ),
+      cycle,
+      session.cycleWeek,
     ),
   };
 
@@ -84,7 +94,7 @@ export default async function SessionRunPage(props: Props) {
       lastPerformances={context.lastPerformances}
       returnRecommendations={context.returnRecommendations}
       readiness={profile.readiness}
-      deloadActive={profile.deloadActive}
+      deloadActive={profile.deloadActive || deloadWeek}
       unit={profile.unit}
       initialProgramExerciseId={searchParams.programExerciseId}
       catalog={profile.catalog}

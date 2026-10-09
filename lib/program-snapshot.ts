@@ -40,6 +40,9 @@ export const programSnapshotSchema = z.object({
   phase: z.string(),
   // Absent in versions recorded before schedules existed: a rotation.
   scheduleMode: z.enum(['ROTATION', 'FIXED_DAYS']).default('ROTATION'),
+  // Mesocycle; absent in versions recorded before cycles existed: none.
+  cycleWeeks: z.number().nullable().default(null),
+  cycleDeloadWeek: z.number().nullable().default(null),
   workouts: z.array(snapshotWorkoutSchema),
 });
 
@@ -53,6 +56,8 @@ export interface ProgramForSnapshot {
   description: string | null;
   phase: string;
   scheduleMode: ProgramSchedule;
+  cycleWeeks: number | null;
+  cycleDeloadWeek: number | null;
   workouts: Array<{
     id: string;
     name: string;
@@ -85,6 +90,8 @@ export function buildProgramSnapshot(program: ProgramForSnapshot): ProgramSnapsh
     description: program.description,
     phase: program.phase,
     scheduleMode: program.scheduleMode,
+    cycleWeeks: program.cycleWeeks,
+    cycleDeloadWeek: program.cycleWeeks ? program.cycleDeloadWeek : null,
     workouts: [...program.workouts]
       .sort((a, b) => a.order - b.order)
       .map((workout) => ({
@@ -126,6 +133,9 @@ export function snapshotContent(snapshot: ProgramSnapshot): string {
     // Only when not the default, so programs recorded before schedules
     // existed keep their content hash.
     ...(snapshot.scheduleMode !== 'ROTATION' ? { scheduleMode: snapshot.scheduleMode } : {}),
+    ...(snapshot.cycleWeeks
+      ? { cycleWeeks: snapshot.cycleWeeks, cycleDeloadWeek: snapshot.cycleDeloadWeek }
+      : {}),
     workouts: snapshot.workouts.map((workout) => ({
       name: workout.name,
       dayOfWeek: workout.dayOfWeek,
@@ -182,7 +192,14 @@ export interface ProgramDiff {
   workoutsChanged: WorkoutChange[];
 }
 
-const PROGRAM_FIELDS = ['name', 'description', 'phase', 'scheduleMode'] as const;
+const PROGRAM_FIELDS = [
+  'name',
+  'description',
+  'phase',
+  'scheduleMode',
+  'cycleWeeks',
+  'cycleDeloadWeek',
+] as const;
 const WORKOUT_FIELDS = ['dayOfWeek'] as const;
 const EXERCISE_FIELDS = [
   'targetSets',

@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { getHomeInsight } from '@/lib/home-insight';
 import { getTrainingDisplayName } from '@/i18n/training-names';
 import { suggestNextWorkout } from '@/lib/next-workout-query';
+import { cycleWeekAt, isDeloadWeek, programCycle } from '@/lib/program-cycle';
+import { getUserTimeZone } from '@/lib/user-timezone';
 import { StartWorkoutButton } from '@/components/session/start-workout-button';
 
 const DAY_KEYS = [
@@ -81,6 +83,17 @@ export default async function DashboardPage() {
         : lastWorkoutName
           ? t('nextAfter', { name: getTrainingDisplayName(lastWorkoutName, locale) })
           : t('nextFirst');
+  // Week of the program's cycle, when it has one.
+  const cycle = activeProgram ? programCycle(activeProgram) : null;
+  const cycleWeek = cycle
+    ? cycleWeekAt(cycle, new Date(), await getUserTimeZone(session.userId))
+    : null;
+  const cycleLine =
+    cycle && cycleWeek
+      ? isDeloadWeek(cycle, cycleWeek)
+        ? t('cycleDeload', { week: cycleWeek, weeks: cycle.weeks })
+        : t('cycleWeek', { week: cycleWeek, weeks: cycle.weeks })
+      : null;
 
   return (
     <main className="flex-1 px-4 py-6">
@@ -188,6 +201,11 @@ export default async function DashboardPage() {
                       name: getTrainingDisplayName(activeProgram.name, locale),
                     })}
                   </CardDescription>
+                  {cycleLine && (
+                    <p data-testid="cycle-week" className="text-sm font-medium">
+                      {cycleLine}
+                    </p>
+                  )}
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
                   <StartWorkoutButton workoutId={nextWorkout.id} />

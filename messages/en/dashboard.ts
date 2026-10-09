@@ -22,6 +22,8 @@ export const dashboard = {
   nextUpcoming: 'Rest day today · next on {day}, in {count, plural, one {# day} other {# days}}',
   chooseOther: 'Choose another workout',
   nextBadge: 'Next',
+  cycleWeek: 'Week {week} of {weeks}',
+  cycleDeload: 'Week {week} of {weeks} · deload: lighter sets and load',
   programSessions: 'Program sessions',
   insight: {
     deloadTitle: 'Recovery may be due',

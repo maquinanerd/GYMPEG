@@ -45,6 +45,8 @@ function program(overrides: Partial<ProgramForSnapshot> = {}): ProgramForSnapsho
     description: null,
     phase: 'Base',
     scheduleMode: 'ROTATION',
+    cycleWeeks: null,
+    cycleDeloadWeek: null,
     workouts: [
       {
         id: 'w-upper',
@@ -108,8 +110,26 @@ describe('snapshotContent', () => {
     expect(snapshotContent(heavier)).not.toBe(snapshotContent(base()));
   });
 
-  it('keeps the hash of versions recorded before schedules existed', () => {
-    const legacy = programSnapshotSchema.parse({ ...base(), scheduleMode: undefined });
+  it('records the cycle and its deload week as part of the program', () => {
+    const cycled = edit((snapshot) => {
+      snapshot.cycleWeeks = 4;
+      snapshot.cycleDeloadWeek = 4;
+    });
+    expect(snapshotContent(cycled)).not.toBe(snapshotContent(base()));
+    expect(diffProgramSnapshots(base(), cycled).fields).toEqual([
+      { field: 'cycleWeeks', from: null, to: 4 },
+      { field: 'cycleDeloadWeek', from: null, to: 4 },
+    ]);
+  });
+
+  it('keeps the hash of versions recorded before schedules and cycles existed', () => {
+    const legacy = programSnapshotSchema.parse({
+      ...base(),
+      scheduleMode: undefined,
+      cycleWeeks: undefined,
+      cycleDeloadWeek: undefined,
+    });
+    expect(legacy.cycleWeeks).toBeNull();
     expect(legacy.scheduleMode).toBe('ROTATION');
     expect(snapshotContent(legacy)).toBe(snapshotContent(base()));
     const byDays = edit((snapshot) => {

@@ -24,6 +24,21 @@ export const programs = {
   programNamePlaceholder: 'ex. Hypertrophie 2026 - Phase 1',
   phase: 'Phase',
   phasePlaceholder: 'ex. Hypertrophie, Force, Stress métabolique',
+  cycle: {
+    label: 'Cycle (mésocycle)',
+    none: 'Pas de cycle',
+    noneHint: 'Chaque semaine suit les mêmes prescriptions.',
+    weeks: '{count} semaines',
+    currentWeek: 'Semaine en cours',
+    week: 'Semaine {week}',
+    deloadWeek: 'Semaine de décharge',
+    noDeload: 'Aucune',
+    hint: 'Le programme se répète toutes les {count} semaines.',
+    hintDeload:
+      'Le programme se répète toutes les {count} semaines. Semaine de décharge : moitié des séries, 2 répétitions de plus en réserve et une charge plus légère.',
+    status: 'Semaine {week} sur {weeks}',
+    statusDeload: 'Semaine {week} sur {weeks} · décharge',
+  },
   schedule: {
     label: 'Prochaine séance',
     ROTATION: 'En séquence (rotation)',
@@ -210,6 +225,8 @@ export const programs = {
       fatigueRate: 'Taux de fatigue',
       loadAdjustmentPct: 'Ajustement de charge (%)',
       scheduleMode: 'Prochaine séance',
+      cycleWeeks: 'Cycle (semaines)',
+      cycleDeloadWeek: 'Semaine de décharge',
     },
     autoregulation: {
       PRESERVE_RIR: 'Garder le RIR',

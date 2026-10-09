@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { handleApiError, requireApiUserId } from '@/lib/api';
 import { liveSessionGymInclude } from '@/lib/session-gym-selection';
+import { getUserTimeZone } from '@/lib/user-timezone';
 import {
   loadRunnerProfile,
   loadWorkoutContext,
@@ -59,6 +60,8 @@ async function buildSessionPack(userId: string, now: Date) {
 
   return {
     generatedAt: now.toISOString(),
+    // For the week of the program's cycle a session started offline is in.
+    timeZone: await getUserTimeZone(userId),
     program: program ? { id: program.id, name: program.name } : null,
     unit: profile.unit,
     deloadActive: profile.deloadActive,

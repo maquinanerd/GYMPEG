@@ -4,6 +4,8 @@ import { sessionStartSchema } from '@/lib/schemas/session';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { resolveStartedAt } from '@/lib/set-timing';
 import { currentProgramRevisionId } from '@/lib/program-revisions';
+import { cycleWeekAt, programCycle } from '@/lib/program-cycle';
+import { getUserTimeZone } from '@/lib/user-timezone';
 import { Prisma } from '@/prisma/generated/client';
 
 export async function GET() {
@@ -50,6 +52,9 @@ export async function POST(req: Request) {
 
     const workout = await db.workout.findFirst({
       where: { id: workoutId, program: { userId } },
+      include: {
+        program: { select: { cycleWeeks: true, cycleDeloadWeek: true, cycleAnchor: true } },
+      },
     });
     if (!workout) {
       throw new ApiError(404, 'Session not found.');
@@ -86,6 +91,12 @@ export async function POST(req: Request) {
 
     // The program version this session runs: the plan as it is right now.
     const programRevisionId = await currentProgramRevisionId(workout.programId);
+    // ... and the week of the program's cycle it falls in.
+    const sessionStart = resolveStartedAt(startedAt, new Date());
+    const cycle = programCycle(workout.program);
+    const cycleWeek = cycle
+      ? cycleWeekAt(cycle, sessionStart, await getUserTimeZone(userId))
+      : null;
 
     try {
       const created = await db.session.create({
@@ -95,8 +106,9 @@ export async function POST(req: Request) {
           workoutId,
           programId: workout.programId,
           programRevisionId,
+          cycleWeek,
           gymId: selectedGymId,
-          startedAt: resolveStartedAt(startedAt, new Date()),
+          startedAt: sessionStart,
         },
       });
       return NextResponse.json(created, { status: 201 });

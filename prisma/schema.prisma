@@ -397,6 +397,12 @@ model Program {
   // How the next workout is chosen (lib/next-workout): in sequence after the
   // last one done, or by the weekday set on each workout.
   scheduleMode ProgramSchedule @default(ROTATION)
+  // Mesocycle (lib/program-cycle): the program repeats over cycleWeeks
+  // calendar weeks counted from cycleAnchor (the Monday of week 1);
+  // cycleDeloadWeek is run lighter. Null cycleWeeks = no cycle.
+  cycleWeeks      Int?
+  cycleDeloadWeek Int?
+  cycleAnchor     DateTime?
   isActive    Boolean   @default(false)
   startDate   DateTime  @default(now())
   endDate     DateTime?
@@ -524,6 +530,9 @@ model Session {
   // Exercises replaced only for this session (lib/session-swaps): a map of
   // ProgramExercise id -> Exercise id. The saved program does not change.
   exerciseSwaps Json?
+  // Week of the program's cycle the session ran in (set at start), when the
+  // program has one.
+  cycleWeek     Int?
   sets       Set[]
 
   @@index([userId, startedAt])

@@ -28,7 +28,8 @@ Base: auditoria de 2026-10-08 ([00_OPEN_SOURCE_AUDIT.md](00_OPEN_SOURCE_AUDIT.md
 | 2026-10-09 | Versões de programa (1.6 fatia A): `ProgramRevision` com snapshot e hash de conteúdo, gravada por todo caminho de escrita (REST, template, IA, coach, MCP, backup; trava em teste), edições em sequência agrupadas até um treino usar a versão, diff entre versões, restaurar como nova versão sem apagar histórico, treino ligado à versão que executou, linha de base para programas antigos na inicialização (M8 parcial) | `a54c278` |
 | 2026-10-09 | Próximo treino (1.6 fatia B): modo de agenda do programa (rotação em sequência ou por dia da semana no fuso do usuário), cartão "Próximo treino" no painel com início direto e motivo, treino sugerido em `/session/new`; o modo entra nas versões do programa | `60157ce` |
 | 2026-10-09 | Substituir só nesta sessão (1.6 fatia C): no menu do exercício, "Só neste treino" ou "também no programa"; a troca vale na hora, inclusive sem rede (outbox: início → trocas → séries → fim), últimos valores seguem o exercício novo e a série congela o alvo da linha substituída; programa e versões intactos | `2916626` |
-| 2026-10-09 | Templates por catálogo (1.6 fatia D): os 32 exercícios usados nos 11 templates apontam para `slug` do catálogo, resolvido antes do nome ao montar o programa; o programa gerado aceita `catalogSlug` | este commit |
+| 2026-10-09 | Templates por catálogo (1.6 fatia D): os 32 exercícios usados nos 11 templates apontam para `slug` do catálogo, resolvido antes do nome ao montar o programa; o programa gerado aceita `catalogSlug` | `0fa2e30` |
+| 2026-10-09 | Mesociclo (1.6 fatia E): ciclo de 2 a 12 semanas por calendário no fuso do usuário, "estou na semana X" posiciona o ciclo, semana de descarga com metade das séries, RIR +2 e carga reduzida; o treino guarda a semana, a série congela o alvo da descarga, o pacote offline aplica o mesmo; ciclo nas versões; semana atual no painel e no programa | este commit |
 
 Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (nonce); aquecimento gerado como séries WARMUP; exclusões com tombstone e push por agregado com resultado por item (ADR-004).
 
@@ -85,7 +86,7 @@ Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (n
 
 | Feature | Atual | Alvo | Gap | Prio | Esforço | Risco |
 |---|---|---|---|---|---|---|
-| Hierarquia de programa | Program → Workout → ProgramExercise | Program → Phase → Week → Template → Prescription | Novos níveis, migração | P0 | L | A |
+| Hierarquia de programa | Program → Workout → ProgramExercise | Program → Phase → Week → Template → Prescription | ⏳ mesociclo leve feito (ciclo de N semanas com semana de descarga sobre a estrutura atual); fases e semanas com prescrições próprias ficam para depois | P0 | L | A |
 | `ProgramRevision` | Ausente (sobrescreve) | Versões imutáveis, diff, rollback | ✓ snapshot por versão em todo caminho de escrita (trava em teste), diff, restaurar como nova versão, `Session.programRevisionId` | P0 | M | A |
 | Próximo treino / rotação | Escolha manual | Sequência rotativa ou dias fixos | ✓ `Program.scheduleMode` (rotação ou dia da semana, no fuso do usuário), cartão "Próximo treino" no painel, sugestão em `/session/new` | P0 | M | M |
 | Prescrição completa | sets, faixa, RIR, descanso, tempo, superset | + RPE, %1RM, AMRAP, drop/warm-up planejados, giant set | Campos + UI | P1 | M | B |

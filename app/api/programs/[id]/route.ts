@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { programInputSchema } from '@/lib/schemas/program';
+import { programInputSchema, type ProgramInput } from '@/lib/schemas/program';
+import { anchorForCurrentWeek } from '@/lib/program-cycle';
+import { getUserTimeZone } from '@/lib/user-timezone';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { recordProgramRevision } from '@/lib/program-revisions';
 
@@ -49,6 +51,7 @@ export async function PUT(req: Request, props: Params) {
         phase: data.phase,
         description: data.description ?? null,
         ...(data.scheduleMode ? { scheduleMode: data.scheduleMode } : {}),
+        ...(await cycleUpdate(userId, params.id, data)),
       },
     });
     await recordProgramRevision(program.id, { source: 'USER' });
@@ -56,6 +59,30 @@ export async function PUT(req: Request, props: Params) {
   } catch (err) {
     return handleApiError(err);
   }
+}
+
+// The cycle columns to write: none when the request does not touch the
+// cycle, all cleared when it removes it. The anchor moves only when the
+// lifter says which week they are in (or the cycle is new).
+async function cycleUpdate(userId: string, programId: string, data: ProgramInput) {
+  if (data.cycleWeeks === undefined) return {};
+  if (data.cycleWeeks === null) {
+    return { cycleWeeks: null, cycleDeloadWeek: null, cycleAnchor: null };
+  }
+  const current = await db.program.findFirst({
+    where: { id: programId, userId },
+    select: { cycleAnchor: true },
+  });
+  const timeZone = await getUserTimeZone(userId);
+  const cycleAnchor =
+    data.cycleCurrentWeek != null || !current?.cycleAnchor
+      ? anchorForCurrentWeek(data.cycleCurrentWeek ?? 1, new Date(), timeZone)
+      : current.cycleAnchor;
+  return {
+    cycleWeeks: data.cycleWeeks,
+    cycleDeloadWeek: data.cycleDeloadWeek ?? null,
+    cycleAnchor,
+  };
 }
 
 export async function DELETE(_req: Request, props: Params) {

@@ -10,6 +10,7 @@ import { acceptsSetAfterFinish, resolvePerformedAt } from '@/lib/set-timing';
 import { Prisma } from '@/prisma/generated/client';
 import { usableExerciseWhere } from '@/lib/catalog/access';
 import { parseExerciseSwaps } from '@/lib/session-swaps';
+import { deloadPrescription, isDeloadWeek, programCycle } from '@/lib/program-cycle';
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -87,9 +88,13 @@ export async function POST(req: Request, props: Params) {
             ...(swappedRowId ? { id: swappedRowId } : { exerciseId: data.exerciseId }),
           },
           orderBy: { order: 'asc' },
-          select: { targetRepsMin: true, targetRepsMax: true, targetRIR: true },
+          select: { targetRepsMin: true, targetRepsMax: true, targetRIR: true, targetSets: true },
         })
       : null;
+    // In the deload week of the program's cycle the session ran a lighter
+    // prescription: that is the target the set was logged against.
+    const deloadWeek = await sessionInDeloadWeek(session);
+    const target = prescription && deloadWeek ? deloadPrescription(prescription) : prescription;
     // Bodyweight at log time for bodyweight exercises.
     const bodyweightKgSnapshot = exercise.usesBodyweight
       ? ((await db.user.findUnique({ where: { id: userId }, select: { bodyweight: true } }))
@@ -124,9 +129,9 @@ export async function POST(req: Request, props: Params) {
             notes: data.notes ?? null,
             ...kind,
             rpe: isCardio ? null : (data.rpe ?? null),
-            targetRepsMin: isCardio ? null : (prescription?.targetRepsMin ?? null),
-            targetRepsMax: isCardio ? null : (prescription?.targetRepsMax ?? null),
-            targetRir: isCardio ? null : (prescription?.targetRIR ?? null),
+            targetRepsMin: isCardio ? null : (target?.targetRepsMin ?? null),
+            targetRepsMax: isCardio ? null : (target?.targetRepsMax ?? null),
+            targetRir: isCardio ? null : (target?.targetRIR ?? null),
             bodyweightKgSnapshot,
             clientMutationId: data.clientMutationId ?? null,
             completedAt: performedAt,
@@ -167,6 +172,19 @@ export async function POST(req: Request, props: Params) {
   } catch (err) {
     return handleApiError(err);
   }
+}
+
+async function sessionInDeloadWeek(session: {
+  programId: string | null;
+  cycleWeek: number | null;
+}): Promise<boolean> {
+  if (!session.programId || session.cycleWeek == null) return false;
+  const program = await db.program.findUnique({
+    where: { id: session.programId },
+    select: { cycleWeeks: true, cycleDeloadWeek: true, cycleAnchor: true },
+  });
+  const cycle = program ? programCycle(program) : null;
+  return cycle != null && isDeloadWeek(cycle, session.cycleWeek);
 }
 
 // Per-exercise goal (issue #90): when a freshly logged working set meets an

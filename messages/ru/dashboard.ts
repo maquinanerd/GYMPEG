@@ -26,6 +26,8 @@ export const dashboard = {
     'Сегодня отдых · следующая: {day}, через {count, plural, one {# день} few {# дня} many {# дней} other {# дня}}',
   chooseOther: 'Выбрать другую тренировку',
   nextBadge: 'Следующая',
+  cycleWeek: 'Неделя {week} из {weeks}',
+  cycleDeload: 'Неделя {week} из {weeks} · разгрузка: меньше подходов и вес',
   programSessions: 'Тренировки программы',
   insight: {
     deloadTitle: 'Похоже, пора восстановиться',

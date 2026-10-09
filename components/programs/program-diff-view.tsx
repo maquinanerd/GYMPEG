@@ -23,6 +23,8 @@ const FIELD_KEYS = [
   'description',
   'phase',
   'scheduleMode',
+  'cycleWeeks',
+  'cycleDeloadWeek',
   'dayOfWeek',
   'targetSets',
   'targetRepsMin',

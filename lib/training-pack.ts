@@ -12,6 +12,7 @@ import { getDB, type LocalSession, type StoredTrainingPack } from '@/lib/indexed
 import { getOutboxOwner } from '@/lib/outbox-owner';
 import { READINESS_RECENCY_HOURS } from '@/lib/progression';
 import { applyExerciseSwaps } from '@/lib/session-swaps';
+import { cycleWeekAt, isDeloadWeek, prescriptionsForWeek, programCycle } from '@/lib/program-cycle';
 import type { SessionPack } from '@/app/api/session-pack/route';
 import type { SessionRunnerProps } from '@/components/session/session-runner';
 
@@ -103,9 +104,20 @@ export function runnerPropsFromPack(
       exercise as unknown as (typeof entry.workout.exercises)[number]['exercise'],
     ]),
   );
+  // Week of the program's cycle the session started in (the server does the
+  // same when the start reaches it); the deload week runs lighter.
+  const cycle = entry.workout.program ? programCycle(entry.workout.program) : null;
+  const cycleWeek = cycle
+    ? cycleWeekAt(cycle, new Date(session.startedAt), pack.timeZone ?? 'UTC')
+    : null;
+  const deloadWeek = cycle != null && cycleWeek != null && isDeloadWeek(cycle, cycleWeek);
   const workout = {
     ...entry.workout,
-    exercises: applyExerciseSwaps(entry.workout.exercises, session.exerciseSwaps ?? {}, catalog),
+    exercises: prescriptionsForWeek(
+      applyExerciseSwaps(entry.workout.exercises, session.exerciseSwaps ?? {}, catalog),
+      cycle,
+      cycleWeek,
+    ),
   };
 
   return {
@@ -121,6 +133,7 @@ export function runnerPropsFromPack(
       finishedAt: session.finishedAt != null ? new Date(session.finishedAt) : null,
       notes: session.notes,
       exerciseSwaps: session.exerciseSwaps ?? null,
+      cycleWeek,
       workout,
       // The sets of a local session live in IndexedDB; the runner reads them there.
       sets: [],
@@ -129,7 +142,7 @@ export function runnerPropsFromPack(
     lastPerformances: entry.lastPerformances,
     returnRecommendations: entry.returnRecommendations,
     readiness,
-    deloadActive: pack.deloadActive,
+    deloadActive: pack.deloadActive || deloadWeek,
     unit: pack.unit,
     catalog: pack.catalog,
   };

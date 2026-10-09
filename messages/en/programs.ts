@@ -20,6 +20,21 @@ export const programs = {
   programNamePlaceholder: 'e.g. Hypertrophy 2026 - Phase 1',
   phase: 'Phase',
   phasePlaceholder: 'e.g. Hypertrophy, Strength, Metabolic stress',
+  cycle: {
+    label: 'Cycle (mesocycle)',
+    none: 'No cycle',
+    noneHint: 'Every week runs the same prescriptions.',
+    weeks: '{count} weeks',
+    currentWeek: 'Current week',
+    week: 'Week {week}',
+    deloadWeek: 'Deload week',
+    noDeload: 'None',
+    hint: 'The program repeats every {count} weeks.',
+    hintDeload:
+      'The program repeats every {count} weeks. In the deload week: half the sets, 2 more reps in reserve and a lighter load.',
+    status: 'Week {week} of {weeks}',
+    statusDeload: 'Week {week} of {weeks} · deload',
+  },
   schedule: {
     label: 'Next workout',
     ROTATION: 'In sequence (rotation)',
@@ -202,6 +217,8 @@ export const programs = {
       fatigueRate: 'Fatigue rate',
       loadAdjustmentPct: 'Load adjustment (%)',
       scheduleMode: 'Next workout',
+      cycleWeeks: 'Cycle (weeks)',
+      cycleDeloadWeek: 'Deload week',
     },
     autoregulation: {
       PRESERVE_RIR: 'Keep RIR',

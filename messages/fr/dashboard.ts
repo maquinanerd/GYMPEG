@@ -26,6 +26,8 @@ export const dashboard = {
     'Repos aujourd’hui · prochaine le {day}, dans {count, plural, one {# jour} other {# jours}}',
   chooseOther: 'Choisir une autre séance',
   nextBadge: 'Prochaine',
+  cycleWeek: 'Semaine {week} sur {weeks}',
+  cycleDeload: 'Semaine {week} sur {weeks} · décharge : moins de séries, charge plus légère',
   programSessions: 'Séances du programme',
   insight: {
     deloadTitle: 'Une récupération semble nécessaire',

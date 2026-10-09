@@ -14,7 +14,9 @@ import type { SerializedLastPerformance } from '@/components/session/session-run
 
 // The workout shape the runner reads.
 export const runnerWorkoutInclude = {
-  program: { select: { id: true, name: true } },
+  program: {
+    select: { id: true, name: true, cycleWeeks: true, cycleDeloadWeek: true, cycleAnchor: true },
+  },
   exercises: {
     orderBy: { order: 'asc' },
     include: { exercise: true },
