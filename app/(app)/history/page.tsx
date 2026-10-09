@@ -19,9 +19,13 @@ import {
   parseMonthKey,
   resolveCalendarTimeZone,
 } from '@/lib/history-calendar';
+import { historySessionWhere, parseHistoryFilters } from '@/lib/history-filters';
 
 interface SearchParams {
   programId?: string;
+  gymId?: string;
+  exerciseId?: string;
+  muscle?: string;
   month?: string;
   day?: string;
   tz?: string;
@@ -36,16 +40,11 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
   const month = parseMonthKey(searchParams.month, new Date(), timeZone);
   const monthKey = formatMonthKey(month);
   const monthRange = getMonthQueryRange(month);
-  const programFilter = searchParams.programId ? { programId: searchParams.programId } : {};
+  const filters = parseHistoryFilters(searchParams);
 
-  const [sessions, programs, user, totalHistoryCount] = await Promise.all([
+  const [sessions, programs, user, totalHistoryCount, gyms, trainedExercises] = await Promise.all([
     db.session.findMany({
-      where: {
-        userId: auth.userId,
-        finishedAt: { not: null },
-        startedAt: monthRange,
-        ...programFilter,
-      },
+      where: historySessionWhere(auth.userId, filters, monthRange),
       orderBy: { startedAt: 'asc' },
       include: {
         workout: { select: { name: true } },
@@ -74,6 +73,21 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
     }),
     db.session.count({
       where: { userId: auth.userId, finishedAt: { not: null } },
+    }),
+    db.gym.findMany({
+      where: { userId: auth.userId },
+      orderBy: { name: 'asc' },
+      select: { id: true, name: true },
+    }),
+    // Only exercises (and so muscles) that appear in the finished history.
+    db.exercise.findMany({
+      where: {
+        sets: {
+          some: { isWarmup: false, session: { userId: auth.userId, finishedAt: { not: null } } },
+        },
+      },
+      orderBy: { name: 'asc' },
+      select: { id: true, name: true, muscleGroup: true },
     }),
   ]);
 
@@ -144,7 +158,13 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
 
         <HistoryFilters
           programs={programs}
-          selectedProgramId={searchParams.programId}
+          gyms={gyms}
+          exercises={trainedExercises.map((exercise) => ({
+            id: exercise.id,
+            name: getExerciseDisplayName(exercise.name, locale),
+          }))}
+          muscles={[...new Set(trainedExercises.map((exercise) => exercise.muscleGroup))]}
+          filters={filters}
           selectedMonth={monthKey}
         />
 
@@ -160,7 +180,7 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
             monthKey={monthKey}
             initialDay={searchParams.day}
             sessions={calendarSessions}
-            selectedProgramId={searchParams.programId}
+            filters={filters}
             timeZone={timeZone}
           />
         )}

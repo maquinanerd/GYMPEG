@@ -117,7 +117,7 @@ describe('HistoryCalendar', () => {
       <HistoryCalendar
         monthKey="2026-09"
         sessions={[]}
-        selectedProgramId="program-1"
+        filters={{ programId: 'program-1' }}
         timeZone={browserZone}
       />,
     );
@@ -155,7 +155,7 @@ describe('HistoryCalendar', () => {
         monthKey="2026-09"
         initialDay="2026-09-12"
         sessions={sessions}
-        selectedProgramId="program-1"
+        filters={{ programId: 'program-1' }}
         timeZone={Intl.DateTimeFormat().resolvedOptions().timeZone}
       />,
     );

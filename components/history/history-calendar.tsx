@@ -17,6 +17,11 @@ import {
   parseMonthKey,
   shiftCalendarMonth,
 } from '@/lib/history-calendar';
+import {
+  hasHistoryFilters,
+  setHistoryFilterParams,
+  type HistoryFilterValues,
+} from '@/lib/history-filters';
 
 export interface HistoryCalendarSession {
   id: string;
@@ -35,17 +40,11 @@ interface Props {
   monthKey: string;
   initialDay?: string;
   sessions: HistoryCalendarSession[];
-  selectedProgramId?: string;
+  filters?: HistoryFilterValues;
   timeZone: string;
 }
 
-export function HistoryCalendar({
-  monthKey,
-  initialDay,
-  sessions,
-  selectedProgramId,
-  timeZone,
-}: Props) {
+export function HistoryCalendar({ monthKey, initialDay, sessions, filters = {}, timeZone }: Props) {
   const t = useTranslations('history.calendar');
   const history = useTranslations('history');
   const common = useTranslations('common');
@@ -127,7 +126,7 @@ export function HistoryCalendar({
   const selectedDateLabel = format.dateTime(dateKeyToUtcDate(selectedDate), {
     ...DATE_LABEL_FORMAT,
   });
-  const filteredEmpty = Boolean(selectedProgramId) && sessionsByDate.size === 0;
+  const filteredEmpty = hasHistoryFilters(filters) && sessionsByDate.size === 0;
 
   function navigateToMonth(delta: number) {
     const target = shiftCalendarMonth(month, delta);
@@ -143,7 +142,7 @@ export function HistoryCalendar({
     params.set('month', nextMonth);
     if (day) params.set('day', day);
     else params.delete('day');
-    if (selectedProgramId) params.set('programId', selectedProgramId);
+    setHistoryFilterParams(params, filters);
     params.set('tz', urlZone);
     const href = `${pathname}?${params.toString()}`;
     startTransition(() => router.push(href));
@@ -280,8 +279,10 @@ export function HistoryCalendar({
         ) : (
           <ul className="flex flex-col gap-2">
             {selectedSessions.map((session) => {
-              const returnParams = new URLSearchParams({ month: monthKey, day: selectedDate });
-              if (selectedProgramId) returnParams.set('programId', selectedProgramId);
+              const returnParams = setHistoryFilterParams(
+                new URLSearchParams({ month: monthKey, day: selectedDate }),
+                filters,
+              );
               returnParams.set('tz', urlZone);
               return (
                 <li key={session.id}>

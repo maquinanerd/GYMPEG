@@ -26,21 +26,30 @@ import { TrackDecoupling } from '@/components/history/track-decoupling';
 import { getExerciseDisplayName } from '@/i18n/exercise-names';
 import { getTrainingDisplayName } from '@/i18n/training-names';
 import { resolveCalendarTimeZone } from '@/lib/history-calendar';
+import {
+  parseHistoryFilters,
+  setHistoryFilterParams,
+  type HistoryFilterKey,
+} from '@/lib/history-filters';
+
+type BackParams = Partial<Record<'month' | 'day' | 'tz' | HistoryFilterKey, string>>;
 
 interface Params {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ month?: string; day?: string; programId?: string; tz?: string }>;
+  searchParams: Promise<BackParams>;
 }
 
-// The calendar links here with the month, day, program filter and the
+// The calendar links here with the month, day, history filters and the
 // lifter's zone; the back link returns to that exact view and the date badge
 // is formatted in that zone (review of #351).
-function buildBackHref(params: { month?: string; day?: string; programId?: string; tz?: string }) {
+function buildBackHref(params: BackParams) {
   const query = new URLSearchParams();
-  for (const key of ['month', 'day', 'programId', 'tz'] as const) {
+  for (const key of ['month', 'day'] as const) {
     const value = params[key];
     if (value) query.set(key, value);
   }
+  setHistoryFilterParams(query, parseHistoryFilters(params));
+  if (params.tz) query.set('tz', params.tz);
   const qs = query.toString();
   return qs ? `/history?${qs}` : '/history';
 }

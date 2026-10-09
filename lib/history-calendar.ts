@@ -1,3 +1,5 @@
+import { setHistoryFilterParams, type HistoryFilterValues } from '@/lib/history-filters';
+
 export interface CalendarMonth {
   year: number;
   monthIndex: number;
@@ -26,12 +28,11 @@ export function resolveCalendarTimeZone(value: string | undefined, fallback: str
   }
 }
 
-// Full-history CSV export, narrowed only by the program filter. The month
-// shown in the calendar is a view, not an export scope (review of #351).
-export function buildHistoryCsvHref(programId: string | undefined): string {
-  const params = new URLSearchParams();
-  if (programId) params.set('programId', programId);
-  const qs = params.toString();
+// Full-history CSV export, narrowed by the history filters (program, gym,
+// exercise, muscle). The month shown in the calendar is a view, not an export
+// scope (review of #351).
+export function buildHistoryCsvHref(filters: HistoryFilterValues = {}): string {
+  const qs = setHistoryFilterParams(new URLSearchParams(), filters).toString();
   return qs ? `/api/history/csv?${qs}` : '/api/history/csv';
 }
 

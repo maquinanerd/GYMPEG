@@ -72,8 +72,13 @@ describe('history calendar helpers', () => {
     expect(resolveCalendarTimeZone('Europe/Paris; DROP', 'UTC')).toBe('UTC');
   });
 
-  it('exports the full history, narrowed only by the program filter', () => {
-    expect(buildHistoryCsvHref(undefined)).toBe('/api/history/csv');
-    expect(buildHistoryCsvHref('program-1')).toBe('/api/history/csv?programId=program-1');
+  it('exports the full history, narrowed by the history filters but not the month', () => {
+    expect(buildHistoryCsvHref()).toBe('/api/history/csv');
+    expect(buildHistoryCsvHref({ programId: 'program-1' })).toBe(
+      '/api/history/csv?programId=program-1',
+    );
+    expect(buildHistoryCsvHref({ gymId: 'gym-1', muscle: 'CHEST' })).toBe(
+      '/api/history/csv?gymId=gym-1&muscle=CHEST',
+    );
   });
 });

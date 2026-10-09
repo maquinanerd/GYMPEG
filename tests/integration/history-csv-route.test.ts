@@ -58,8 +58,8 @@ async function seedMixedSession() {
   return { user, session };
 }
 
-async function exportRows(): Promise<{ header: string[]; rows: string[][] }> {
-  const res = await getCsv(new Request('http://test.local/api/history/csv'));
+async function exportRows(query = ''): Promise<{ header: string[]; rows: string[][] }> {
+  const res = await getCsv(new Request(`http://test.local/api/history/csv${query}`));
   expect(res.status).toBe(200);
   const body = (await res.text()).replace(/^﻿/, '');
   // Numeric-only cells in these fixtures: a plain split is safe.
@@ -112,5 +112,79 @@ describe('GET /api/history/csv - cardio columns (issue #144)', () => {
     expect(strengthRow![header.indexOf('external_load_kg')]).toBe('100');
     expect(strengthRow![header.indexOf('reps')]).toBe('5');
     expect(strengthRow![header.indexOf('volume_kg')]).toBe('500');
+  });
+});
+
+describe('GET /api/history/csv - history filters (epic 1.8)', () => {
+  async function seedFilteredHistory() {
+    const user = await db.user.create({
+      data: { email: 'csv-filters@test.dev', passwordHash: 'x', timezone: 'America/Sao_Paulo' },
+    });
+    const gym = await db.gym.create({ data: { userId: user.id, name: 'Downtown' } });
+    const bench = await db.exercise.create({
+      data: { userId: user.id, name: 'Bench', muscleGroup: 'CHEST', category: 'COMPOUND' },
+    });
+    const squat = await db.exercise.create({
+      data: { userId: user.id, name: 'Squat', muscleGroup: 'QUADS', category: 'COMPOUND' },
+    });
+    // 2026-07-01 01:30 UTC is still June 30 in Sao Paulo (UTC-3).
+    const atGym = await db.session.create({
+      data: {
+        userId: user.id,
+        gymId: gym.id,
+        startedAt: new Date('2026-07-01T01:30:00Z'),
+        finishedAt: new Date('2026-07-01T02:30:00Z'),
+      },
+    });
+    const elsewhere = await db.session.create({
+      data: {
+        userId: user.id,
+        startedAt: new Date('2026-07-10T12:00:00Z'),
+        finishedAt: new Date('2026-07-10T13:00:00Z'),
+      },
+    });
+    await db.set.createMany({
+      data: [
+        { sessionId: atGym.id, exerciseId: bench.id, setNumber: 1, weight: 80, reps: 8 },
+        { sessionId: atGym.id, exerciseId: squat.id, setNumber: 1, weight: 100, reps: 5 },
+        { sessionId: elsewhere.id, exerciseId: squat.id, setNumber: 1, weight: 110, reps: 5 },
+      ],
+    });
+    return { user, gym, bench, atGym, elsewhere };
+  }
+
+  it('narrows sessions by gym and rows by exercise or muscle', async () => {
+    const { user, gym, bench, atGym } = await seedFilteredHistory();
+    actAs(user.id);
+
+    const byGym = await exportRows(`?gymId=${gym.id}`);
+    const sessionIdx = byGym.header.indexOf('session_id');
+    const exerciseIdx = byGym.header.indexOf('exercise');
+    expect(new Set(byGym.rows.map((r) => r[sessionIdx]))).toEqual(new Set([atGym.id]));
+    expect(byGym.rows).toHaveLength(2);
+
+    const byExercise = await exportRows(`?exerciseId=${bench.id}`);
+    expect(byExercise.rows.map((r) => r[exerciseIdx])).toEqual(['Bench']);
+
+    const byMuscle = await exportRows('?muscle=QUADS');
+    expect(byMuscle.rows.map((r) => r[exerciseIdx])).toEqual(['Squat', 'Squat']);
+
+    // Malformed filters are ignored, never sent to the database.
+    const bogus = await exportRows('?muscle=WINGS&gymId=%27%3B');
+    expect(bogus.rows).toHaveLength(3);
+  });
+
+  it('uses the user time zone for the month and the date column', async () => {
+    const { user, atGym, elsewhere } = await seedFilteredHistory();
+    actAs(user.id);
+
+    const june = await exportRows('?month=2026-06');
+    const sessionIdx = june.header.indexOf('session_id');
+    const dateIdx = june.header.indexOf('session_date');
+    expect(new Set(june.rows.map((r) => r[sessionIdx]))).toEqual(new Set([atGym.id]));
+    expect(june.rows.every((r) => r[dateIdx] === '2026-06-30')).toBe(true);
+
+    const july = await exportRows('?month=2026-07');
+    expect(new Set(july.rows.map((r) => r[sessionIdx]))).toEqual(new Set([elsewhere.id]));
   });
 });
