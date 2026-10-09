@@ -61,6 +61,7 @@ export const dashboard = {
       '{count, plural, one {# jour d’entraînement} other {# jours d’entraînement}} cette semaine. Gardez le rythme.',
     deloadStalledReason:
       '{count, plural, one {# exercice stagne : {names}.} other {# exercices stagnent : {names}.}}',
+    deloadLongBlockReason: '{weeks} semaines d’entraînement depuis votre dernière décharge.',
     deloadReadinessReason:
       'Votre forme est en moyenne à {average}/5 sur {checkins, plural, one {votre dernier bilan} other {vos # derniers bilans}}.',
   },

@@ -60,6 +60,8 @@ export const dashboard = {
       'На этой неделе: {count, plural, one {# тренировочный день} few {# тренировочных дня} many {# тренировочных дней} other {# тренировочного дня}}. Продолжайте в том же режиме.',
     deloadStalledReason:
       '{count, plural, one {Прогресс остановился в # упражнении: {names}.} few {Прогресс остановился в # упражнениях: {names}.} many {Прогресс остановился в # упражнениях: {names}.} other {Прогресс остановился в # упражнения: {names}.}}',
+    deloadLongBlockReason:
+      '{weeks, plural, one {# неделя} few {# недели} many {# недель} other {# недели}} тренировок с последней разгрузки.',
     deloadReadinessReason:
       'Средняя готовность за последние {checkins, plural, one {# оценку} few {# оценки} many {# оценок} other {# оценки}} составляет {average}/5.',
   },

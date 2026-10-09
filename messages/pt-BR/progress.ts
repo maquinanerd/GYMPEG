@@ -121,6 +121,8 @@ export const progress = {
     endError: 'Não foi possível encerrar o deload.',
     stalledReason:
       '{count, plural, one {# exercício estagnou: {names}.} other {# exercícios estagnaram: {names}.}}',
+    longBlockReason:
+      '{weeks} semanas de treino desde o último deload: uma semana mais leve ajuda a recuperar e continuar progredindo.',
     readinessReason:
       'Sua prontidão ficou em média {average}/5 {checkins, plural, one {no último check-in} other {nos últimos # check-ins}}.',
   },

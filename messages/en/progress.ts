@@ -117,6 +117,8 @@ export const progress = {
     endError: 'Could not end the deload.',
     stalledReason:
       '{count, plural, one {# lift has stalled: {names}.} other {# lifts have stalled: {names}.}}',
+    longBlockReason:
+      '{weeks} weeks of training since your last deload: a lighter week helps you recover and keep progressing.',
     readinessReason:
       'Your readiness has averaged {average}/5 over your last {checkins, plural, one {# check-in} other {# check-ins}}.',
   },

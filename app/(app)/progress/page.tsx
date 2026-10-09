@@ -11,7 +11,7 @@ import {
   classifyWeeklySets,
   effectiveWeight,
   exerciseProgress,
-  isStalled,
+  isStalledOverTime,
   isoWeekKey,
   trainingConsistency,
   weeklyConditioning,
@@ -21,6 +21,7 @@ import {
   WEEKLY_SETS_MRV,
 } from '@/lib/stats';
 import { buildMuscleMap } from '@/lib/muscle-map';
+import { loadTrainingBlock } from '@/lib/deload-history';
 import { calculateMuscleVolume, muscleContributions } from '@/lib/training-engine/volume';
 import { calculateWeightTrend, estimateBodyFatNavy } from '@/lib/training-engine/body';
 import {
@@ -353,7 +354,7 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
         lastE1RM: last.estimated1RM,
         e1rmDelta: +(last.estimated1RM - first.estimated1RM).toFixed(1),
         // Read-only flag: e1RM has not improved over the recent sessions.
-        stalled: isStalled(points.map((p) => p.estimated1RM)),
+        stalled: isStalledOverTime(points),
       };
     }),
   );
@@ -506,6 +507,7 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
   const deload = recommendDeload({
     stalledExerciseNames: recap.filter((r) => r.stalled).map((r) => r.exerciseName),
     recentReadiness: recentCheckins.map((c) => c.readiness),
+    block: await loadTrainingBlock(auth.userId, new Date(), timeZone),
   });
 
   // Active planned deload week (issue #112): only a future deloadUntil counts;

@@ -72,6 +72,7 @@ model User {
   passwordResets    PasswordResetToken[]
   trainingRecommendations TrainingRecommendation[]
   personalRecords         PersonalRecord[]
+  deloadPeriods           DeloadPeriod[]
   activeGymId       String?
   activeGym         Gym?                                  @relation("ActiveGym", fields: [activeGymId], references: [id], onDelete: SetNull)
 }
@@ -553,6 +554,29 @@ model TrainingRecommendation {
 
   @@index([sessionId])
   @@index([userId, exerciseId, createdAt])
+}
+
+enum DeloadTrigger {
+  RECOMMENDED
+  MANUAL
+}
+
+// A deload week the lifter took (epic 2.5): started from the recommendation
+// (with the reasons shown then) or on their own, and possibly ended early.
+// The program cycle's planned deload weeks are not stored here: they are
+// derived from the cycle. "Weeks since the last deload" reads both.
+model DeloadPeriod {
+  id        String        @id @default(cuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trigger   DeloadTrigger
+  // Reason kinds shown when it was started (lib/deload DeloadReasonKind).
+  reasons   String[]      @default([])
+  startedAt DateTime      @default(now())
+  endsAt    DateTime
+  endedAt   DateTime?
+
+  @@index([userId, startedAt])
 }
 
 enum PersonalRecordType {

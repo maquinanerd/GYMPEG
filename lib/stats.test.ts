@@ -67,10 +67,7 @@ describe('estimateRepMax (Epley inverse)', () => {
     expect(estimateRepMax(62.5, 8, 8)).toBeCloseTo(62.5, 6);
   });
   it('stays consistent with estimate1RM', () => {
-    expect(estimateRepMax(90, 6, 10) * (1 + 10 / 30)).toBeCloseTo(
-      estimate1RM(90, 6),
-      6,
-    );
+    expect(estimateRepMax(90, 6, 10) * (1 + 10 / 30)).toBeCloseTo(estimate1RM(90, 6), 6);
   });
   it('returns 0 for bodyweight, zero reps or a non-positive target', () => {
     expect(estimateRepMax(0, 12, 10)).toBe(0);
@@ -404,12 +401,8 @@ describe('resolveVolumeBand (issue #211)', () => {
 
   it('falls back to defaults for an internally inconsistent stored band', () => {
     // A hand-tampered row (mrv <= mev or mev < 1) is ignored, not trusted.
-    expect(resolveVolumeBand('CHEST', { CHEST: { mev: 18, mrv: 10 } }).custom).toBe(
-      false,
-    );
-    expect(resolveVolumeBand('CHEST', { CHEST: { mev: 0, mrv: 10 } }).custom).toBe(
-      false,
-    );
+    expect(resolveVolumeBand('CHEST', { CHEST: { mev: 18, mrv: 10 } }).custom).toBe(false);
+    expect(resolveVolumeBand('CHEST', { CHEST: { mev: 0, mrv: 10 } }).custom).toBe(false);
   });
 });
 
@@ -631,9 +624,7 @@ describe('cardio set exclusion', () => {
 
   it('exerciseProgress produces no point from cardio-only sessions', () => {
     const d = new Date('2026-06-01T10:00:00Z');
-    const points = exerciseProgress([
-      { ...cardio, sessionId: 's1', sessionStartedAt: d },
-    ]);
+    const points = exerciseProgress([{ ...cardio, sessionId: 's1', sessionStartedAt: d }]);
     expect(points).toHaveLength(0);
   });
 
@@ -747,9 +738,17 @@ describe('dailyConditioning (issue #153)', () => {
   it('aggregates minutes and km per UTC calendar day, ascending', () => {
     const days = dailyConditioning(
       [
-        run({ sessionStartedAt: new Date('2026-06-10T18:00:00Z'), durationSec: 600, distanceM: null }),
+        run({
+          sessionStartedAt: new Date('2026-06-10T18:00:00Z'),
+          durationSec: 600,
+          distanceM: null,
+        }),
         run(), // Tuesday 30 min / 5 km
-        run({ sessionStartedAt: new Date('2026-06-09T18:30:00Z'), durationSec: 900, distanceM: 2500 }),
+        run({
+          sessionStartedAt: new Date('2026-06-09T18:30:00Z'),
+          durationSec: 900,
+          distanceM: 2500,
+        }),
       ],
       { now: NOW },
     );
@@ -775,9 +774,31 @@ describe('dailyConditioning (issue #153)', () => {
 
   it('includes the Monday boundary of the current week', () => {
     const days = dailyConditioning(
-      [run({ sessionStartedAt: new Date('2026-06-08T00:00:00Z'), durationSec: 1200, distanceM: null })],
+      [
+        run({
+          sessionStartedAt: new Date('2026-06-08T00:00:00Z'),
+          durationSec: 1200,
+          distanceM: null,
+        }),
+      ],
       { now: NOW },
     );
     expect(days).toEqual([{ date: '2026-06-08', minutes: 20, km: 0 }]);
+  });
+});
+
+describe('isStalledOverTime (epic 2.5)', () => {
+  it('needs the stalled window to span at least 10 days', async () => {
+    const { isStalledOverTime } = await import('./stats');
+    const flat = (dates: string[]) => dates.map((date) => ({ date, estimated1RM: 100 }));
+    expect(isStalledOverTime(flat(['2026-10-01', '2026-10-03', '2026-10-05']))).toBe(false);
+    expect(isStalledOverTime(flat(['2026-09-20', '2026-09-26', '2026-10-01']))).toBe(true);
+    expect(
+      isStalledOverTime([
+        { date: '2026-09-20', estimated1RM: 100 },
+        { date: '2026-09-26', estimated1RM: 100 },
+        { date: '2026-10-01', estimated1RM: 104 },
+      ]),
+    ).toBe(false);
   });
 });

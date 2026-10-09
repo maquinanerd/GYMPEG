@@ -120,6 +120,14 @@ async function seedEverything(email: string) {
       guidelineVersion: 'test',
     },
   });
+  await db.deloadPeriod.create({
+    data: {
+      userId,
+      trigger: 'RECOMMENDED',
+      reasons: ['long-block'],
+      endsAt: new Date(Date.now() + 7 * 86_400_000),
+    },
+  });
   await db.personalRecord.create({
     data: {
       userId,

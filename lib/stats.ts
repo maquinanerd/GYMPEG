@@ -198,6 +198,29 @@ export const STALL_LOOKBACK_SESSIONS = 3;
 // masking a genuine plateau.
 export const STALL_TOLERANCE = 0.005;
 
+// The stall window must also span this many days (epic 2.5): three sessions
+// in one week say little about a plateau.
+export const STALL_MIN_SPAN_DAYS = 10;
+
+// Stall test over exerciseProgress points (dated, oldest first): the e1RM
+// test below, over a window of sessions that also spans STALL_MIN_SPAN_DAYS.
+export function isStalledOverTime(
+  points: { date: string; estimated1RM: number }[],
+  lookback: number = STALL_LOOKBACK_SESSIONS,
+  minSpanDays: number = STALL_MIN_SPAN_DAYS,
+): boolean {
+  if (points.length < lookback) return false;
+  const window = points.slice(-lookback);
+  const spanDays =
+    (Date.parse(`${window.at(-1)!.date}T00:00:00Z`) - Date.parse(`${window[0]!.date}T00:00:00Z`)) /
+    (24 * 60 * 60 * 1000);
+  if (!(spanDays >= minSpanDays)) return false;
+  return isStalled(
+    points.map((point) => point.estimated1RM),
+    lookback,
+  );
+}
+
 // Pure stall test over an exercise's per-session best-e1RM series (oldest ->
 // newest). Returns true when, over the last `lookback` sessions, no session
 // improves on the best e1RM seen before that window (and within the window).

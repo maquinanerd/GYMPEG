@@ -37,7 +37,11 @@ export function DeloadBanner({ reasons, deloadUntil }: Props) {
       const res = await fetch('/api/deload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        // Started from the recommendation: keep what it said (epic 2.5).
+        body: JSON.stringify({
+          trigger: 'RECOMMENDED',
+          reasons: reasons.map((reason) => reason.kind),
+        }),
       });
       if (!res.ok) {
         const data = (await res.json().catch(() => null)) as { error?: string } | null;
@@ -109,10 +113,12 @@ export function DeloadBanner({ reasons, deloadUntil }: Props) {
                     count: reason.exerciseNames.length,
                     names: reason.exerciseNames.map(exerciseName).join(', '),
                   })
-                : t('readinessReason', {
-                    average: reason.averageReadiness,
-                    checkins: reason.checkins,
-                  })}
+                : reason.kind === 'low-readiness'
+                  ? t('readinessReason', {
+                      average: reason.averageReadiness,
+                      checkins: reason.checkins,
+                    })
+                  : t('longBlockReason', { weeks: reason.weeks })}
             </li>
           ))}
         </ul>

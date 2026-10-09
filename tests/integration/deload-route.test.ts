@@ -117,3 +117,73 @@ describe('DELETE /api/deload', () => {
     expect(res.status).toBe(401);
   });
 });
+
+// Each deload taken is kept (epic 2.5): how it was started, why, and when it
+// ended; the training block since the last one feeds the recommendation.
+describe('deload history', () => {
+  it('records the period with its trigger and reasons, closing it on restart and on end', async () => {
+    const user = await makeUser('deload-history@test.dev');
+    actAs(user.id);
+
+    expect(
+      (await POST(postReq({ trigger: 'RECOMMENDED', reasons: ['stalled-lifts', 'long-block'] })))
+        .status,
+    ).toBe(201);
+    expect((await POST(postReq())).status).toBe(201);
+
+    const periods = await db.deloadPeriod.findMany({
+      where: { userId: user.id },
+      orderBy: { startedAt: 'asc' },
+    });
+    expect(periods).toHaveLength(2);
+    expect(periods[0]).toMatchObject({
+      trigger: 'RECOMMENDED',
+      reasons: ['stalled-lifts', 'long-block'],
+    });
+    // The restart closed the first one; a bare start is manual.
+    expect(periods[0]!.endedAt).not.toBeNull();
+    expect(periods[1]).toMatchObject({ trigger: 'MANUAL', reasons: [], endedAt: null });
+
+    expect((await DELETE()).status).toBe(200);
+    const ended = await db.deloadPeriod.findUniqueOrThrow({ where: { id: periods[1]!.id } });
+    expect(ended.endedAt).not.toBeNull();
+  });
+
+  it('rejects an unknown reason kind', async () => {
+    const user = await makeUser('deload-bad-reason@test.dev');
+    actAs(user.id);
+    expect((await POST(postReq({ reasons: ['bored'] }))).status).toBe(400);
+    expect(await db.deloadPeriod.count({ where: { userId: user.id } })).toBe(0);
+  });
+
+  it('measures the block from the latest deload, taken or planned in the cycle', async () => {
+    const { loadTrainingBlock } = await import('@/lib/deload-history');
+    const user = await makeUser('deload-block@test.dev');
+    const program = await db.program.create({
+      data: { userId: user.id, name: 'Block', phase: 'Base', cycleWeeks: 4, cycleDeloadWeek: 4 },
+    });
+    const now = new Date();
+    const weeksAgo = (weeks: number) => new Date(now.getTime() - weeks * 7 * 86_400_000);
+    // Ten weeks of training, the planned deload week of the cycle 3 weeks ago.
+    for (let week = 10; week >= 1; week -= 1) {
+      await db.session.create({
+        data: {
+          userId: user.id,
+          programId: program.id,
+          startedAt: weeksAgo(week),
+          finishedAt: weeksAgo(week),
+          cycleWeek: week === 3 ? 4 : 1,
+        },
+      });
+    }
+
+    const block = await loadTrainingBlock(user.id, now, 'UTC');
+    expect(block).toEqual({ weeks: 3, trainedWeeks: 3 });
+
+    // A deload taken one week ago is more recent.
+    await db.deloadPeriod.create({
+      data: { userId: user.id, trigger: 'MANUAL', startedAt: weeksAgo(1), endsAt: now },
+    });
+    expect(await loadTrainingBlock(user.id, now, 'UTC')).toEqual({ weeks: 1, trainedWeeks: 1 });
+  });
+});

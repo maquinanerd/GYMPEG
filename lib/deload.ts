@@ -36,6 +36,41 @@ export const DELOAD_READINESS_THRESHOLD = READINESS_HOLD_AT_OR_BELOW;
 // User.deloadUntil this many days ahead.
 export const DELOAD_DURATION_DAYS = 7;
 
+// A long block without any deload (epic 2.5): this many weeks since the last
+// deload (taken, or the planned week of the program cycle), trained in at least
+// this share of them, recommends one even without stalls or low readiness.
+export const DELOAD_LONG_BLOCK_WEEKS = 8;
+export const DELOAD_LONG_BLOCK_TRAINED_SHARE = 0.75;
+
+export interface TrainingBlock {
+  // Whole weeks since the last deload (or since training started).
+  weeks: number;
+  // Distinct weeks in that span with at least one finished session.
+  trainedWeeks: number;
+}
+
+// The block since the last deload, from the session start dates. Null with no
+// training at all.
+export function trainingBlock(input: {
+  lastDeloadAt: Date | null;
+  sessionStarts: Date[];
+  now: Date;
+  weekKey: (date: Date) => string;
+}): TrainingBlock | null {
+  const since =
+    input.lastDeloadAt ??
+    input.sessionStarts.reduce<Date | null>(
+      (first, date) => (!first || date < first ? date : first),
+      null,
+    );
+  if (!since) return null;
+  const weeks = Math.floor((input.now.getTime() - since.getTime()) / (7 * 24 * 60 * 60 * 1000));
+  const trainedWeeks = new Set(
+    input.sessionStarts.filter((date) => date >= since).map(input.weekKey),
+  ).size;
+  return { weeks: Math.max(0, weeks), trainedWeeks };
+}
+
 // Whether a planned deload is currently active. Null or a timestamp at/in the
 // past means no active deload, so an expired deloadUntil silently returns the
 // app to normal progression without any cleanup write.
@@ -45,7 +80,10 @@ export function isDeloadActive(deloadUntil: Date | null, now: Date): boolean {
 
 export type DeloadReason =
   | { kind: 'stalled-lifts'; exerciseNames: string[] }
-  | { kind: 'low-readiness'; averageReadiness: number; checkins: number };
+  | { kind: 'low-readiness'; averageReadiness: number; checkins: number }
+  | { kind: 'long-block'; weeks: number };
+
+export type DeloadReasonKind = DeloadReason['kind'];
 
 export interface DeloadRecommendation {
   recommended: boolean;
@@ -66,6 +104,8 @@ export function deloadReasonLine(reason: DeloadReason): string {
     }
     case 'low-readiness':
       return `Your readiness has averaged ${reason.averageReadiness}/5 over your last ${reason.checkins} check-ins.`;
+    case 'long-block':
+      return `${reason.weeks} weeks of training since the last deload.`;
   }
 }
 
@@ -76,6 +116,9 @@ export interface DeloadInput {
   // The caller passes whatever it has; only the first
   // DELOAD_READINESS_LOOKBACK entries are considered.
   recentReadiness: number[];
+  // The block since the last deload (trainingBlock); absent or null skips the
+  // long-block arm.
+  block?: TrainingBlock | null;
 }
 
 // Recommends a deload week when EITHER enough lifts are stalled OR the recent
@@ -101,6 +144,15 @@ export function recommendDeload(input: DeloadInput): DeloadRecommendation {
         checkins: window.length,
       });
     }
+  }
+
+  const block = input.block;
+  if (
+    block &&
+    block.weeks >= DELOAD_LONG_BLOCK_WEEKS &&
+    block.trainedWeeks >= Math.ceil(block.weeks * DELOAD_LONG_BLOCK_TRAINED_SHARE)
+  ) {
+    reasons.push({ kind: 'long-block', weeks: block.weeks });
   }
 
   return { recommended: reasons.length > 0, reasons };

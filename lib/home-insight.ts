@@ -1,8 +1,9 @@
 import { db } from './db';
 import { localDayKey, safeTimeZone } from '@/lib/timezone';
 import { createTranslator } from 'next-intl';
-import { applyBodyweight, exerciseProgress, isStalled, isoWeekStart } from './stats';
+import { applyBodyweight, exerciseProgress, isStalledOverTime, isoWeekStart } from './stats';
 import { exerciseRecords } from './records';
+import { loadTrainingBlock } from '@/lib/deload-history';
 import {
   recommendDeload,
   DELOAD_READINESS_MAX_AGE_DAYS,
@@ -52,7 +53,8 @@ type HomeInsightMessageKey =
   | 'consistentTitle'
   | 'consistentDetail'
   | 'deloadStalledReason'
-  | 'deloadReadinessReason';
+  | 'deloadReadinessReason'
+  | 'deloadLongBlockReason';
 
 export type HomeInsightTranslator = (
   key: HomeInsightMessageKey,
@@ -97,10 +99,12 @@ export function selectHomeInsight(
                 count: reason.exerciseNames.length,
                 names: reason.exerciseNames.join(', '),
               })
-            : translate('deloadReadinessReason', {
-                average: reason.averageReadiness,
-                checkins: reason.checkins,
-              }),
+            : reason.kind === 'low-readiness'
+              ? translate('deloadReadinessReason', {
+                  average: reason.averageReadiness,
+                  checkins: reason.checkins,
+                })
+              : translate('deloadLongBlockReason', { weeks: reason.weeks }),
         )
         .join(' '),
       href: '/progress',
@@ -209,7 +213,7 @@ export async function getHomeInsight(
   const stalledExerciseNames: string[] = [];
   for (const [name, sets] of byExercise) {
     const points = exerciseProgress(applyBodyweight(sets, bodyweight), { timeZone });
-    if (isStalled(points.map((p) => p.estimated1RM))) {
+    if (isStalledOverTime(points)) {
       stalledExerciseNames.push(name);
     }
   }
@@ -227,6 +231,7 @@ export async function getHomeInsight(
   const deload = recommendDeload({
     stalledExerciseNames,
     recentReadiness: checkins.map((c) => c.readiness),
+    block: await loadTrainingBlock(userId, now, timeZone),
   });
 
   // A fresh personal record: an all-time record (over full history) whose date

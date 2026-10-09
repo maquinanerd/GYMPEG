@@ -121,6 +121,8 @@ export const progress = {
     endError: 'Impossible de terminer la décharge.',
     stalledReason:
       '{count, plural, one {# exercice stagne : {names}.} other {# exercices stagnent : {names}.}}',
+    longBlockReason:
+      '{weeks} semaines d’entraînement depuis votre dernière décharge : une semaine plus légère aide à récupérer et à continuer de progresser.',
     readinessReason:
       'Votre forme est en moyenne à {average}/5 sur {checkins, plural, one {votre dernier bilan} other {vos # derniers bilans}}.',
   },

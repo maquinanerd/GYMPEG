@@ -5,7 +5,7 @@ import {
   effectiveWeight,
   dailyConditioning,
   exerciseProgress,
-  isStalled,
+  isStalledOverTime,
   isoWeekStart,
   totalVolume,
   weekStartBefore,
@@ -23,6 +23,7 @@ import {
   isDeloadActive,
   recommendDeload,
 } from '@/lib/deload';
+import { loadTrainingBlock } from '@/lib/deload-history';
 import { COACH_SYSTEM_PROMPT } from '@/lib/prompts/coach-system-prompt';
 import { exerciseRecords, type ExerciseRecord } from '@/lib/records';
 import { getLlmProvider } from '@/lib/llm';
@@ -800,7 +801,7 @@ async function fetchFatigueSummary(
         bodyweight,
       ),
     );
-    if (isStalled(points.map((p) => p.estimated1RM))) {
+    if (isStalledOverTime(points)) {
       stalledExercises.push(first.exercise.name);
     }
   }
@@ -809,6 +810,7 @@ async function fetchFatigueSummary(
   const recommendation = recommendDeload({
     stalledExerciseNames: stalledExercises,
     recentReadiness: recentCheckins.map((c) => c.readiness),
+    block: await loadTrainingBlock(userId, now, await getUserTimeZone(userId)),
   });
   return {
     stalledExercises,

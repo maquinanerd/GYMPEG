@@ -41,6 +41,7 @@ export const USER_OWNED_MODELS = {
   // Engine decisions with their inputs (ADR-007); also cascade with sessions.
   TrainingRecommendation: { delegate: 'trainingRecommendation', erase: 'cascade' },
   PersonalRecord: { delegate: 'personalRecord', erase: 'cascade' },
+  DeloadPeriod: { delegate: 'deloadPeriod', erase: 'cascade' },
 } as const satisfies Record<string, { delegate: string; erase: Erasure }>;
 
 export type UserOwnedModel = keyof typeof USER_OWNED_MODELS;

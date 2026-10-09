@@ -55,6 +55,7 @@ export const dashboard = {
       'Trained {count, plural, one {# day} other {# days}} this week. Keep the momentum going.',
     deloadStalledReason:
       '{count, plural, one {# lift has stalled: {names}.} other {# lifts have stalled: {names}.}}',
+    deloadLongBlockReason: '{weeks} weeks of training since your last deload.',
     deloadReadinessReason:
       'Your readiness has averaged {average}/5 over your last {checkins, plural, one {# check-in} other {# check-ins}}.',
   },
