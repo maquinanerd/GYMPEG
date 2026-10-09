@@ -42,6 +42,7 @@ import {
   nextNavIndex,
   SUPERSET_TRANSITION_REST_SEC,
 } from '@/lib/supersets';
+import { WARMUP_REST_SEC } from '@/lib/warmup';
 import { isReadinessAutoRegulationEnabled, isRestEndFlashEnabled } from '@/lib/preferences';
 import { adjustRest, pauseRest, resumeRest } from '@/lib/rest-timer';
 import {
@@ -532,8 +533,13 @@ export function SessionRunner({
     // Superset-aware rest (issue #189): a short transition rest when the
     // auto-advance moves to another member of the same group (A1 -> A2); the
     // full per-exercise rest after the last member and for standalone work.
+    // A warm-up only needs time to change plates.
     const transition = isSupersetTransitionRest(supersetView, currentIdx, nextIdx);
-    const restSec = transition ? SUPERSET_TRANSITION_REST_SEC : currentTarget.restSec;
+    const restSec = kind.isWarmup
+      ? Math.min(WARMUP_REST_SEC, currentTarget.restSec)
+      : transition
+        ? SUPERSET_TRANSITION_REST_SEC
+        : currentTarget.restSec;
 
     // For a same-superset transition, show the next exercise immediately so
     // the lifter can get into position while the short transition rest runs.

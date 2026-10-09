@@ -10,8 +10,8 @@
 // weights round to a loadable increment in that unit. The session UI converts
 // the kg-stored working weight to the display unit before calling in here.
 
-import { WeightUnit } from '@/lib/prisma-client';
-import { roundWeight } from '@/lib/units';
+import type { EquipmentType, WeightUnit } from '@/lib/prisma-client';
+import { fromDisplayWeight, roundWeight, toDisplayWeight } from '@/lib/units';
 
 // One step of the ramp: a fraction of the working weight and the reps to do at
 // it. Fractions ascend, reps descend - a standard hypertrophy/strength warm-up.
@@ -131,4 +131,52 @@ export function computeWarmupRamp(
 
   result.sets = sets;
   return result;
+}
+
+// Rest after a logged warm-up set, in seconds: enough to change plates, never
+// the full working rest (capped by the exercise's own rest).
+export const WARMUP_REST_SEC = 60;
+
+// Externally loaded equipment that benefits from a ramp. Bodyweight and cardio
+// have no load to ramp up to.
+const RAMPED_EQUIPMENT: readonly EquipmentType[] = [
+  'BARBELL',
+  'DUMBBELL',
+  'MACHINE',
+  'CABLE',
+  'OTHER',
+];
+
+export interface WarmupSuggestion {
+  // Storage unit (kg), ready to be logged as a WARMUP set.
+  weightKg: number;
+  reps: number;
+  percent: number;
+}
+
+// Warm-up sets the logger offers before the first working set, each logged as
+// a WARMUP set with one tap. The ramp is built in the display unit so every
+// step lands on a loadable increment there, then converted back to kg. Steps
+// already covered by logged warm-ups drop off, so the list shrinks as the
+// lifter works through it. Only a barbell starts from the empty bar.
+export function suggestWarmupSets(input: {
+  workingWeightKg: number;
+  unit: WeightUnit;
+  equipmentType: EquipmentType;
+  usesBodyweight: boolean;
+  barWeightKg: number;
+  loggedWarmups: number;
+}): WarmupSuggestion[] {
+  if (input.usesBodyweight || !RAMPED_EQUIPMENT.includes(input.equipmentType)) return [];
+  const barWeight =
+    input.equipmentType === 'BARBELL'
+      ? roundWeight(toDisplayWeight(input.barWeightKg, input.unit), 2)
+      : 0;
+  const working = roundWeight(toDisplayWeight(input.workingWeightKg, input.unit), 2);
+  const ramp = computeWarmupRamp(working, input.unit, barWeight);
+  return ramp.sets.slice(Math.max(0, input.loggedWarmups)).map((set) => ({
+    weightKg: fromDisplayWeight(set.weight, input.unit),
+    reps: set.reps,
+    percent: set.percent,
+  }));
 }

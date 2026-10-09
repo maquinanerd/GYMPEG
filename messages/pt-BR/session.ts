@@ -232,6 +232,8 @@ export const session = {
     },
     warmups: 'Aquecimento',
     deleteWarmup: 'Excluir o aquecimento {number}',
+    logWarmup: 'Registrar aquecimento de {weight} × {reps}',
+    logWarmupHint: 'Aquecimento sugerido: {percent}% da carga de trabalho',
     weight: 'Carga da série {number} em {unit}',
     reps: 'Repetições da série {number}',
     rir: 'Repetições em reserva da série {number}',

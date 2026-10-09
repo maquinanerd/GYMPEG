@@ -228,6 +228,8 @@ export const session = {
     },
     warmups: 'Разминка',
     deleteWarmup: 'Удалить разминочный подход {number}',
+    logWarmup: 'Записать разминку {weight} × {reps}',
+    logWarmupHint: 'Рекомендуемая разминка: {percent}% рабочего веса',
     weight: 'Вес подхода {number} в {unit}',
     reps: 'Повторения подхода {number}',
     rir: 'Повторы в запасе для подхода {number}',

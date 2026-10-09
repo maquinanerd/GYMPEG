@@ -212,6 +212,86 @@ describe('EditableSetsTable', () => {
     expect(onDeleteSet).toHaveBeenCalledWith(warmup);
   });
 
+  it('offers the warm-up ramp to the first working weight and logs a step as WARMUP', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
+    const barbell = {
+      ...(programExercise as object),
+      exercise: {
+        id: 'exercise-1',
+        name: 'Squat',
+        category: 'COMPOUND',
+        equipmentType: 'BARBELL',
+        usesBodyweight: false,
+      },
+    } as never;
+    const warmup = loggedSet(20, 8, { localId: 'warmup-1', isWarmup: true, type: 'WARMUP' });
+    const { rerender } = render(
+      <EditableSetsTable
+        programExercise={barbell}
+        sets={[]}
+        lastPerformance={lastTime([{ weight: 100, reps: 10, rir: 2 }])}
+        readiness={null}
+        deloadActive={false}
+        unit="KG"
+        onSubmit={onSubmit}
+        onDeleteSet={vi.fn()}
+        onUpdateSet={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+
+    // 100 kg on a 20 kg bar: empty bar, 40, 60, 80 kg.
+    const steps = screen.getAllByRole('button', { name: /^Log warm-up/ });
+    expect(steps.map((step) => step.textContent)).toEqual([
+      '20 kg × 8',
+      '40 kg × 5',
+      '60 kg × 3',
+      '80 kg × 2',
+    ]);
+    fireEvent.click(screen.getByRole('button', { name: 'Log warm-up 40 kg × 5' }));
+    await waitFor(() =>
+      expect(onSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          weight: 40,
+          reps: 5,
+          rir: null,
+          type: 'WARMUP',
+          isWarmup: true,
+          isDropSet: false,
+        }),
+      ),
+    );
+
+    // A logged warm-up covers the first step; the first working set ends the offer.
+    rerender(
+      <EditableSetsTable
+        programExercise={barbell}
+        sets={[warmup]}
+        lastPerformance={lastTime([{ weight: 100, reps: 10, rir: 2 }])}
+        readiness={null}
+        deloadActive={false}
+        unit="KG"
+        onSubmit={onSubmit}
+        onDeleteSet={vi.fn()}
+        onUpdateSet={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+    expect(screen.getAllByRole('button', { name: /^Log warm-up/ })).toHaveLength(3);
+    rerender(
+      <EditableSetsTable
+        programExercise={barbell}
+        sets={[warmup, loggedSet(100, 10)]}
+        lastPerformance={lastTime([{ weight: 100, reps: 10, rir: 2 }])}
+        readiness={null}
+        deloadActive={false}
+        unit="KG"
+        onSubmit={onSubmit}
+        onDeleteSet={vi.fn()}
+        onUpdateSet={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: /^Log warm-up/ })).not.toBeInTheDocument();
+  });
+
   it('switches calculated columns and persists the selection', async () => {
     const user = userEvent.setup();
     render(

@@ -7,6 +7,7 @@ import {
   ChevronUp,
   Loader2,
   Pencil,
+  Plus,
   RotateCcw,
   Trash2,
   Trophy,
@@ -26,6 +27,7 @@ import type { GymLoadConstraints } from '@/lib/gym-loads';
 import { constrainGymWeight, gymWeightOptions } from '@/lib/gym-loads';
 import { suggestNextWeight, type ReadinessSignal } from '@/lib/progression';
 import { estimate1RM, estimateRepMax } from '@/lib/stats';
+import { suggestWarmupSets, type WarmupSuggestion } from '@/lib/warmup';
 import {
   loadPreferences,
   savePreferences,
@@ -237,9 +239,17 @@ export function EditableSetsTable({
     [priorSets],
   );
 
+  // Bar used as the floor of the warm-up ramp: the lightest bar of the gym,
+  // else the lifter's preferred bar (localStorage, read after hydration).
+  const [preferredBarKg, setPreferredBarKg] = useState(20);
+
   useEffect(() => {
-    setMetrics(loadPreferences().setTableMetrics);
-  }, []);
+    const prefs = loadPreferences();
+    setMetrics(prefs.setTableMetrics);
+    setPreferredBarKg(
+      unit === 'LB' ? fromDisplayWeight(prefs.barWeightLb, 'LB') : prefs.barWeightKg,
+    );
+  }, [unit]);
 
   function metricLabel(metric: SetTableMetric, short = false) {
     if (metric === '1RM') return t(short ? 'metrics.oneRmShort' : 'metrics.oneRm');
@@ -351,6 +361,29 @@ export function EditableSetsTable({
     [editedSet, effectiveLoadConstraints, equipmentOptions, loadConstraints],
   );
   const pickerReferenceWeight = editingSet?.draft.weight ?? draft.weight;
+
+  // Ramp up to the first working set, offered until that set is logged.
+  const warmupSuggestions = useMemo(() => {
+    if (workingSets.length > 0) return [];
+    const gymBars = loadConstraints?.barWeights?.filter((weight) => weight > 0) ?? [];
+    return suggestWarmupSets({
+      workingWeightKg: draft.weight,
+      unit,
+      equipmentType: programExercise.exercise.equipmentType,
+      usesBodyweight: programExercise.exercise.usesBodyweight,
+      barWeightKg: gymBars.length > 0 ? Math.min(...gymBars) : preferredBarKg,
+      loggedWarmups: warmupSets.length,
+    });
+  }, [
+    draft.weight,
+    loadConstraints,
+    preferredBarKg,
+    programExercise.exercise.equipmentType,
+    programExercise.exercise.usesBodyweight,
+    unit,
+    warmupSets.length,
+    workingSets.length,
+  ]);
 
   const currentNumber = workingSets.length + 1;
   const totalRows = Math.max(programExercise.targetSets, currentNumber);
@@ -491,6 +524,31 @@ export function EditableSetsTable({
     }
   }
 
+  // One tap logs a suggested ramp step as a WARMUP set (outside the working
+  // set numbering, like any warm-up), on the selected equipment.
+  async function logWarmup(step: WarmupSuggestion) {
+    if (disabled || submitting) return;
+    setSubmitting(true);
+    try {
+      const kind = resolveSetType({ type: 'WARMUP' });
+      await onSubmit({
+        weight: constrainGymWeight(step.weightKg, step.weightKg, effectiveLoadConstraints),
+        reps: step.reps,
+        rir: null,
+        durationSec: null,
+        distanceM: null,
+        isWarmup: kind.isWarmup,
+        isDropSet: kind.isDropSet,
+        notes: null,
+        gymEquipmentId: gymEquipmentId || null,
+        type: kind.type,
+        rpe: null,
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   const optionsSummary = [
     nextType !== 'WORKING'
       ? t(
@@ -558,7 +616,7 @@ export function EditableSetsTable({
           onSaved={(equipment) => onEquipmentWeightsUpdated?.(equipment)}
         />
       )}
-      {warmupSets.length > 0 && (
+      {(warmupSets.length > 0 || warmupSuggestions.length > 0) && (
         <div
           data-testid="warmup-sets"
           className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2 text-sm"
@@ -583,6 +641,23 @@ export function EditableSetsTable({
               </button>
             </span>
           ))}
+          {warmupSuggestions.map((step) => {
+            const weight = formatWeight(step.weightKg, unit, { decimals: 2, group: false, locale });
+            return (
+              <button
+                key={`suggested-${step.weightKg}-${step.reps}`}
+                type="button"
+                disabled={disabled || submitting}
+                onClick={() => void logWarmup(step)}
+                aria-label={t('logWarmup', { weight, reps: step.reps })}
+                title={t('logWarmupHint', { percent: step.percent })}
+                className="inline-flex min-h-8 items-center gap-1 rounded-full border border-dashed border-primary/60 px-2.5 py-1 tabular-nums text-primary hover:bg-primary/10 disabled:opacity-50"
+              >
+                <Plus className="size-3.5" />
+                {weight} × {step.reps}
+              </button>
+            );
+          })}
         </div>
       )}
       <div data-testid="editable-sets-scroll" className="overflow-x-auto overscroll-x-contain">

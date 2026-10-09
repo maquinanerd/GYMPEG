@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeWarmupRamp } from './warmup';
+import { computeWarmupRamp, suggestWarmupSets } from './warmup';
 
 describe('computeWarmupRamp', () => {
   it('builds an ascending ramp for a typical kg working weight', () => {
@@ -97,5 +97,55 @@ describe('computeWarmupRamp', () => {
 
   it('returns an empty ramp for a negative bar weight', () => {
     expect(computeWarmupRamp(100, 'KG', -5).sets).toEqual([]);
+  });
+});
+
+describe('suggestWarmupSets', () => {
+  const base = {
+    workingWeightKg: 100,
+    unit: 'KG' as const,
+    equipmentType: 'BARBELL' as const,
+    usesBodyweight: false,
+    barWeightKg: 20,
+    loggedWarmups: 0,
+  };
+
+  it('offers the barbell ramp in kg, ready to log', () => {
+    expect(suggestWarmupSets(base)).toEqual([
+      { weightKg: 20, reps: 8, percent: 20 },
+      { weightKg: 40, reps: 5, percent: 40 },
+      { weightKg: 60, reps: 3, percent: 60 },
+      { weightKg: 80, reps: 2, percent: 80 },
+    ]);
+  });
+
+  it('drops the steps already covered by logged warm-ups', () => {
+    expect(suggestWarmupSets({ ...base, loggedWarmups: 3 })).toEqual([
+      { weightKg: 80, reps: 2, percent: 80 },
+    ]);
+    expect(suggestWarmupSets({ ...base, loggedWarmups: 9 })).toEqual([]);
+  });
+
+  it('skips the empty bar off a barbell and has no ramp without external load', () => {
+    expect(
+      suggestWarmupSets({ ...base, equipmentType: 'DUMBBELL', workingWeightKg: 30 }).map(
+        (s) => s.weightKg,
+      ),
+    ).toEqual([10, 17.5, 22.5]);
+    expect(suggestWarmupSets({ ...base, equipmentType: 'BODYWEIGHT' })).toEqual([]);
+    expect(suggestWarmupSets({ ...base, equipmentType: 'CARDIO' })).toEqual([]);
+    expect(suggestWarmupSets({ ...base, usesBodyweight: true })).toEqual([]);
+    expect(suggestWarmupSets({ ...base, workingWeightKg: 0 })).toEqual([]);
+  });
+
+  it('builds the ramp on lb plates and stores it in kg', () => {
+    const steps = suggestWarmupSets({
+      ...base,
+      unit: 'LB',
+      workingWeightKg: 225 * 0.45359237,
+      barWeightKg: 45 * 0.45359237,
+    });
+    // 225 lb working weight on a 45 lb bar: 45, 90, 135, 180 lb.
+    expect(steps.map((s) => Math.round(s.weightKg / 0.45359237))).toEqual([45, 90, 135, 180]);
   });
 });

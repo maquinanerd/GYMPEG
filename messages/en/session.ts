@@ -224,6 +224,8 @@ export const session = {
     },
     warmups: 'Warm-up',
     deleteWarmup: 'Delete warm-up set {number}',
+    logWarmup: 'Log warm-up {weight} × {reps}',
+    logWarmupHint: 'Suggested warm-up: {percent}% of the working weight',
     weight: 'Set {number} weight in {unit}',
     reps: 'Set {number} repetitions',
     rir: 'Set {number} reps in reserve',
