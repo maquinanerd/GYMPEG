@@ -34,7 +34,7 @@ export const progress = {
     noWeeklyData: 'No weekly data.',
     weekLabel: 'W{week}',
     landmarksDescription:
-      'Working sets in {week} vs your reference band (MEV-MRV) per muscle group. Defaults to {mev}-{mrv} sets/week; edit a group to set your own. General hypertrophy heuristic, not a prescription.',
+      'Effective sets in {week} (sets up to 4 reps in reserve; a secondary muscle counts half a set) vs your reference band (MEV-MRV) per muscle group. Defaults to {mev}-{mrv} sets/week; edit a group to set your own. General hypertrophy heuristic, not a prescription.',
     custom: 'custom',
     default: 'default',
     frequency: '{count}x/week',

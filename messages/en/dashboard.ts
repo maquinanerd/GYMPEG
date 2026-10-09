@@ -17,6 +17,12 @@ export const dashboard = {
   chooseSession: 'Choose a session',
   nextWorkout: 'Next workout',
   nextFirst: 'First workout of the program',
+  adherence: {
+    title: 'This week',
+    sessions: '{done} of {planned} planned workouts',
+    sessionsLabel: 'Planned workouts done this week',
+    sets: '{done} of {prescribed} prescribed sets in those workouts',
+  },
   records: {
     title: 'Recent records',
     weight: '{exercise}: heaviest load, {value} (before {previous})',

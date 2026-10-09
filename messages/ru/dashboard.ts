@@ -20,6 +20,12 @@ export const dashboard = {
   chooseSession: 'Выбрать тренировку',
   nextWorkout: 'Следующая тренировка',
   nextFirst: 'Первая тренировка программы',
+  adherence: {
+    title: 'Эта неделя',
+    sessions: '{done} из {planned} запланированных тренировок',
+    sessionsLabel: 'Выполнено запланированных тренировок за неделю',
+    sets: '{done} из {prescribed} назначенных подходов в этих тренировках',
+  },
   records: {
     title: 'Новые рекорды',
     weight: '{exercise}: максимальный вес, {value} (было {previous})',

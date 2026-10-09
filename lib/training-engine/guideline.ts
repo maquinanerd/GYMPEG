@@ -5,7 +5,7 @@
 import type { ExerciseCategory, WeightUnit } from '@/lib/prisma-client';
 
 export const TRAINING_GUIDELINE = {
-  version: 'engine-v2.1.2026-10-09',
+  version: 'engine-v2.2.2026-10-09',
   source:
     'Double progression on the prescribed rep range; one loadable step down below the range; 10% deload; readiness may only hold or lower the load.',
   // Load step per exercise category, in the lifter's own unit, so a pound
@@ -28,6 +28,14 @@ export const TRAINING_GUIDELINE = {
   // Estimated 1RM for records: Epley, trusted only up to this many reps (a
   // 20-rep set says little about a single). Charts keep the uncapped value.
   e1rm: { formula: 'EPLEY', maxReps: 12 },
+  // Volume per muscle: a set counts fully for the exercise's primary muscles
+  // and by this share for the secondary ones (stabilizers do not count). An
+  // estimate for comparing weeks, not a physiological measurement.
+  secondarySetShare: 0.5,
+  // A working set is "effective" (hard enough to drive adaptation) at this
+  // many reps in reserve or fewer, or this RPE or more; unrated sets count.
+  effectiveSetMaxRIR: 4,
+  effectiveSetMinRPE: 6,
 } as const;
 
 export type TrainingGuideline = typeof TRAINING_GUIDELINE;

@@ -14,6 +14,8 @@ import { getUserTimeZone } from '@/lib/user-timezone';
 import { StartWorkoutButton } from '@/components/session/start-workout-button';
 import { RecentRecordsCard } from '@/components/progress/recent-records-card';
 import { recentPersonalRecords } from '@/lib/personal-records';
+import { weeklyAdherence } from '@/lib/adherence';
+import { Progress } from '@/components/ui/progress';
 
 const RECENT_RECORDS_DAYS = 30;
 
@@ -60,7 +62,7 @@ export default async function DashboardPage() {
   // New accounts are invited (not forced) to set up their training profile.
   const profile = await db.user.findUnique({
     where: { id: session.userId },
-    select: { onboardedAt: true, unit: true },
+    select: { onboardedAt: true, unit: true, weeklyFrequency: true },
   });
 
   // Records beaten in the last 30 days (epic 2.2), newest first.
@@ -94,10 +96,18 @@ export default async function DashboardPage() {
           ? t('nextAfter', { name: getTrainingDisplayName(lastWorkoutName, locale) })
           : t('nextFirst');
   // Week of the program's cycle, when it has one.
+  const timeZone = await getUserTimeZone(session.userId);
   const cycle = activeProgram ? programCycle(activeProgram) : null;
-  const cycleWeek = cycle
-    ? cycleWeekAt(cycle, new Date(), await getUserTimeZone(session.userId))
-    : null;
+  const cycleWeek = cycle ? cycleWeekAt(cycle, new Date(), timeZone) : null;
+  // This week against the plan (epic 2.3).
+  const adherence =
+    activeProgram && activeProgram.workouts.length > 0
+      ? await weeklyAdherence(session.userId, activeProgram, {
+          now: new Date(),
+          timeZone,
+          weeklyFrequency: profile?.weeklyFrequency ?? null,
+        })
+      : null;
   const cycleLine =
     cycle && cycleWeek
       ? isDeloadWeek(cycle, cycleWeek)
@@ -243,6 +253,34 @@ export default async function DashboardPage() {
                       <span className="ml-2">{t('chooseSession')}</span>
                     </Link>
                   </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {adherence && adherence.sessionsPlanned > 0 && (
+              <Card data-testid="weekly-adherence">
+                <CardContent className="flex flex-col gap-2 p-4">
+                  <p className="text-sm font-medium">{t('adherence.title')}</p>
+                  <div className="flex flex-col gap-1">
+                    <p className="text-sm text-muted-foreground">
+                      {t('adherence.sessions', {
+                        done: adherence.sessionsDone,
+                        planned: adherence.sessionsPlanned,
+                      })}
+                    </p>
+                    <Progress
+                      value={adherence.sessionRatio * 100}
+                      aria-label={t('adherence.sessionsLabel')}
+                    />
+                  </div>
+                  {adherence.setsPrescribed > 0 && (
+                    <p className="text-sm text-muted-foreground">
+                      {t('adherence.sets', {
+                        done: adherence.setsDone,
+                        prescribed: adherence.setsPrescribed,
+                      })}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             )}

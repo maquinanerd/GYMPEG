@@ -15,14 +15,13 @@ import {
   isoWeekKey,
   trainingConsistency,
   weeklyConditioning,
-  weeklyFrequencyByMuscleGroup,
-  weeklySetsByMuscleGroup,
   weeklyVolumeByMuscleGroup,
   resolveVolumeBand,
   WEEKLY_SETS_MEV,
   WEEKLY_SETS_MRV,
 } from '@/lib/stats';
 import { buildMuscleMap } from '@/lib/muscle-map';
+import { calculateMuscleVolume, muscleContributions } from '@/lib/training-engine/volume';
 import {
   DELOAD_READINESS_LOOKBACK,
   DELOAD_READINESS_MAX_AGE_DAYS,
@@ -181,11 +180,20 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
     select: {
       weight: true,
       reps: true,
+      rir: true,
+      rpe: true,
       isWarmup: true,
       durationSec: true,
       distanceM: true,
       sessionId: true,
-      exercise: { select: { muscleGroup: true, usesBodyweight: true } },
+      exercise: {
+        select: {
+          muscleGroup: true,
+          usesBodyweight: true,
+          category: true,
+          muscles: { select: { role: true, muscle: { select: { group: true } } } },
+        },
+      },
       session: { select: { startedAt: true } },
     },
   });
@@ -206,29 +214,24 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
     { timeZone },
   );
 
-  // Weekly working-set count per muscle group, for the MEV/MRV reference band.
-  // Set counts are load-agnostic, so no bodyweight adjustment is needed.
-  const weeklySetsPoints = weeklySetsByMuscleGroup(
-    weeklySetsRaw.map((s) => ({
-      isWarmup: s.isWarmup,
-      durationSec: s.durationSec,
-      muscleGroup: s.exercise.muscleGroup,
-      sessionStartedAt: s.session.startedAt,
-    })),
-    { timeZone },
-  );
-
-  // Weekly training FREQUENCY per muscle group (issue #225): distinct training
-  // days (calendar days with >= 1 working set) per muscle, same warmup/cardio
-  // exclusion and ISO-week bucketing as the set-count card. Shown alongside the
-  // volume on the landmarks view as "Nx/week".
-  const weeklyFrequencyPoints = weeklyFrequencyByMuscleGroup(
-    weeklySetsRaw.map((s) => ({
-      isWarmup: s.isWarmup,
-      durationSec: s.durationSec,
-      muscleGroup: s.exercise.muscleGroup,
-      sessionStartedAt: s.session.startedAt,
-    })),
+  // Weekly volume per muscle (epic 2.3): a set counts fully for the
+  // exercise's primary muscles and by half for the secondary ones (catalog
+  // roles); the MEV/MRV landmarks read the effective (hard) sets, and the
+  // frequency counts the days a muscle got any work.
+  const muscleWeeks = calculateMuscleVolume(
+    weeklySetsRaw
+      .filter((s) => s.durationSec == null && s.exercise.category !== 'CARDIO')
+      .map((s) => ({
+        weight: effectiveWeight(s.weight, s.exercise.usesBodyweight, bodyweight),
+        reps: s.reps,
+        rir: s.rir,
+        rpe: s.rpe,
+        performedAt: s.session.startedAt,
+        contributions: muscleContributions({
+          muscleGroup: s.exercise.muscleGroup,
+          muscles: s.exercise.muscles.map((m) => ({ role: m.role, group: m.muscle.group })),
+        }),
+      })),
     { timeZone },
   );
 
@@ -237,14 +240,26 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
   // Falling back to the latest available week keeps a signal when only the
   // current week has data.
   const currentWeekKey = isoWeekKey(new Date(), timeZone);
-  const latestCompletedWeek =
-    [...weeklySetsPoints].reverse().find((w) => w.weekKey !== currentWeekKey) ??
-    weeklySetsPoints[weeklySetsPoints.length - 1];
+  const latestMuscleWeek =
+    [...muscleWeeks].reverse().find((w) => w.weekKey !== currentWeekKey) ??
+    muscleWeeks[muscleWeeks.length - 1];
+  const latestCompletedWeek = latestMuscleWeek
+    ? {
+        weekKey: latestMuscleWeek.weekKey,
+        byMuscleGroup: Object.fromEntries(
+          Object.entries(latestMuscleWeek.byMuscleGroup).map(([group, stats]) => [
+            group,
+            stats.effectiveSets,
+          ]),
+        ) as Record<string, number>,
+      }
+    : null;
   // Frequency for the exact week the landmarks card displays, so volume and
   // frequency describe the same week per muscle group.
-  const frequencyForWeek = latestCompletedWeek
-    ? (weeklyFrequencyPoints.find((w) => w.weekKey === latestCompletedWeek.weekKey)
-        ?.byMuscleGroup ?? {})
+  const frequencyForWeek: Record<string, number> = latestMuscleWeek
+    ? Object.fromEntries(
+        Object.entries(latestMuscleWeek.byMuscleGroup).map(([group, stats]) => [group, stats.days]),
+      )
     : {};
   const volumeLandmarks = latestCompletedWeek
     ? {

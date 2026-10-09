@@ -37,7 +37,7 @@ export const progress = {
     noWeeklyData: 'Aucune donnée hebdomadaire.',
     weekLabel: 'S{week}',
     landmarksDescription:
-      'Séries effectives en {week} par rapport à votre zone de référence (MEV-MRV) par groupe musculaire. Par défaut {mev}-{mrv} séries/semaine ; modifiez un groupe pour définir la vôtre. Heuristique générale d’hypertrophie, pas une prescription.',
+      'Séries effectives en {week} (jusqu’à 4 répétitions en réserve ; un muscle secondaire compte pour une demi-série) par rapport à votre zone de référence (MEV-MRV) par groupe musculaire. Par défaut {mev}-{mrv} séries/semaine ; modifiez un groupe pour définir la vôtre. Heuristique générale d’hypertrophie, pas une prescription.',
     custom: 'personnalisé',
     default: 'défaut',
     frequency: '{count}x/semaine',
