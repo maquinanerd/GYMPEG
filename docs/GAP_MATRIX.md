@@ -47,6 +47,7 @@ Base: auditoria de 2026-10-08 ([00_OPEN_SOURCE_AUDIT.md](00_OPEN_SOURCE_AUDIT.md
 | 2026-10-09 | Storage e privacidade das fotos (G3): metadados (GPS, câmera, data) removidos no upload de fotos e imagens de equipamento, mantendo a orientação; bucket privado S3/R2 opcional (`STORAGE_PROVIDER=s3`) com cliente SigV4 próprio validado com os vetores da AWS, migração preguiçosa do disco e exclusão nos dois lugares; imagem Docker pelo espelho ECR Public | `37bac5c` |
 | 2026-10-09 | Operação (G3): rate limit compartilhado em Postgres (`RATE_LIMIT_STORE=postgres`, contagem atômica, chave em hash), logs estruturados em JSON com redação de campos sensíveis (credenciais, e-mail, dados de saúde) | `887ea78` |
 | 2026-10-09 | Importação com mapeamento manual (G3): na prévia de Strong, Hevy e CSV GymCoach, cada nome sem correspondência ganha sugestões do catálogo e dos exercícios do usuário (termos pt-BR/inglês) e pode ser associado a um exercício existente antes de importar; RPE das exportações Strong e Hevy preservado | este commit |
+| 2026-10-09 | Planejador de IA (G4.1, adendo 02): gerar → schema → validação de domínio → prévia → confirmar → salvar como programa com versão `AI_GENERATED`; a IA só recebe candidatos da academia do usuário (sem evitados) e só devolve `exerciseId`; uma correção controlada com os erros; prévia editável que revalida no navegador; consentimento versionado (aceitar e retirar), flags `ai.*`, `AIUsage` com tokens/latência/custo e cache por chave de idempotência; modo demo gera plano determinístico sem chave | — |
 
 Pendentes do G1: nenhum item de código; falta configurar o provedor de e-mail em produção.
 
@@ -61,7 +62,7 @@ Pendentes do G1: nenhum item de código; falta configurar o provedor de e-mail e
 | Controle de cadastro | Aberto | Convite/allowlist até o lançamento | Flag `SIGNUP_MODE` | P0 | S | A |
 | Exclusão de conta (LGPD) | Ausente; FKs RESTRICT | Exclusão completa e auditável | ✓ `lib/account-deletion` (ordem explícita onde não há cascade, fotos em disco, `AccountDeletion` anônimo) | P0 | M | A |
 | Export completo (LGPD) | Parcial | Todos os dados em JSON/CSV | ✓ `GET /api/account/export`: ZIP com todas as tabelas do usuário, CSVs e imagens | P1 | M | M |
-| Consentimento IA/dados de saúde | Ausente | Consentimento versionado antes de enviar dados à IA | `Consent` + gate nas rotas de IA | P1 | S | A |
+| Consentimento IA/dados de saúde | ✓ versionado (`aiConsentAt`/`aiConsentVersion`), retirável em Configurações, exigido pelo planejador | Consentimento versionado antes de enviar dados à IA | ⏳ gate no coach, debrief e parse de série | P1 | S | A |
 | Headers de segurança/CSP ✓ | CSP com nonce, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy | CSP, HSTS, frame-ancestors, Referrer-Policy | `headers()` no Next | P1 | S | M |
 | Limite de corpo JSON | Só em algumas rotas | `maxBytes` obrigatório | Tornar obrigatório em `parseJsonBody` | P1 | S | M |
 | Rate limit | Em memória, por processo | Compartilhado (Redis/Postgres) | Store compartilhado | P1 | S | M |
@@ -145,15 +146,15 @@ Pendentes do G1: nenhum item de código; falta configurar o provedor de e-mail e
 |---|---|---|---|---|---|---|
 | Providers Gemini/DeepSeek + fallback | Anthropic/OpenRouter | Gemini padrão, DeepSeek fallback | ✓ | P2 | — | B |
 | JSON nativo + usage | Texto | Structured output + tokens | ✓ parcial (`responseFormat`, `usage`) | P2 | S | B |
-| `AIProvider` de domínio | Ausente | `generateWorkoutPlan` / `adjustWorkoutPlan` | Camada sobre `LlmProvider` | P2 | M | M |
-| `TrainingContextBuilder` | `buildCoachPayload` parcial | JSON compacto com tendências calculadas | Adaptar | P2 | M | M |
-| `ExerciseRetrievalService` + tool `searchExercises` | Catálogo inteiro no prompt | 50-100 candidatos por busca | Novo + tool calling | P2 | M | M |
-| Só `exerciseId` existentes | Nome livre + `upsert` | ids validados | Reescrever geração | P2 | M | A |
-| `WorkoutPlanValidator` | Só faixas Zod | Validação de domínio completa | Novo | P2 | M | A |
-| Preview → confirmação → revisão | Preview existe; MCP grava direto | Fluxo obrigatório + `ProgramRevision` | Reescrever apply/MCP | P2 | M | A |
-| `AIUsage` + idempotency key | Ausente | Custo por operação, sem cobrança duplicada | Tabela + middleware | P2 | S | M |
-| Feature flags `ai.*` | Ausente | 4 flags | Config | P2 | S | B |
-| Prompts versionados em arquivo | Constantes TS | `prompts/<nome>/vN.md` | Migrar | P2 | S | B |
+| `AIProvider` de domínio | ✓ `generateWorkoutPlan` (com uma correção controlada) | `generateWorkoutPlan` / `adjustWorkoutPlan` | ⏳ `adjustWorkoutPlan` | P2 | M | M |
+| `TrainingContextBuilder` ✓ | `buildTrainingContext`: perfil, disponibilidade, academia, preferências, tendência do peso, treinos recentes e e1RM dos principais exercícios | JSON compacto com tendências calculadas | — | P2 | M | M |
+| `ExerciseRetrievalService` + tool `searchExercises` | ✓ candidatos por grupo (até 100), filtrados por equipamento e exercícios evitados, prioridades primeiro | 50-100 candidatos por busca | ⏳ tool calling | P2 | M | M |
+| Só `exerciseId` existentes | ✓ no planejador novo (`/programs/generate`) | ids validados | ⏳ coach/debrief e MCP | P2 | M | A |
+| `WorkoutPlanValidator` ✓ | ids oferecidos, academia, evitados, duplicados, faixas, dias; avisos de duração, volume e cobertura; roda também no navegador a cada edição | Validação de domínio completa | — | P2 | M | A |
+| Preview → confirmação → revisão | ✓ no planejador (revalida ao salvar, versão `AI_GENERATED`) | Fluxo obrigatório + `ProgramRevision` | ⏳ apply do coach e MCP | P2 | M | A |
+| `AIUsage` + idempotency key ✓ | Tokens, latência, custo estimado, sucesso e versão do prompt por chamada; resultado guardado 10 min por chave | Custo por operação, sem cobrança duplicada | — | P2 | S | M |
+| Feature flags `ai.*` ✓ | `AI_FEATURES_DISABLED` | 4 flags | — | P2 | S | B |
+| Prompts versionados em arquivo | `lib/prompts/workout-planner.ts` (v1, versão gravada no `AIUsage`) | `prompts/<nome>/vN.md` | ⏳ demais prompts | P2 | S | B |
 
 ## Expansão (G5)
 

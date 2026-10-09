@@ -10,6 +10,8 @@ import { GymProfilesSection } from '@/components/settings/gym-profiles-section';
 import { McpSection } from '@/components/settings/mcp-section';
 import { SecuritySection } from '@/components/settings/security-section';
 import { PrivacySection } from '@/components/settings/privacy-section';
+import { AiConsentSection } from '@/components/settings/ai-consent-section';
+import { AI_CONSENT_VERSION, hasAiConsent } from '@/lib/ai/features';
 import { DEFAULT_TIME_ZONE } from '@/lib/timezone';
 import { pickableExerciseWhere } from '@/lib/catalog/access';
 
@@ -30,6 +32,8 @@ export default async function SettingsPage() {
         unit: true,
         timezone: true,
         activeGymId: true,
+        aiConsentAt: true,
+        aiConsentVersion: true,
       },
     }),
     db.gym.findMany({
@@ -115,6 +119,11 @@ export default async function SettingsPage() {
         />
 
         <SettingsClient />
+
+        <AiConsentSection
+          initialConsent={hasAiConsent(user ?? null)}
+          consentVersion={AI_CONSENT_VERSION}
+        />
 
         <PrivacySection email={auth.email} />
       </div>

@@ -51,6 +51,10 @@ model User {
   // "morning" | "afternoon" | "evening", free text kept short by the API.
   preferredTrainingTime String?
   priorityMuscles       MuscleGroup[]         @default([])
+  // Consent to send training and health data to the AI provider (G4): when
+  // and which version of the notice was accepted. Null: no AI call.
+  aiConsentAt           DateTime?
+  aiConsentVersion      String?
   // Set when the onboarding flow is completed (or skipped on purpose).
   onboardedAt           DateTime?
   exercisePreferences   ExercisePreference[]
@@ -73,6 +77,8 @@ model User {
   trainingRecommendations TrainingRecommendation[]
   personalRecords         PersonalRecord[]
   deloadPeriods           DeloadPeriod[]
+  aiUsages                AIUsage[]
+  aiResults               AiResultCache[]
   activeGymId       String?
   activeGym         Gym?                                  @relation("ActiveGym", fields: [activeGymId], references: [id], onDelete: SetNull)
 }
@@ -565,6 +571,52 @@ model RateLimitBucket {
   resetAt DateTime
 
   @@index([resetAt])
+}
+
+enum AIOperation {
+  GENERATE_PROGRAM
+  ADJUST_PROGRAM
+  WEEKLY_REVIEW
+  EXPLAIN_RECOMMENDATION
+  CHAT
+}
+
+// One AI call (G4, spec addendum 02 §33): who, which provider and model, what
+// for, tokens, latency, estimated cost and outcome. The base for choosing a
+// provider by real cost. No prompt or answer text is stored here.
+model AIUsage {
+  id             String      @id @default(cuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider       String
+  model          String
+  operation      AIOperation
+  inputTokens    Int?
+  outputTokens   Int?
+  latencyMs      Int
+  // USD, from AI_COST_PER_MTOKEN_INPUT/OUTPUT; null when not configured.
+  estimatedCost  Float?
+  success        Boolean
+  promptVersion  String?
+  createdAt      DateTime    @default(now())
+
+  @@index([userId, createdAt])
+  @@index([operation, createdAt])
+}
+
+// The result of an AI request under the client's idempotency key (G4, §34):
+// a retry with the same key within minutes returns it instead of calling (and
+// paying for) the model again.
+model AiResultCache {
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  idempotencyKey String
+  operation      AIOperation
+  result         Json
+  createdAt      DateTime    @default(now())
+
+  @@id([userId, idempotencyKey])
+  @@index([createdAt])
 }
 
 enum DeloadTrigger {

@@ -128,6 +128,19 @@ async function seedEverything(email: string) {
       endsAt: new Date(Date.now() + 7 * 86_400_000),
     },
   });
+  await db.aIUsage.create({
+    data: {
+      userId,
+      provider: 'demo',
+      model: 'demo',
+      operation: 'GENERATE_PROGRAM',
+      latencyMs: 10,
+      success: true,
+    },
+  });
+  await db.aiResultCache.create({
+    data: { userId, idempotencyKey: 'key-1', operation: 'GENERATE_PROGRAM', result: {} },
+  });
   await db.personalRecord.create({
     data: {
       userId,

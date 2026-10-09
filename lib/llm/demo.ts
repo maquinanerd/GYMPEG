@@ -1,8 +1,5 @@
-import {
-  type LlmCompletionRequest,
-  type LlmCompletionResult,
-  type LlmProvider,
-} from './types';
+import { type LlmCompletionRequest, type LlmCompletionResult, type LlmProvider } from './types';
+import { demoWorkoutPlan } from './demo-planner';
 
 // ============================================================
 // Demo provider (LLM_PROVIDER=demo)
@@ -101,33 +98,168 @@ const DEMO_PROGRAM = {
       name: 'Push',
       dayOfWeek: 1,
       exercises: [
-        { name: 'Barbell bench press', muscleGroup: 'CHEST', category: 'COMPOUND', targetSets: 4, targetRepsMin: 6, targetRepsMax: 10, targetRIR: 2, restSec: 150 },
-        { name: 'Seated dumbbell overhead press', muscleGroup: 'SHOULDERS_FRONT', category: 'COMPOUND', targetSets: 3, targetRepsMin: 8, targetRepsMax: 12, targetRIR: 2, restSec: 120 },
-        { name: 'Incline dumbbell press (30 deg)', muscleGroup: 'CHEST', category: 'COMPOUND', targetSets: 3, targetRepsMin: 8, targetRepsMax: 12, targetRIR: 2, restSec: 120 },
-        { name: 'Cable lateral raises', muscleGroup: 'SHOULDERS_LATERAL', category: 'ISOLATION', targetSets: 4, targetRepsMin: 12, targetRepsMax: 20, targetRIR: 1, restSec: 60 },
-        { name: 'Triceps pushdown (rope)', muscleGroup: 'TRICEPS', category: 'ISOLATION', targetSets: 3, targetRepsMin: 10, targetRepsMax: 15, targetRIR: 1, restSec: 60 },
+        {
+          name: 'Barbell bench press',
+          muscleGroup: 'CHEST',
+          category: 'COMPOUND',
+          targetSets: 4,
+          targetRepsMin: 6,
+          targetRepsMax: 10,
+          targetRIR: 2,
+          restSec: 150,
+        },
+        {
+          name: 'Seated dumbbell overhead press',
+          muscleGroup: 'SHOULDERS_FRONT',
+          category: 'COMPOUND',
+          targetSets: 3,
+          targetRepsMin: 8,
+          targetRepsMax: 12,
+          targetRIR: 2,
+          restSec: 120,
+        },
+        {
+          name: 'Incline dumbbell press (30 deg)',
+          muscleGroup: 'CHEST',
+          category: 'COMPOUND',
+          targetSets: 3,
+          targetRepsMin: 8,
+          targetRepsMax: 12,
+          targetRIR: 2,
+          restSec: 120,
+        },
+        {
+          name: 'Cable lateral raises',
+          muscleGroup: 'SHOULDERS_LATERAL',
+          category: 'ISOLATION',
+          targetSets: 4,
+          targetRepsMin: 12,
+          targetRepsMax: 20,
+          targetRIR: 1,
+          restSec: 60,
+        },
+        {
+          name: 'Triceps pushdown (rope)',
+          muscleGroup: 'TRICEPS',
+          category: 'ISOLATION',
+          targetSets: 3,
+          targetRepsMin: 10,
+          targetRepsMax: 15,
+          targetRIR: 1,
+          restSec: 60,
+        },
       ],
     },
     {
       name: 'Pull',
       dayOfWeek: 3,
       exercises: [
-        { name: 'Pronated pull-ups (weighted if possible)', muscleGroup: 'BACK_WIDTH', category: 'COMPOUND', targetSets: 4, targetRepsMin: 6, targetRepsMax: 10, targetRIR: 2, restSec: 120 },
-        { name: 'Bent-over barbell row', muscleGroup: 'BACK_THICKNESS', category: 'COMPOUND', targetSets: 4, targetRepsMin: 8, targetRepsMax: 12, targetRIR: 2, restSec: 120 },
-        { name: 'Lat pulldown (wide grip)', muscleGroup: 'BACK_WIDTH', category: 'COMPOUND', targetSets: 3, targetRepsMin: 10, targetRepsMax: 12, targetRIR: 1, restSec: 90 },
-        { name: 'Machine rear delt fly', muscleGroup: 'SHOULDERS_REAR', category: 'ISOLATION', targetSets: 3, targetRepsMin: 12, targetRepsMax: 20, targetRIR: 1, restSec: 60 },
-        { name: 'EZ-bar curl', muscleGroup: 'BICEPS', category: 'ISOLATION', targetSets: 3, targetRepsMin: 8, targetRepsMax: 12, targetRIR: 2, restSec: 75 },
+        {
+          name: 'Pronated pull-ups (weighted if possible)',
+          muscleGroup: 'BACK_WIDTH',
+          category: 'COMPOUND',
+          targetSets: 4,
+          targetRepsMin: 6,
+          targetRepsMax: 10,
+          targetRIR: 2,
+          restSec: 120,
+        },
+        {
+          name: 'Bent-over barbell row',
+          muscleGroup: 'BACK_THICKNESS',
+          category: 'COMPOUND',
+          targetSets: 4,
+          targetRepsMin: 8,
+          targetRepsMax: 12,
+          targetRIR: 2,
+          restSec: 120,
+        },
+        {
+          name: 'Lat pulldown (wide grip)',
+          muscleGroup: 'BACK_WIDTH',
+          category: 'COMPOUND',
+          targetSets: 3,
+          targetRepsMin: 10,
+          targetRepsMax: 12,
+          targetRIR: 1,
+          restSec: 90,
+        },
+        {
+          name: 'Machine rear delt fly',
+          muscleGroup: 'SHOULDERS_REAR',
+          category: 'ISOLATION',
+          targetSets: 3,
+          targetRepsMin: 12,
+          targetRepsMax: 20,
+          targetRIR: 1,
+          restSec: 60,
+        },
+        {
+          name: 'EZ-bar curl',
+          muscleGroup: 'BICEPS',
+          category: 'ISOLATION',
+          targetSets: 3,
+          targetRepsMin: 8,
+          targetRepsMax: 12,
+          targetRIR: 2,
+          restSec: 75,
+        },
       ],
     },
     {
       name: 'Legs',
       dayOfWeek: 5,
       exercises: [
-        { name: 'Machine squat (or Hack squat)', muscleGroup: 'QUADS', category: 'COMPOUND', targetSets: 4, targetRepsMin: 8, targetRepsMax: 12, targetRIR: 2, restSec: 150 },
-        { name: 'Dumbbell Romanian Deadlift', muscleGroup: 'HAMSTRINGS', category: 'COMPOUND', targetSets: 3, targetRepsMin: 8, targetRepsMax: 12, targetRIR: 2, restSec: 120 },
-        { name: 'Leg extension', muscleGroup: 'QUADS', category: 'ISOLATION', targetSets: 3, targetRepsMin: 12, targetRepsMax: 15, targetRIR: 1, restSec: 75 },
-        { name: 'Seated leg curl', muscleGroup: 'HAMSTRINGS', category: 'ISOLATION', targetSets: 3, targetRepsMin: 10, targetRepsMax: 15, targetRIR: 1, restSec: 75 },
-        { name: 'Standing calf raise (or machine)', muscleGroup: 'CALVES', category: 'ISOLATION', targetSets: 4, targetRepsMin: 10, targetRepsMax: 15, targetRIR: 1, restSec: 60 },
+        {
+          name: 'Machine squat (or Hack squat)',
+          muscleGroup: 'QUADS',
+          category: 'COMPOUND',
+          targetSets: 4,
+          targetRepsMin: 8,
+          targetRepsMax: 12,
+          targetRIR: 2,
+          restSec: 150,
+        },
+        {
+          name: 'Dumbbell Romanian Deadlift',
+          muscleGroup: 'HAMSTRINGS',
+          category: 'COMPOUND',
+          targetSets: 3,
+          targetRepsMin: 8,
+          targetRepsMax: 12,
+          targetRIR: 2,
+          restSec: 120,
+        },
+        {
+          name: 'Leg extension',
+          muscleGroup: 'QUADS',
+          category: 'ISOLATION',
+          targetSets: 3,
+          targetRepsMin: 12,
+          targetRepsMax: 15,
+          targetRIR: 1,
+          restSec: 75,
+        },
+        {
+          name: 'Seated leg curl',
+          muscleGroup: 'HAMSTRINGS',
+          category: 'ISOLATION',
+          targetSets: 3,
+          targetRepsMin: 10,
+          targetRepsMax: 15,
+          targetRIR: 1,
+          restSec: 75,
+        },
+        {
+          name: 'Standing calf raise (or machine)',
+          muscleGroup: 'CALVES',
+          category: 'ISOLATION',
+          targetSets: 4,
+          targetRepsMin: 10,
+          targetRepsMax: 15,
+          targetRIR: 1,
+          restSec: 60,
+        },
       ],
     },
   ],
@@ -153,13 +285,13 @@ const DEMO_SET_PARSE_CARDIO = JSON.stringify({
 // payload: the chat context also contains "workouts", which fooled an earlier
 // heuristic). The set-parse prompt also reads the user message to pick the
 // strength vs cardio shape and to honor the unparseable marker.
-function cannedResponse(system: string, userText = ''): string {
+function cannedResponse(system: string, userText = '', payloadText = ''): string {
+  // AI workout planner: a plan built from the candidates in the payload.
+  if (system.includes('[workout-planner/v1]')) return demoWorkoutPlan(payloadText);
   if (system.includes('parse ONE natural-language description')) {
     // Mirror the contract: non-set text returns the refusal sentinel.
     if (/\bUNPARSEABLE\b/i.test(userText)) return '{"error":"unparseable"}';
-    return /Type:\s*CARDIO/i.test(userText)
-      ? DEMO_SET_PARSE_CARDIO
-      : DEMO_SET_PARSE_STRENGTH;
+    return /Type:\s*CARDIO/i.test(userText) ? DEMO_SET_PARSE_CARDIO : DEMO_SET_PARSE_STRENGTH;
   }
   if (system.includes('<adjustments>')) return DEBRIEF; // weekly debrief prompt
   if (system.includes('SINGLE JSON object')) return JSON.stringify(DEMO_PROGRAM, null, 2); // program generation prompt
@@ -180,6 +312,10 @@ function lastUserText(req: LlmCompletionRequest): string {
   return '';
 }
 
+function firstUserText(req: LlmCompletionRequest): string {
+  return req.messages.find((m) => m.role === 'user')?.content ?? '';
+}
+
 export class DemoProvider implements LlmProvider {
   readonly id = 'demo' as const;
   readonly label = 'Demo';
@@ -192,11 +328,14 @@ export class DemoProvider implements LlmProvider {
 
   async complete(req: LlmCompletionRequest): Promise<LlmCompletionResult> {
     await delay(500);
-    return { text: cannedResponse(req.system, lastUserText(req)), modelUsed: 'demo' };
+    return {
+      text: cannedResponse(req.system, lastUserText(req), firstUserText(req)),
+      modelUsed: 'demo',
+    };
   }
 
   async *stream(req: LlmCompletionRequest): AsyncIterable<string> {
-    const text = cannedResponse(req.system, lastUserText(req));
+    const text = cannedResponse(req.system, lastUserText(req), firstUserText(req));
     for (const token of text.split(/(\s+)/)) {
       await delay(22);
       yield token;
