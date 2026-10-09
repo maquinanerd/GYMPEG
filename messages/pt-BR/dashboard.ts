@@ -20,6 +20,17 @@ export const dashboard = {
   chooseSession: 'Escolha um treino',
   nextWorkout: 'Próximo treino',
   nextFirst: 'Primeiro treino do programa',
+  records: {
+    title: 'Recordes recentes',
+    weight: '{exercise}: maior carga, {value} (antes {previous})',
+    reps: '{exercise}: {value} reps com {weight} (antes {previous})',
+    e1rm: '{exercise}: 1RM estimado de {value} (antes {previous})',
+    setVolume: '{exercise}: maior série, {value} de volume (antes {previous})',
+    exerciseVolume: '{exercise}: maior volume num treino, {value} (antes {previous})',
+    workoutTonnage: 'Maior tonelagem num treino: {value} (antes {previous})',
+    weeklyTonnage: 'Maior tonelagem semanal: {value} (antes {previous})',
+    viewAll: 'Ver todos os recordes',
+  },
   nextAfter: 'Vem depois de {name}',
   nextToday: 'Agendado para hoje',
   nextUpcoming:

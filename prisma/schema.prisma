@@ -71,6 +71,7 @@ model User {
   authSessions      AuthSession[]
   passwordResets    PasswordResetToken[]
   trainingRecommendations TrainingRecommendation[]
+  personalRecords         PersonalRecord[]
   activeGymId       String?
   activeGym         Gym?                                  @relation("ActiveGym", fields: [activeGymId], references: [id], onDelete: SetNull)
 }
@@ -554,6 +555,40 @@ model TrainingRecommendation {
   @@index([userId, exerciseId, createdAt])
 }
 
+enum PersonalRecordType {
+  WEIGHT
+  REPS
+  E1RM
+  SET_VOLUME
+  EXERCISE_VOLUME
+  WORKOUT_TONNAGE
+  WEEKLY_TONNAGE
+}
+
+// A record a finished session beat (epic 2.2, lib/personal-records), with
+// the previous best, so the dashboard and the weekly report can say "Novo PR
+// de e1RM no supino: 94 kg (antes 91)" without recomputing history.
+model PersonalRecord {
+  id            String             @id @default(cuid())
+  userId        String
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionId     String
+  session       Session            @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  // Null for the workout and weekly tonnage records.
+  exerciseId    String?
+  type          PersonalRecordType
+  value         Float
+  previousValue Float
+  // The set behind a set-level record (effective load in kg).
+  weightKg      Float?
+  reps          Int?
+  achievedAt    DateTime
+  createdAt     DateTime           @default(now())
+
+  @@index([userId, achievedAt])
+  @@index([sessionId])
+}
+
 enum SetAutoregulationMode {
   PRESERVE_RIR
   PRESERVE_REPS
@@ -587,6 +622,7 @@ model Session {
   sets       Set[]
   setTombstones SetTombstone[]
   recommendations TrainingRecommendation[]
+  personalRecords PersonalRecord[]
 
   @@index([userId, startedAt])
   @@index([workoutId])

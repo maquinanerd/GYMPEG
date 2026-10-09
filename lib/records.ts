@@ -1,6 +1,7 @@
 import type { Set } from '@/lib/prisma-client';
-import { estimate1RM, best1RM, type CalendarOptions } from '@/lib/stats';
+import type { CalendarOptions } from '@/lib/stats';
 import { localDayKey } from '@/lib/timezone';
+import { calculateE1RM } from '@/lib/training-engine/records';
 
 // ============================================================
 // Personal records (PRs) - derived on read from existing set
@@ -13,6 +14,8 @@ import { localDayKey } from '@/lib/timezone';
 //  - 'e1rm':   the candidate's estimated 1RM (Epley) beats the best
 //              estimated 1RM in prior history (catches higher-rep
 //              sets that imply more strength without more load).
+//              Records use the capped estimate (calculateE1RM, up to
+//              12 reps), the same one the stored PersonalRecord uses.
 //
 // Warm-up sets are excluded from both the candidate and the history
 // baseline, consistent with `best1RM` / `setVolume` in lib/stats.
@@ -59,11 +62,23 @@ export function detectPRs(candidate: SetLike, history: SetLike[]): PRType[] {
     prs.push('weight');
   }
 
-  if (estimate1RM(candidate.weight, candidate.reps) > best1RM(history)) {
+  const candidateE1RM = calculateE1RM(candidate.weight, candidate.reps);
+  if (candidateE1RM != null && candidateE1RM > bestRecordE1RM(history)) {
     prs.push('e1rm');
   }
 
   return prs;
+}
+
+// Best capped estimated 1RM of the working sets (0 if none qualifies).
+function bestRecordE1RM(sets: SetLike[]): number {
+  let best = 0;
+  for (const s of sets) {
+    if (s.isWarmup || s.durationSec != null) continue;
+    const e1rm = calculateE1RM(s.weight, s.reps);
+    if (e1rm != null && e1rm > best) best = e1rm;
+  }
+  return best;
 }
 
 // Convenience predicate: does the candidate set any PR at all?
@@ -127,7 +142,8 @@ export function exerciseRecords(
       continue;
     }
 
-    const e1rm = +estimate1RM(s.weight, s.reps).toFixed(1);
+    // Past the rep cap a set says nothing about a single: 0 never wins.
+    const e1rm = +(calculateE1RM(s.weight, s.reps) ?? 0).toFixed(1);
     const day = isoDay(s.sessionStartedAt, timeZone);
     const current = byExercise.get(s.exerciseName);
 

@@ -20,6 +20,17 @@ export const dashboard = {
   chooseSession: 'Выбрать тренировку',
   nextWorkout: 'Следующая тренировка',
   nextFirst: 'Первая тренировка программы',
+  records: {
+    title: 'Новые рекорды',
+    weight: '{exercise}: максимальный вес, {value} (было {previous})',
+    reps: '{exercise}: {value} повторов с {weight} (было {previous})',
+    e1rm: '{exercise}: расчётный 1ПМ {value} (было {previous})',
+    setVolume: '{exercise}: самый объёмный подход, {value} (было {previous})',
+    exerciseVolume: '{exercise}: максимальный объём за тренировку, {value} (было {previous})',
+    workoutTonnage: 'Максимальный тоннаж за тренировку: {value} (было {previous})',
+    weeklyTonnage: 'Максимальный тоннаж за неделю: {value} (было {previous})',
+    viewAll: 'Все рекорды',
+  },
   nextAfter: 'Идёт после {name}',
   nextToday: 'Запланирована на сегодня',
   nextUpcoming:

@@ -63,15 +63,11 @@ describe('detectPRs', () => {
 // Cardio sets (issue #133) can never set a lifting PR.
 describe('detectPRs - cardio exclusion', () => {
   it('ignores a cardio candidate even with non-zero weight/reps', () => {
-    expect(
-      detectPRs({ weight: 100, reps: 10, isWarmup: false, durationSec: 750 }, []),
-    ).toEqual([]);
+    expect(detectPRs({ weight: 100, reps: 10, isWarmup: false, durationSec: 750 }, [])).toEqual([]);
   });
 
   it('ignores a normalized cardio candidate (weight 0, reps 1)', () => {
-    expect(
-      detectPRs({ weight: 0, reps: 1, isWarmup: false, durationSec: 750 }, []),
-    ).toEqual([]);
+    expect(detectPRs({ weight: 0, reps: 1, isWarmup: false, durationSec: 750 }, [])).toEqual([]);
   });
 });
 
@@ -159,17 +155,20 @@ describe('exerciseRecords', () => {
       rset('Bench', 100, 5, '2026-01-01'),
       rset('Deadlift', 180, 2, '2026-01-01'),
     ]);
-    expect(records.map((r) => r.exerciseName)).toEqual([
-      'Bench',
-      'Deadlift',
-      'Squat',
-    ]);
+    expect(records.map((r) => r.exerciseName)).toEqual(['Bench', 'Deadlift', 'Squat']);
   });
 
   it('returns an empty board when there is no qualifying set', () => {
     expect(exerciseRecords([])).toEqual([]);
-    expect(
-      exerciseRecords([rset('Squat', 100, 5, '2026-01-01', { isWarmup: true })]),
-    ).toEqual([]);
+    expect(exerciseRecords([rset('Squat', 100, 5, '2026-01-01', { isWarmup: true })])).toEqual([]);
+  });
+});
+
+describe('record e1RM rep cap', () => {
+  it('never flags an e1RM PR from a set past 12 reps, nor counts one in the baseline', () => {
+    // 60 x 20 would be 100 kg by Epley: too many reps to say anything about a single.
+    expect(detectPRs(set(60, 20), [set(70, 8)])).toEqual([]);
+    // A high-rep set in history does not raise the bar either.
+    expect(detectPRs(set(80, 5), [set(60, 25), set(75, 5)])).toEqual(['weight', 'e1rm']);
   });
 });

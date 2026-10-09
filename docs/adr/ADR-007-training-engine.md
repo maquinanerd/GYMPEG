@@ -29,3 +29,9 @@ A spec põe progressão, autorregulação, stall e deload no domínio, sem LLM. 
 - Histórico por prescrição: `getLastPerformances` prefere a última sessão do mesmo treino e só recorre à última sessão do exercício quando o treino ainda não tem histórico.
 - Persistência: `TrainingRecommendation`, gravada no início da sessão no servidor (online ou quando o início offline chega), uma por linha de força, com as entradas, o histórico usado e a versão. A tela da sessão roda o mesmo motor sobre as mesmas entradas (`suggestNextWeight` virou adaptador).
 - Limite conhecido: a preferência "autorregulação por prontidão" mora no aparelho; o registro do servidor sempre aplica a prontidão (está nas entradas gravadas).
+
+## Recordes (2026-10-09, épico 2.2)
+
+- `lib/training-engine/records.ts`: `calculateE1RM` (Epley até `TRAINING_GUIDELINE.e1rm.maxReps` = 12 reps; acima disso não há estimativa de recorde) e `detectSessionRecords` (WEIGHT, REPS, E1RM, SET_VOLUME, EXERCISE_VOLUME, WORKOUT_TONNAGE, WEEKLY_TONNAGE, sempre com o valor anterior; primeira vez é linha de base; empate não é recorde; o recorde semanal vai para a sessão que ultrapassa a melhor semana).
+- `PersonalRecord` gravado ao finalizar a sessão (`lib/personal-records.ts`), recalculado do zero para aquela sessão (finalização repetida não duplica), com carga efetiva (peso corporal incluído).
+- O selo de PR ao vivo e o quadro de recordes usam o mesmo e1RM com teto; gráficos e tendências seguem com Epley sem teto.

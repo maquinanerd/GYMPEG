@@ -120,6 +120,17 @@ async function seedEverything(email: string) {
       guidelineVersion: 'test',
     },
   });
+  await db.personalRecord.create({
+    data: {
+      userId,
+      sessionId: session.id,
+      exerciseId: exercise.id,
+      type: 'WEIGHT',
+      value: 62.5,
+      previousValue: 60,
+      achievedAt: new Date(),
+    },
+  });
   await db.set.create({
     data: {
       sessionId: session.id,

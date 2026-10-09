@@ -4,6 +4,7 @@ import { sessionUpdateSchema } from '@/lib/schemas/session';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { resolveFinishedAt } from '@/lib/set-timing';
 import { usableExerciseWhere } from '@/lib/catalog/access';
+import { recordSessionPersonalRecords } from '@/lib/personal-records';
 import type { ExerciseSwaps } from '@/lib/session-swaps';
 
 interface Params {
@@ -71,6 +72,15 @@ export async function PUT(req: Request, props: Params) {
         ...(exerciseSwaps !== undefined ? { exerciseSwaps } : {}),
       },
     });
+    // What this session beat (epic 2.2), once it is finished. Best effort: a
+    // failure must not fail the finish (the offline outbox would retry it).
+    if (data.finish && updated.finishedAt) {
+      try {
+        await recordSessionPersonalRecords(userId, updated.id);
+      } catch (recordErr) {
+        console.error('[sessions] personal record update failed:', recordErr);
+      }
+    }
     return NextResponse.json(updated);
   } catch (err) {
     return handleApiError(err);

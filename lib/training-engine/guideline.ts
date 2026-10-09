@@ -5,7 +5,7 @@
 import type { ExerciseCategory, WeightUnit } from '@/lib/prisma-client';
 
 export const TRAINING_GUIDELINE = {
-  version: 'engine-v2.2026-10-09',
+  version: 'engine-v2.1.2026-10-09',
   source:
     'Double progression on the prescribed rep range; one loadable step down below the range; 10% deload; readiness may only hold or lower the load.',
   // Load step per exercise category, in the lifter's own unit, so a pound
@@ -25,6 +25,9 @@ export const TRAINING_GUIDELINE = {
   // Soreness of the exercise's muscle, 1 (none) to 5 (severe).
   sorenessHoldAtOrAbove: 4,
   sorenessDeloadAtOrAbove: 5,
+  // Estimated 1RM for records: Epley, trusted only up to this many reps (a
+  // 20-rep set says little about a single). Charts keep the uncapped value.
+  e1rm: { formula: 'EPLEY', maxReps: 12 },
 } as const;
 
 export type TrainingGuideline = typeof TRAINING_GUIDELINE;

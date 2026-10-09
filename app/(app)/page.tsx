@@ -12,6 +12,10 @@ import { suggestNextWorkout } from '@/lib/next-workout-query';
 import { cycleWeekAt, isDeloadWeek, programCycle } from '@/lib/program-cycle';
 import { getUserTimeZone } from '@/lib/user-timezone';
 import { StartWorkoutButton } from '@/components/session/start-workout-button';
+import { RecentRecordsCard } from '@/components/progress/recent-records-card';
+import { recentPersonalRecords } from '@/lib/personal-records';
+
+const RECENT_RECORDS_DAYS = 30;
 
 const DAY_KEYS = [
   'monday',
@@ -56,8 +60,14 @@ export default async function DashboardPage() {
   // New accounts are invited (not forced) to set up their training profile.
   const profile = await db.user.findUnique({
     where: { id: session.userId },
-    select: { onboardedAt: true },
+    select: { onboardedAt: true, unit: true },
   });
+
+  // Records beaten in the last 30 days (epic 2.2), newest first.
+  const recentRecords = await recentPersonalRecords(
+    session.userId,
+    new Date(Date.now() - RECENT_RECORDS_DAYS * 24 * 60 * 60 * 1000),
+  );
 
   // The next workout of the program (rotation or fixed days, epic 1.6).
   const next =
@@ -133,6 +143,8 @@ export default async function DashboardPage() {
             </Card>
           </Link>
         )}
+
+        <RecentRecordsCard records={recentRecords} unit={profile?.unit ?? 'KG'} />
 
         {inProgressSession ? (
           <Card className="border-primary/40 bg-primary/5">
