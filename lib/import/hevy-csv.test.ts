@@ -294,3 +294,17 @@ describe('parseHevyCsv caps (untrusted input)', () => {
     expect(res.rows[0]?.exerciseName).toBe('=cmd|calc');
   });
 });
+
+describe('parseHevyCsv RPE (G3)', () => {
+  it('keeps the RPE column on strength sets and ignores invalid values', () => {
+    const res = parseHevyCsv(
+      [
+        HEADER,
+        'Push,2024-01-07 17:15:00,2024-01-07 18:00:00,,Bench Press (Barbell),,,0,normal,80,8,,,8.5',
+        'Push,2024-01-07 17:15:00,2024-01-07 18:00:00,,Bench Press (Barbell),,,1,normal,80,7,,,',
+        'Push,2024-01-07 17:15:00,2024-01-07 18:00:00,,Bench Press (Barbell),,,2,normal,80,6,,,42',
+      ].join('\n'),
+    );
+    expect(res.rows.map((row) => row.rpe ?? null)).toEqual([8.5, null, null]);
+  });
+});

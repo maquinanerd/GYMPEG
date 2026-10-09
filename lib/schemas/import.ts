@@ -4,6 +4,14 @@ import { TCX_MAX_BYTES } from '@/lib/import/tcx';
 import { GPX_MAX_BYTES } from '@/lib/import/gpx';
 import { FIT_MAX_BYTES } from '@/lib/import/fit';
 
+// Manual exercise mapping chosen in the import preview (G3): imported name ->
+// one of the user's exercise ids. Names left out are matched or created as
+// before.
+export const importMappingSchema = z
+  .record(z.string().trim().min(1).max(200), z.string().min(1).max(64))
+  .refine((mapping) => Object.keys(mapping).length <= 500, 'Too many mapped exercises.')
+  .optional();
+
 // Strong CSV import request (issue #100). The csv field carries the raw file
 // text (untrusted): the size cap is enforced here AND on the content-length
 // before parsing. `unit` is the unit the Strong app was set to when exporting
@@ -13,6 +21,7 @@ export const strongImportInputSchema = z.object({
   csv: z.string().min(1).max(STRONG_CSV_MAX_BYTES, 'File too large: the limit is 5 MB.'),
   unit: z.enum(['KG', 'LB']).default('KG'),
   mode: z.enum(['preview', 'confirm']),
+  mapping: importMappingSchema,
 });
 
 export type StrongImportInput = z.infer<typeof strongImportInputSchema>;
@@ -23,6 +32,7 @@ export type StrongImportInput = z.infer<typeof strongImportInputSchema>;
 export const hevyImportInputSchema = z.object({
   csv: z.string().min(1).max(STRONG_CSV_MAX_BYTES, 'File too large: the limit is 5 MB.'),
   mode: z.enum(['preview', 'confirm']),
+  mapping: importMappingSchema,
 });
 
 export type HevyImportInput = z.infer<typeof hevyImportInputSchema>;
@@ -32,6 +42,7 @@ export type HevyImportInput = z.infer<typeof hevyImportInputSchema>;
 export const gymcoachImportInputSchema = z.object({
   csv: z.string().min(1).max(STRONG_CSV_MAX_BYTES, 'File too large: the limit is 5 MB.'),
   mode: z.enum(['preview', 'confirm']),
+  mapping: importMappingSchema,
 });
 
 export type GymcoachImportInput = z.infer<typeof gymcoachImportInputSchema>;

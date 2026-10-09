@@ -7,6 +7,7 @@ import {
   headerKey,
   IMPORT_CSV_MAX_BYTES,
   IMPORT_CSV_MAX_ROWS,
+  parseRpeCell,
   readCsvRecords,
 } from '@/lib/import/csv';
 
@@ -36,6 +37,8 @@ export interface StrongCsvRow {
   // meters (the #133 set model). Absent on strength rows.
   durationSec?: number;
   distanceM?: number | null;
+  // RPE of the set (6-10), when the export has the column.
+  rpe?: number | null;
 }
 
 export interface StrongCsvLineError {
@@ -87,6 +90,7 @@ interface HeaderMap {
   reps: number;
   distance: number | null;
   seconds: number | null;
+  rpe: number | null;
   // Unit forced by the header itself ("Weight (kg)" / "Weight (lbs)"), if any.
   forcedUnit: WeightUnit | null;
 }
@@ -131,6 +135,7 @@ function mapHeader(cells: string[]): HeaderMap | null {
   }
   const distance = find('distance');
   const seconds = find('seconds', 'duration (sec)');
+  const rpe = find('rpe');
   return {
     date,
     workoutName,
@@ -140,6 +145,7 @@ function mapHeader(cells: string[]): HeaderMap | null {
     reps,
     distance: distance === -1 ? null : distance,
     seconds: seconds === -1 ? null : seconds,
+    rpe: rpe === -1 ? null : rpe,
     forcedUnit,
   };
 }
@@ -163,10 +169,7 @@ function toDateKey(cell: string): string | null {
 
 // Parse a Strong CSV export. `unit` is the unit the Strong app was set to
 // (user-chosen toggle, default kg); a unit suffix in the header overrides it.
-export function parseStrongCsv(
-  text: string,
-  unit: WeightUnit = 'KG',
-): StrongCsvParseResult {
+export function parseStrongCsv(text: string, unit: WeightUnit = 'KG'): StrongCsvParseResult {
   const fail = (fatalError: string): StrongCsvParseResult => ({
     ok: false,
     fatalError,
@@ -203,8 +206,7 @@ export function parseStrongCsv(
   let cardioSkipped = 0;
 
   for (const record of dataRecords) {
-    const get = (idx: number | null) =>
-      idx === null ? undefined : record.fields[idx];
+    const get = (idx: number | null) => (idx === null ? undefined : record.fields[idx]);
 
     const dateKey = toDateKey(get(map.date) ?? '');
     if (!dateKey) {
@@ -257,8 +259,7 @@ export function parseStrongCsv(
       continue;
     }
 
-    const weightKg =
-      effectiveUnit === 'LB' ? roundWeight(lbToKg(weightRaw), 2) : weightRaw;
+    const weightKg = effectiveUnit === 'LB' ? roundWeight(lbToKg(weightRaw), 2) : weightRaw;
 
     const parsed = rowSchema.safeParse({
       dateKey,
@@ -276,7 +277,8 @@ export function parseStrongCsv(
       });
       continue;
     }
-    rows.push(parsed.data);
+    const rpe = map.rpe === null ? null : parseRpeCell(get(map.rpe));
+    rows.push({ ...parsed.data, ...(rpe != null && { rpe }) });
   }
 
   return { ok: true, fatalError: null, rows, errors, cardioSkipped };

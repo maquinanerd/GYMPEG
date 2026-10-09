@@ -10,6 +10,7 @@ import {
   setDuplicateKey,
 } from '@/lib/import/strong-import';
 import { usableExerciseWhere } from '@/lib/catalog/access';
+import { applyExerciseMapping, mappingSuggestions } from '@/lib/import/mapping';
 
 // How many per-line errors the response reports (the count is always exact).
 const MAX_REPORTED_ERRORS = 50;
@@ -48,7 +49,14 @@ export async function POST(req: Request) {
 
     // Existing data on the imported days, for duplicate skipping and the
     // "you already trained that day" preview warning.
-    const dateKeys = [...new Set(parsed.rows.map((r) => r.dateKey))].sort();
+    // The user's exercises: the planner's known names and the candidates of
+    // the manual mapping chosen in the preview, applied before planning.
+    const exercises = await db.exercise.findMany({
+      where: usableExerciseWhere(userId),
+      select: { id: true, name: true },
+    });
+    const rows = applyExerciseMapping(parsed.rows, data.mapping, exercises);
+    const dateKeys = [...new Set(rows.map((r) => r.dateKey))].sort();
     const existingSetKeys = new Set<string>();
     const existingSessionDates = new Set<string>();
     if (dateKeys.length > 0) {
@@ -90,12 +98,8 @@ export async function POST(req: Request) {
       }
     }
 
-    const exercises = await db.exercise.findMany({
-      where: usableExerciseWhere(userId),
-      select: { name: true },
-    });
     const plan = buildStrongImportPlan(
-      parsed.rows,
+      rows,
       exercises.map((e) => e.name),
       existingSetKeys,
     );
@@ -116,6 +120,7 @@ export async function POST(req: Request) {
         sessions: plan.sessions.length,
         sets: plan.totalSets,
         newExercises: plan.newExerciseNames,
+        suggestions: mappingSuggestions(plan.newExerciseNames, exercises),
         existingSessionDates: [...existingSessionDates].filter((d) => dateKeys.includes(d)).sort(),
         ...common,
       });

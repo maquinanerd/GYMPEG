@@ -141,6 +141,11 @@ export const settings = {
       '{count, plural, one {# cardio set} other {# cardio sets}} (duration/distance) included',
     cardioSkipped:
       '{count, plural, one {# cardio row} other {# cardio rows}} without a usable duration will be skipped',
+    mappingTitle: 'Match exercises',
+    mappingHint:
+      'These names match none of your exercises. Pick the one each refers to, or keep it as a new exercise.',
+    mappingCreate: 'Create as a new exercise',
+    mappingFor: 'Exercise for {name}',
     existingDates: 'You already have sessions on: {dates}',
     unreadable:
       '{count, plural, one {# line could} other {# lines could}} not be read and will be skipped:',

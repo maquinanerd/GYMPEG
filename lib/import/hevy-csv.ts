@@ -6,6 +6,7 @@ import {
   headerKey,
   IMPORT_CSV_MAX_BYTES,
   IMPORT_CSV_MAX_ROWS,
+  parseRpeCell,
   readCsvRecords,
   type CsvLineError,
 } from '@/lib/import/csv';
@@ -85,6 +86,7 @@ interface HeaderMap {
   // True when the distance column is the miles variant (issue #134).
   distanceIsMiles: boolean;
   duration: number | null;
+  rpe: number | null;
 }
 
 // Recognize Hevy's export header (snake_case columns; extra columns are fine,
@@ -130,6 +132,7 @@ function mapHeader(cells: string[]): HeaderMap | null {
     if (distance !== -1) distanceIsMiles = true;
   }
   const duration = find('duration_seconds');
+  const rpe = find('rpe');
   return {
     title,
     startTime,
@@ -143,12 +146,23 @@ function mapHeader(cells: string[]): HeaderMap | null {
     distance: distance === -1 ? null : distance,
     distanceIsMiles,
     duration: duration === -1 ? null : duration,
+    rpe: rpe === -1 ? null : rpe,
   };
 }
 
 const MONTHS: Record<string, number> = {
-  jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
-  jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12,
+  jan: 1,
+  feb: 2,
+  mar: 3,
+  apr: 4,
+  may: 5,
+  jun: 6,
+  jul: 7,
+  aug: 8,
+  sep: 9,
+  oct: 10,
+  nov: 11,
+  dec: 12,
 };
 
 // Parses Hevy's two documented timestamp formats into a UTC instant:
@@ -157,17 +171,19 @@ const MONTHS: Record<string, number> = {
 // Hevy exports local wall-clock times with no zone; we read them as UTC -
 // the same honest convention as Strong's noon-UTC default, but with the real
 // time of day preserved. Returns null when the cell is not a real date.
-export function parseHevyTimestamp(
-  cell: string,
-): { dateKey: string; iso: string } | null {
+export function parseHevyTimestamp(cell: string): { dateKey: string; iso: string } | null {
   const trimmed = cell.trim();
   let y: number, mo: number, d: number, h: number, mi: number, s: number;
 
   let m = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/.exec(trimmed);
   if (m) {
     [y, mo, d, h, mi, s] = [
-      Number(m[1]), Number(m[2]), Number(m[3]),
-      Number(m[4]), Number(m[5]), Number(m[6] ?? 0),
+      Number(m[1]),
+      Number(m[2]),
+      Number(m[3]),
+      Number(m[4]),
+      Number(m[5]),
+      Number(m[6] ?? 0),
     ];
   } else {
     m = /^(\d{1,2}) ([A-Za-z]{3}) (\d{4}),? (\d{1,2}):(\d{2})$/.exec(trimmed);
@@ -179,11 +195,7 @@ export function parseHevyTimestamp(
 
   if (h > 23 || mi > 59 || s > 59) return null;
   const date = new Date(Date.UTC(y, mo - 1, d, h, mi, s));
-  if (
-    date.getUTCFullYear() !== y ||
-    date.getUTCMonth() !== mo - 1 ||
-    date.getUTCDate() !== d
-  ) {
+  if (date.getUTCFullYear() !== y || date.getUTCMonth() !== mo - 1 || date.getUTCDate() !== d) {
     return null;
   }
   return { dateKey: date.toISOString().slice(0, 10), iso: date.toISOString() };
@@ -227,8 +239,7 @@ export function parseHevyCsv(text: string): HevyCsvParseResult {
   let cardioSkipped = 0;
 
   for (const record of dataRecords) {
-    const get = (idx: number | null) =>
-      idx === null ? undefined : record.fields[idx];
+    const get = (idx: number | null) => (idx === null ? undefined : record.fields[idx]);
 
     const start = parseHevyTimestamp(get(map.startTime) ?? '');
     if (!start) {
@@ -306,9 +317,7 @@ export function parseHevyCsv(text: string): HevyCsvParseResult {
     // be silently dropped as a duplicate), so it fails the row instead.
     const setIndexCell = get(map.setIndex);
     const setIndex =
-      setIndexCell === undefined || setIndexCell.trim() === ''
-        ? NaN
-        : asNumber(setIndexCell);
+      setIndexCell === undefined || setIndexCell.trim() === '' ? NaN : asNumber(setIndexCell);
 
     const parsed = rowSchema.safeParse({
       dateKey: start.dateKey,
@@ -326,8 +335,10 @@ export function parseHevyCsv(text: string): HevyCsvParseResult {
       });
       continue;
     }
+    const rpe = map.rpe === null ? null : parseRpeCell(get(map.rpe));
     rows.push({
       ...parsed.data,
+      ...(rpe != null && { rpe }),
       isWarmup: setType === 'warmup',
       isDropSet: setType === 'dropset',
       startedAtIso: start.iso,

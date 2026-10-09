@@ -229,3 +229,17 @@ describe('parseStrongCsv caps (untrusted input)', () => {
     expect(res.rows[0]?.exerciseName).toBe('=cmd|calc');
   });
 });
+
+describe('parseStrongCsv RPE (G3)', () => {
+  it('reads an RPE column when the export has one', () => {
+    const res = parseStrongCsv(
+      [
+        'Date,Workout Name,Exercise Name,Set Order,Weight,Reps,RPE',
+        '2024-03-01 18:00:00,Legs,Squat (Barbell),1,100,5,9',
+        '2024-03-01 18:00:00,Legs,Squat (Barbell),2,100,5,',
+      ].join('\n'),
+      'KG',
+    );
+    expect(res.rows.map((row) => row.rpe ?? null)).toEqual([9, null]);
+  });
+});

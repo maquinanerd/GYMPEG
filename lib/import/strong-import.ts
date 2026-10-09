@@ -34,6 +34,8 @@ export interface NormalizedImportRow {
   // Richer per-set data the GymCoach native CSV carries (issue #270). Absent
   // for Strong/Hevy rows - their path is unchanged.
   rir?: number | null;
+  // RPE (6-10) from exports that carry it (Strong, Hevy).
+  rpe?: number | null;
   notes?: string | null;
   avgHr?: number | null;
   maxHr?: number | null;
@@ -56,6 +58,7 @@ export interface PlannedSet {
   durationSec?: number | null;
   distanceM?: number | null;
   rir?: number | null;
+  rpe?: number | null;
   notes?: string | null;
   avgHr?: number | null;
   maxHr?: number | null;
@@ -161,6 +164,7 @@ export function buildStrongImportPlan(
       ...(row.isDropSet !== undefined && { isDropSet: row.isDropSet }),
       ...(isCardio && { durationSec: row.durationSec, distanceM: row.distanceM ?? null }),
       ...(row.rir != null && { rir: row.rir }),
+      ...(row.rpe != null && { rpe: row.rpe }),
       ...(row.notes != null && { notes: row.notes }),
       ...(row.avgHr != null && { avgHr: row.avgHr }),
       ...(row.maxHr != null && { maxHr: row.maxHr }),
@@ -302,6 +306,7 @@ export async function executeStrongImport(
           durationSec: s.durationSec ?? null,
           distanceM: s.distanceM ?? null,
           rir: s.rir ?? null,
+          rpe: s.rpe ?? null,
           notes: s.notes ?? null,
           avgHr: s.avgHr ?? null,
           maxHr: s.maxHr ?? null,

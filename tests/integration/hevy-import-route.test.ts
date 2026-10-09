@@ -159,9 +159,7 @@ describe('POST /api/import/hevy (confirm)', () => {
     actAs(user.id);
 
     await postImport(importReq({ csv: CSV, mode: 'confirm' }));
-    expect(
-      await db.exercise.count({ where: { userId: user.id, name: 'Bench Press' } }),
-    ).toBe(1);
+    expect(await db.exercise.count({ where: { userId: user.id, name: 'Bench Press' } })).toBe(1);
     expect(await db.set.count({ where: { session: { userId: other.id } } })).toBe(0);
   });
 
@@ -208,5 +206,69 @@ describe('POST /api/import/hevy (confirm)', () => {
     // Unchanged Strong behavior: noon-UTC fallback and Strong-labelled notes.
     expect(session.startedAt.toISOString()).toBe('2026-06-01T12:00:00.000Z');
     expect(session.notes).toBe('Imported from Strong - Push');
+  });
+});
+
+// Manual exercise mapping and RPE (G3): a name that matches nothing can be
+// mapped in the preview to one of the user's exercises; the RPE column is kept.
+describe('POST /api/import/hevy (mapping and RPE)', () => {
+  const MAPPED_CSV = [
+    'title,start_time,end_time,exercise_title,set_index,set_type,weight_kg,reps,rpe',
+    'Push,2026-06-02 09:00:00,2026-06-02 10:00:00,Supino da academia,0,normal,80,8,8.5',
+    'Push,2026-06-02 09:00:00,2026-06-02 10:00:00,Supino da academia,1,normal,80,7,',
+  ].join('\n');
+
+  it('suggests matches, imports onto the chosen exercise and keeps the RPE', async () => {
+    const user = await seedUser('hevy-mapping@test.dev');
+    actAs(user.id);
+    const own = await db.exercise.create({
+      data: {
+        userId: user.id,
+        name: 'Supino com halteres',
+        muscleGroup: 'CHEST',
+        category: 'COMPOUND',
+      },
+    });
+
+    const preview = await (
+      await postImport(importReq({ csv: MAPPED_CSV, mode: 'preview' }))
+    ).json();
+    expect(preview.newExercises).toEqual(['Supino da academia']);
+    expect(preview.suggestions['Supino da academia'].map((s: { id: string }) => s.id)).toContain(
+      own.id,
+    );
+
+    const res = await postImport(
+      importReq({ csv: MAPPED_CSV, mode: 'confirm', mapping: { 'Supino da academia': own.id } }),
+    );
+    expect(res.status).toBe(200);
+    expect((await res.json()).createdExercises).toBe(0);
+    const sets = await db.set.findMany({
+      where: { session: { userId: user.id } },
+      orderBy: { setNumber: 'asc' },
+    });
+    expect(sets.map((s) => [s.exerciseId, s.rpe])).toEqual([
+      [own.id, 8.5],
+      [own.id, null],
+    ]);
+  });
+
+  it('refuses a mapping to an exercise the user cannot use', async () => {
+    const owner = await seedUser('hevy-mapping-owner@test.dev');
+    const intruder = await seedUser('hevy-mapping-intruder@test.dev');
+    const foreign = await db.exercise.create({
+      data: { userId: owner.id, name: 'Private press', muscleGroup: 'CHEST', category: 'COMPOUND' },
+    });
+    actAs(intruder.id);
+
+    const res = await postImport(
+      importReq({
+        csv: MAPPED_CSV,
+        mode: 'confirm',
+        mapping: { 'Supino da academia': foreign.id },
+      }),
+    );
+    expect(res.status).toBe(400);
+    expect(await db.set.count({ where: { session: { userId: intruder.id } } })).toBe(0);
   });
 });

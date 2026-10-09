@@ -28,6 +28,12 @@ export function catalogPtBrName(name: string): string | null {
   return byName.get(normalizeExerciseText(name))?.namePtBr ?? null;
 }
 
+// Search terms (aliases, pt-BR and English names) of a catalog exercise, or
+// none for a custom one.
+export function exerciseSearchTerms(name: string): string[] {
+  return byName.get(normalizeExerciseText(name))?.terms ?? [];
+}
+
 // True when every word of the query appears in the exercise's name, its
 // displayed name or one of its catalog search terms (accent- and
 // case-insensitive): "puxada" finds "Puxada alta aberta", "pulley" finds it

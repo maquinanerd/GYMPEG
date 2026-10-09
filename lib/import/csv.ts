@@ -91,6 +91,17 @@ export function headerKey(cell: string): string {
   return cell.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
+// RPE cell of an export (Strong, Hevy): 6 to 10 in half steps, a decimal
+// comma accepted. Anything else (empty, out of range) is no RPE, never an
+// error: the set itself is still imported.
+export function parseRpeCell(cell: string | undefined): number | null {
+  const trimmed = cell?.trim().replace(',', '.');
+  if (!trimmed) return null;
+  const value = Number(trimmed);
+  if (!Number.isFinite(value) || value < 6 || value > 10) return null;
+  return Math.round(value * 2) / 2;
+}
+
 // Lenient numeric cell reader: empty/absent reads as 0, garbage as NaN (so
 // Zod rejects it downstream with a per-line error).
 export function asNumber(cell: string | undefined): number {

@@ -144,6 +144,11 @@ export const settings = {
       '{count, plural, one {# série cardio incluse} other {# séries cardio incluses}} (durée/distance)',
     cardioSkipped:
       '{count, plural, one {# ligne cardio sans durée exploitable sera ignorée} other {# lignes cardio sans durée exploitable seront ignorées}}',
+    mappingTitle: 'Associer les exercices',
+    mappingHint:
+      'Ces noms ne correspondent à aucun de vos exercices. Choisissez celui que chacun désigne ou gardez-le comme nouvel exercice.',
+    mappingCreate: 'Créer un nouvel exercice',
+    mappingFor: 'Exercice pour {name}',
     existingDates: 'Vous avez déjà des séances les : {dates}',
     unreadable:
       '{count, plural, one {# ligne n’a pas pu être lue et sera ignorée} other {# lignes n’ont pas pu être lues et seront ignorées}} :',

@@ -59,6 +59,9 @@ interface Preview {
   sessions: number;
   sets: number;
   newExercises: string[];
+  // Up to three of the user's exercises per new name, for the manual mapping
+  // (CSV imports only).
+  suggestions?: Record<string, { id: string; name: string }[]>;
   existingSessionDates: string[];
   duplicatesSkipped: number;
   // Cardio sets to import (issue #134) vs rows that still cannot be
@@ -194,6 +197,8 @@ export function ImportSection() {
   const [fitPayloads, setFitPayloads] = useState<string[] | null>(null);
   const [fitBatch, setFitBatch] = useState<FitBatchPreview | null>(null);
   const [busy, setBusy] = useState(false);
+  // Imported name -> chosen exercise id; absent names are created as new.
+  const [mapping, setMapping] = useState<Record<string, string>>({});
 
   const meta = FORMAT_META[format];
   const isTcx = format === 'TCX';
@@ -208,6 +213,7 @@ export function ImportSection() {
   }
 
   function resetPreviews() {
+    setMapping({});
     setCsvText(null);
     setFileName(null);
     setPreview(null);
@@ -307,7 +313,11 @@ export function ImportSection() {
     }
   }
 
-  async function callApi(fileText: string, mode: 'preview' | 'confirm') {
+  async function callApi(
+    fileText: string,
+    mode: 'preview' | 'confirm',
+    chosen: Record<string, string> = {},
+  ) {
     const res = await fetch(meta.endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -319,9 +329,12 @@ export function ImportSection() {
           ? { xml: fileText, mode }
           : isGpx
             ? { gpx: fileText, mode }
-            : meta.hasUnitToggle
-              ? { csv: fileText, unit, mode }
-              : { csv: fileText, mode },
+            : {
+                csv: fileText,
+                mode,
+                ...(meta.hasUnitToggle ? { unit } : {}),
+                ...(Object.keys(chosen).length > 0 ? { mapping: chosen } : {}),
+              },
       ),
     });
     const json = (await res.json().catch(() => null)) as
@@ -359,7 +372,7 @@ export function ImportSection() {
     if (!csvText) return;
     setBusy(true);
     try {
-      const json = await callApi(csvText, 'confirm');
+      const json = await callApi(csvText, 'confirm', mapping);
       toast.success(
         t('importDone', {
           sessions: json?.createdSessions ?? 0,
@@ -371,6 +384,7 @@ export function ImportSection() {
       setFileName(null);
       setPreview(null);
       setTcxPreview(null);
+      setMapping({});
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t('importFailed'));
     } finally {
@@ -572,6 +586,46 @@ export function ImportSection() {
                 </li>
               )}
             </ul>
+
+            {preview.newExercises.some(
+              (name) => (preview.suggestions?.[name] ?? []).length > 0,
+            ) && (
+              <div className="mt-3 space-y-2" data-testid="import-mapping">
+                <p className="font-medium">{t('mappingTitle')}</p>
+                <p className="text-xs text-muted-foreground">{t('mappingHint')}</p>
+                {preview.newExercises
+                  .filter((name) => (preview.suggestions?.[name] ?? []).length > 0)
+                  .map((name) => (
+                    <label
+                      key={name}
+                      className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3"
+                    >
+                      <span className="min-w-0 flex-1 truncate">{name}</span>
+                      <select
+                        className="h-9 rounded-md border border-input bg-background px-2 text-sm"
+                        value={mapping[name] ?? ''}
+                        disabled={busy}
+                        aria-label={t('mappingFor', { name })}
+                        onChange={(event) =>
+                          setMapping((current) => {
+                            const next = { ...current };
+                            if (event.target.value) next[name] = event.target.value;
+                            else delete next[name];
+                            return next;
+                          })
+                        }
+                      >
+                        <option value="">{t('mappingCreate')}</option>
+                        {(preview.suggestions?.[name] ?? []).map((exercise) => (
+                          <option key={exercise.id} value={exercise.id}>
+                            {exerciseName(exercise.name)}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  ))}
+              </div>
+            )}
 
             {preview.errorCount > 0 && (
               <div className="mt-2">
