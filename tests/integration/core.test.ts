@@ -554,14 +554,15 @@ describe('buildCoachPayload goals (issue #101)', () => {
 });
 
 describe('buildCoachPayload fatigue (issue #101)', () => {
-  // Three sessions on distinct days with an identical top set: e1RM flat over
-  // the full stall lookback -> isStalled flags the lift.
+  // Three sessions six days apart with an identical top set: e1RM flat over
+  // the full stall lookback, spanning more than the 10 days a stall needs
+  // (epic 2.5) -> the lift is flagged.
   async function seedStalledLift(userId: string, name: string) {
     const exercise = await db.exercise.create({
       data: { userId, name, muscleGroup: 'CHEST', category: 'COMPOUND' },
     });
     for (let i = 0; i < 3; i++) {
-      const startedAt = new Date(Date.now() - (10 - i) * 24 * 60 * 60 * 1000);
+      const startedAt = new Date(Date.now() - (20 - i * 6) * 24 * 60 * 60 * 1000);
       const session = await db.session.create({
         data: { userId, startedAt, finishedAt: startedAt },
       });
