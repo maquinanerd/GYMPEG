@@ -1,7 +1,10 @@
 import { expect, test, type Page } from '@playwright/test';
 import { Client } from 'pg';
 
-test.use({ viewport: { width: 390, height: 844 }, extraHTTPHeaders: { 'x-forwarded-for': '10.111.1.91' } });
+test.use({
+  viewport: { width: 390, height: 844 },
+  extraHTTPHeaders: { 'x-forwarded-for': '10.111.1.91' },
+});
 
 async function seedReturnScenario(page: Page) {
   const email = 'e2e-return-' + Date.now() + '@test.dev';
@@ -98,10 +101,11 @@ async function seedReturnScenario(page: Page) {
       const startedAt = new Date(now - age * 86_400_000);
       const finishedAt = new Date(startedAt.getTime() + 3_600_000);
       const completedAt = new Date(startedAt.getTime() + 60_000);
-      await sql.query(
-        'UPDATE "Session" SET "startedAt" = $1, "finishedAt" = $2 WHERE id = $3',
-        [startedAt, finishedAt, historical.id],
-      );
+      await sql.query('UPDATE "Session" SET "startedAt" = $1, "finishedAt" = $2 WHERE id = $3', [
+        startedAt,
+        finishedAt,
+        historical.id,
+      ]);
       await sql.query('UPDATE "Set" SET "completedAt" = $1 WHERE "sessionId" = $2', [
         completedAt,
         historical.id,
@@ -119,7 +123,9 @@ async function seedReturnScenario(page: Page) {
   return { sessionId: session.id as string };
 }
 
-test('a long break activates a conservative first working set without replacing normal progression', async ({ page }) => {
+test('a long break activates a conservative first working set without replacing normal progression', async ({
+  page,
+}) => {
   const { sessionId } = await seedReturnScenario(page);
   await page.goto('/session/' + sessionId);
 
@@ -128,6 +134,9 @@ test('a long break activates a conservative first working set without replacing 
   await expect(notice).toContainText('Sets today: 1. Target RIR: 4.');
   await expect(notice).toContainText('Conservative starting load: 40 kg.');
 
+  // The detailed card (with the drop-set switch) sits in the collapsed
+  // "Detailed entry" section under the set table.
+  await page.getByText('Detailed entry (shortcuts, AI)').click();
   const loadInput = page.locator('input[type="number"]').first();
   await expect(loadInput).toHaveValue('40');
   await expect(page.getByRole('switch', { name: 'Drop set' })).toBeDisabled();

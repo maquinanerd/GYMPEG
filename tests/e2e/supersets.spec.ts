@@ -99,8 +99,7 @@ test('a lifter can pair two exercises as a superset and run the A1/A2 flow', asy
   // Log a working set on A1. For a same-superset transition, the runner shows
   // A2 immediately while the short rest is still counting down so the lifter
   // can move into position; skipping rest must not navigate a second time.
-  await page.getByLabel('Quick entry').fill('60x8@2');
-  await page.getByRole('button', { name: /log the set/i }).click();
+  await page.getByRole('button', { name: /^confirm set \d+$/i }).click();
   await expect(page.getByTestId('rest-remaining')).toBeVisible();
   await expect(page.getByText('Superset A2')).toBeVisible();
   await expect(page.getByText(/Exercise 2\/2 · E2E Row/)).toBeVisible();
@@ -155,32 +154,28 @@ test('a superset gives a short rest between members and a full rest after the gr
   // the FULL per-exercise rest (here 90s, > 20) run before the group repeats.
 
   // A1 set 1 -> transition (A2 still owes sets).
-  await page.getByLabel('Quick entry').fill('60x8@2');
-  await page.getByRole('button', { name: /log the set/i }).click();
+  await page.getByRole('button', { name: /^confirm set \d+$/i }).click();
   await expect(restValue).toBeVisible();
   expect(Number(await restValue.textContent())).toBeLessThanOrEqual(20);
   await page.getByRole('button', { name: /skip/i }).click();
   await expect(page.getByText('Superset A2')).toBeVisible();
 
   // A2 set 1 -> transition (A1 still owes its 2nd set).
-  await page.getByLabel('Quick entry').fill('50x10@2');
-  await page.getByRole('button', { name: /log the set/i }).click();
+  await page.getByRole('button', { name: /^confirm set \d+$/i }).click();
   await expect(restValue).toBeVisible();
   expect(Number(await restValue.textContent())).toBeLessThanOrEqual(20);
   await page.getByRole('button', { name: /skip/i }).click();
   await expect(page.getByText('Superset A1')).toBeVisible();
 
   // A1 set 2 -> transition (A2 still owes its 2nd set).
-  await page.getByLabel('Quick entry').fill('60x8@2');
-  await page.getByRole('button', { name: /log the set/i }).click();
+  await page.getByRole('button', { name: /^confirm set \d+$/i }).click();
   await expect(restValue).toBeVisible();
   expect(Number(await restValue.textContent())).toBeLessThanOrEqual(20);
   await page.getByRole('button', { name: /skip/i }).click();
   await expect(page.getByText('Superset A2')).toBeVisible();
 
   // A2 set 2 -> group complete: the FULL rest runs (> 20s) before the repeat.
-  await page.getByLabel('Quick entry').fill('50x10@2');
-  await page.getByRole('button', { name: /log the set/i }).click();
+  await page.getByRole('button', { name: /^confirm set \d+$/i }).click();
   await expect(restValue).toBeVisible();
   expect(Number(await restValue.textContent())).toBeGreaterThan(20);
 

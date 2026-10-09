@@ -193,6 +193,11 @@ async function seedFullUser(email: string) {
             reps: 5,
             rir: 2,
             isDropSet: true,
+            type: 'DROP',
+            rpe: 8.5,
+            targetRepsMin: 3,
+            targetRepsMax: 5,
+            targetRir: 2,
             notes: 'top set',
             completedAt: new Date('2026-06-01T10:10:00.000Z'),
           },
@@ -365,6 +370,13 @@ describe('GET /api/backup - export completeness (issue #168)', () => {
         modelName: 'Bench Pro',
         weightOptions: [20, 40, 60, 80, 100],
       },
+      isDropSet: true,
+      type: 'DROP',
+      rpe: 8.5,
+      targetRepsMin: 3,
+      targetRepsMax: 5,
+      targetRir: 2,
+      bodyweightKgSnapshot: null,
     });
     const cardio = sets.find((s) => s.exerciseName === 'Running');
     expect(cardio).toMatchObject({ durationSec: 1800, distanceM: 5000, avgHr: 152, maxHr: 181 });
@@ -553,7 +565,7 @@ describe('POST /api/backup - restore round trip (issue #168)', () => {
               reps: 5,
               rir: 1,
               notes: null,
-              isWarmup: false,
+              isWarmup: true,
               isDropSet: false,
               completedAt: '2025-11-03T10:15:00.000Z',
             },
@@ -586,6 +598,8 @@ describe('POST /api/backup - restore round trip (issue #168)', () => {
     expect(set?.durationSec).toBeNull();
     expect(set?.avgHr).toBeNull();
     expect(set?.maxHr).toBeNull();
+    // Older backups carry only the flags: the type is derived from them.
+    expect(set).toMatchObject({ type: 'WARMUP', isWarmup: true, rpe: null, targetRir: null });
 
     // No profile in a v1 file: the account's profile is left alone.
     const profile = await db.user.findUnique({ where: { id: user.id } });

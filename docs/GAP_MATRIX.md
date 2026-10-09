@@ -22,9 +22,10 @@ Base: auditoria de 2026-10-08 ([00_OPEN_SOURCE_AUDIT.md](00_OPEN_SOURCE_AUDIT.md
 | 2026-10-09 | Fuso horário do usuário em semanas, streaks, PRs, coach e datas (M2 parcial) | `0347b01` |
 | 2026-10-09 | Sync offline idempotente: `clientMutationId`, horário do aparelho, série tardia aceita, hidratação sem duplicar, finalizar só com fila vazia | `d0ee1bc` |
 | 2026-10-09 | Catálogo global curado (229 exercícios, 19 músculos), busca pt-BR por aliases, ficha do exercício, fusão das cópias por conta (M5) | `1aa05a5` |
-| 2026-10-09 | Onboarding em 5 passos: objetivo, experiência, disponibilidade, academia e equipamentos, músculos prioritários, exercícios a evitar, dados opcionais (M2) | este commit |
+| 2026-10-09 | Onboarding em 5 passos: objetivo, experiência, disponibilidade, academia e equipamentos, músculos prioritários, exercícios a evitar, dados opcionais (M2) | `9c83af1` |
+| 2026-10-09 | Logger único: a tabela de séries é o fluxo principal, já preenchida com a progressão do motor (pirâmides deslocadas pela mudança de carga do dia); `Set.type` (aquecimento, trabalho, drop, AMRAP, falha, back-off), RPE opcional, alvo congelado na série, peso corporal no registro; aquecimentos fora da numeração; backup e import preservam os campos novos (M7 parcial) | este commit |
 
-Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (nonce); iniciar/finalizar treino offline e outbox por usuário; `Set.type`/`rpe`/alvo.
+Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (nonce); iniciar/finalizar treino offline e outbox por usuário; substituir exercício só nesta sessão; aquecimento gerado como séries WARMUP.
 
 ## Fundação e plataforma
 
@@ -91,8 +92,8 @@ Pendentes nos mesmos épicos: reset de senha por e-mail; CSP com `script-src` (n
 
 | Feature | Atual | Alvo | Gap | Prio | Esforço | Risco |
 |---|---|---|---|---|---|---|
-| Registrar série em 2-3 toques | 1 toque, mas 2 loggers divergentes | Um logger, sugestão do motor pré-preenchida | Unificar | P0 | M | M |
-| `WorkoutSet` completo | weight, reps, rir Int, isWarmup/isDropSet | + type, rpe, clientMutationId, performedAt, alvo×realizado | Migração | P0 | M | A |
+| Registrar série em 2-3 toques | 1 toque, mas 2 loggers divergentes | Um logger, sugestão do motor pré-preenchida | ✓ tabela como fluxo principal; cartão detalhado (atalhos, IA) recolhido | P0 | M | M |
+| `WorkoutSet` completo | weight, reps, rir Int, isWarmup/isDropSet | + type, rpe, clientMutationId, performedAt, alvo×realizado | ✓ `type`, `rpe`, alvo, `bodyweightKgSnapshot` (flags legadas em sincronia até o *contract*) | P0 | M | A |
 | Sync offline idempotente | Sem idempotência (O1-O7) | Outbox, UUIDv7 do cliente, dedupe no servidor, resultado por item | Reescrever `lib/sync.ts` | P0 | L | A |
 | Iniciar/finalizar offline | Exige rede | Sessão criada no cliente | Parte do novo sync | P0 | M | A |
 | Logout limpa dados locais | Não limpa | Limpar IndexedDB + Cache Storage | Ajuste | P0 | S | A |

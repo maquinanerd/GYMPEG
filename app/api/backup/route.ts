@@ -7,10 +7,12 @@ import {
   EquipmentType,
   MessageRole,
   MuscleGroup,
+  SetType,
   Sex,
   TrainingGoal,
   WeightUnit,
 } from '@/lib/prisma-client';
+import { resolveSetType } from '@/lib/schemas/set';
 import { db } from '@/lib/db';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import {
@@ -279,6 +281,12 @@ export async function GET() {
           notes: set.notes,
           isWarmup: set.isWarmup,
           isDropSet: set.isDropSet,
+          type: set.type,
+          rpe: set.rpe,
+          targetRepsMin: set.targetRepsMin,
+          targetRepsMax: set.targetRepsMax,
+          targetRir: set.targetRir,
+          bodyweightKgSnapshot: set.bodyweightKgSnapshot,
           completedAt: set.completedAt.toISOString(),
         })),
       })),
@@ -460,6 +468,14 @@ const importSchema = z.object({
               notes: z.string().max(2000).nullable().optional(),
               isWarmup: z.boolean(),
               isDropSet: z.boolean(),
+              // Unified logger fields; absent in older backups, where the type
+              // is derived from the flags.
+              type: z.nativeEnum(SetType).optional(),
+              rpe: z.number().min(6).max(10).nullable().optional(),
+              targetRepsMin: z.number().int().min(0).max(1000).nullable().optional(),
+              targetRepsMax: z.number().int().min(0).max(1000).nullable().optional(),
+              targetRir: z.number().int().min(0).max(10).nullable().optional(),
+              bodyweightKgSnapshot: z.number().min(0).max(1000).nullable().optional(),
               completedAt: dateString,
             }),
           )
@@ -895,8 +911,12 @@ export async function POST(req: Request) {
                 avgHr: set.avgHr ?? null,
                 maxHr: set.maxHr ?? null,
                 notes: set.notes ?? null,
-                isWarmup: set.isWarmup,
-                isDropSet: set.isDropSet,
+                ...resolveSetType(set),
+                rpe: set.rpe ?? null,
+                targetRepsMin: set.targetRepsMin ?? null,
+                targetRepsMax: set.targetRepsMax ?? null,
+                targetRir: set.targetRir ?? null,
+                bodyweightKgSnapshot: set.bodyweightKgSnapshot ?? null,
                 completedAt: new Date(set.completedAt),
               },
             ];

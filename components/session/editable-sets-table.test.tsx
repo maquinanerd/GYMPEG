@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { EditableSetsTable } from './editable-sets-table';
+import { EditableSetsTable, initialDraft } from './editable-sets-table';
 import type { PendingSet } from '@/lib/indexeddb';
 import type { IntraSetRecommendation } from '@/lib/intra-set-autoregulation';
 
@@ -26,7 +26,192 @@ beforeEach(() => {
   window.localStorage.clear();
 });
 
+function loggedSet(weight: number, reps: number, extra: Partial<PendingSet> = {}): PendingSet {
+  return {
+    localId: `local-${weight}-${reps}`,
+    sessionId: 'session-1',
+    exerciseId: 'exercise-1',
+    setNumber: 1,
+    weight,
+    reps,
+    rir: 2,
+    notes: null,
+    isWarmup: false,
+    isDropSet: false,
+    status: 'synced',
+    createdAt: 1,
+    ...extra,
+  } as PendingSet;
+}
+
+function lastTime(rows: { weight: number; reps: number; rir: number | null }[]) {
+  const maxWeight = Math.max(...rows.map((row) => row.weight));
+  return {
+    sessionStartedAt: '2026-07-01T10:00:00.000Z',
+    sets: rows,
+    maxWeight,
+    repsAtMaxWeight: rows.find((row) => row.weight === maxWeight)!.reps,
+    cardio: null,
+  };
+}
+
+// Target range 8-12, RIR 2, compound (+2.5 kg per progression step).
+describe('initialDraft', () => {
+  const draft = (sets: PendingSet[], last?: ReturnType<typeof lastTime>) =>
+    initialDraft(programExercise, sets, last, null, false, null);
+
+  it('carries the suggested increase into the first set and restarts reps at the bottom', () => {
+    const last = lastTime([
+      { weight: 100, reps: 12, rir: 2 },
+      { weight: 100, reps: 12, rir: 1 },
+    ]);
+    expect(draft([], last)).toEqual({ weight: 102.5, reps: 8, rir: 2 });
+  });
+
+  it('repeats last time when the top of the range was not reached', () => {
+    const last = lastTime([
+      { weight: 100, reps: 10, rir: 2 },
+      { weight: 100, reps: 9, rir: 1 },
+    ]);
+    expect(draft([], last)).toEqual({ weight: 100, reps: 10, rir: 2 });
+  });
+
+  it("shifts a pyramid by today's change on the first set", () => {
+    const last = lastTime([
+      { weight: 100, reps: 12, rir: 2 },
+      { weight: 90, reps: 10, rir: 1 },
+      { weight: 80, reps: 8, rir: 0 },
+    ]);
+    expect(draft([loggedSet(105, 8)], last)).toEqual({ weight: 95, reps: 8, rir: 1 });
+  });
+
+  it('keeps the previous row as is when the load did not change', () => {
+    const last = lastTime([
+      { weight: 100, reps: 10, rir: 2 },
+      { weight: 90, reps: 9, rir: 1 },
+    ]);
+    expect(draft([loggedSet(100, 10)], last)).toEqual({ weight: 90, reps: 9, rir: 1 });
+  });
+
+  it("keeps last time's reps on a lighter day", () => {
+    const last = lastTime([
+      { weight: 100, reps: 10, rir: 2 },
+      { weight: 90, reps: 9, rir: 1 },
+    ]);
+    expect(draft([loggedSet(95, 10)], last)).toEqual({ weight: 85, reps: 9, rir: 1 });
+  });
+
+  it('ignores warm-ups when matching the rows of last time', () => {
+    const last = lastTime([{ weight: 100, reps: 10, rir: 2 }]);
+    const warmup = loggedSet(40, 10, { isWarmup: true, type: 'WARMUP' });
+    expect(draft([warmup], last)).toEqual({ weight: 100, reps: 10, rir: 2 });
+  });
+
+  it("falls back to today's last working set, then to the prescription", () => {
+    expect(draft([loggedSet(80, 8)])).toEqual({ weight: 80, reps: 8, rir: 2 });
+    expect(draft([])).toEqual({ weight: 0, reps: 10, rir: 2 });
+  });
+});
+
 describe('EditableSetsTable', () => {
+  it('logs the next set with the type, RPE and note chosen in the options panel', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
+    render(
+      <EditableSetsTable
+        programExercise={programExercise}
+        sets={[]}
+        lastPerformance={lastTime([{ weight: 60, reps: 8, rir: 2 }])}
+        readiness={null}
+        deloadActive={false}
+        unit="KG"
+        onSubmit={onSubmit}
+        onDeleteSet={vi.fn()}
+        onUpdateSet={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+
+    const toggle = screen.getByRole('button', { name: /set options/i });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await user.click(toggle);
+    expect(screen.getByRole('button', { name: 'Working' })).toHaveAttribute('aria-pressed', 'true');
+    await user.click(screen.getByRole('button', { name: 'AMRAP' }));
+    await user.click(screen.getByRole('combobox', { name: 'RPE' }));
+    await user.click(screen.getByRole('option', { name: '8.5' }));
+    await user.type(screen.getByLabelText('Note'), 'grip slipped');
+    expect(toggle).toHaveTextContent('AMRAP · RPE 8.5 · Note');
+
+    fireEvent.click(screen.getByRole('button', { name: /confirm set 1/i }));
+    await waitFor(() =>
+      expect(onSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          weight: 60,
+          reps: 8,
+          type: 'AMRAP',
+          isWarmup: false,
+          isDropSet: false,
+          rpe: 8.5,
+          notes: 'grip slipped',
+        }),
+      ),
+    );
+    // The choices apply to one set only.
+    await waitFor(() => expect(toggle).toHaveAttribute('aria-expanded', 'false'));
+    expect(toggle).not.toHaveTextContent('AMRAP');
+  });
+
+  it('logs a warm-up through the type chips with the legacy flag set', async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
+    render(
+      <EditableSetsTable
+        programExercise={programExercise}
+        sets={[]}
+        lastPerformance={lastTime([{ weight: 60, reps: 8, rir: 2 }])}
+        readiness={null}
+        deloadActive={false}
+        unit="KG"
+        onSubmit={onSubmit}
+        onDeleteSet={vi.fn()}
+        onUpdateSet={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: /set options/i }));
+    await user.click(screen.getByRole('button', { name: 'Warm-up' }));
+    fireEvent.click(screen.getByRole('button', { name: /confirm set 1/i }));
+    await waitFor(() =>
+      expect(onSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({ type: 'WARMUP', isWarmup: true, isDropSet: false, rpe: null }),
+      ),
+    );
+  });
+
+  it('lists warm-ups apart from the working rows and lets the lifter delete one', () => {
+    const onDeleteSet = vi.fn();
+    const warmup = loggedSet(40, 10, { localId: 'warmup-1', isWarmup: true, type: 'WARMUP' });
+    render(
+      <EditableSetsTable
+        programExercise={programExercise}
+        sets={[warmup]}
+        lastPerformance={undefined}
+        readiness={null}
+        deloadActive={false}
+        unit="KG"
+        onSubmit={vi.fn()}
+        onDeleteSet={onDeleteSet}
+        onUpdateSet={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+
+    expect(screen.getByTestId('warmup-sets')).toHaveTextContent('40');
+    // Working rows still start at set 1.
+    expect(screen.getByRole('button', { name: /confirm set 1/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /delete set 1/i })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Delete warm-up set 1' }));
+    expect(onDeleteSet).toHaveBeenCalledWith(warmup);
+  });
+
   it('switches calculated columns and persists the selection', async () => {
     const user = userEvent.setup();
     render(
@@ -119,6 +304,8 @@ describe('EditableSetsTable', () => {
         isDropSet: false,
         notes: null,
         gymEquipmentId: null,
+        type: 'WORKING',
+        rpe: null,
       }),
     );
   });

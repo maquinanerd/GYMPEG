@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { Exercise, Set } from '@/lib/prisma-client';
 import { db } from '@/lib/db';
-import { setInputSchema, validateSetForCategory } from '@/lib/schemas/set';
+import { resolveSetType, setInputSchema, validateSetForCategory } from '@/lib/schemas/set';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { setAchievesGoal } from '@/lib/goals';
 import { effectiveWeight } from '@/lib/stats';
@@ -71,6 +71,22 @@ export async function POST(req: Request, props: Params) {
       throw new ApiError(400, categoryError);
     }
     const isCardio = exercise.category === 'CARDIO';
+    const kind = resolveSetType(data);
+
+    // Target x actual: the prescription of this exercise in the session's
+    // workout, frozen on the set so later program edits do not rewrite it.
+    const prescription = session.workoutId
+      ? await db.programExercise.findFirst({
+          where: { workoutId: session.workoutId, exerciseId: data.exerciseId },
+          orderBy: { order: 'asc' },
+          select: { targetRepsMin: true, targetRepsMax: true, targetRIR: true },
+        })
+      : null;
+    // Bodyweight at log time for bodyweight exercises.
+    const bodyweightKgSnapshot = exercise.usesBodyweight
+      ? ((await db.user.findUnique({ where: { id: userId }, select: { bodyweight: true } }))
+          ?.bodyweight ?? null)
+      : null;
 
     let created: Set;
     try {
@@ -98,8 +114,12 @@ export async function POST(req: Request, props: Params) {
             avgHr: isCardio ? (data.avgHr ?? null) : null,
             maxHr: isCardio ? (data.maxHr ?? null) : null,
             notes: data.notes ?? null,
-            isWarmup: data.isWarmup ?? false,
-            isDropSet: data.isDropSet ?? false,
+            ...kind,
+            rpe: isCardio ? null : (data.rpe ?? null),
+            targetRepsMin: isCardio ? null : (prescription?.targetRepsMin ?? null),
+            targetRepsMax: isCardio ? null : (prescription?.targetRepsMax ?? null),
+            targetRir: isCardio ? null : (prescription?.targetRIR ?? null),
+            bodyweightKgSnapshot,
             clientMutationId: data.clientMutationId ?? null,
             completedAt: performedAt,
           },

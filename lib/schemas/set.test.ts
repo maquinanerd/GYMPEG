@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { setInputSchema, setUpdateSchema, validateSetForCategory } from './set';
+import {
+  resolveSetType,
+  RPE_VALUES,
+  setInputSchema,
+  setUpdateSchema,
+  validateSetForCategory,
+} from './set';
 
 describe('setInputSchema', () => {
   const valid = { exerciseId: 'ex1', setNumber: 1, weight: 60, reps: 10 };
@@ -78,6 +84,57 @@ describe('setInputSchema', () => {
     expect(setInputSchema.safeParse({ ...valid, maxHr: 251 }).success).toBe(false);
     expect(setInputSchema.safeParse({ ...valid, maxHr: 150.5 }).success).toBe(false);
   });
+
+  it('accepts every offered RPE and a null RPE', () => {
+    for (const rpe of RPE_VALUES) {
+      expect(setInputSchema.parse({ ...valid, rpe }).rpe).toBe(rpe);
+    }
+    expect(setInputSchema.parse({ ...valid, rpe: null }).rpe).toBeNull();
+  });
+
+  it('rejects an RPE outside 6..10 or off the half steps', () => {
+    expect(setInputSchema.safeParse({ ...valid, rpe: 5.5 }).success).toBe(false);
+    expect(setInputSchema.safeParse({ ...valid, rpe: 10.5 }).success).toBe(false);
+    expect(setInputSchema.safeParse({ ...valid, rpe: 8.25 }).success).toBe(false);
+  });
+
+  it('accepts a known set type and rejects an unknown one', () => {
+    expect(setInputSchema.parse({ ...valid, type: 'AMRAP' }).type).toBe('AMRAP');
+    expect(setInputSchema.safeParse({ ...valid, type: 'SUPER' }).success).toBe(false);
+  });
+});
+
+describe('resolveSetType', () => {
+  it('derives the type from the legacy flags of older clients', () => {
+    expect(resolveSetType({})).toEqual({ type: 'WORKING', isWarmup: false, isDropSet: false });
+    expect(resolveSetType({ isWarmup: true })).toEqual({
+      type: 'WARMUP',
+      isWarmup: true,
+      isDropSet: false,
+    });
+    expect(resolveSetType({ isDropSet: true })).toEqual({
+      type: 'DROP',
+      isWarmup: false,
+      isDropSet: true,
+    });
+  });
+
+  it('lets warm-up win when both legacy flags are set', () => {
+    expect(resolveSetType({ isWarmup: true, isDropSet: true }).type).toBe('WARMUP');
+  });
+
+  it('lets an explicit type win and keeps the flags in agreement with it', () => {
+    expect(resolveSetType({ type: 'AMRAP', isWarmup: true })).toEqual({
+      type: 'AMRAP',
+      isWarmup: false,
+      isDropSet: false,
+    });
+    expect(resolveSetType({ type: 'DROP' })).toEqual({
+      type: 'DROP',
+      isWarmup: false,
+      isDropSet: true,
+    });
+  });
 });
 
 describe('setUpdateSchema', () => {
@@ -88,6 +145,14 @@ describe('setUpdateSchema', () => {
       reps: 10,
       rir: null,
     });
+  });
+
+  it('accepts an RPE edit and leaves it out when absent', () => {
+    expect(setUpdateSchema.parse({ weight: 60, reps: 10, rir: 2, rpe: 8.5 }).rpe).toBe(8.5);
+    expect(setUpdateSchema.parse({ weight: 60, reps: 10, rir: 2 })).not.toHaveProperty('rpe');
+    expect(setUpdateSchema.safeParse({ weight: 60, reps: 10, rir: 2, rpe: 11 }).success).toBe(
+      false,
+    );
   });
 });
 

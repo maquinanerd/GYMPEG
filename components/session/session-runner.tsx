@@ -16,7 +16,9 @@ import type {
   Gym,
   GymExerciseConfig,
   EquipmentType,
+  SetType,
 } from '@/lib/prisma-client';
+import { resolveSetType } from '@/lib/schemas/set';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
@@ -457,10 +459,14 @@ export function SessionRunner({
     isDropSet: boolean;
     notes: string | null;
     gymEquipmentId?: string | null;
+    type?: SetType;
+    rpe?: number | null;
   }) {
     if (!currentPE || !currentTarget) return;
     const existing = setsByExercise.get(currentPE.exerciseId) ?? [];
     const setNumber = (existing.at(-1)?.setNumber ?? 0) + 1;
+    // One source of truth for the kind of set: the legacy flags follow it.
+    const kind = resolveSetType(values);
 
     // Optimistic write: immediate insert into IndexedDB (status pending),
     // instant display via useLiveQuery, and a background POST attempt.
@@ -476,8 +482,10 @@ export function SessionRunner({
       durationSec: values.durationSec,
       distanceM: values.distanceM,
       notes: values.notes,
-      isWarmup: values.isWarmup,
-      isDropSet: values.isDropSet,
+      isWarmup: kind.isWarmup,
+      isDropSet: kind.isDropSet,
+      type: kind.type,
+      rpe: values.rpe ?? null,
     });
 
     vibrate(VIBRATION_PATTERNS.validate);
@@ -492,7 +500,7 @@ export function SessionRunner({
       const justLogged = pe.exerciseId === currentPE.exerciseId ? 1 : 0;
       return target.targetSets - logged - justLogged;
     };
-    const nextIdx = values.isWarmup
+    const nextIdx = kind.isWarmup
       ? null
       : nextAutoAdvanceIndex(supersetView, currentIdx, remainingAfterThisSet);
 
@@ -719,6 +727,24 @@ export function SessionRunner({
   const currentSets = setsByExercise.get(currentPE.exerciseId) ?? [];
   const currentReturnRecommendation = returnRecommendations[currentPE.id];
   const currentRecommendation = recommendationFor(currentTarget, Date.now());
+  const setInputCard = (
+    <SetInput
+      programExercise={currentTarget}
+      existingSets={currentSets}
+      lastPerformance={lastPerf}
+      readiness={effectiveReadiness}
+      deloadActive={deloadActive}
+      unit={unit}
+      returnRecommendation={currentReturnRecommendation}
+      loadConstraints={loadConstraintsFor(currentTarget)}
+      equipmentOptions={sessionEquipment.filter(
+        (item) =>
+          !droppedEquipmentIds.includes(item.id) &&
+          item.exerciseLinks.some((link) => link.exerciseId === currentPE.exerciseId),
+      )}
+      onSubmit={handleValidate}
+    />
+  );
   const restNextPe =
     mode.kind === 'rest'
       ? mode.nextExerciseIdx != null
@@ -867,26 +893,22 @@ export function SessionRunner({
           />
         )}
 
-        {/* Keep the full logger available while the inline table is introduced:
-            strength users still retain warmup/drop-set, notes, AI parsing and
-            equipment selection; cardio continues to use this as its only input. */}
+        {/* One logger: for strength the table above is the logger (prefilled
+            with the suggestion, set type, RPE and note in its options). The
+            full card stays one tap away for text shortcuts and AI parsing;
+            cardio keeps it as its only input. */}
         {!hydrated ? null : mode.kind === 'input' ? (
-          <SetInput
-            programExercise={currentTarget}
-            existingSets={currentSets}
-            lastPerformance={lastPerf}
-            readiness={effectiveReadiness}
-            deloadActive={deloadActive}
-            unit={unit}
-            returnRecommendation={currentReturnRecommendation}
-            loadConstraints={loadConstraintsFor(currentTarget)}
-            equipmentOptions={sessionEquipment.filter(
-              (item) =>
-                !droppedEquipmentIds.includes(item.id) &&
-                item.exerciseLinks.some((link) => link.exerciseId === currentPE.exerciseId),
-            )}
-            onSubmit={handleValidate}
-          />
+          currentPE.exercise.category === 'CARDIO' ? (
+            setInputCard
+          ) : (
+            <details className="group rounded-md border border-border">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between px-3 text-sm font-medium">
+                {t('detailedEntry')}
+                <ChevronRight className="size-4 transition-transform group-open:rotate-90" />
+              </summary>
+              <div className="border-t border-border p-3">{setInputCard}</div>
+            </details>
+          )
         ) : (
           <RestTimer
             endsAt={mode.endsAt}

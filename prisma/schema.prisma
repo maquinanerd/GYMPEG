@@ -147,6 +147,16 @@ enum TrainingGoal {
   RETURN_TO_TRAINING
 }
 
+enum SetType {
+  WARMUP
+  WORKING
+  DROP
+  AMRAP
+  FAILURE
+  BACKOFF
+  OTHER
+}
+
 enum TrainingExperience {
   BEGINNER
   INTERMEDIATE
@@ -574,6 +584,19 @@ model Set {
   notes                 String?
   isWarmup              Boolean       @default(false)
   isDropSet             Boolean       @default(false)
+  // Kind of set. isWarmup/isDropSet are kept in sync with it until every
+  // reader uses `type` (expand phase): WARMUP <-> isWarmup, DROP <-> isDropSet.
+  type                  SetType       @default(WORKING)
+  // Optional effort on the RPE scale (6 to 10 in half steps), next to RIR.
+  rpe                   Float?
+  // The prescription in force when the set was logged, so "target x actual"
+  // survives later edits of the program.
+  targetRepsMin         Int?
+  targetRepsMax         Int?
+  targetRir             Int?
+  // Bodyweight at log time on bodyweight exercises: a later weight change no
+  // longer rewrites past effective loads, PRs and e1RM.
+  bodyweightKgSnapshot  Float?
   completedAt           DateTime      @default(now())
   // Idempotency key from the offline queue (the client-side id of the set).
   // A retried POST with the same key returns the stored set instead of a

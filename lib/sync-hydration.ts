@@ -26,6 +26,8 @@ function fromServer(sessionId: string, s: PrismaSet): Omit<PendingSet, 'localId'
     notes: s.notes,
     isWarmup: s.isWarmup,
     isDropSet: s.isDropSet,
+    type: s.type,
+    rpe: s.rpe,
     createdAt: new Date(s.completedAt).getTime(),
     status: 'synced',
     serverId: s.id,

@@ -99,7 +99,13 @@ async function doFlush(): Promise<FlushResult> {
     try {
       const existingServerId = item.serverId;
       const updatesExistingSet = existingServerId != null;
-      const sentPatch = { weight: item.weight, reps: item.reps, rir: item.rir };
+      const sentPatch = {
+        weight: item.weight,
+        reps: item.reps,
+        rir: item.rir,
+        // Absent on rows queued before RPE existed: the server keeps its value.
+        ...(item.rpe !== undefined ? { rpe: item.rpe } : {}),
+      };
       let res: Response;
       let sentEquipmentId: string | null = null;
 
@@ -123,6 +129,8 @@ async function doFlush(): Promise<FlushResult> {
           notes: item.notes,
           isWarmup: item.isWarmup,
           isDropSet: item.isDropSet,
+          ...(item.type ? { type: item.type } : {}),
+          ...(item.rpe != null ? { rpe: item.rpe } : {}),
           // Idempotency key: a retry of this very set returns the stored row.
           clientMutationId: item.localId,
           // When it was performed on the device, not when it reached the server.
@@ -179,7 +187,8 @@ async function doFlush(): Promise<FlushResult> {
             latest.serverId === existingServerId &&
             latest.weight === sentPatch.weight &&
             latest.reps === sentPatch.reps &&
-            latest.rir === sentPatch.rir;
+            latest.rir === sentPatch.rir &&
+            (latest.rpe ?? null) === (item.rpe ?? null);
           await db.pendingSets.update(
             item.localId,
             patchStillCurrent

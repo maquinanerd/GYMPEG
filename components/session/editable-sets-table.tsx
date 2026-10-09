@@ -1,9 +1,20 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, Loader2, Pencil, RotateCcw, Trash2, Trophy } from 'lucide-react';
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  Pencil,
+  RotateCcw,
+  Trash2,
+  Trophy,
+} from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import type { Exercise, ProgramExercise, WeightUnit } from '@/lib/prisma-client';
+import type { Exercise, ProgramExercise, SetType, WeightUnit } from '@/lib/prisma-client';
+import { resolveSetType, RPE_VALUES } from '@/lib/schemas/set';
+import { Input } from '@/components/ui/input';
 import type { PendingSet } from '@/lib/indexeddb';
 import type { SerializedLastPerformance } from '@/components/session/session-runner';
 import {
@@ -61,10 +72,12 @@ interface Props {
     rir: number | null;
     durationSec: null;
     distanceM: null;
-    isWarmup: false;
-    isDropSet: false;
-    notes: null;
+    isWarmup: boolean;
+    isDropSet: boolean;
+    notes: string | null;
     gymEquipmentId?: string | null;
+    type: SetType;
+    rpe: number | null;
   }) => Promise<void>;
   onEquipmentWeightsUpdated?: (equipment: LiveEquipmentOption) => void;
   onDeleteSet: (set: PendingSet) => Promise<boolean | void> | boolean | void;
@@ -76,6 +89,17 @@ interface DraftSet {
   reps: number;
   rir: number | null;
 }
+
+// Kinds offered for the next set, in the order lifters reach for them. Keys
+// live under session.editableSets.setTypes.
+const SET_TYPE_OPTIONS = [
+  { type: 'WORKING', key: 'working' },
+  { type: 'WARMUP', key: 'warmup' },
+  { type: 'DROP', key: 'drop' },
+  { type: 'AMRAP', key: 'amrap' },
+  { type: 'FAILURE', key: 'failure' },
+  { type: 'BACKOFF', key: 'backoff' },
+] as const satisfies readonly { type: SetType; key: string }[];
 
 const SINGLE_METRIC_GRID_COLUMNS = 'grid-cols-[2.5rem_minmax(5rem,1fr)_4.5rem_4rem_5rem_3.25rem]';
 const DUAL_METRIC_GRID_COLUMNS =
@@ -103,7 +127,15 @@ function equipmentLoadConstraints(
   };
 }
 
-function initialDraft(
+// Prefill of the next set: last session's set at the same position, shifted by
+// today's change in load. This keeps the shape of the work (straight sets,
+// pyramids, back-offs) while carrying the progression:
+// - first working set: the change the progression engine suggests (double
+//   progression, readiness, planned deload), so the one-tap path logs the
+//   suggested increase instead of repeating last time's weight;
+// - later sets: the change the lifter actually made on today's first set.
+// After a load increase, reps restart at the bottom of the target range.
+export function initialDraft(
   pe: Props['programExercise'],
   sets: PendingSet[],
   lastPerformance: SerializedLastPerformance | undefined,
@@ -112,17 +144,15 @@ function initialDraft(
   loadConstraints: GymLoadConstraints | null,
 ): DraftSet {
   const workingSets = sets.filter((set) => !set.isWarmup);
-  const previousRow = lastPerformance?.sets[workingSets.length];
-  if (previousRow) {
-    return { weight: previousRow.weight, reps: previousRow.reps, rir: previousRow.rir };
-  }
+  const previousRows = lastPerformance?.sets ?? [];
+  const previousRow = previousRows[workingSets.length];
+  const previousFirst = previousRows[0];
 
-  const lastWorking = workingSets.at(-1);
-  if (lastWorking) {
-    return { weight: lastWorking.weight, reps: lastWorking.reps, rir: lastWorking.rir };
-  }
-
-  if (lastPerformance) {
+  let offset = 0;
+  const todayFirst = workingSets[0];
+  if (todayFirst && previousFirst) {
+    offset = todayFirst.weight - previousFirst.weight;
+  } else if (!todayFirst && lastPerformance) {
     const suggestion = suggestNextWeight(
       pe,
       lastPerformance.sets,
@@ -130,14 +160,22 @@ function initialDraft(
       deloadActive,
       loadConstraints,
     );
+    if (suggestion.weight != null) offset = suggestion.weight - lastPerformance.maxWeight;
+  }
+
+  if (previousRow) {
+    const target = Math.max(0, roundWeight(previousRow.weight + offset, 2));
     return {
-      weight: suggestion.weight ?? lastPerformance.maxWeight,
-      reps:
-        suggestion.reason === 'progression'
-          ? pe.targetRepsMin
-          : Math.max(pe.targetRepsMin, lastPerformance.repsAtMaxWeight),
-      rir: pe.targetRIR,
+      weight:
+        offset === 0 ? previousRow.weight : constrainGymWeight(target, target, loadConstraints),
+      reps: offset > 0 ? pe.targetRepsMin : previousRow.reps,
+      rir: previousRow.rir,
     };
+  }
+
+  const lastWorking = workingSets.at(-1);
+  if (lastWorking) {
+    return { weight: lastWorking.weight, reps: lastWorking.reps, rir: lastWorking.rir };
   }
 
   return {
@@ -179,7 +217,14 @@ export function EditableSetsTable({
   const [appliedRecommendationKey, setAppliedRecommendationKey] = useState<string | null>(null);
   const [gymEquipmentId, setGymEquipmentId] = useState('');
   const [weightEditorOpen, setWeightEditorOpen] = useState(false);
+  // Options of the next set: kind, RPE and note. They reset to a plain
+  // working set after each confirmation and when the exercise changes.
+  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [nextType, setNextType] = useState<SetType>('WORKING');
+  const [nextRpe, setNextRpe] = useState<number | null>(null);
+  const [nextNotes, setNextNotes] = useState('');
   const workingSets = useMemo(() => sets.filter((set) => !set.isWarmup), [sets]);
+  const warmupSets = useMemo(() => sets.filter((set) => set.isWarmup), [sets]);
   const latestWorkingSetId = workingSets.at(-1)?.localId ?? null;
   // The exercise strip lets the lifter jump between exercises mid-entry. An
   // unconfirmed draft is parked per program row when they leave and restored
@@ -256,6 +301,7 @@ export function EditableSetsTable({
     setEditingSet(null);
     setPicker(null);
     setAppliedRecommendationKey(null);
+    if (previous.id !== programExercise.id) resetNextOptions();
     const recentEquipmentId = workingSets.at(-1)?.gymEquipmentId ?? '';
     setGymEquipmentId(
       equipmentOptions.some((equipment) => equipment.id === recentEquipmentId)
@@ -414,25 +460,48 @@ export function EditableSetsTable({
     void persistEditedSet(set, { ...current, rir });
   }
 
+  function resetNextOptions() {
+    setNextType('WORKING');
+    setNextRpe(null);
+    setNextNotes('');
+    setOptionsOpen(false);
+  }
+
   async function confirmRow() {
     if (disabled || submitting || draft.reps <= 0 || draft.weight < 0) return;
     setSubmitting(true);
     try {
+      const kind = resolveSetType({ type: nextType });
       await onSubmit({
         weight: constrainGymWeight(draft.weight, draft.weight, effectiveLoadConstraints),
         reps: draft.reps,
         rir: draft.rir,
         durationSec: null,
         distanceM: null,
-        isWarmup: false,
-        isDropSet: false,
-        notes: null,
+        isWarmup: kind.isWarmup,
+        isDropSet: kind.isDropSet,
+        notes: nextNotes.trim() || null,
         gymEquipmentId: gymEquipmentId || null,
+        type: kind.type,
+        rpe: nextRpe,
       });
+      resetNextOptions();
     } finally {
       setSubmitting(false);
     }
   }
+
+  const optionsSummary = [
+    nextType !== 'WORKING'
+      ? t(
+          `setTypes.${SET_TYPE_OPTIONS.find((o) => o.type === nextType)?.key ?? ('other' as const)}`,
+        )
+      : null,
+    nextRpe != null ? `RPE ${nextRpe}` : null,
+    nextNotes.trim() ? t('options.notes') : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
   return (
     <section className="overflow-hidden rounded-md border border-border">
@@ -488,6 +557,33 @@ export function EditableSetsTable({
           onOpenChange={setWeightEditorOpen}
           onSaved={(equipment) => onEquipmentWeightsUpdated?.(equipment)}
         />
+      )}
+      {warmupSets.length > 0 && (
+        <div
+          data-testid="warmup-sets"
+          className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2 text-sm"
+        >
+          <span className="text-xs uppercase tracking-wide text-muted-foreground">
+            {t('warmups')}
+          </span>
+          {warmupSets.map((set, index) => (
+            <span
+              key={set.localId}
+              className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 tabular-nums"
+            >
+              {formatWeight(set.weight, unit, { decimals: 2, group: false, locale })} × {set.reps}
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={() => void onDeleteSet(set)}
+                aria-label={t('deleteWarmup', { number: index + 1 })}
+                className="-mr-1 rounded-full p-1 text-muted-foreground hover:text-destructive"
+              >
+                <Trash2 className="size-3.5" />
+              </button>
+            </span>
+          ))}
+        </div>
       )}
       <div data-testid="editable-sets-scroll" className="overflow-x-auto overscroll-x-contain">
         <div data-testid="editable-sets-grid" className="min-w-[31rem]">
@@ -771,6 +867,91 @@ export function EditableSetsTable({
             );
           })}
         </div>
+      </div>
+
+      <div className="border-t border-border">
+        <button
+          type="button"
+          onClick={() => setOptionsOpen((open) => !open)}
+          aria-expanded={optionsOpen}
+          aria-controls="next-set-options"
+          disabled={disabled}
+          className="flex min-h-11 w-full items-center justify-between gap-2 px-3 text-left text-sm"
+        >
+          <span className="font-medium">{t('options.toggle')}</span>
+          <span className="flex items-center gap-2 text-muted-foreground">
+            {optionsSummary && <span className="text-xs">{optionsSummary}</span>}
+            {optionsOpen ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+          </span>
+        </button>
+        {optionsOpen && (
+          <div id="next-set-options" className="flex flex-col gap-3 px-3 pb-3">
+            <fieldset className="space-y-1.5">
+              <legend className="text-xs uppercase tracking-wide text-muted-foreground">
+                {t('options.type')}
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {SET_TYPE_OPTIONS.map((option) => (
+                  <button
+                    key={option.type}
+                    type="button"
+                    aria-pressed={nextType === option.type}
+                    disabled={disabled}
+                    onClick={() => setNextType(option.type)}
+                    className={`min-h-10 rounded-full border px-3 text-sm ${
+                      nextType === option.type
+                        ? 'border-primary bg-primary text-primary-foreground'
+                        : 'border-input bg-background hover:bg-muted'
+                    }`}
+                  >
+                    {t(`setTypes.${option.key}`)}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+            <div className="grid grid-cols-[6rem_1fr] items-end gap-3">
+              <div className="space-y-1.5">
+                <span className="block text-xs uppercase tracking-wide text-muted-foreground">
+                  {t('options.rpe')}
+                </span>
+                <Select
+                  value={nextRpe == null ? 'none' : String(nextRpe)}
+                  disabled={disabled}
+                  onValueChange={(value) => setNextRpe(value === 'none' ? null : Number(value))}
+                >
+                  <SelectTrigger aria-label={t('options.rpe')} className="h-10">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">{t('options.rpeNone')}</SelectItem>
+                    {RPE_VALUES.map((value) => (
+                      <SelectItem key={value} value={String(value)}>
+                        {value}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="next-set-notes"
+                  className="block text-xs uppercase tracking-wide text-muted-foreground"
+                >
+                  {t('options.notes')}
+                </label>
+                <Input
+                  id="next-set-notes"
+                  value={nextNotes}
+                  maxLength={500}
+                  disabled={disabled}
+                  placeholder={t('options.notesPlaceholder')}
+                  onChange={(event) => setNextNotes(event.target.value)}
+                  className="h-10"
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <SetValuePicker

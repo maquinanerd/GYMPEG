@@ -1,6 +1,7 @@
 import type { Prisma, PrismaClient } from '@/prisma/generated/client';
 import { usableExerciseWhere } from '@/lib/catalog/access';
 import { findUsableExerciseByName } from '@/lib/catalog/resolve';
+import { resolveSetType } from '@/lib/schemas/set';
 
 // ============================================================
 // CSV import planning + execution (issues #100/#113)
@@ -180,14 +181,9 @@ export function buildStrongImportPlan(
     }
   }
 
-  const sessions = [...sessionsByKey.values()].sort((a, b) =>
-    a.dateKey.localeCompare(b.dateKey),
-  );
+  const sessions = [...sessionsByKey.values()].sort((a, b) => a.dateKey.localeCompare(b.dateKey));
   for (const s of sessions) {
-    s.sets.sort(
-      (a, b) =>
-        a.exerciseName.localeCompare(b.exerciseName) || a.setOrder - b.setOrder,
-    );
+    s.sets.sort((a, b) => a.exerciseName.localeCompare(b.exerciseName) || a.setOrder - b.setOrder);
   }
 
   return {
@@ -237,9 +233,7 @@ export async function executeStrongImport(
 
   // Exercises whose imported rows are all cardio are created as CARDIO
   // (issue #134); everything else keeps the conservative ISOLATION default.
-  const cardioLowers = new Set(
-    plan.newCardioExerciseNames.map((n) => n.trim().toLowerCase()),
-  );
+  const cardioLowers = new Set(plan.newCardioExerciseNames.map((n) => n.trim().toLowerCase()));
   let createdExercises = 0;
   for (const name of plan.newExerciseNames) {
     const lower = name.trim().toLowerCase();
@@ -279,9 +273,7 @@ export async function executeStrongImport(
     // below the start time.
     const finishedAtRaw = session.finishedAtIso ? new Date(session.finishedAtIso) : null;
     const finishedAt =
-      finishedAtRaw && finishedAtRaw.getTime() >= startedAt.getTime()
-        ? finishedAtRaw
-        : startedAt;
+      finishedAtRaw && finishedAtRaw.getTime() >= startedAt.getTime() ? finishedAtRaw : startedAt;
     const created = await tx.session.create({
       data: {
         userId,
@@ -306,8 +298,7 @@ export async function executeStrongImport(
           setNumber: s.setOrder,
           weight: s.weightKg,
           reps: s.reps,
-          isWarmup: s.isWarmup ?? false,
-          isDropSet: s.isDropSet ?? false,
+          ...resolveSetType(s),
           durationSec: s.durationSec ?? null,
           distanceM: s.distanceM ?? null,
           rir: s.rir ?? null,

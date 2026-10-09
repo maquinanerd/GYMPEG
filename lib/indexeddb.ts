@@ -11,6 +11,7 @@
 // dexie-react-hooks (which already does it).
 
 import Dexie, { type Table } from 'dexie';
+import type { SetType } from '@/lib/prisma-client';
 
 export type PendingSetStatus = 'pending' | 'syncing' | 'synced' | 'failed';
 
@@ -39,6 +40,11 @@ export interface PendingSet {
   notes: string | null;
   isWarmup: boolean;
   isDropSet: boolean;
+  // Kind of set and optional RPE (6-10). Optional so rows written before
+  // these fields existed stay valid; the server derives the type from the
+  // flags when it is missing.
+  type?: SetType;
+  rpe?: number | null;
 
   createdAt: number; // epoch ms
   status: PendingSetStatus;

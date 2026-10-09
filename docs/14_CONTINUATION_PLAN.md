@@ -1,8 +1,10 @@
 # 14 — Plano de continuação
 
-Estado em **2026-10-09**: G0 concluído; G1 em andamento. Já entregues: épico 1.1 (produção segura), fuso horário do épico 1.2 e parte 1 do épico 1.4 (sync idempotente). Lista com commits na seção "Progresso" de `docs/GAP_MATRIX.md`. Código no `main` de `maquinanerd/GYMPEG`, CI do GitHub verde. Deploy no Coolify aguardando a criação dos recursos (ver abaixo).
+Estado em **2026-10-09**: G0 concluído; G1 em andamento. Já entregues: épico 1.1 (produção segura), épico 1.2 (fuso horário e onboarding), épico 1.3 (catálogo global), parte 1 do épico 1.4 (sync idempotente) e o núcleo do épico 1.5 (logger único). Lista com commits na seção "Progresso" de `docs/GAP_MATRIX.md`. Código no `main` de `maquinanerd/GYMPEG`, CI do GitHub verde. Deploy no Coolify aguardando a criação dos recursos (ver abaixo).
 
-Ordem dos próximos épicos: ~~1.3 catálogo global~~ (feito, `1aa05a5`) → ~~1.2 onboarding~~ (feito) → **1.5 logger único** (`Set.type`, RPE, alvo × realizado) → 1.4 parte 2 (iniciar/finalizar offline, outbox por usuário) → 1.6 programas com revisões → 1.7 exclusão de conta e export. O sync idempotente foi antecipado porque perda e duplicação de séries são o maior risco assim que houver uso real.
+Ordem dos próximos épicos: ~~1.3 catálogo global~~ (feito, `1aa05a5`) → ~~1.2 onboarding~~ (feito, `9c83af1`) → ~~1.5 logger único~~ (feito: `Set.type`, RPE, alvo × realizado; "substituir só nesta sessão" ficou para o 1.6, porque depende do `WorkoutExercise` da sessão) → **1.4 parte 2** (iniciar/finalizar offline, outbox por usuário) → 1.6 programas com revisões → 1.7 exclusão de conta e export. O sync idempotente foi antecipado porque perda e duplicação de séries são o maior risco assim que houver uso real.
+
+Contract pendente do 1.5: `isWarmup`/`isDropSet` continuam gravados em sincronia com `Set.type` (todo gravador passa por `resolveSetType`), porque estatísticas, PRs, coach e importadores ainda leem as flags. As colunas só saem depois que esses leitores migrarem para `type`.
 
 ## Como retomar
 

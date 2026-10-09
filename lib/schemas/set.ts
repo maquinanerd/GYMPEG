@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { ExerciseCategory } from '@/lib/prisma-client';
+import { SetType, type ExerciseCategory } from '@/lib/prisma-client';
 import {
   AVG_HR_MAX,
   AVG_HR_MIN,
@@ -8,6 +8,17 @@ import {
   MAX_HR_MAX,
   MAX_HR_MIN,
 } from '@/lib/cardio';
+
+// RPE 6 to 10 in half steps; null clears it.
+export const RPE_VALUES = [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10] as const;
+const rpeSchema = z.union([
+  z
+    .number()
+    .min(6)
+    .max(10)
+    .refine((value) => Number.isInteger(value * 2), 'RPE goes in half steps'),
+  z.null(),
+]);
 
 export const setInputSchema = z.object({
   exerciseId: z.string().min(1),
@@ -56,6 +67,10 @@ export const setInputSchema = z.object({
     .optional(),
   // When the set was performed on the device (epoch ms). Bounded server-side.
   performedAt: z.number().int().positive().optional(),
+  // Kind of set. Optional: older clients only send isWarmup/isDropSet, and
+  // resolveSetType() derives the type from them.
+  type: z.nativeEnum(SetType).optional(),
+  rpe: rpeSchema.optional(),
 });
 
 export type SetInput = z.infer<typeof setInputSchema>;
@@ -67,7 +82,20 @@ export const setUpdateSchema = setInputSchema
   })
   .extend({
     rir: z.union([z.null(), z.coerce.number().int().min(0).max(5)]),
+    rpe: rpeSchema.optional(),
   });
+
+// The stored type and the legacy flags always agree: an explicit type wins,
+// otherwise the flags decide (warm-up first, as every reader excludes it).
+export function resolveSetType(data: { type?: SetType; isWarmup?: boolean; isDropSet?: boolean }): {
+  type: SetType;
+  isWarmup: boolean;
+  isDropSet: boolean;
+} {
+  const type: SetType =
+    data.type ?? (data.isWarmup ? 'WARMUP' : data.isDropSet ? 'DROP' : 'WORKING');
+  return { type, isWarmup: type === 'WARMUP', isDropSet: type === 'DROP' };
+}
 
 export type SetUpdateInput = z.infer<typeof setUpdateSchema>;
 

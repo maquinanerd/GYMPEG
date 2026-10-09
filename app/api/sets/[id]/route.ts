@@ -43,7 +43,13 @@ export async function PATCH(req: Request, props: Params) {
       await lockExerciseGoal(tx, userId, set.exerciseId);
       const row = await tx.set.update({
         where: { id: set.id, session: { userId } },
-        data: { weight: data.weight, reps: data.reps, rir: data.rir },
+        data: {
+          weight: data.weight,
+          reps: data.reps,
+          rir: data.rir,
+          // RPE is optional on an edit: absent keeps the stored value.
+          ...(data.rpe !== undefined ? { rpe: data.rpe } : {}),
+        },
       });
       await rederiveGoalAchievement(tx, userId, set.exerciseId, true);
       return row;
