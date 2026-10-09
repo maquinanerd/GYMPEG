@@ -169,7 +169,8 @@ test('a set deleted offline is removed from the server once back online', async 
 
   await page.goto('/session/new');
   await page.getByRole('button', { name: 'Start this session' }).click();
-  await expect(page).toHaveURL(/\/session\/[^/?]+$/, { timeout: 20_000 });
+  // The started session's id, not /session/new itself.
+  await expect(page).toHaveURL(/\/session\/[0-9a-f]{8}-[0-9a-f]{4}-/, { timeout: 20_000 });
   const sessionId = new URL(page.url()).pathname.split('/').pop()!;
   await expect(page.getByText(/Exercise 1\/1 · E2E Offline Squat/)).toBeVisible({
     timeout: 20_000,
