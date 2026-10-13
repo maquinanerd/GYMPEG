@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet"><style>html,body{margin:0;background:#F9F9F9}a{color:#CCFF00}a:hover{color:#DFFAA9}</style><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script></helmet>
+<div style="width:100%;max-width:430px;margin:0 auto;height:100%;min-height:844px;position:relative;background:{{ c.bg }};font-family:Urbanist, sans-serif;color:{{ c.text }};overflow:hidden;display:flex;flex-direction:column">
+  <div style="height:54px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 36px;font-size:17px;font-weight:600">
+    <span>9:41</span>
+    <div style="display:flex;gap:6px;font-size:18px"><i class="ph-fill ph-cell-signal-full"></i><i class="ph-fill ph-wifi-high"></i><i class="ph-fill ph-battery-full"></i></div>
+  </div>
+  <div style="flex:none;padding:4px 20px 0;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div aria-label="Voltar" style="flex:none;width:48px;height:48px;border-radius:50%;background:{{ c.card }};border:{{ c.border }};box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ph-bold ph-caret-left"></i></div>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px">
+        <span style="font-size:17px;font-weight:600">Treino A</span>
+        <span style="font-size:14px;font-weight:500;color:{{ c.text2 }}">Superiores · Exercício 1 de 6</span>
+      </div>
+      <div aria-label="Abrir coach com o treino anexado" style="width:48px;height:48px;flex:none;border-radius:50%;background:#CCFF00;color:#111111;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 0 16px rgba(204,255,0,0.35)"><i class="ph-fill ph-sparkle"></i></div>
+      <div style="width:48px;height:48px;flex:none;border-radius:50%;background:{{ c.card }};border:{{ c.border }};box-sizing:border-box;position:relative;display:flex;align-items:center;justify-content:center;font-size:20px;color:{{ c.icon }}">
+        <i class="ph-fill {{ syncIcon }}"></i>
+        <span style="position:absolute;top:10px;right:10px;width:8px;height:8px;border-radius:50%;background:{{ syncDot }};box-shadow:0 0 0 2px {{ c.card }}"></span>
+        <sc-if value="{{ syncBadge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;border-radius:9px;background:#FF9F0A;color:#111111;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">3</span></sc-if>
+      </div>
+    </div>
+    <div style="display:flex;gap:4px">
+      <span style="flex:1;height:4px;border-radius:2px;background:#CCFF00"></span>
+      <span style="flex:1;height:4px;border-radius:2px;background:{{ c.track }}"></span>
+      <span style="flex:1;height:4px;border-radius:2px;background:{{ c.track }}"></span>
+      <span style="flex:1;height:4px;border-radius:2px;background:{{ c.track }}"></span>
+      <span style="flex:1;height:4px;border-radius:2px;background:{{ c.track }}"></span>
+      <span style="flex:1;height:4px;border-radius:2px;background:{{ c.track }}"></span>
+    </div>
+  </div>
+  <div style="flex:none;display:flex;gap:8px;overflow-x:auto;padding:14px 20px 12px;scrollbar-width:none">
+    <sc-for list="{{ chips }}" as="ch" hint-placeholder-count="5">
+      <div style="flex:none;height:48px;padding:0 16px;border-radius:24px;background:{{ ch.bg }};color:{{ ch.color }};display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;white-space:nowrap"><span style="font-variant-numeric:tabular-nums">{{ ch.n }}</span><span style="font-weight:500">{{ ch.label }}</span></div>
+    </sc-for>
+  </div>
+
+  <div style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:4px 20px 24px;display:flex;flex-direction:column;gap:16px">
+    <div style="background:{{ c.card }};border:{{ c.border }};border-radius:28px;padding:20px 16px 16px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:24px;font-weight:600;line-height:1.15">Supino reto com barra</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px 12px;font-size:14px;font-weight:500;color:{{ c.text2 }}">
+            <span style="display:flex;align-items:center;gap:4px"><i class="ph-fill ph-stack" style="color:{{ c.icon }}"></i>3 × 6‑8</span>
+            <span style="display:flex;align-items:center;gap:4px"><i class="ph-fill ph-gauge" style="color:{{ c.icon }}"></i>RIR 2</span>
+            <span style="display:flex;align-items:center;gap:4px"><i class="ph-fill ph-timer" style="color:{{ c.icon }}"></i>180 s</span>
+          </div>
+        </div>
+        <div style="width:48px;height:48px;flex:none;border-radius:50%;background:{{ c.pill }};display:flex;align-items:center;justify-content:center;font-size:22px"><i class="ph-bold ph-dots-three"></i></div>
+      </div>
+      <span style="font-size:14px;font-weight:500;color:{{ c.text2 }};font-variant-numeric:tabular-nums">Último treino (02/10): 80 × 10 · 80 × 9 · 80 × 8</span>
+      <div style="background:{{ c.sugBg }};border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:17px;font-weight:600;color:{{ c.sugTitle }}">Sugestão: 82,5 kg</span>
+        <span style="font-size:14px;font-weight:500;color:{{ c.sugText }};line-height:1.4;text-wrap:pretty">Você chegou ao topo da faixa em todas as séries. Sobe 2,5 kg e a meta volta para 6‑8 repetições.</span>
+        <span style="font-size:14px;font-weight:600;color:{{ c.sugTitle }}">Como foi calculado ›</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:17px;font-weight:600">Aquecimento</span><span style="font-size:12px;font-weight:500;color:{{ c.text2 }}">toque para registrar</span></div>
+      <div style="display:flex;gap:8px">
+        <sc-for list="{{ warm }}" as="w" hint-placeholder-count="3">
+          <div onClick="{{ w.toggle }}" style="flex:1;height:64px;border-radius:32px;border:1.5px solid #FF9459;background:{{ w.bg }};color:{{ w.color }};box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-variant-numeric:tabular-nums"><span style="font-size:17px;font-weight:600">{{ w.kg }}</span><span style="font-size:12px;font-weight:500">{{ w.reps }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:17px;font-weight:600">Séries</span><span style="font-size:12px;font-weight:500;color:{{ c.text2 }}">toque num número para ajustar</span></div>
+      <sc-for list="{{ sets }}" as="s" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:6px;padding:5px;border-radius:26px;border:{{ s.rowBorder }}">
+            <span style="width:28px;height:28px;flex:none;border-radius:50%;background:transparent;border:1.5px solid {{ s.numRing }};box-sizing:border-box;color:{{ s.numColor }};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600">{{ s.n }}</span>
+            <div style="flex:1;min-width:0;height:64px;border-radius:20px;background:{{ c.pill }};display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:28px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums">{{ s.kg }}</span><span style="font-size:12px;font-weight:500;color:{{ c.text2 }}">kg</span></div>
+            <div style="flex:1;min-width:0;height:64px;border-radius:20px;background:{{ c.pill }};display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:28px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums">{{ s.reps }}</span><span style="font-size:12px;font-weight:500;color:{{ c.text2 }}">reps</span></div>
+            <div style="flex:1;min-width:0;height:64px;border-radius:20px;background:{{ c.pill }};display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:28px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums">{{ s.rir }}</span><span style="font-size:12px;font-weight:500;color:{{ c.text2 }}">RIR</span></div>
+            <div onClick="{{ s.toggle }}" style="width:64px;height:64px;flex:none;border-radius:50%;background:{{ s.btnBg }};border:{{ s.btnBorder }};box-sizing:border-box;color:{{ s.btnIcon }};display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer"><i class="ph-bold ph-check"></i></div>
+          </div>
+          <sc-if value="{{ s.pr }}" hint-placeholder-val="{{ false }}">
+            <div style="align-self:flex-start;margin-left:39px;height:26px;padding:0 10px;border-radius:13px;background:#FFD509;color:#111111;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600"><i class="ph-fill ph-trophy"></i>PR 1RM est.</div>
+          </sc-if>
+        </div>
+      </sc-for>
+      <div style="height:48px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px;font-weight:600;color:{{ c.text2 }}"><i class="ph-bold ph-plus"></i>Adicionar série</div>
+    </div>
+
+    <div style="background:{{ c.card }};border:{{ c.border }};border-radius:24px;padding:12px;display:flex;align-items:center;gap:12px">
+      <div style="width:48px;height:48px;flex:none;border-radius:16px;background:{{ c.pill }};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600">2</div>
+      <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;font-weight:500;color:{{ c.text2 }}">A seguir</span><span style="font-size:16px;font-weight:600">Remada curvada</span><span style="font-size:12px;font-weight:500;color:{{ c.text2 }}">3 × 8‑10 • RIR 2 • 120 s</span></div>
+    </div>
+  </div>
+
+  <div style="flex:none;position:relative;padding:12px 20px 34px;border-top:{{ c.footLine }};background:{{ c.bg }};display:flex;gap:12px">
+    
+    <div aria-label="Exercício anterior" style="width:64px;height:64px;flex:none;border-radius:50%;background:{{ c.pill }};display:flex;align-items:center;justify-content:center;font-size:24px"><i class="ph-bold ph-caret-left"></i></div>
+    <div style="flex:1;height:64px;border-radius:32px;background:#CCFF00;color:#111111;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600">Concluir</div>
+    <div aria-label="Próximo exercício" style="width:64px;height:64px;flex:none;border-radius:50%;background:{{ c.pill }};display:flex;align-items:center;justify-content:center;font-size:24px"><i class="ph-bold ph-caret-right"></i></div>
+    <div style="position:absolute;left:50%;bottom:8px;width:134px;height:5px;margin-left:-67px;border-radius:3px;background:{{ c.text }}"></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'dark'&quot;},&quot;sync&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;sincronizado&quot;,&quot;pendente&quot;,&quot;offline&quot;],&quot;default&quot;:&quot;sincronizado&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { done: [true, false, false], warm: [true, true, false] };
+  toggle(key, i) { this.setState(s => { const a = [...s[key]]; a[i] = !a[i]; return { [key]: a }; }); }
+  renderVals() {
+    const light = this.props.theme !== 'dark';
+    const c = light
+      ? { bg:'#F9F9F9', card:'#FFFFFF', border:'1px solid #F2F2F2', pill:'#F1F1F1', text:'#111111', text2:'#646464', icon:'#646464', track:'#E9E9E9', accent:'#637F00', sugBg:'#F8FCEF', sugTitle:'#354119', sugText:'#354119', footLine:'1px solid #F2F2F2', pendBorder:'2px solid #CECECE' }
+      : { bg:'#111111', card:'#181818', border:'1px solid #181818', pill:'#232323', text:'#FFFFFF', text2:'#8D8D8D', icon:'#B4B4B4', track:'#2A2A2A', accent:'#CCFF00', sugBg:'#21290F', sugTitle:'#CCFF00', sugText:'#DFFAA9', footLine:'1px solid #1C1C1C', pendBorder:'2px solid #484848' };
+    const chips = [['1','Supino reto'],['2','Remada curvada'],['3','Desenvolvimento'],['4','Puxada frontal'],['A1/A2','Tríceps + Rosca']]
+      .map(([n, label], i) => ({ n, label, bg: i === 0 ? '#CCFF00' : c.pill, color: i === 0 ? '#111111' : c.text }));
+    const warm = [['20 kg','× 10'],['40 kg','× 5'],['60 kg','× 3']].map(([kg, reps], i) => {
+      const on = this.state.warm[i];
+      return { kg, reps, bg: on ? '#FF9459' : 'transparent', color: on ? '#111111' : c.text, toggle: () => this.toggle('warm', i) };
+    });
+    const firstOpen = this.state.done.indexOf(false);
+    const sets = [['82,5','8','2'],['82,5','7','2'],['82,5','7','2']].map(([kg, reps, rir], i) => {
+      const d = this.state.done[i], cur = i === firstOpen;
+      return { n: i + 1, kg, reps, rir, pr: d && i === 0,
+        rowBorder: cur ? '1.5px solid #CCFF00' : '1.5px solid transparent',
+        numColor: d ? c.accent : c.text, numRing: d ? c.accent : (light ? '#CECECE' : '#484848'),
+        btnBg: d ? '#CCFF00' : 'transparent', btnBorder: d ? 'none' : c.pendBorder, btnIcon: d ? '#111111' : c.text2,
+        toggle: () => this.toggle('done', i) };
+    });
+    const sync = this.props.sync ?? 'sincronizado';
+    const S = { sincronizado:{ i:'ph-cloud-check', d:c.accent, b:false }, pendente:{ i:'ph-cloud-arrow-up', d:'transparent', b:true }, offline:{ i:'ph-cloud-slash', d:'transparent', b:false } }[sync] || {};
+    return { c, chips, warm, sets, syncIcon:S.i, syncDot:S.d, syncBadge:S.b };
+  }
+}
+</script>
+</body>
+</html>

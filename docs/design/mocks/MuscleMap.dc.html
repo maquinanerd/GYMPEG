@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<svg width="{{ w }}" height="{{ h }}" viewBox="0 0 120 116" role="img" aria-label="{{ label }}" style="display:block">
+  <g fill="{{ f.base }}"><ellipse cx="30" cy="8" rx="5.5" ry="6.5"></ellipse><ellipse cx="90" cy="8" rx="5.5" ry="6.5"></ellipse></g>
+  <ellipse cx="18.5" cy="22" rx="5.5" ry="5" fill="{{ f.shoulders }}"></ellipse><ellipse cx="41.5" cy="22" rx="5.5" ry="5" fill="{{ f.shoulders }}"></ellipse>
+  <rect x="21.5" y="18" width="8" height="12" rx="4" fill="{{ f.chest }}"></rect><rect x="30.5" y="18" width="8" height="12" rx="4" fill="{{ f.chest }}"></rect>
+  <rect x="23.5" y="32" width="13" height="20" rx="5" fill="{{ f.abs }}"></rect>
+  <rect x="12" y="28.5" width="6.5" height="15" rx="3.25" fill="{{ f.biceps }}"></rect><rect x="41.5" y="28.5" width="6.5" height="15" rx="3.25" fill="{{ f.biceps }}"></rect>
+  <rect x="10" y="45.5" width="5.5" height="15" rx="2.75" fill="{{ f.forearms }}"></rect><rect x="44.5" y="45.5" width="5.5" height="15" rx="2.75" fill="{{ f.forearms }}"></rect>
+  <rect x="21.5" y="55" width="8" height="28" rx="4" fill="{{ f.quads }}"></rect><rect x="30.5" y="55" width="8" height="28" rx="4" fill="{{ f.quads }}"></rect>
+  <rect x="22.5" y="86" width="6" height="24" rx="3" fill="{{ f.calves }}"></rect><rect x="31.5" y="86" width="6" height="24" rx="3" fill="{{ f.calves }}"></rect>
+  <rect x="83" y="15.5" width="14" height="7" rx="3.5" fill="{{ f.back }}"></rect>
+  <ellipse cx="78.5" cy="22" rx="5.5" ry="5" fill="{{ f.shoulders }}"></ellipse><ellipse cx="101.5" cy="22" rx="5.5" ry="5" fill="{{ f.shoulders }}"></ellipse>
+  <rect x="81.5" y="24" width="17" height="24" rx="6" fill="{{ f.back }}"></rect>
+  <rect x="72" y="28.5" width="6.5" height="15" rx="3.25" fill="{{ f.triceps }}"></rect><rect x="101.5" y="28.5" width="6.5" height="15" rx="3.25" fill="{{ f.triceps }}"></rect>
+  <rect x="70" y="45.5" width="5.5" height="15" rx="2.75" fill="{{ f.forearms }}"></rect><rect x="104.5" y="45.5" width="5.5" height="15" rx="2.75" fill="{{ f.forearms }}"></rect>
+  <rect x="81.5" y="50" width="8" height="12" rx="4" fill="{{ f.glutes }}"></rect><rect x="90.5" y="50" width="8" height="12" rx="4" fill="{{ f.glutes }}"></rect>
+  <rect x="81.5" y="64" width="8" height="19" rx="4" fill="{{ f.hams }}"></rect><rect x="90.5" y="64" width="8" height="19" rx="4" fill="{{ f.hams }}"></rect>
+  <rect x="82.5" y="86" width="6" height="24" rx="3" fill="{{ f.calves }}"></rect><rect x="91.5" y="86" width="6" height="24" rx="3" fill="{{ f.calves }}"></rect>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:140,&quot;height&quot;:140},&quot;on&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;quads,hams,glutes,calves&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'dark'&quot;},&quot;width&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:120,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const light = this.props.theme !== 'dark';
+    const off = light ? '#E9E9E9' : '#2A2A2A', on = light ? '#B9EA00' : '#CCFF00';
+    const act = (this.props.on ?? 'quads,hams,glutes,calves').split(',').map(s => s.trim());
+    const names = { chest:'peitoral', shoulders:'ombros', abs:'abdômen', biceps:'bíceps', triceps:'tríceps', forearms:'antebraços', quads:'quadríceps', calves:'panturrilhas', back:'costas', glutes:'glúteos', hams:'posteriores' };
+    const f = { base: off };
+    Object.keys(names).forEach(k => { f[k] = act.includes(k) ? on : off; });
+    const w = this.props.width ?? 120;
+    return { f, w, h: Math.round(w * 116 / 120), label: 'Músculos do treino: ' + act.map(k => names[k]).filter(Boolean).join(', ') };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet"><style>html,body{margin:0;background:#F9F9F9}a{color:#CCFF00}a:hover{color:#DFFAA9}</style><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script></helmet>
+<div style="width:100%;max-width:430px;margin:0 auto;height:100%;min-height:844px;position:relative;background:{{ c.bg }};font-family:Urbanist, sans-serif;color:{{ c.text }};overflow:hidden">
+  <div style="height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 36px;font-size:17px;font-weight:600">
+    <span>9:41</span>
+    <div style="display:flex;gap:6px;font-size:18px"><i class="ph-fill ph-cell-signal-full"></i><i class="ph-fill ph-wifi-high"></i><i class="ph-fill ph-battery-full"></i></div>
+  </div>
+  <div style="position:absolute;top:54px;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:8px 20px 140px;display:flex;flex-direction:column;gap:24px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:44px;height:44px;border-radius:50%;background:#232323;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600">RA</div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:14px;font-weight:500;color:{{ c.text2 }}">Bom dia,</span>
+        <span style="font-size:17px;font-weight:600">Rafa</span>
+      </div>
+      <div style="width:44px;height:44px;border-radius:50%;background:{{ c.card }};border:{{ c.border }};box-sizing:border-box;position:relative;display:flex;align-items:center;justify-content:center;font-size:20px;color:{{ c.icon }}">
+        <i class="ph-fill {{ syncIcon }}"></i>
+        <span style="position:absolute;top:10px;right:10px;width:8px;height:8px;border-radius:50%;background:{{ syncDot }};box-shadow:0 0 0 2px {{ c.card }}"></span>
+        <sc-if value="{{ syncBadge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;border-radius:9px;background:#FF9F0A;color:#111111;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">3</span></sc-if>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between">
+        <span style="font-size:22px;font-weight:600">Esta semana</span>
+        <span style="font-size:14px;font-weight:500;color:{{ c.text2 }}">sex., 09/10</span>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <sc-for list="{{ days }}" as="d" hint-placeholder-count="7">
+          <div style="width:46px;height:88px;border-radius:23px;background:{{ d.bg }};border:{{ d.border }};box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:9px 0 6px">
+            <span style="width:5px;height:5px;border-radius:50%;background:{{ d.dot }}"></span>
+            <span style="font-size:12px;font-weight:500;color:{{ d.labelColor }}">{{ d.label }}</span>
+            <span style="width:32px;height:32px;border-radius:50%;background:{{ d.numBg }};color:{{ d.numColor }};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600">{{ d.num }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="background:{{ c.card }};border:{{ c.border }};border-radius:28px;padding:16px;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;padding:4px 0 0 4px">
+          <div style="align-self:flex-start;height:28px;padding:0 12px;border-radius:14px;background:{{ c.pill }};display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500"><span style="width:6px;height:6px;border-radius:50%;background:{{ v.dot }}"></span>{{ v.tag }}</div>
+          <span style="font-size:24px;font-weight:600;line-height:1.15;text-wrap:pretty">{{ v.title }}</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px 10px;font-size:14px;font-weight:500;color:{{ c.text2 }}">
+            <sc-for list="{{ v.meta }}" as="m" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:4px"><i class="ph-fill {{ m.icon }}" style="color:{{ c.icon }}"></i>{{ m.text }}</span></sc-for>
+          </div>
+          <span style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:500"><i class="ph-fill ph-calendar-check" style="color:{{ c.accent }};font-size:16px"></i>{{ v.reason }}</span>
+        </div>
+        <sc-if value="{{ v.map }}" hint-placeholder-val="{{ true }}">
+          <dc-import name="MuscleMap" on="quads,hams,glutes,calves" theme="{{ themeName }}" width="{{ 104 }}" style="flex:none;align-self:center;display:block" hint-size="104px,101px"></dc-import>
+        </sc-if>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="height:56px;border-radius:28px;background:#CCFF00;color:#111111;display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;font-weight:600;cursor:pointer"><i class="ph-fill {{ v.ctaIcon }}"></i>{{ v.cta }}</div>
+        <div style="height:44px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:{{ c.text2 }}">{{ v.link }}</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <span style="font-size:22px;font-weight:600">Sua semana</span>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px">
+        <div style="background:{{ c.card }};border:{{ c.border }};border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:500;color:{{ c.text2 }}">Treinos<i class="ph-fill ph-barbell" style="color:{{ c.accent }};font-size:18px"></i></div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between">
+            <div style="display:flex;flex-direction:column"><span style="font-size:28px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums">3</span><span style="font-size:12px;font-weight:500;color:{{ c.text2 }};margin-top:4px">de 4 planejados</span></div>
+            <svg width="52" height="52" viewBox="0 0 56 56"><circle cx="28" cy="28" r="23" fill="none" stroke="{{ c.track }}" stroke-width="6"></circle><circle cx="28" cy="28" r="23" fill="none" stroke="{{ c.ring }}" stroke-width="6" stroke-linecap="round" stroke-dasharray="108.4 144.5" transform="rotate(-90 28 28)"></circle></svg>
+          </div>
+        </div>
+        <div style="background:{{ c.card }};border:{{ c.border }};border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:500;color:{{ c.text2 }}">Séries<i class="ph-fill ph-stack" style="color:{{ c.accent }};font-size:18px"></i></div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between">
+            <div style="display:flex;flex-direction:column"><span style="font-size:28px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums">52</span><span style="font-size:12px;font-weight:500;color:{{ c.text2 }};margin-top:4px">de 60 planejadas</span></div>
+            <svg width="52" height="52" viewBox="0 0 56 56"><circle cx="28" cy="28" r="23" fill="none" stroke="{{ c.track }}" stroke-width="6"></circle><circle cx="28" cy="28" r="23" fill="none" stroke="{{ c.ring }}" stroke-width="6" stroke-linecap="round" stroke-dasharray="125.2 144.5" transform="rotate(-90 28 28)"></circle></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:{{ c.card }};border:{{ c.border }};border-radius:24px;padding:16px;display:flex;gap:12px;align-items:flex-start">
+      <div style="width:40px;height:40px;flex:none;border-radius:50%;background:#FF9F0A;color:#111111;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ph-fill ph-pause"></i></div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <span style="font-size:16px;font-weight:600">Desenvolvimento com halteres estagnou</span>
+        <span style="font-size:14px;font-weight:500;color:{{ c.text2 }};line-height:1.4;text-wrap:pretty">1RM estimado parado há 4 treinos. Na próxima sessão a sugestão mantém 24 kg e pede +1 repetição.</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between">
+        <span style="font-size:22px;font-weight:600">Recordes recentes</span>
+        <span style="font-size:14px;font-weight:500;color:{{ c.accent }}">Ver todos</span>
+      </div>
+      <div style="background:{{ c.card }};border:{{ c.border }};border-radius:24px;padding:4px 16px;display:flex;flex-direction:column">
+        <sc-for list="{{ prs }}" as="p" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:{{ p.sep }}">
+            <div style="width:40px;height:40px;flex:none;border-radius:50%;background:#FFD509;color:#111111;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ph-fill ph-trophy"></i></div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:500">{{ p.name }}</span><span style="font-size:12px;font-weight:500;color:{{ c.text2 }}">{{ p.meta }}</span></div>
+            <div style="display:flex;align-items:baseline;gap:4px;font-variant-numeric:tabular-nums"><span style="font-size:14px;font-weight:500;color:{{ c.text2 }}">{{ p.before }}</span><span style="font-size:14px;color:{{ c.text2 }}">→</span><span style="font-size:17px;font-weight:600">{{ p.after }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="background:{{ c.card }};border:{{ c.border }};border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:500;color:{{ c.text2 }}">Peso<i class="ph-fill ph-scales" style="color:{{ c.accent }};font-size:18px"></i></div>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+        <div style="display:flex;align-items:baseline;gap:4px"><span style="font-size:28px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums">78,0</span><span style="font-size:14px;font-weight:500;color:{{ c.text2 }}">kg</span></div>
+        <span style="font-size:12px;font-weight:500;color:{{ c.text2 }};text-align:right">Meta 76,0 kg</span>
+      </div>
+      <span style="font-size:14px;font-weight:500;color:{{ c.text2 }}">Média de 7 dias 78,1 kg · −0,1 kg/semana</span>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:0;height:150px;background:linear-gradient(to bottom, {{ c.fade0 }}, {{ c.bg }} 70%);pointer-events:none"></div>
+  <div style="position:absolute;right:20px;bottom:110px;width:56px;height:56px;border-radius:50%;background:#CCFF00;color:#111111;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 0 0 6px rgba(204,255,0,0.12), 0 8px 24px rgba(204,255,0,0.35)"><i class="ph-fill ph-sparkle"></i></div>
+  <div style="position:absolute;left:16px;right:16px;bottom:28px;height:68px;border-radius:34px;background:{{ c.bar }};padding:6px;box-sizing:border-box;display:flex;gap:4px">
+    <div style="flex:1.3;border-radius:28px;background:#CCFF00;color:#111111;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px"><i class="ph-fill ph-house" style="font-size:22px"></i><span style="font-size:12px;font-weight:600">Início</span></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:{{ c.barIcon }}"><i class="ph-fill ph-barbell" style="font-size:22px"></i><span style="font-size:12px;font-weight:500">Treinos</span></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:{{ c.barIcon }}"><i class="ph-fill ph-chart-line-up" style="font-size:22px"></i><span style="font-size:12px;font-weight:500">Evolução</span></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:{{ c.barIcon }}"><i class="ph-fill ph-user" style="font-size:22px"></i><span style="font-size:12px;font-weight:500">Perfil</span></div>
+  </div>
+  <div style="position:absolute;left:50%;bottom:8px;width:134px;height:5px;margin-left:-67px;border-radius:3px;background:{{ c.text }}"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'dark'&quot;},&quot;variant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;proximo&quot;,&quot;andamento&quot;,&quot;semPrograma&quot;,&quot;novo&quot;],&quot;default&quot;:&quot;proximo&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;sync&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;sincronizado&quot;,&quot;pendente&quot;,&quot;offline&quot;],&quot;default&quot;:&quot;sincronizado&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const light = this.props.theme !== 'dark';
+    const c = light
+      ? { bg:'#F9F9F9', card:'#FFFFFF', border:'1px solid #F2F2F2', pill:'#F1F1F1', text:'#111111', text2:'#646464', icon:'#646464', track:'#E9E9E9', bar:'#4D4D4D', barIcon:'#CECECE', fade0:'rgba(249,249,249,0)', accent:'#637F00', mapOff:'#E9E9E9', mapOn:'#B9EA00', ring:'#B9EA00' }
+      : { bg:'#111111', card:'#181818', border:'1px solid #181818', pill:'#232323', text:'#FFFFFF', text2:'#8D8D8D', icon:'#B4B4B4', track:'#2A2A2A', bar:'#1C1C1C', barIcon:'#B4B4B4', fade0:'rgba(17,17,17,0)', accent:'#CCFF00', mapOff:'#2A2A2A', mapOn:'#CCFF00', ring:'#CCFF00' };
+    const raw = [['Seg','05','done'],['Ter','06','done'],['Qua','07','rest'],['Qui','08','done'],['Sex','09','today'],['Sáb','10','rest'],['Dom','11','rest']];
+    const days = raw.map(([label, num, s]) => s === 'today'
+      ? { label, num, bg:'#CCFF00', border:'none', dot:'#111111', labelColor:'#111111', numBg:'#111111', numColor:'#CCFF00' }
+      : { label, num, bg:c.card, border:c.border, dot: s === 'done' ? c.accent : 'transparent', labelColor:c.text2, numBg: s === 'done' ? c.pill : 'transparent', numColor: s === 'done' ? c.text : c.text2 });
+    const V = {
+      proximo: { dot:c.accent, tag:'Semana 3 de 5', title:'Treino B — Inferiores', meta:[{icon:'ph-barbell',text:'5 exercícios'},{icon:'ph-stack',text:'17 séries'},{icon:'ph-clock',text:'~60 min'}], reason:'Agendado para hoje', cta:'Iniciar treino', ctaIcon:'ph-play', link:'Escolher outro treino', map:true },
+      andamento: { dot:c.accent, tag:'Em andamento · 24 min', title:'Treino B — Inferiores', meta:[{icon:'ph-barbell',text:'Exercício 2 de 5'},{icon:'ph-stack',text:'6 de 17 séries'}], reason:'Iniciado às 18:12 neste aparelho', cta:'Retomar treino', ctaIcon:'ph-play', link:'Descartar treino', map:true },
+      semPrograma: { dot:'#FF9F0A', tag:'Sem programa ativo', title:'Escolha um programa', meta:[{icon:'ph-files',text:'5/3/1, GZCLP, PPL e outros'}], reason:'Com um programa o app sugere o próximo treino', cta:'Escolher programa', ctaIcon:'ph-list-checks', link:'Fazer treino livre', map:false },
+      novo: { dot:c.accent, tag:'Primeiros passos', title:'Configure seu treino em 2 minutos', meta:[{icon:'ph-list-numbers',text:'5 passos'},{icon:'ph-target',text:'objetivo, dias e equipamentos'}], reason:'Nada é enviado sem sua confirmação', cta:'Começar', ctaIcon:'ph-arrow-right', link:'Explorar exercícios', map:false }
+    };
+    const sync = this.props.sync ?? 'sincronizado';
+    const S = { sincronizado:{ i:'ph-cloud-check', d:c.accent, b:false }, pendente:{ i:'ph-cloud-arrow-up', d:'transparent', b:true }, offline:{ i:'ph-cloud-slash', d:'transparent', b:false } }[sync] || {};
+    const prs = [
+      { name:'Supino reto com barra', meta:'1RM estimado · 02/10', before:'91', after:'94 kg' },
+      { name:'Agachamento livre', meta:'100 kg · 06/10', before:'× 5', after:'× 6' }
+    ].map((p, i, a) => ({ ...p, sep: i < a.length - 1 ? `1px solid ${light ? '#F2F2F2' : '#232323'}` : 'none' }));
+    return { themeName: light ? 'light' : 'dark', c, days, v: V[this.props.variant] || V.proximo, syncIcon:S.i, syncDot:S.d, syncBadge:S.b, prs };
+  }
+}
+</script>
+</body>
+</html>
