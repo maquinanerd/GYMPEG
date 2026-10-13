@@ -18,7 +18,9 @@ test('a new user can sign up, log out and sign back in', async ({ page }) => {
   await page.getByRole('button', { name: 'Create account' }).click();
   await expect(page).toHaveURL('/');
 
-  // Log out (the logout control lives in the app shell)
+  // Log out (the logout control lives in Profile, reached from the bottom bar)
+  await page.getByRole('link', { name: 'Profile' }).click();
+  await expect(page).toHaveURL(/\/settings$/);
   await page.getByRole('button', { name: /log ?out|sign ?out/i }).click();
   await expect(page).toHaveURL(/\/login$/);
 

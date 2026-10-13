@@ -10,4 +10,10 @@ export const navigation = {
   programs: 'Программы',
   catalog: 'Упражнения',
   settings: 'Настройки',
+  training: 'Тренировки',
+  profile: 'Профиль',
+  exercises: 'Упражнения',
+  mainLabel: 'Основная навигация',
+  trainingLabel: 'Разделы тренировок',
+  openCoach: 'Открыть тренера',
 } satisfies MessageShape<typeof english>;

@@ -7,6 +7,11 @@ export const coach = {
   chatTitle: 'Chat',
   chatDescription: 'Discutez avec votre coach, vos données d’entraînement en contexte.',
   conversation: 'Conversation',
+  tabs: {
+    label: 'Sections du coach',
+    conversation: 'Conversation',
+    analyses: 'Bilans',
+  },
   client: {
     generating: 'Génération (10-20 s)...',
     request: 'Demander un débrief hebdomadaire',

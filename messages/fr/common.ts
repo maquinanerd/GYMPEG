@@ -83,6 +83,9 @@ export const common = {
   offline: {
     offline: 'Hors ligne',
     syncNow: 'Synchroniser maintenant',
+    synced: 'Tout est synchronisé',
+    waiting:
+      '{count, plural, one {# modification en attente} other {# modifications en attente}}',
     syncing: 'Synchronisation de {count}...',
     pending: 'Hors ligne · {count, plural, one {# en attente} other {# en attente}}',
   },

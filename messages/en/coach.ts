@@ -4,6 +4,11 @@ export const coach = {
   chatTitle: 'Chat',
   chatDescription: 'Talk to your coach with your training data in context.',
   conversation: 'Conversation',
+  tabs: {
+    label: 'Coach sections',
+    conversation: 'Chat',
+    analyses: 'Debriefs',
+  },
   client: {
     generating: 'Generating (10-20s)...',
     request: 'Request a weekly debrief',

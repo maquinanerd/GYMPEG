@@ -7,4 +7,10 @@ export const navigation = {
   programs: 'Programs',
   catalog: 'Catalog',
   settings: 'Settings',
+  training: 'Training',
+  profile: 'Profile',
+  exercises: 'Exercises',
+  mainLabel: 'Main navigation',
+  trainingLabel: 'Training sections',
+  openCoach: 'Open the coach',
 };

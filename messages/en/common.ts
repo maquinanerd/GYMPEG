@@ -80,6 +80,8 @@ export const common = {
   offline: {
     offline: 'Offline',
     syncNow: 'Sync now',
+    synced: 'Everything is synced',
+    waiting: '{count, plural, one {# change waiting to sync} other {# changes waiting to sync}}',
     syncing: 'Syncing {count}...',
     pending: 'Offline · {count, plural, one {# pending} other {# pending}}',
   },

@@ -4,6 +4,7 @@ import { requireSession } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { SettingsClient } from '@/components/settings/settings-client';
+import { LogoutButton } from '@/components/auth/logout-button';
 import { ProfileSection } from '@/components/settings/profile-section';
 import { ImportSection } from '@/components/settings/import-section';
 import { GymProfilesSection } from '@/components/settings/gym-profiles-section';
@@ -79,11 +80,12 @@ export default async function SettingsPage() {
           <CardHeader className="pb-3">
             <h2 className="text-base font-semibold">{t('account')}</h2>
           </CardHeader>
-          <CardContent className="text-sm">
+          <CardContent className="flex flex-col gap-3 text-sm">
             <div className="flex items-center justify-between gap-3">
               <span className="text-muted-foreground">{common('fields.email')}</span>
-              <span className="font-medium">{auth.email}</span>
+              <span className="min-w-0 truncate font-medium">{auth.email}</span>
             </div>
+            <LogoutButton />
           </CardContent>
         </Card>
 

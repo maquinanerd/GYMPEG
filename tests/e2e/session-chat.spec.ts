@@ -70,8 +70,9 @@ test('a lifter can ask the coach mid-session with the live workout attached', as
   await expect(page.getByText('Chat Bench').first()).toBeVisible();
   await page.getByRole('link', { name: 'Ask the coach' }).click();
 
-  // Chat opens with the live session attached and a fresh conversation.
-  await expect(page).toHaveURL(new RegExp(`/chat\\?sessionId=${sessionId}`));
+  // The coach's chat opens with the live session attached and a fresh
+  // conversation.
+  await expect(page).toHaveURL(new RegExp(`/coach\\?sessionId=${sessionId}`));
   await expect(page.getByText('Live session attached.')).toBeVisible();
 
   // Ask a mid-workout question: the demo provider streams the in-session

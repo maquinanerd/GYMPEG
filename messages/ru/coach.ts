@@ -7,6 +7,11 @@ export const coach = {
   chatTitle: 'Чат',
   chatDescription: 'Обсудите тренировки с ИИ-тренером, который видит ваши данные.',
   conversation: 'Диалог',
+  tabs: {
+    label: 'Разделы тренера',
+    conversation: 'Диалог',
+    analyses: 'Разборы',
+  },
   client: {
     generating: 'Генерация (10-20 с)...',
     request: 'Запросить недельный разбор',

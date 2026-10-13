@@ -793,7 +793,7 @@ export function SessionRunner({
     <main className="flex flex-1 flex-col">
       <RestEndFlash count={restFlashCount} />
       {/* Sticky header with progress and exit button */}
-      <div className="sticky top-[97px] z-10 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
+      <div className="sticky top-0 z-10 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate text-xs text-muted-foreground">{trainingName(workout.name)}</p>
@@ -952,7 +952,7 @@ export function SessionRunner({
             session attached so the advice is grounded in the live workout.
             Always available, never auto-triggered. */}
         <Button variant="outline" size="sm" asChild className="min-h-tap">
-          <Link href={`/chat?sessionId=${session.id}`}>
+          <Link href={`/coach?sessionId=${session.id}`}>
             <ChatTextIcon className="size-4" />
             <span className="ml-2">{t('askCoach')}</span>
           </Link>
