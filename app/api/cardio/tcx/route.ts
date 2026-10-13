@@ -63,7 +63,7 @@ export async function GET(req: Request) {
     };
 
     const body = serializeTcx(activity);
-    const filename = `gymcoach-${session.startedAt.toISOString().slice(0, 10)}.tcx`;
+    const filename = `gympeg-${session.startedAt.toISOString().slice(0, 10)}.tcx`;
     return new NextResponse(body, {
       headers: {
         'Content-Type': 'application/vnd.garmin.tcx+xml; charset=utf-8',

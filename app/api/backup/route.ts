@@ -330,7 +330,7 @@ export async function GET() {
       })),
     };
 
-    const filename = `gymcoach-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    const filename = `gympeg-backup-${new Date().toISOString().slice(0, 10)}.json`;
     const serialized = JSON.stringify(dump, null, 2);
     if (Buffer.byteLength(serialized, 'utf8') > MAX_BACKUP_BYTES) {
       throw new ApiError(413, BACKUP_TOO_LARGE_MESSAGE);

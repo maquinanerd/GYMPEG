@@ -124,7 +124,7 @@ export async function GET(req: Request) {
 }
 
 function buildFilename(month: string | null, programId: string | null, timeZone: string): string {
-  const parts = ['gymcoach-history'];
+  const parts = ['gympeg-history'];
   if (month) parts.push(month);
   if (programId) parts.push(`prog-${programId.slice(0, 8)}`);
   if (parts.length === 1) parts.push(localDayKey(new Date(), timeZone));

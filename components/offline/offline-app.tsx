@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BarbellIcon } from '@/components/ui/icon';
+import { Logo } from '@/components/brand/logo';
 import { OfflineIndicator } from '@/components/shared/offline-indicator';
 import { LocalSessionRunner } from '@/components/session/local-session-runner';
 import { OfflineHome } from '@/components/offline/offline-home';
@@ -61,8 +61,7 @@ export function OfflineApp() {
             onClick={() => window.location.assign(offlineAwareHref('/'))}
             className="flex items-center gap-2"
           >
-            <BarbellIcon className="size-5" />
-            <span className="text-base font-semibold">GYM Peg</span>
+            <Logo size="sm" />
           </button>
           <OfflineIndicator />
         </div>

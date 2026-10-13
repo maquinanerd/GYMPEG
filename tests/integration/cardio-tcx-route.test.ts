@@ -60,7 +60,7 @@ describe('GET /api/cardio/tcx (issue #175)', () => {
     actAs(user.id);
     const res = await getFor(session.id);
     expect(res.status).toBe(200);
-    expect(res.headers.get('Content-Disposition')).toContain('gymcoach-2026-06-01.tcx');
+    expect(res.headers.get('Content-Disposition')).toContain('gympeg-2026-06-01.tcx');
 
     const parsed = parseTcx(await res.text());
     expect(parsed.ok).toBe(true);

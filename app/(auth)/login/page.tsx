@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { LoginForm } from '@/components/auth/login-form';
-import { BarbellIcon } from '@/components/ui/icon';
+import { Logo } from '@/components/brand/logo';
 
 interface Props {
   searchParams: Promise<{ deleted?: string; reset?: string }>;
@@ -11,10 +11,7 @@ export default async function LoginPage(props: Props) {
   const t = await getTranslations('auth.login');
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-4">
-      <div className="flex items-center gap-2">
-        <BarbellIcon className="size-7" />
-        <span className="text-xl font-semibold">GYM Peg</span>
-      </div>
+      <Logo size="lg" />
       {deleted === '1' && (
         <p role="status" className="max-w-sm text-center text-sm text-muted-foreground">
           {t('accountDeleted')}

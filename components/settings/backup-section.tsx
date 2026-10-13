@@ -2,7 +2,12 @@
 
 import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { AlertTriangle, Download, Loader2, Upload } from 'lucide-react';
+import {
+  WarningIcon,
+  DownloadSimpleIcon,
+  CircleNotchIcon,
+  UploadSimpleIcon,
+} from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -24,7 +29,7 @@ export function BackupSection() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `gymcoach-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `gympeg-backup-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -94,9 +99,9 @@ export function BackupSection() {
           className="min-h-tap"
         >
           {exporting ? (
-            <Loader2 className="size-4 animate-spin" />
+            <CircleNotchIcon className="size-4 animate-spin" />
           ) : (
-            <Download className="size-4" />
+            <DownloadSimpleIcon className="size-4" />
           )}
           <span className="ml-2">{t('export')}</span>
         </Button>
@@ -107,7 +112,7 @@ export function BackupSection() {
           disabled={importing}
           className="min-h-tap"
         >
-          <Upload className="size-4" />
+          <UploadSimpleIcon className="size-4" />
           <span className="ml-2">{t('import')}</span>
         </Button>
         <input
@@ -121,7 +126,7 @@ export function BackupSection() {
         {confirmingFile && (
           <div className="rounded-md border border-amber-500/40 bg-amber-500/5 p-3 text-sm">
             <div className="flex items-start gap-2">
-              <AlertTriangle className="size-5 shrink-0 text-amber-600" />
+              <WarningIcon className="size-5 shrink-0 text-amber-600" />
               <div className="flex-1">
                 <p className="font-medium">{t('confirmTitle')}</p>
                 <p className="mt-1 text-xs text-muted-foreground">
@@ -135,7 +140,7 @@ export function BackupSection() {
                     className="min-h-tap"
                   >
                     {importing ? (
-                      <Loader2 className="size-4 animate-spin" />
+                      <CircleNotchIcon className="size-4 animate-spin" />
                     ) : null}
                     <span className={importing ? 'ml-2' : ''}>
                       {t('replace')}
