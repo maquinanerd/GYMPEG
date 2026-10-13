@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import typography from '@tailwindcss/typography';
 
 // Every color is a token from app/globals.css (HSL channels), so opacity
 // modifiers work and the .dark class swaps the whole palette.
@@ -116,7 +117,8 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  // An import, not require(): Node 22+ may load this file as ESM.
+  plugins: [typography],
 };
 
 export default config;
