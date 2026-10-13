@@ -75,15 +75,17 @@ export function StatTile({
         <span className="truncate">{label}</span>
         {Glyph && <Glyph className="size-[18px] shrink-0 text-brand" />}
       </div>
-      <div className="flex items-end justify-between gap-2">
+      <div className="flex items-end justify-between gap-1">
         <div className="flex min-w-0 flex-col">
           <span className="flex items-baseline gap-1">
             <span className="text-number tabular-nums">{value}</span>
             {unit && <span className="text-caption text-muted-foreground">{unit}</span>}
           </span>
-          {caption && <span className="mt-1 text-small text-muted-foreground">{caption}</span>}
+          {caption && (
+            <span className="mt-1 whitespace-nowrap text-small text-muted-foreground">{caption}</span>
+          )}
         </div>
-        {progress != null && <ProgressRing value={progress} />}
+        {progress != null && <ProgressRing value={progress} size={46} />}
       </div>
     </div>
   );

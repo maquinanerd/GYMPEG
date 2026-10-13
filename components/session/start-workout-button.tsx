@@ -13,10 +13,13 @@ export function StartWorkoutButton({
   workoutId,
   gymId,
   disabled,
+  label,
 }: {
   workoutId: string;
   gymId?: string | null;
   disabled?: boolean;
+  // Defaults to "Iniciar este treino".
+  label?: string;
 }) {
   const t = useTranslations('session');
   const router = useRouter();
@@ -42,13 +45,9 @@ export function StartWorkoutButton({
   }
 
   return (
-    <Button
-      onClick={handleStart}
-      disabled={disabled || isPending}
-      className="min-h-tap w-full text-base"
-    >
-      <PlayIcon className="size-5" />
-      <span className="ml-2">{isPending ? t('starting') : t('startThis')}</span>
+    <Button onClick={handleStart} disabled={disabled || isPending} className="w-full">
+      <PlayIcon />
+      <span>{isPending ? t('starting') : (label ?? t('startThis'))}</span>
     </Button>
   );
 }

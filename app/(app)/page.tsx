@@ -1,29 +1,32 @@
-import Link from 'next/link';
-import {
-  BarbellIcon,
-  PlayIcon,
-  WarningCircleIcon,
-  LightbulbIcon,
-  SparkleIcon,
-} from '@/components/ui/icon';
-import { getFormatter, getLocale, getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { getHomeInsight } from '@/lib/home-insight';
 import { getTrainingDisplayName } from '@/i18n/training-names';
+import { getExerciseDisplayName } from '@/i18n/exercise-names';
 import { suggestNextWorkout } from '@/lib/next-workout-query';
 import { cycleWeekAt, isDeloadWeek, programCycle } from '@/lib/program-cycle';
 import { getUserTimeZone } from '@/lib/user-timezone';
-import { StartWorkoutButton } from '@/components/session/start-workout-button';
-import { RecentRecordsCard } from '@/components/progress/recent-records-card';
 import { recentPersonalRecords } from '@/lib/personal-records';
 import { weeklyAdherence } from '@/lib/adherence';
-import { Progress } from '@/components/ui/progress';
+import { isoWeekStart } from '@/lib/stats';
+import { compactMuscles } from '@/lib/muscle-map';
+import { calculateWeightTrend } from '@/lib/training-engine/body';
+import {
+  buildWeekStrip,
+  estimateWorkoutMinutes,
+  greetingName,
+  greetingPeriod,
+  initialsFor,
+  weekDayStatus,
+} from '@/lib/home-week';
+import { HomeView, type HomeNext } from '@/components/home/home-view';
 
 const RECENT_RECORDS_DAYS = 30;
+const RECENT_RECORDS_SHOWN = 3;
+// The weekly weight rate looks at the last 30 days (lib/training-engine/body).
+const WEIGHT_LOOKBACK_DAYS = 35;
+const DAY_MS = 86_400_000;
 
 const DAY_KEYS = [
   'monday',
@@ -38,306 +41,254 @@ const DAY_KEYS = [
 export default async function DashboardPage() {
   const t = await getTranslations('dashboard');
   const common = await getTranslations('common');
-  const format = await getFormatter();
   const locale = await getLocale();
   const session = await requireSession();
-
-  // Look for an unfinished session to offer resuming it.
-  const inProgressSession = await db.session.findFirst({
-    where: { userId: session.userId, finishedAt: null },
-    orderBy: { startedAt: 'desc' },
-    include: { workout: { select: { name: true } } },
-  });
-
-  const activeProgram = await db.program.findFirst({
-    where: { userId: session.userId, isActive: true },
-    include: {
-      workouts: {
-        orderBy: { order: 'asc' },
-        include: { _count: { select: { exercises: true } } },
-      },
-    },
-  });
-
-  // Proactive coach insight (issue #237): the single highest-priority
-  // deterministic signal (recommended deload / stalled lift / fresh PR /
-  // on-track), composed from the existing derivations. Display-only, no LLM
-  // call; null on a brand-new account with no history.
-  const insight = await getHomeInsight(session.userId, new Date(), locale);
-
-  // New accounts are invited (not forced) to set up their training profile.
-  const profile = await db.user.findUnique({
-    where: { id: session.userId },
-    select: { onboardedAt: true, unit: true, weeklyFrequency: true },
-  });
-
-  // Records beaten in the last 30 days (epic 2.2), newest first.
-  const recentRecords = await recentPersonalRecords(
-    session.userId,
-    new Date(Date.now() - RECENT_RECORDS_DAYS * 24 * 60 * 60 * 1000),
-  );
-
-  // The next workout of the program (rotation or fixed days, epic 1.6).
-  const next =
-    !inProgressSession && activeProgram
-      ? await suggestNextWorkout(session.userId, activeProgram)
-      : null;
-  const nextWorkout = next
-    ? (activeProgram?.workouts.find((workout) => workout.id === next.workoutId) ?? null)
-    : null;
-  const lastWorkoutName =
-    next?.kind === 'rotation' && next.afterWorkoutId
-      ? activeProgram?.workouts.find((workout) => workout.id === next.afterWorkoutId)?.name
-      : undefined;
-  const nextReason = !next
-    ? null
-    : next.kind === 'today'
-      ? t('nextToday')
-      : next.kind === 'upcoming'
-        ? t('nextUpcoming', {
-            day: common(`days.${DAY_KEYS[next.dayOfWeek - 1]!}`),
-            count: next.inDays,
-          })
-        : lastWorkoutName
-          ? t('nextAfter', { name: getTrainingDisplayName(lastWorkoutName, locale) })
-          : t('nextFirst');
-  // Week of the program's cycle, when it has one.
+  const now = new Date();
   const timeZone = await getUserTimeZone(session.userId);
-  const cycle = activeProgram ? programCycle(activeProgram) : null;
-  const cycleWeek = cycle ? cycleWeekAt(cycle, new Date(), timeZone) : null;
-  // This week against the plan (epic 2.3).
-  const adherence =
+  const weekStart = isoWeekStart(now, timeZone);
+
+  const [profile, inProgressSession, activeProgram, weekSessions] = await Promise.all([
+    db.user.findUnique({
+      where: { id: session.userId },
+      select: {
+        displayName: true,
+        onboardedAt: true,
+        unit: true,
+        weeklyFrequency: true,
+        deloadUntil: true,
+      },
+    }),
+    // An unfinished session is offered for resuming.
+    db.session.findFirst({
+      where: { userId: session.userId, finishedAt: null },
+      orderBy: { startedAt: 'desc' },
+      select: {
+        id: true,
+        startedAt: true,
+        workout: {
+          select: {
+            name: true,
+            exercises: {
+              select: { targetSets: true, exercise: { select: { muscleGroup: true } } },
+            },
+          },
+        },
+        _count: { select: { sets: { where: { isWarmup: false } } } },
+      },
+    }),
+    db.program.findFirst({
+      where: { userId: session.userId, isActive: true },
+      include: {
+        workouts: {
+          orderBy: { order: 'asc' },
+          include: {
+            _count: { select: { exercises: true } },
+            exercises: {
+              select: {
+                targetSets: true,
+                restSec: true,
+                exercise: { select: { muscleGroup: true } },
+              },
+            },
+          },
+        },
+      },
+    }),
+    // Finished sessions of this week, for the week strip and the counts.
+    db.session.findMany({
+      where: { userId: session.userId, finishedAt: { not: null }, startedAt: { gte: weekStart } },
+      select: {
+        startedAt: true,
+        _count: { select: { sets: { where: { isWarmup: false } } } },
+      },
+    }),
+  ]);
+
+  // Proactive insight (issue #237): the single highest-priority deterministic
+  // signal (deload / stalled lift / fresh PR / on track). No LLM call.
+  const [insight, records, weighIns, adherence, next] = await Promise.all([
+    getHomeInsight(session.userId, now, locale),
+    recentPersonalRecords(
+      session.userId,
+      new Date(now.getTime() - RECENT_RECORDS_DAYS * DAY_MS),
+      RECENT_RECORDS_SHOWN,
+    ),
+    db.bodyweightEntry.findMany({
+      where: {
+        userId: session.userId,
+        measuredAt: { gte: new Date(now.getTime() - WEIGHT_LOOKBACK_DAYS * DAY_MS) },
+      },
+      orderBy: { measuredAt: 'desc' },
+      select: { weightKg: true, measuredAt: true },
+    }),
+    // This week against the plan (epic 2.3).
     activeProgram && activeProgram.workouts.length > 0
-      ? await weeklyAdherence(session.userId, activeProgram, {
-          now: new Date(),
+      ? weeklyAdherence(session.userId, activeProgram, {
+          now,
           timeZone,
           weeklyFrequency: profile?.weeklyFrequency ?? null,
         })
+      : null,
+    // The next workout of the program (rotation or fixed days, epic 1.6).
+    !inProgressSession && activeProgram
+      ? suggestNextWorkout(session.userId, activeProgram, now)
+      : null,
+  ]);
+
+  // The dominant card, in priority order: a workout in progress, a brand-new
+  // account, no program, an empty program, the next workout, a free choice.
+  let homeNext: HomeNext;
+  if (inProgressSession) {
+    const rows = inProgressSession.workout?.exercises ?? [];
+    homeNext = {
+      kind: 'inProgress',
+      sessionId: inProgressSession.id,
+      title: inProgressSession.workout?.name
+        ? getTrainingDisplayName(inProgressSession.workout.name, locale)
+        : t('sessionFallback'),
+      elapsedMinutes: Math.max(
+        0,
+        Math.floor((now.getTime() - inProgressSession.startedAt.getTime()) / 60_000),
+      ),
+      startedAt: inProgressSession.startedAt,
+      exerciseCount: rows.length,
+      setsDone: inProgressSession._count.sets,
+      setsTotal: rows.reduce((sum, row) => sum + row.targetSets, 0),
+      muscles: compactMuscles(rows.map((row) => row.exercise.muscleGroup)),
+    };
+  } else if (!activeProgram) {
+    homeNext = profile && !profile.onboardedAt ? { kind: 'new' } : { kind: 'noProgram' };
+  } else if (activeProgram.workouts.length === 0) {
+    homeNext = {
+      kind: 'empty',
+      programId: activeProgram.id,
+      programName: getTrainingDisplayName(activeProgram.name, locale),
+      reason: t('emptyProgramDescription', {
+        name: getTrainingDisplayName(activeProgram.name, locale),
+      }),
+    };
+  } else {
+    const nextWorkout = next
+      ? (activeProgram.workouts.find((workout) => workout.id === next.workoutId) ?? null)
       : null;
-  const cycleLine =
-    cycle && cycleWeek
-      ? isDeloadWeek(cycle, cycleWeek)
-        ? t('cycleDeload', { week: cycleWeek, weeks: cycle.weeks })
-        : t('cycleWeek', { week: cycleWeek, weeks: cycle.weeks })
-      : null;
+    if (!next || !nextWorkout) {
+      homeNext = {
+        kind: 'choose',
+        programName: getTrainingDisplayName(activeProgram.name, locale),
+      };
+    } else {
+      const lastWorkoutName =
+        next.kind === 'rotation' && next.afterWorkoutId
+          ? activeProgram.workouts.find((workout) => workout.id === next.afterWorkoutId)?.name
+          : undefined;
+      const reason =
+        next.kind === 'today'
+          ? t('nextToday')
+          : next.kind === 'upcoming'
+            ? t('nextUpcoming', {
+                day: common(`days.${DAY_KEYS[next.dayOfWeek - 1]!}`),
+                count: next.inDays,
+              })
+            : lastWorkoutName
+              ? t('nextAfter', { name: getTrainingDisplayName(lastWorkoutName, locale) })
+              : t('nextFirst');
+      // Week of the program's cycle, and whether this week (or a planned
+      // deload the lifter started) runs lighter.
+      const cycle = programCycle(activeProgram);
+      const cycleWeek = cycle ? cycleWeekAt(cycle, now, timeZone) : null;
+      const weekText =
+        cycle && cycleWeek ? t('cycleWeek', { week: cycleWeek, weeks: cycle.weeks }) : null;
+      const deload =
+        (cycle != null && cycleWeek != null && isDeloadWeek(cycle, cycleWeek)) ||
+        (profile?.deloadUntil != null && profile.deloadUntil > now);
+      homeNext = {
+        kind: 'next',
+        workoutId: nextWorkout.id,
+        title: getTrainingDisplayName(nextWorkout.name, locale),
+        tag: deload
+          ? {
+              text: weekText ? `${weekText} · ${t('home.next.deload')}` : t('home.next.deload'),
+              tone: 'deload',
+            }
+          : {
+              text: weekText ?? getTrainingDisplayName(activeProgram.name, locale),
+              tone: 'brand',
+            },
+        exerciseCount: nextWorkout._count.exercises,
+        setCount: nextWorkout.exercises.reduce((sum, row) => sum + row.targetSets, 0),
+        minutes: estimateWorkoutMinutes(nextWorkout.exercises),
+        reason,
+        muscles: compactMuscles(nextWorkout.exercises.map((row) => row.exercise.muscleGroup)),
+      };
+    }
+  }
+
+  const plannedWeekdays =
+    activeProgram?.scheduleMode === 'FIXED_DAYS'
+      ? activeProgram.workouts.flatMap((workout) =>
+          workout.dayOfWeek != null ? [workout.dayOfWeek] : [],
+        )
+      : [];
+  const week = buildWeekStrip({
+    now,
+    timeZone,
+    trainedAt: weekSessions.map((row) => row.startedAt),
+    plannedWeekdays,
+  }).map((day) => ({
+    key: day.key,
+    date: day.date,
+    status: weekDayStatus(day),
+    trained: day.trained,
+  }));
+
+  const trend = weighIns.length > 0 ? calculateWeightTrend(weighIns, { timeZone }) : null;
 
   return (
-    <main className="flex-1 px-4 py-6">
-      <div className="mx-auto flex max-w-2xl flex-col gap-6">
-        <div className="flex items-center gap-3">
-          <BarbellIcon className="size-8" />
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">GYM Peg</h1>
-            <p className="text-xs text-muted-foreground">{session.email}</p>
-          </div>
-        </div>
-
-        {profile && !profile.onboardedAt && (
-          <Link href="/onboarding" className="block">
-            <Card className="border-primary/40 bg-primary/5 transition-colors hover:bg-primary/10">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <SparkleIcon className="size-4 text-primary" />
-                  {t('onboardingTitle')}
-                </CardTitle>
-                <CardDescription>{t('onboardingDescription')}</CardDescription>
-              </CardHeader>
-            </Card>
-          </Link>
-        )}
-
-        {insight && (
-          <Link href={insight.href} className="block">
-            <Card className="border-primary/30 bg-primary/5 transition-colors hover:bg-primary/10">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-base">
-                  <LightbulbIcon className="size-4 text-primary" />
-                  {insight.title}
-                </CardTitle>
-                <CardDescription>{insight.detail}</CardDescription>
-              </CardHeader>
-            </Card>
-          </Link>
-        )}
-
-        <RecentRecordsCard records={recentRecords} unit={profile?.unit ?? 'KG'} />
-
-        {inProgressSession ? (
-          <Card className="border-primary/40 bg-primary/5">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">{t('activeSession')}</CardTitle>
-              <CardDescription>
-                {t('startedOn', {
-                  name: inProgressSession.workout?.name
-                    ? getTrainingDisplayName(inProgressSession.workout.name, locale)
-                    : t('sessionFallback'),
-                  date: format.dateTime(inProgressSession.startedAt, {
-                    day: '2-digit',
-                    month: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  }),
-                })}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild className="min-h-tap w-full text-base">
-                <Link href={`/session/${inProgressSession.id}`}>{t('resumeSession')}</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ) : !activeProgram ? (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">{t('noActiveProgram')}</CardTitle>
-              <CardDescription>{t('noActiveProgramDescription')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild>
-                <Link href="/programs">{t('viewPrograms')}</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ) : activeProgram.workouts.length === 0 ? (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">{t('emptyProgram')}</CardTitle>
-              <CardDescription>
-                {t('emptyProgramDescription', {
-                  name: getTrainingDisplayName(activeProgram.name, locale),
-                })}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild>
-                <Link href={`/programs/${activeProgram.id}`}>{t('configureProgram')}</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <>
-            {nextWorkout ? (
-              <Card data-testid="next-workout">
-                <CardHeader className="pb-3">
-                  <CardDescription>{t('nextWorkout')}</CardDescription>
-                  <CardTitle className="text-xl">
-                    {getTrainingDisplayName(nextWorkout.name, locale)}
-                  </CardTitle>
-                  <CardDescription>
-                    {nextReason} ·{' '}
-                    {t('activeProgram', {
-                      name: getTrainingDisplayName(activeProgram.name, locale),
-                    })}
-                  </CardDescription>
-                  {cycleLine && (
-                    <p data-testid="cycle-week" className="text-sm font-medium">
-                      {cycleLine}
-                    </p>
-                  )}
-                </CardHeader>
-                <CardContent className="flex flex-col gap-2">
-                  <StartWorkoutButton workoutId={nextWorkout.id} />
-                  <Button asChild variant="ghost" className="min-h-tap">
-                    <Link href="/session/new">{t('chooseOther')}</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            ) : (
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base">{t('startSession')}</CardTitle>
-                  <CardDescription>
-                    {t('activeProgram', {
-                      name: getTrainingDisplayName(activeProgram.name, locale),
-                    })}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button asChild className="min-h-tap w-full text-base">
-                    <Link href="/session/new">
-                      <PlayIcon className="size-5" />
-                      <span className="ml-2">{t('chooseSession')}</span>
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-
-            {adherence && adherence.sessionsPlanned > 0 && (
-              <Card data-testid="weekly-adherence">
-                <CardContent className="flex flex-col gap-2 p-4">
-                  <p className="text-sm font-medium">{t('adherence.title')}</p>
-                  <div className="flex flex-col gap-1">
-                    <p className="text-sm text-muted-foreground">
-                      {t('adherence.sessions', {
-                        done: adherence.sessionsDone,
-                        planned: adherence.sessionsPlanned,
-                      })}
-                    </p>
-                    <Progress
-                      value={adherence.sessionRatio * 100}
-                      aria-label={t('adherence.sessionsLabel')}
-                    />
-                  </div>
-                  {adherence.setsPrescribed > 0 && (
-                    <p className="text-sm text-muted-foreground">
-                      {t('adherence.sets', {
-                        done: adherence.setsDone,
-                        prescribed: adherence.setsPrescribed,
-                      })}
-                    </p>
-                  )}
-                  <Link
-                    href="/progress/report"
-                    className="self-start text-sm font-medium text-primary underline-offset-4 hover:underline"
-                  >
-                    {t('adherence.report')}
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
-
-            <div>
-              <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                {t('programSessions')}
-              </h2>
-              <ul className="flex flex-col gap-2">
-                {activeProgram.workouts.map((w) => {
-                  const dayKey = w.dayOfWeek != null ? DAY_KEYS[w.dayOfWeek - 1] : null;
-                  const day = dayKey ? common(`days.${dayKey}`) : null;
-                  const empty = w._count.exercises === 0;
-                  return (
-                    <li key={w.id}>
-                      <Card>
-                        <CardContent className="flex items-center justify-between gap-3 p-3">
-                          <div className="min-w-0">
-                            <p className="truncate text-sm font-medium">
-                              {getTrainingDisplayName(w.name, locale)}
-                            </p>
-                            <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-                              {w.id === nextWorkout?.id && <Badge>{t('nextBadge')}</Badge>}
-                              {day && <Badge variant="secondary">{day}</Badge>}
-                              <span>
-                                {common('counts.exercises', { count: w._count.exercises })}
-                              </span>
-                              {empty && (
-                                <span className="flex items-center gap-1 text-amber-600">
-                                  <WarningCircleIcon className="size-3" />
-                                  {common('states.empty')}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </>
-        )}
-      </div>
-    </main>
+    <HomeView
+      data={{
+        initials: initialsFor(profile?.displayName, session.email),
+        name: greetingName(profile?.displayName, session.email),
+        greeting: greetingPeriod(now, timeZone),
+        now,
+        timeZone,
+        unit: profile?.unit ?? 'KG',
+        week,
+        next: homeNext,
+        weekStats:
+          adherence && adherence.sessionsPlanned > 0
+            ? {
+                sessionsDone: adherence.sessionsDone,
+                sessionsPlanned: adherence.sessionsPlanned,
+                setsDone: adherence.setsDone,
+                setsPrescribed: adherence.setsPrescribed > 0 ? adherence.setsPrescribed : null,
+              }
+            : {
+                sessionsDone: weekSessions.length,
+                sessionsPlanned: null,
+                setsDone: weekSessions.reduce((sum, row) => sum + row._count.sets, 0),
+                setsPrescribed: null,
+              },
+        insight,
+        records: records.map((record) => ({
+          id: record.id,
+          type: record.type,
+          exerciseName: record.exerciseName
+            ? getExerciseDisplayName(record.exerciseName, locale)
+            : null,
+          value: record.value,
+          previousValue: record.previousValue,
+          weightKg: record.weightKg,
+          achievedAt: record.achievedAt,
+        })),
+        weight:
+          weighIns[0] && trend
+            ? {
+                latestKg: weighIns[0].weightKg,
+                averageKg: trend.averageKg,
+                ratePerWeekKg: trend.ratePerWeekKg,
+              }
+            : null,
+      }}
+    />
   );
 }
