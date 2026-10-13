@@ -85,3 +85,35 @@ describe('exerciseMuscleMap (epic 2.7)', () => {
     expect(regions.every((region) => region.group !== 'OTHER')).toBe(true);
   });
 });
+
+describe('compact muscle figure (design round 1)', () => {
+  it('maps every muscle group but OTHER to one compact shape', async () => {
+    const { COMPACT_MUSCLE_OF, COMPACT_MUSCLES } = await import('./muscle-map');
+    for (const [group, muscle] of Object.entries(COMPACT_MUSCLE_OF)) {
+      if (group === 'OTHER') expect(muscle).toBeNull();
+      else expect(COMPACT_MUSCLES).toContain(muscle);
+    }
+  });
+
+  it('lists the lit shapes once, in figure order', async () => {
+    const { compactMuscles } = await import('./muscle-map');
+    expect(
+      compactMuscles(['HAMSTRINGS', 'QUADS', 'BACK_WIDTH', 'BACK_THICKNESS', 'OTHER', 'QUADS']),
+    ).toEqual(['quads', 'back', 'hams']);
+    expect(compactMuscles([])).toEqual([]);
+  });
+
+  it('keeps the hottest level of the groups a shape covers', async () => {
+    const { compactHeat } = await import('./muscle-map');
+    expect(
+      compactHeat([
+        { group: 'BACK_WIDTH', level: 'low' },
+        { group: 'BACK_THICKNESS', level: 'high' },
+        { group: 'LOWER_BACK', level: 'none' },
+        { group: 'CHEST', level: 'none' },
+        { group: 'QUADS', level: 'optimal' },
+        { group: 'OTHER', level: 'high' },
+      ]),
+    ).toEqual({ back: 3, chest: 0, quads: 2 });
+  });
+});

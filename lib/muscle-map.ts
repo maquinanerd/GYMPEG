@@ -109,3 +109,72 @@ export function exerciseMuscleMap(
     return mapping.regionIds.map((regionId) => ({ regionId, group, view: mapping.view, role }));
   });
 }
+
+// ============================================================
+// Compact figure (home "Próximo treino" card, design round 1)
+// ============================================================
+
+// The small front/back figure groups the fifteen muscle groups into eleven
+// shapes. OTHER is never painted.
+export const COMPACT_MUSCLES = [
+  'chest',
+  'shoulders',
+  'abs',
+  'biceps',
+  'triceps',
+  'forearms',
+  'quads',
+  'calves',
+  'back',
+  'glutes',
+  'hams',
+] as const;
+export type CompactMuscle = (typeof COMPACT_MUSCLES)[number];
+
+export const COMPACT_MUSCLE_OF = {
+  CHEST: 'chest',
+  BACK_WIDTH: 'back',
+  BACK_THICKNESS: 'back',
+  LOWER_BACK: 'back',
+  SHOULDERS_FRONT: 'shoulders',
+  SHOULDERS_LATERAL: 'shoulders',
+  SHOULDERS_REAR: 'shoulders',
+  BICEPS: 'biceps',
+  TRICEPS: 'triceps',
+  FOREARMS: 'forearms',
+  QUADS: 'quads',
+  HAMSTRINGS: 'hams',
+  GLUTES: 'glutes',
+  CALVES: 'calves',
+  ABS: 'abs',
+  OTHER: null,
+} as const satisfies Record<MuscleGroup, CompactMuscle | null>;
+
+// The compact shapes a list of muscle groups lights up, in figure order and
+// without duplicates (a workout with lats and rows lights "back" once).
+export function compactMuscles(groups: Iterable<MuscleGroup>): CompactMuscle[] {
+  const lit = new Set<CompactMuscle>();
+  for (const group of groups) {
+    const muscle = COMPACT_MUSCLE_OF[group];
+    if (muscle) lit.add(muscle);
+  }
+  return COMPACT_MUSCLES.filter((muscle) => lit.has(muscle));
+}
+
+// Heat level of each compact shape as 0..3 (heat-0..heat-3 tokens). A shape
+// covering several groups takes the hottest one.
+const HEAT_INDEX: Record<HeatLevel, 0 | 1 | 2 | 3> = { none: 0, low: 1, optimal: 2, high: 3 };
+
+export function compactHeat(
+  regions: Pick<MuscleMapRegion, 'group' | 'level'>[],
+): Partial<Record<CompactMuscle, 0 | 1 | 2 | 3>> {
+  const out: Partial<Record<CompactMuscle, 0 | 1 | 2 | 3>> = {};
+  for (const region of regions) {
+    const muscle = COMPACT_MUSCLE_OF[region.group];
+    if (!muscle) continue;
+    const level = HEAT_INDEX[region.level];
+    const current = out[muscle];
+    if (current == null || current < level) out[muscle] = level;
+  }
+  return out;
+}

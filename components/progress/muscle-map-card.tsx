@@ -7,14 +7,15 @@ import { muscleGroupMessageKeys } from '@/i18n/enum-keys';
 import type { BodyView, HeatLevel, MuscleMapRegion } from '@/lib/muscle-map';
 import { BODY_OUTLINE_PATHS, BODY_VIEWBOX, REGION_PATHS } from './body-paths';
 
-// Fill ramp for the four heat levels. Sequential warm ramp (amber to deep
-// red) validated for CVD and normal-vision separation in both themes; the
-// gray 'none' state is deliberately desaturated so untouched reads as absent.
+// Fill of the four heat levels: the design's heat tokens (heat-0 untrained,
+// heat-1 below MEV, heat-2 in the band, heat-3 above MRV). Red is no longer
+// used: above MRV is the attention orange, and every level keeps its text
+// label (legend, region labels), so the color never stands alone.
 const LEVEL_FILL: Record<HeatLevel, string> = {
-  none: 'fill-muted',
-  low: 'fill-amber-300',
-  optimal: 'fill-orange-500 dark:fill-orange-400',
-  high: 'fill-red-700 dark:fill-red-500',
+  none: 'fill-heat-0',
+  low: 'fill-heat-1',
+  optimal: 'fill-heat-2',
+  high: 'fill-heat-3',
 };
 
 const LEGEND_LEVELS: readonly HeatLevel[] = ['none', 'low', 'optimal', 'high'];

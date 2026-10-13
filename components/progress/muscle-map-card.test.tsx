@@ -26,13 +26,13 @@ describe('MuscleMapCard', () => {
 
     const chest = screen.getAllByLabelText('Chest: 14 sets this week, within range');
     expect(chest).toHaveLength(2);
-    expect(chest[0]).toHaveClass('fill-orange-500');
+    expect(chest[0]).toHaveClass('fill-heat-2');
 
     const quads = screen.getAllByLabelText('Quads: 25 sets this week, above MRV');
-    expect(quads[0]).toHaveClass('fill-red-700');
+    expect(quads[0]).toHaveClass('fill-heat-3');
 
     const untouched = screen.getAllByLabelText('Abs: 0 sets this week, untrained');
-    expect(untouched[0]).toHaveClass('fill-muted');
+    expect(untouched[0]).toHaveClass('fill-heat-0');
   });
 
   it('shows the tapped region detail below the figures', async () => {

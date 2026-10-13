@@ -224,6 +224,21 @@ export const progress = {
     regionLabel:
       '{name}: {sets, plural, one {# подход} few {# подхода} many {# подходов} other {# подхода}} за неделю, {status}',
     hint: 'Нажмите на мышцу, чтобы увидеть детали.',
+    compact: {
+      label: 'Мышцы тренировки: {list}',
+      none: 'Нет мышц для показа',
+      chest: 'грудь',
+      shoulders: 'плечи',
+      abs: 'пресс',
+      biceps: 'бицепс',
+      triceps: 'трицепс',
+      forearms: 'предплечья',
+      quads: 'квадрицепсы',
+      calves: 'икры',
+      back: 'спина',
+      glutes: 'ягодицы',
+      hams: 'бицепс бедра',
+    },
     empty: 'За эту неделю нет рабочих подходов; запишите тренировку, и тело загорится.',
   },
 } satisfies MessageShape<typeof english>;
