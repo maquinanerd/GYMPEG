@@ -1,7 +1,15 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Check, Circle, CircleDot, CloudOff, Loader2, Trash2, Trophy } from 'lucide-react';
+import {
+  CheckIcon,
+  CircleIcon,
+  RadioButtonIcon,
+  CloudSlashIcon,
+  CircleNotchIcon,
+  TrashIcon,
+  TrophyIcon,
+} from '@/components/ui/icon';
 import type { Exercise, ProgramExercise } from '@/lib/prisma-client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -92,7 +100,7 @@ function RowDone({ set, prs, onDelete }: { set: PendingSet; prs: PRType[]; onDel
         </span>
         {prs.map((pr) => (
           <Badge key={pr} className="gap-1 text-xs" title={t(PR_TITLE_KEYS[pr])}>
-            <Trophy className="size-3" />
+            <TrophyIcon className="size-3" />
             {t(PR_LABEL_KEYS[pr])}
           </Badge>
         ))}
@@ -109,19 +117,19 @@ function RowDone({ set, prs, onDelete }: { set: PendingSet; prs: PRType[]; onDel
         aria-label={t('delete')}
         className="size-8 text-muted-foreground hover:text-destructive"
       >
-        <Trash2 className="size-3.5" />
+        <TrashIcon className="size-3.5" />
       </Button>
     </div>
   );
 }
 
 function SyncIcon({ status }: { status: PendingSet['status'] }) {
-  if (status === 'synced') return <Check className="size-4 flex-shrink-0 text-primary" />;
+  if (status === 'synced') return <CheckIcon className="size-4 flex-shrink-0 text-primary" />;
   if (status === 'syncing')
-    return <Loader2 className="size-4 flex-shrink-0 animate-spin text-muted-foreground" />;
-  if (status === 'failed') return <CloudOff className="size-4 flex-shrink-0 text-amber-500" />;
+    return <CircleNotchIcon className="size-4 flex-shrink-0 animate-spin text-muted-foreground" />;
+  if (status === 'failed') return <CloudSlashIcon className="size-4 flex-shrink-0 text-amber-500" />;
   // 'pending'
-  return <CloudOff className="size-4 flex-shrink-0 text-muted-foreground" />;
+  return <CloudSlashIcon className="size-4 flex-shrink-0 text-muted-foreground" />;
 }
 
 function RowUpcoming({ setNumber, isCurrent }: { setNumber: number; isCurrent: boolean }) {
@@ -134,9 +142,9 @@ function RowUpcoming({ setNumber, isCurrent }: { setNumber: number; isCurrent: b
       }`}
     >
       {isCurrent ? (
-        <CircleDot className="size-4 flex-shrink-0 text-primary" />
+        <RadioButtonIcon className="size-4 flex-shrink-0 text-primary" />
       ) : (
-        <Circle className="size-4 flex-shrink-0 text-muted-foreground" />
+        <CircleIcon className="size-4 flex-shrink-0 text-muted-foreground" />
       )}
       <span className={`text-sm ${isCurrent ? 'font-medium' : 'text-muted-foreground'}`}>
         {isCurrent ? t('current', { number: setNumber }) : t('upcoming', { number: setNumber })}

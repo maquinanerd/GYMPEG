@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Loader2, Save, User } from 'lucide-react';
+import { CircleNotchIcon, FloppyDiskIcon, UserIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import type { Sex, TrainingGoal, WeightUnit } from '@/lib/prisma-client';
 import { trainingGoalMessageKeys } from '@/i18n/enum-keys';
@@ -112,7 +112,7 @@ export function ProfileSection({ initial }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
-          <User className="size-5" />
+          <UserIcon className="size-5" />
           <h2 className="text-base font-semibold">{t('title')}</h2>
         </div>
         <p className="text-xs text-muted-foreground">{t('description')}</p>
@@ -270,7 +270,7 @@ export function ProfileSection({ initial }: Props) {
 
         <div>
           <Button type="button" onClick={save} disabled={pending || !isValid} className="min-h-tap">
-            {pending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+            {pending ? <CircleNotchIcon className="size-4 animate-spin" /> : <FloppyDiskIcon className="size-4" />}
             <span className="ml-2">{common('actions.save')}</span>
           </Button>
         </div>

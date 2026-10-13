@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { Ruler, Trash2 } from 'lucide-react';
+import { RulerIcon, TrashIcon } from '@/components/ui/icon';
 import {
   CartesianGrid,
   Line,
@@ -142,7 +142,7 @@ export function MeasurementsCard({ entries, unit, listLimit = 5, bodyFat = null 
       <CardHeader className="pb-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="flex items-center gap-2 text-base font-semibold">
-            <Ruler className="size-4" />
+            <RulerIcon className="size-4" />
             {t('title')}
           </h2>
         </div>
@@ -276,7 +276,7 @@ export function MeasurementsCard({ entries, unit, listLimit = 5, bodyFat = null 
                   onClick={() => void deleteEntry(e.id)}
                   disabled={busy}
                 >
-                  <Trash2 className="size-4" />
+                  <TrashIcon className="size-4" />
                 </Button>
               </li>
             ))}

@@ -3,7 +3,13 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Building2, Check, Plus, Save, Trash2 } from 'lucide-react';
+import {
+  BuildingsIcon,
+  CheckIcon,
+  PlusIcon,
+  FloppyDiskIcon,
+  TrashIcon,
+} from '@/components/ui/icon';
 import { toast } from 'sonner';
 import type { Exercise, Gym, GymExerciseConfig } from '@/lib/prisma-client';
 import { Button } from '@/components/ui/button';
@@ -155,7 +161,7 @@ export function GymProfilesSection({ initialGyms, activeGymId: initialActive, ex
     <Card>
       <CardHeader className="pb-3">
         <h2 className="flex items-center gap-2 text-base font-semibold">
-          <Building2 className="size-4" />
+          <BuildingsIcon className="size-4" />
           {t('title')}
         </h2>
         <p className="text-xs text-muted-foreground">{t('description')}</p>
@@ -185,7 +191,7 @@ export function GymProfilesSection({ initialGyms, activeGymId: initialActive, ex
             onClick={() => selectGym('new')}
             title={t('newGym')}
           >
-            <Plus className="size-4" />
+            <PlusIcon className="size-4" />
           </Button>
         </div>
 
@@ -281,7 +287,7 @@ export function GymProfilesSection({ initialGyms, activeGymId: initialActive, ex
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button type="button" variant="outline" className="text-destructive">
-                    <Trash2 className="size-4" />
+                    <TrashIcon className="size-4" />
                     <span className="ml-2">{common('actions.delete')}</span>
                   </Button>
                 </AlertDialogTrigger>
@@ -305,12 +311,12 @@ export function GymProfilesSection({ initialGyms, activeGymId: initialActive, ex
           <div className="flex gap-2">
             {draft.id && draft.id !== activeGymId && (
               <Button type="button" variant="outline" onClick={activate}>
-                <Check className="size-4" />
+                <CheckIcon className="size-4" />
                 <span className="ml-2">{t('makeActive')}</span>
               </Button>
             )}
             <Button type="button" onClick={save} disabled={!draft.name.trim() || saving}>
-              <Save className="size-4" />
+              <FloppyDiskIcon className="size-4" />
               <span className="ml-2">
                 {saving ? common('actions.saving') : common('actions.save')}
               </span>

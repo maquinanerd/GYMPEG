@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Check, Loader2, SlidersHorizontal } from 'lucide-react';
+import { CheckIcon, CircleNotchIcon, SlidersHorizontalIcon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -112,7 +112,7 @@ export function CoachAdjustments({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <SlidersHorizontal className="size-5" />
+            <SlidersHorizontalIcon className="size-5" />
             <h2 className="text-base font-semibold">{t('title')}</h2>
           </div>
           {alreadyApplied && <Badge variant="secondary">{t('applied')}</Badge>}
@@ -202,12 +202,12 @@ export function CoachAdjustments({
           >
             {pending ? (
               <>
-                <Loader2 className="size-5 animate-spin" />
+                <CircleNotchIcon className="size-5 animate-spin" />
                 <span className="ml-2">{t('applying')}</span>
               </>
             ) : (
               <>
-                <Check className="size-5" />
+                <CheckIcon className="size-5" />
                 <span className="ml-2">{t('apply', { count: selectedCount })}</span>
               </>
             )}

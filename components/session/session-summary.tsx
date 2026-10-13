@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { ChevronLeft, Check, Trophy } from 'lucide-react';
+import { CaretLeftIcon, CheckIcon, TrophyIcon } from '@/components/ui/icon';
 import type { Exercise, ProgramExercise, Session, WeightUnit } from '@/lib/prisma-client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -154,7 +154,7 @@ export function SessionSummary({
     <main className="flex flex-1 flex-col">
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-4 py-6">
         <Button variant="ghost" size="sm" onClick={onBack} className="self-start">
-          <ChevronLeft className="size-4" />
+          <CaretLeftIcon className="size-4" />
           <span className="ml-1">{t('back')}</span>
         </Button>
 
@@ -174,7 +174,7 @@ export function SessionSummary({
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-base">
-                <Trophy className="size-4 text-primary" />
+                <TrophyIcon className="size-4 text-primary" />
                 {t('records')}
               </CardTitle>
               <CardDescription>{t('bests')}</CardDescription>
@@ -192,7 +192,7 @@ export function SessionSummary({
                     <div className="flex flex-shrink-0 items-center gap-1.5">
                       {pr.types.map((type) => (
                         <Badge key={type} className="gap-1 text-xs">
-                          <Trophy className="size-3" />
+                          <TrophyIcon className="size-3" />
                           {t(PR_TYPE_KEYS[type])}
                         </Badge>
                       ))}
@@ -222,7 +222,7 @@ export function SessionSummary({
                 <li key={s.pe.id} className="flex items-center justify-between gap-2 py-2 text-sm">
                   <div className="flex min-w-0 items-center gap-2">
                     {s.complete ? (
-                      <Check className="size-4 text-primary" />
+                      <CheckIcon className="size-4 text-primary" />
                     ) : (
                       <span className="size-4 flex-shrink-0 rounded-full border border-muted-foreground/40" />
                     )}

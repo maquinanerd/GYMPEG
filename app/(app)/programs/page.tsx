@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Plus, Wand2 } from 'lucide-react';
+import { PlusIcon, MagicWandIcon } from '@/components/ui/icon';
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
@@ -34,13 +34,13 @@ export default async function ProgramsPage() {
           <div className="flex gap-2">
             <Button asChild variant="outline" className="min-h-tap">
               <Link href="/programs/generate">
-                <Wand2 className="size-4" />
+                <MagicWandIcon className="size-4" />
                 <span className="ml-2">{t('generateWithAi')}</span>
               </Link>
             </Button>
             <Button asChild className="min-h-tap">
               <Link href="/programs/new">
-                <Plus className="size-4" />
+                <PlusIcon className="size-4" />
                 <span className="ml-2">{t('create')}</span>
               </Link>
             </Button>

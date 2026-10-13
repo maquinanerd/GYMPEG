@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Dumbbell } from 'lucide-react';
+import { BarbellIcon } from '@/components/ui/icon';
 import { EmptyState } from './empty-state';
 
 describe('EmptyState', () => {
@@ -15,7 +15,7 @@ describe('EmptyState', () => {
   it('renders the call-to-action as a link to the given href', () => {
     render(
       <EmptyState
-        icon={Dumbbell}
+        icon={BarbellIcon}
         title="Nothing here"
         action={{ label: 'Log your first session', href: '/session/new' }}
       />,

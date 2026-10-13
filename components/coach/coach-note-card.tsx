@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { MessageSquarePlus } from 'lucide-react';
+import { ChatCenteredDotsIcon } from '@/components/ui/icon';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -72,7 +72,7 @@ export function CoachNoteCard({ initialNote }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
-          <MessageSquarePlus className="size-4 text-primary" />
+          <ChatCenteredDotsIcon className="size-4 text-primary" />
           <h2 className="text-base font-semibold">{t('title')}</h2>
         </div>
         <p className="text-xs text-muted-foreground">

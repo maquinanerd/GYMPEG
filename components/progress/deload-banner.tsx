@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
-import { BatteryCharging, BatteryLow } from 'lucide-react';
+import { BatteryChargingIcon, BatteryLowIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -80,7 +80,7 @@ export function DeloadBanner({ reasons, deloadUntil }: Props) {
       <Card className="border-emerald-500/50 bg-emerald-500/5">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
-            <BatteryCharging className="size-4 text-emerald-600" />
+            <BatteryChargingIcon className="size-4 text-emerald-600" />
             <h2 className="text-base font-semibold">{t('activeTitle')}</h2>
           </div>
         </CardHeader>
@@ -100,7 +100,7 @@ export function DeloadBanner({ reasons, deloadUntil }: Props) {
     <Card className="border-amber-500/50 bg-amber-500/5">
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
-          <BatteryLow className="size-4 text-amber-600" />
+          <BatteryLowIcon className="size-4 text-amber-600" />
           <h2 className="text-base font-semibold">{t('dueTitle')}</h2>
         </div>
       </CardHeader>

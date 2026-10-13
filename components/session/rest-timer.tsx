@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { FastForward, Minus, Pause, Play, Plus } from 'lucide-react';
+import { FastForwardIcon, MinusIcon, PauseIcon, PlayIcon, PlusIcon } from '@/components/ui/icon';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { REST_ADJUST_STEP_MS, restRemainingMs } from '@/lib/rest-timer';
@@ -122,7 +122,7 @@ export function RestTimer({
             aria-label={t('removeFifteenLabel')}
             className="min-h-tap flex-1"
           >
-            <Minus className="size-4" />
+            <MinusIcon className="size-4" />
             <span className="ml-1">{t('fifteen')}</span>
           </Button>
           <Button
@@ -130,7 +130,7 @@ export function RestTimer({
             onClick={paused ? onResume : onPause}
             className="min-h-tap flex-1"
           >
-            {paused ? <Play className="size-4" /> : <Pause className="size-4" />}
+            {paused ? <PlayIcon className="size-4" /> : <PauseIcon className="size-4" />}
             <span className="ml-1">{paused ? t('resume') : t('pause')}</span>
           </Button>
           <Button
@@ -139,12 +139,12 @@ export function RestTimer({
             aria-label={t('addFifteenLabel')}
             className="min-h-tap flex-1"
           >
-            <Plus className="size-4" />
+            <PlusIcon className="size-4" />
             <span className="ml-1">{t('fifteen')}</span>
           </Button>
         </div>
         <Button variant="default" onClick={onSkip} className="min-h-tap w-full max-w-sm">
-          <FastForward className="size-4" />
+          <FastForwardIcon className="size-4" />
           <span className="ml-1">{t('skip')}</span>
         </Button>
       </CardContent>

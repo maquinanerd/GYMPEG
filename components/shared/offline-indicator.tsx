@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { CloudOff, RotateCw, Wifi } from 'lucide-react';
+import { CloudSlashIcon, ArrowClockwiseIcon, WifiHighIcon } from '@/components/ui/icon';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { getDB } from '@/lib/indexeddb';
 import { flushPendingSets } from '@/lib/sync';
@@ -64,7 +64,7 @@ export function OfflineIndicator() {
   if (!online) {
     return (
       <div className="flex items-center gap-1.5 rounded-md bg-amber-500/15 px-2 py-1 text-xs font-medium text-amber-600 dark:text-amber-400">
-        <CloudOff className="size-3.5" />
+        <CloudSlashIcon className="size-3.5" />
         <span>{pendingCount > 0 ? t('pending', { count: pendingCount }) : t('offline')}</span>
       </div>
     );
@@ -81,9 +81,9 @@ export function OfflineIndicator() {
       aria-label={t('syncNow')}
     >
       {flushing ? (
-        <RotateCw className="size-3.5 animate-spin" />
+        <ArrowClockwiseIcon className="size-3.5 animate-spin" />
       ) : (
-        <Wifi className="size-3.5" />
+        <WifiHighIcon className="size-3.5" />
       )}
       <span>{t('syncing', { count: pendingCount })}</span>
     </Button>

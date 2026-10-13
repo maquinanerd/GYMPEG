@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Trophy } from 'lucide-react';
+import { TrophyIcon } from '@/components/ui/icon';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { PersonalRecordType, WeightUnit } from '@/lib/prisma-client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -44,7 +44,7 @@ export async function RecentRecordsCard({
     <Card data-testid="recent-records">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base">
-          <Trophy className="size-4 text-primary" />
+          <TrophyIcon className="size-4 text-primary" />
           {t('title')}
         </CardTitle>
       </CardHeader>

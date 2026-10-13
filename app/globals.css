@@ -2,51 +2,109 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Variables Shadcn/UI (palette zinc, mode sombre par défaut). */
+/* GYM Peg tokens (docs/design/tokens.css). Light is the default theme; .dark
+   is opt-in from Perfil > Tema. HSL channels so Tailwind can add alpha. */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.5rem;
+    --background: 0 0% 97.6%; /* #F9F9F9 */
+    --foreground: 0 0% 6.7%; /* #111111 */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 0 0% 6.7%; /* #111111 */
+    --popover: 0 0% 100%; /* #FFFFFF */
+    --popover-foreground: 0 0% 6.7%; /* #111111 */
+    --primary: 72 100% 50%; /* #CCFF00 */
+    --primary-foreground: 0 0% 6.7%; /* #111111 */
+    --secondary: 0 0% 94.1%; /* #F0F0F0 */
+    --secondary-foreground: 0 0% 6.7%; /* #111111 */
+    --muted: 0 0% 94.5%; /* #F1F1F1 */
+    --muted-foreground: 0 0% 39.2%; /* #646464 */
+    --accent: 78.5 68.4% 96.3%; /* #F8FCEF */
+    --accent-foreground: 78 44.4% 17.6%; /* #354119 */
+    --destructive: 2.8 100% 61.6%; /* #FF443B */
+    --destructive-foreground: 0 0% 6.7%; /* #111111 */
+    --border: 0 0% 94.9%; /* #F2F2F2 */
+    --input: 0 0% 94.1%; /* #F0F0F0 */
+    --ring: 73.2 100% 24.9%; /* #637F00 */
+    --brand: 73.2 100% 24.9%; /* #637F00 */
+    --brand-strong: 78 44.4% 17.6%; /* #354119 */
+    --suggestion: 78.5 68.4% 96.3%; /* #F8FCEF */
+    --suggestion-foreground: 78 44.4% 17.6%; /* #354119 */
+    --track: 0 0% 91.4%; /* #E9E9E9 */
+    --pill: 0 0% 94.5%; /* #F1F1F1 */
+    --nav: 0 0% 30.2%; /* #4D4D4D */
+    --nav-foreground: 0 0% 80.8%; /* #CECECE */
+    --nav-active: 72 100% 50%; /* #CCFF00 */
+    --nav-active-foreground: 0 0% 6.7%; /* #111111 */
+    --pr: 49.8 100% 51.8%; /* #FFD509 */
+    --pr-foreground: 0 0% 6.7%; /* #111111 */
+    --info: 191.7 100% 59.8%; /* #32D7FF */
+    --info-foreground: 0 0% 6.7%; /* #111111 */
+    --warmup: 21.3 100% 67.5%; /* #FF9459 */
+    --warmup-foreground: 0 0% 6.7%; /* #111111 */
+    --deload: 266.9 98% 80.8%; /* #C99EFE */
+    --deload-foreground: 0 0% 6.7%; /* #111111 */
+    --warning: 36.5 100% 52%; /* #FF9F0A */
+    --warning-foreground: 0 0% 6.7%; /* #111111 */
+    --success: 72 100% 50%; /* #CCFF00 */
+    --success-foreground: 0 0% 6.7%; /* #111111 */
+    --heat-0: 0 0% 91.4%; /* #E9E9E9 */
+    --heat-1: 78.6 74% 74.3%; /* #D0EE8D */
+    --heat-2: 72.6 100% 45.9%; /* #B9EA00 */
+    --heat-3: 36.5 100% 52%; /* #FF9F0A */
+    --radius: 1.5rem; /* 24px — cards */
+    --radius-sm: 1rem; /* 16px — miniaturas */
+    --radius-lg: 1.75rem; /* 28px — card dominante */
+    --h-btn: 3.5rem; /* 56px pílula padrão */
+    --h-btn-session: 4rem; /* 64px treino ativo */
+    --h-nav: 4.25rem; /* 68px barra inferior flutuante */
+    --h-row: 4rem; /* 64px linha de lista */
   }
-
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --background: 0 0% 6.7%; /* #111111 */
+    --foreground: 0 0% 100%; /* #FFFFFF */
+    --card: 0 0% 9.4%; /* #181818 */
+    --card-foreground: 0 0% 100%; /* #FFFFFF */
+    --popover: 0 0% 9.4%; /* #181818 */
+    --popover-foreground: 0 0% 100%; /* #FFFFFF */
+    --primary: 72 100% 50%; /* #CCFF00 */
+    --primary-foreground: 0 0% 6.7%; /* #111111 */
+    --secondary: 0 0% 13.7%; /* #232323 */
+    --secondary-foreground: 0 0% 100%; /* #FFFFFF */
+    --muted: 0 0% 11%; /* #1C1C1C */
+    --muted-foreground: 0 0% 55.3%; /* #8D8D8D */
+    --accent: 78.5 46.4% 11%; /* #21290F */
+    --accent-foreground: 72 100% 50%; /* #CCFF00 */
+    --destructive: 2.8 100% 61.6%; /* #FF443B */
+    --destructive-foreground: 0 0% 6.7%; /* #111111 */
+    --border: 0 0% 16.5%; /* #2A2A2A */
+    --input: 0 0% 13.7%; /* #232323 */
+    --ring: 72 100% 50%; /* #CCFF00 */
+    --brand: 72 100% 50%; /* #CCFF00 */
+    --brand-strong: 80 89% 82.2%; /* #DFFAA9 */
+    --suggestion: 78.5 46.4% 11%; /* #21290F */
+    --suggestion-foreground: 80 89% 82.2%; /* #DFFAA9 */
+    --track: 0 0% 16.5%; /* #2A2A2A */
+    --pill: 0 0% 13.7%; /* #232323 */
+    --nav: 0 0% 11%; /* #1C1C1C */
+    --nav-foreground: 0 0% 70.6%; /* #B4B4B4 */
+    --nav-active: 72 100% 50%; /* #CCFF00 */
+    --nav-active-foreground: 0 0% 6.7%; /* #111111 */
+    --pr: 49.8 100% 51.8%; /* #FFD509 */
+    --pr-foreground: 0 0% 6.7%; /* #111111 */
+    --info: 191.7 100% 59.8%; /* #32D7FF */
+    --info-foreground: 0 0% 6.7%; /* #111111 */
+    --warmup: 21.3 100% 67.5%; /* #FF9459 */
+    --warmup-foreground: 0 0% 6.7%; /* #111111 */
+    --deload: 266.9 98% 80.8%; /* #C99EFE */
+    --deload-foreground: 0 0% 6.7%; /* #111111 */
+    --warning: 36.5 100% 52%; /* #FF9F0A */
+    --warning-foreground: 0 0% 6.7%; /* #111111 */
+    --success: 72 100% 50%; /* #CCFF00 */
+    --success-foreground: 0 0% 6.7%; /* #111111 */
+    --heat-0: 0 0% 16.5%; /* #2A2A2A */
+    --heat-1: 75 64% 19.6%; /* #425212 */
+    --heat-2: 72 100% 50%; /* #CCFF00 */
+    --heat-3: 36.5 100% 52%; /* #FF9F0A */
   }
 }
 

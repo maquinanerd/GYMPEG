@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Trash2 } from 'lucide-react';
+import { TrashIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import {
   AlertDialog,
@@ -53,7 +53,7 @@ export function ProgramDeleteButton({
           size="sm"
           className="min-h-tap text-destructive hover:bg-destructive/10 hover:text-destructive"
         >
-          <Trash2 className="size-4" />
+          <TrashIcon className="size-4" />
           <span className="ml-2">{common('actions.delete')}</span>
         </Button>
       </AlertDialogTrigger>

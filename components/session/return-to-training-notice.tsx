@@ -1,6 +1,6 @@
 'use client';
 
-import { RotateCcw } from 'lucide-react';
+import { ArrowCounterClockwiseIcon } from '@/components/ui/icon';
 import { useLocale, useTranslations } from 'next-intl';
 import type { WeightUnit } from '@/lib/prisma-client';
 import type { ReturnRecommendation } from '@/lib/return-to-training';
@@ -37,7 +37,7 @@ export function ReturnToTrainingNotice({ recommendation, unit, usesBodyweight }:
       className="rounded-md border border-amber-300/70 bg-amber-50 px-3 py-3 text-amber-950 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-100"
     >
       <div className="flex items-start gap-2.5">
-        <RotateCcw className="mt-0.5 size-4 shrink-0" aria-hidden />
+        <ArrowCounterClockwiseIcon className="mt-0.5 size-4 shrink-0" aria-hidden />
         <div className="min-w-0 space-y-1 text-xs leading-relaxed sm:text-sm">
           <p className="font-semibold">{t('title')}</p>
           <p>{description}</p>

@@ -1,5 +1,11 @@
 import Link from 'next/link';
-import { Dumbbell, Play, AlertCircle, Lightbulb, Sparkles } from 'lucide-react';
+import {
+  BarbellIcon,
+  PlayIcon,
+  WarningCircleIcon,
+  LightbulbIcon,
+  SparkleIcon,
+} from '@/components/ui/icon';
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
@@ -119,7 +125,7 @@ export default async function DashboardPage() {
     <main className="flex-1 px-4 py-6">
       <div className="mx-auto flex max-w-2xl flex-col gap-6">
         <div className="flex items-center gap-3">
-          <Dumbbell className="size-8" />
+          <BarbellIcon className="size-8" />
           <div>
             <h1 className="text-2xl font-bold tracking-tight">GYM Peg</h1>
             <p className="text-xs text-muted-foreground">{session.email}</p>
@@ -131,7 +137,7 @@ export default async function DashboardPage() {
             <Card className="border-primary/40 bg-primary/5 transition-colors hover:bg-primary/10">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <Sparkles className="size-4 text-primary" />
+                  <SparkleIcon className="size-4 text-primary" />
                   {t('onboardingTitle')}
                 </CardTitle>
                 <CardDescription>{t('onboardingDescription')}</CardDescription>
@@ -145,7 +151,7 @@ export default async function DashboardPage() {
             <Card className="border-primary/30 bg-primary/5 transition-colors hover:bg-primary/10">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <Lightbulb className="size-4 text-primary" />
+                  <LightbulbIcon className="size-4 text-primary" />
                   {insight.title}
                 </CardTitle>
                 <CardDescription>{insight.detail}</CardDescription>
@@ -249,7 +255,7 @@ export default async function DashboardPage() {
                 <CardContent>
                   <Button asChild className="min-h-tap w-full text-base">
                     <Link href="/session/new">
-                      <Play className="size-5" />
+                      <PlayIcon className="size-5" />
                       <span className="ml-2">{t('chooseSession')}</span>
                     </Link>
                   </Button>
@@ -316,7 +322,7 @@ export default async function DashboardPage() {
                               </span>
                               {empty && (
                                 <span className="flex items-center gap-1 text-amber-600">
-                                  <AlertCircle className="size-3" />
+                                  <WarningCircleIcon className="size-3" />
                                   {common('states.empty')}
                                 </span>
                               )}

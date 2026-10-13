@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Link2, MoreHorizontal, Pencil, Trash2, Unlink } from 'lucide-react';
+import {
+  LinkIcon,
+  DotsThreeIcon,
+  PencilSimpleIcon,
+  TrashIcon,
+  LinkBreakIcon,
+} from '@/components/ui/icon';
 import type { Exercise, ProgramExercise } from '@/lib/prisma-client';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -119,23 +125,23 @@ export function ProgramExerciseRow({
                 className="min-h-tap min-w-tap"
                 aria-label={t('actions')}
               >
-                <MoreHorizontal className="size-4" />
+                <DotsThreeIcon className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onSelect={() => setEditOpen(true)}>
-                <Pencil className="mr-2 size-4" />
+                <PencilSimpleIcon className="mr-2 size-4" />
                 {common('actions.edit')}
               </DropdownMenuItem>
               {onPairWithPrevious && (
                 <DropdownMenuItem onSelect={() => onPairWithPrevious()}>
-                  <Link2 className="mr-2 size-4" />
+                  <LinkIcon className="mr-2 size-4" />
                   {t('pairPrevious')}
                 </DropdownMenuItem>
               )}
               {onUnpair && (
                 <DropdownMenuItem onSelect={() => onUnpair()}>
-                  <Unlink className="mr-2 size-4" />
+                  <LinkBreakIcon className="mr-2 size-4" />
                   {t('unpair')}
                 </DropdownMenuItem>
               )}
@@ -145,7 +151,7 @@ export function ProgramExerciseRow({
                 disabled={deleting}
                 className="text-destructive focus:text-destructive"
               >
-                <Trash2 className="mr-2 size-4" />
+                <TrashIcon className="mr-2 size-4" />
                 {common('actions.remove')}
               </DropdownMenuItem>
             </DropdownMenuContent>

@@ -4,15 +4,14 @@ import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
 import {
-  Activity,
-  Languages,
-  Moon,
-  Smartphone,
-  Sun,
-  Volume2,
-  Monitor,
-  Zap,
-} from 'lucide-react';
+  PulseIcon,
+  TranslateIcon,
+  MoonIcon,
+  DeviceMobileIcon,
+  SunIcon,
+  SpeakerHighIcon,
+  LightningIcon,
+} from '@/components/ui/icon';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -52,7 +51,7 @@ export function SettingsClient() {
       <Card>
         <CardHeader className="pb-3">
           <h2 className="flex items-center gap-2 text-base font-semibold">
-            <Languages className="size-4" />
+            <TranslateIcon className="size-4" />
             {common('language.label')}
           </h2>
           <p className="text-xs text-muted-foreground">{common('language.description')}</p>
@@ -70,24 +69,17 @@ export function SettingsClient() {
           <div className="flex flex-wrap gap-2">
             <ThemeChoice
               current={theme}
-              value="dark"
-              icon={<Moon className="size-4" />}
-              label={common('theme.dark')}
-              onClick={() => setTheme('dark')}
-            />
-            <ThemeChoice
-              current={theme}
               value="light"
-              icon={<Sun className="size-4" />}
+              icon={<SunIcon className="size-4" />}
               label={common('theme.light')}
               onClick={() => setTheme('light')}
             />
             <ThemeChoice
               current={theme}
-              value="system"
-              icon={<Monitor className="size-4" />}
-              label={common('theme.system')}
-              onClick={() => setTheme('system')}
+              value="dark"
+              icon={<MoonIcon className="size-4" />}
+              label={common('theme.dark')}
+              onClick={() => setTheme('dark')}
             />
           </div>
         </CardContent>
@@ -100,7 +92,7 @@ export function SettingsClient() {
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
           <PrefRow
-            icon={<Smartphone className="size-4" />}
+            icon={<DeviceMobileIcon className="size-4" />}
             label={t('vibration')}
             description={t('vibrationDescription')}
             checked={prefs.vibration}
@@ -108,7 +100,7 @@ export function SettingsClient() {
             disabled={!hydrated}
           />
           <PrefRow
-            icon={<Volume2 className="size-4" />}
+            icon={<SpeakerHighIcon className="size-4" />}
             label={t('timerSound')}
             description={t('timerSoundDescription')}
             checked={prefs.restTimerSound}
@@ -116,7 +108,7 @@ export function SettingsClient() {
             disabled={!hydrated}
           />
           <PrefRow
-            icon={<Zap className="size-4" />}
+            icon={<LightningIcon className="size-4" />}
             label={t('restFlash')}
             description={t('restFlashDescription')}
             checked={prefs.restEndFlash}
@@ -124,7 +116,7 @@ export function SettingsClient() {
             disabled={!hydrated}
           />
           <PrefRow
-            icon={<Activity className="size-4" />}
+            icon={<PulseIcon className="size-4" />}
             label={t('readiness')}
             description={t('readinessDescription')}
             checked={prefs.readinessAutoRegulation}
@@ -149,7 +141,7 @@ function ThemeChoice({
   onClick,
 }: {
   current: string | undefined;
-  value: 'dark' | 'light' | 'system';
+  value: 'dark' | 'light';
   icon: React.ReactNode;
   label: string;
   onClick: () => void;

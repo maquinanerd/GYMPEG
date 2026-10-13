@@ -1,7 +1,13 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getFormatter, getLocale, getTimeZone, getTranslations } from 'next-intl/server';
-import { ArrowLeft, Calendar, Clock, Download, Dumbbell } from 'lucide-react';
+import {
+  ArrowLeftIcon,
+  CalendarIcon,
+  ClockIcon,
+  DownloadSimpleIcon,
+  BarbellIcon,
+} from '@/components/ui/icon';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
@@ -188,7 +194,7 @@ export default async function HistorySessionPage(props: Params) {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <Button asChild variant="ghost" size="sm" className="-ml-2">
             <Link href={buildBackHref(searchParams)}>
-              <ArrowLeft className="size-4" />
+              <ArrowLeftIcon className="size-4" />
               <span className="ml-1">{t('title')}</span>
             </Link>
           </Button>
@@ -197,7 +203,7 @@ export default async function HistorySessionPage(props: Params) {
             {hasCardio && (
               <Button asChild variant="outline" size="sm">
                 <a href={`/api/cardio/tcx?sessionId=${session.id}`} download>
-                  <Download className="size-4" />
+                  <DownloadSimpleIcon className="size-4" />
                   <span className="ml-1">{detail('downloadTcx')}</span>
                 </a>
               </Button>
@@ -222,7 +228,7 @@ export default async function HistorySessionPage(props: Params) {
                 </Badge>
               )}
               <Badge variant="outline" className="gap-1">
-                <Calendar className="size-3" />
+                <CalendarIcon className="size-3" />
                 {format.dateTime(session.startedAt, {
                   day: '2-digit',
                   month: 'long',
@@ -234,7 +240,7 @@ export default async function HistorySessionPage(props: Params) {
               </Badge>
               {durationMin != null && (
                 <Badge variant="outline" className="gap-1">
-                  <Clock className="size-3" />
+                  <ClockIcon className="size-3" />
                   {t('minutes', { count: durationMin })}
                 </Badge>
               )}
@@ -494,7 +500,7 @@ export default async function HistorySessionPage(props: Params) {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center gap-2">
-      <Dumbbell className="size-4 shrink-0 text-muted-foreground" />
+      <BarbellIcon className="size-4 shrink-0 text-muted-foreground" />
       <div className="min-w-0">
         <p className="text-xs text-muted-foreground">{label}</p>
         <p className="truncate font-medium">{value}</p>

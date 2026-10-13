@@ -3,7 +3,11 @@
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
-import { History, Loader2, RotateCcw } from 'lucide-react';
+import {
+  ClockCounterClockwiseIcon,
+  CircleNotchIcon,
+  ArrowCounterClockwiseIcon,
+} from '@/components/ui/icon';
 import { toast } from 'sonner';
 import type { ProgramRevisionSource } from '@/lib/prisma-client';
 import type { ProgramDiff } from '@/lib/program-snapshot';
@@ -134,7 +138,7 @@ export function ProgramHistory({ programId }: { programId: string }) {
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <CardTitle className="flex items-center gap-2 text-base">
-              <History className="size-4" />
+              <ClockCounterClockwiseIcon className="size-4" />
               {t('title')}
             </CardTitle>
             <CardDescription>{t('description')}</CardDescription>
@@ -156,7 +160,7 @@ export function ProgramHistory({ programId }: { programId: string }) {
           {loadFailed && <p className="text-sm text-destructive">{t('loadError')}</p>}
           {!versions && !loadFailed && (
             <p className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="size-4 animate-spin" />
+              <CircleNotchIcon className="size-4 animate-spin" />
               {t('loading')}
             </p>
           )}
@@ -199,7 +203,7 @@ export function ProgramHistory({ programId }: { programId: string }) {
                 {expanded && (
                   <div className="mt-3 flex flex-col gap-3 border-t border-border pt-3">
                     {!detail ? (
-                      <Loader2 className="size-4 animate-spin text-muted-foreground" />
+                      <CircleNotchIcon className="size-4 animate-spin text-muted-foreground" />
                     ) : (
                       <>
                         <section>
@@ -220,7 +224,7 @@ export function ProgramHistory({ programId }: { programId: string }) {
                               className="mt-3 min-h-tap"
                               onClick={() => setConfirming(version)}
                             >
-                              <RotateCcw className="size-4" />
+                              <ArrowCounterClockwiseIcon className="size-4" />
                               <span className="ml-2">{t('restore')}</span>
                             </Button>
                           </section>

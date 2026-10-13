@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { LogOut } from 'lucide-react';
+import { SignOutIcon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { clearLocalUserData } from '@/lib/local-data';
 
@@ -30,7 +30,7 @@ export function LogoutButton() {
       disabled={isPending}
       aria-label={t('logout')}
     >
-      <LogOut className="size-4" />
+      <SignOutIcon className="size-4" />
       <span className="ml-2 hidden sm:inline">{t('logout')}</span>
     </Button>
   );

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Calculator } from 'lucide-react';
+import { CalculatorIcon } from '@/components/ui/icon';
 import type { WeightUnit } from '@/lib/prisma-client';
 import {
   Dialog,
@@ -61,7 +61,7 @@ export function PlateCalculator({ weightKg, unit, barWeightsKg, plateWeightsKg }
           className="h-7 gap-1 px-2 text-xs text-muted-foreground"
           aria-label={t('openPlates')}
         >
-          <Calculator className="size-4" />
+          <CalculatorIcon className="size-4" />
           {t('plates')}
         </Button>
       </DialogTrigger>

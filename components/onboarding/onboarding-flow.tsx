@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ChevronLeft, Loader2, X } from 'lucide-react';
+import { CaretLeftIcon, CircleNotchIcon, XIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import type {
   MuscleGroup,
@@ -421,7 +421,7 @@ export function OnboardingFlow({ initial, exercises }: Props) {
                           className="inline-flex min-h-10 items-center gap-1 rounded-full border border-input bg-muted px-3 text-sm"
                         >
                           {name}
-                          <X className="size-3.5" aria-hidden="true" />
+                          <XIcon className="size-3.5" aria-hidden="true" />
                         </button>
                       </li>
                     );
@@ -547,7 +547,7 @@ export function OnboardingFlow({ initial, exercises }: Props) {
             onClick={() => setStep(step - 1)}
             disabled={saving}
           >
-            <ChevronLeft className="size-4" aria-hidden="true" />
+            <CaretLeftIcon className="size-4" aria-hidden="true" />
             <span className="ml-1">{t('back')}</span>
           </Button>
         )}
@@ -557,7 +557,7 @@ export function OnboardingFlow({ initial, exercises }: Props) {
           disabled={!canContinue || saving}
           onClick={() => (isLast ? save() : setStep(step + 1))}
         >
-          {saving && <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />}
+          {saving && <CircleNotchIcon className="mr-2 size-4 animate-spin" aria-hidden="true" />}
           {saving ? t('saving') : isLast ? t('finish') : t('next')}
         </Button>
       </div>

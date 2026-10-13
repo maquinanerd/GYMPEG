@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { MoreHorizontal, Plus, Pencil, Printer, Trash2 } from 'lucide-react';
+import {
+  DotsThreeIcon,
+  PlusIcon,
+  PencilSimpleIcon,
+  PrinterIcon,
+  TrashIcon,
+} from '@/components/ui/icon';
 import type { Exercise, ProgramExercise, Workout } from '@/lib/prisma-client';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -147,12 +153,12 @@ export function WorkoutCard({ workout, catalog }: Props) {
                 className="min-h-tap min-w-tap"
                 aria-label={t('actions')}
               >
-                <MoreHorizontal className="size-4" />
+                <DotsThreeIcon className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onSelect={() => setEditOpen(true)}>
-                <Pencil className="mr-2 size-4" />
+                <PencilSimpleIcon className="mr-2 size-4" />
                 {common('actions.edit')}
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -160,7 +166,7 @@ export function WorkoutCard({ workout, catalog }: Props) {
                   router.push(`/programs/${workout.programId}/print?workout=${workout.id}`)
                 }
               >
-                <Printer className="mr-2 size-4" />
+                <PrinterIcon className="mr-2 size-4" />
                 {printT('action')}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -169,7 +175,7 @@ export function WorkoutCard({ workout, catalog }: Props) {
                 disabled={deleting}
                 className="text-destructive focus:text-destructive"
               >
-                <Trash2 className="mr-2 size-4" />
+                <TrashIcon className="mr-2 size-4" />
                 {common('actions.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -214,7 +220,7 @@ export function WorkoutCard({ workout, catalog }: Props) {
           className="min-h-tap self-start"
           disabled={catalog.length === 0}
         >
-          <Plus className="size-4" />
+          <PlusIcon className="size-4" />
           <span className="ml-2">{exerciseT('add')}</span>
         </Button>
         {catalog.length === 0 && (

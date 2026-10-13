@@ -3,7 +3,15 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { CirclePlay, ExternalLink, Pause, Play, SkipBack, SkipForward, Wrench } from 'lucide-react';
+import {
+  PlayCircleIcon,
+  ArrowSquareOutIcon,
+  PauseIcon,
+  PlayIcon,
+  SkipBackIcon,
+  SkipForwardIcon,
+  WrenchIcon,
+} from '@/components/ui/icon';
 import type { EquipmentType } from '@/lib/prisma-client';
 import { getExerciseMedia } from '@/lib/exercise-media';
 import { equipmentTypeMessageKeys } from '@/i18n/enum-keys';
@@ -83,11 +91,11 @@ export function ExerciseMediaDialog({
                   className="object-cover"
                 />
                 <span className="absolute bottom-0.5 right-0.5 rounded-full bg-background/80 p-0.5">
-                  <CirclePlay className="size-4" />
+                  <PlayCircleIcon className="size-4" />
                 </span>
               </>
             ) : (
-              <CirclePlay className="size-4 text-muted-foreground" />
+              <PlayCircleIcon className="size-4 text-muted-foreground" />
             )}
           </Button>
         ) : (
@@ -98,7 +106,7 @@ export function ExerciseMediaDialog({
             className="min-h-tap self-start"
             aria-label={t('open', { name: displayName })}
           >
-            <CirclePlay className="size-4" />
+            <PlayCircleIcon className="size-4" />
             <span className="ml-2">{t('button')}</span>
           </Button>
         )}
@@ -147,7 +155,7 @@ export function ExerciseMediaDialog({
                 aria-label={t('showStart')}
                 title={t('showStart')}
               >
-                <SkipBack className="size-4" />
+                <SkipBackIcon className="size-4" />
               </Button>
               <Button
                 type="button"
@@ -157,7 +165,7 @@ export function ExerciseMediaDialog({
                 aria-label={t(playing ? 'pause' : 'play')}
                 title={t(playing ? 'pause' : 'play')}
               >
-                {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
+                {playing ? <PauseIcon className="size-4" /> : <PlayIcon className="size-4" />}
               </Button>
               <Button
                 type="button"
@@ -170,13 +178,13 @@ export function ExerciseMediaDialog({
                 aria-label={t('showFinish')}
                 title={t('showFinish')}
               >
-                <SkipForward className="size-4" />
+                <SkipForwardIcon className="size-4" />
               </Button>
             </div>
 
             <div className="border-t pt-4 text-sm">
               <div className="flex items-center gap-2 font-medium">
-                <Wrench className="size-4" />
+                <WrenchIcon className="size-4" />
                 <span>{t('equipment')}</span>
               </div>
               <p className="mt-1 text-muted-foreground">
@@ -193,7 +201,7 @@ export function ExerciseMediaDialog({
                 className="inline-flex items-center gap-1 underline underline-offset-2 hover:text-foreground"
               >
                 {t('source', { source: media.source.name, license: media.source.license })}
-                <ExternalLink className="size-3" />
+                <ArrowSquareOutIcon className="size-3" />
               </a>
             </div>
           </div>
@@ -203,7 +211,7 @@ export function ExerciseMediaDialog({
             <Button asChild variant="outline" size="sm">
               <a href={commonsUrl} target="_blank" rel="noreferrer">
                 {t('searchCommons')}
-                <ExternalLink className="ml-2 size-4" />
+                <ArrowSquareOutIcon className="ml-2 size-4" />
               </a>
             </Button>
           </div>

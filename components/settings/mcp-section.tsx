@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
-import { Copy, KeyRound, Loader2, Plug, Trash2 } from 'lucide-react';
+import { CopyIcon, KeyIcon, CircleNotchIcon, PlugIcon, TrashIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -83,7 +83,7 @@ export function McpSection({ initialTokens }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <h2 className="flex items-center gap-2 text-base font-semibold">
-          <Plug className="size-4" />
+          <PlugIcon className="size-4" />
           {t('title')}
         </h2>
         <p className="text-xs text-muted-foreground">{t('description')}</p>
@@ -96,9 +96,9 @@ export function McpSection({ initialTokens }: Props) {
           </label>
           <Button onClick={createToken} disabled={creating || name.trim().length === 0}>
             {creating ? (
-              <Loader2 className="size-4 animate-spin" />
+              <CircleNotchIcon className="size-4 animate-spin" />
             ) : (
-              <KeyRound className="size-4" />
+              <KeyIcon className="size-4" />
             )}
             <span className="ml-2">{t('create')}</span>
           </Button>
@@ -125,7 +125,7 @@ export function McpSection({ initialTokens }: Props) {
                 onClick={copyConnectorUrl}
                 title={t('copy')}
               >
-                <Copy className="size-4" />
+                <CopyIcon className="size-4" />
               </Button>
             </div>
           </div>
@@ -166,9 +166,9 @@ export function McpSection({ initialTokens }: Props) {
                   title={t('revoke')}
                 >
                   {revokingId === token.id ? (
-                    <Loader2 className="size-4 animate-spin" />
+                    <CircleNotchIcon className="size-4 animate-spin" />
                   ) : (
-                    <Trash2 className="size-4" />
+                    <TrashIcon className="size-4" />
                   )}
                 </Button>
               </div>

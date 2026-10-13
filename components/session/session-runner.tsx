@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Flag, MessageSquare, X } from 'lucide-react';
+import { CaretLeftIcon, CaretRightIcon, FlagIcon, ChatTextIcon, XIcon } from '@/components/ui/icon';
 import type {
   Exercise,
   Program,
@@ -823,7 +823,7 @@ export function SessionRunner({
             aria-label={t('quit')}
           >
             <Link href="/">
-              <X className="size-4" />
+              <XIcon className="size-4" />
             </Link>
           </Button>
         </div>
@@ -927,7 +927,7 @@ export function SessionRunner({
             <details className="group rounded-md border border-border">
               <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between px-3 text-sm font-medium">
                 {t('detailedEntry')}
-                <ChevronRight className="size-4 transition-transform group-open:rotate-90" />
+                <CaretRightIcon className="size-4 transition-transform group-open:rotate-90" />
               </summary>
               <div className="border-t border-border p-3">{setInputCard}</div>
             </details>
@@ -953,7 +953,7 @@ export function SessionRunner({
             Always available, never auto-triggered. */}
         <Button variant="outline" size="sm" asChild className="min-h-tap">
           <Link href={`/chat?sessionId=${session.id}`}>
-            <MessageSquare className="size-4" />
+            <ChatTextIcon className="size-4" />
             <span className="ml-2">{t('askCoach')}</span>
           </Link>
         </Button>
@@ -966,7 +966,7 @@ export function SessionRunner({
             disabled={currentIdx === 0 || mode.kind !== 'input'}
             className="min-h-tap"
           >
-            <ChevronLeft className="size-4" />
+            <CaretLeftIcon className="size-4" />
             <span className="ml-1">{t('previous')}</span>
           </Button>
 
@@ -976,7 +976,7 @@ export function SessionRunner({
             onClick={() => setMode({ kind: 'summary' })}
             className="min-h-tap"
           >
-            <Flag className="size-4" />
+            <FlagIcon className="size-4" />
             <span className="ml-2">{t('finish')}</span>
           </Button>
 
@@ -988,7 +988,7 @@ export function SessionRunner({
             className="min-h-tap"
           >
             <span className="mr-1">{t('next')}</span>
-            <ChevronRight className="size-4" />
+            <CaretRightIcon className="size-4" />
           </Button>
         </div>
       </div>

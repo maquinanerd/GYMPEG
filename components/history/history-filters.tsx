@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { Download, Filter, X } from 'lucide-react';
+import { DownloadSimpleIcon, FunnelIcon, XIcon } from '@/components/ui/icon';
 import type { MuscleGroup } from '@/lib/prisma-client';
 import { Button } from '@/components/ui/button';
 import {
@@ -68,11 +68,11 @@ export function HistoryFilters({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-        <Filter className="size-4" />
+        <FunnelIcon className="size-4" />
         <span>{t('title')}</span>
         <Button variant="outline" size="sm" asChild className="ml-auto" title={t('csvTitle')}>
           <a href={buildHistoryCsvHref(filters)} download>
-            <Download className="size-4" />
+            <DownloadSimpleIcon className="size-4" />
             <span className="ml-1">CSV</span>
           </a>
         </Button>
@@ -162,7 +162,7 @@ export function HistoryFilters({
           onClick={() => apply({})}
           disabled={isPending}
         >
-          <X className="size-4" />
+          <XIcon className="size-4" />
           <span className="ml-1">{t('clear')}</span>
         </Button>
       )}

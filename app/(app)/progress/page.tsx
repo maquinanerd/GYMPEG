@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { TrendingUp } from 'lucide-react';
+import { TrendUpIcon } from '@/components/ui/icon';
 import { safeTimeZone } from '@/lib/timezone';
 import { getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
@@ -520,7 +520,7 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
     <main className="flex-1 px-4 py-6">
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
         <div className="flex flex-wrap items-center gap-3">
-          <TrendingUp className="size-6" />
+          <TrendUpIcon className="size-6" />
           <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
           <Link
             href="/progress/report"
@@ -589,7 +589,7 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
 
         {exercisesWithSets.length === 0 ? (
           <EmptyState
-            icon={TrendingUp}
+            icon={TrendUpIcon}
             title={t('emptyTitle')}
             description={t('emptyDescription', { weeks: RECENT_WEEKS })}
             action={{ label: t('firstSession'), href: '/session/new' }}

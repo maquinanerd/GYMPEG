@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useMemo, useRef, useState } from 'react';
-import { Plus, Replace, Search, Trash2 } from 'lucide-react';
+import { PlusIcon, SwapIcon, MagnifyingGlassIcon, TrashIcon } from '@/components/ui/icon';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import type { Exercise, ProgramExercise } from '@/lib/prisma-client';
@@ -300,7 +300,7 @@ export function SessionExerciseMenu({
               className="min-h-tap justify-start"
               onClick={() => openView('replace')}
             >
-              <Replace className="mr-2 size-4" aria-hidden />
+              <SwapIcon className="mr-2 size-4" aria-hidden />
               {t('replace')}
             </Button>
             <Button
@@ -309,7 +309,7 @@ export function SessionExerciseMenu({
               className="min-h-tap justify-start"
               onClick={() => openView('add')}
             >
-              <Plus className="mr-2 size-4" aria-hidden />
+              <PlusIcon className="mr-2 size-4" aria-hidden />
               {t('addExercises')}
             </Button>
             <Button
@@ -320,7 +320,7 @@ export function SessionExerciseMenu({
               aria-describedby={onlyExercise ? removeBlockedId : undefined}
               onClick={() => openView('removeConfirm')}
             >
-              <Trash2 className="mr-2 size-4" aria-hidden />
+              <TrashIcon className="mr-2 size-4" aria-hidden />
               {t('remove')}
             </Button>
             {onlyExercise && (
@@ -403,7 +403,7 @@ export function SessionExerciseMenu({
         ) : view === 'replace' || view === 'add' ? (
           <>
             <div className="relative">
-              <Search
+              <MagnifyingGlassIcon
                 className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                 aria-hidden
               />

@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { Check, Languages } from 'lucide-react';
+import { CheckIcon, TranslateIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { localeLabels, locales, type Locale } from '@/i18n/config';
 import { Button } from '@/components/ui/button';
@@ -69,14 +69,14 @@ export function LanguageSelector({ showLabel = false }: { showLabel?: boolean })
           disabled={isPending}
           aria-label={t('change')}
         >
-          <Languages className={cn('size-4', showLabel && 'mr-2')} />
+          <TranslateIcon className={cn('size-4', showLabel && 'mr-2')} />
           {showLabel && localeLabels[locale]}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {locales.map((item) => (
           <DropdownMenuItem key={item} onSelect={() => changeLocale(item)}>
-            <Check className={cn('mr-2 size-4', item !== locale && 'invisible')} />
+            <CheckIcon className={cn('mr-2 size-4', item !== locale && 'invisible')} />
             {t(localeMessageKeys[item])}
           </DropdownMenuItem>
         ))}

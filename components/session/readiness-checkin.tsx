@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { HeartPulse } from 'lucide-react';
+import { HeartbeatIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import type { MuscleGroup } from '@/lib/prisma-client';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -104,7 +104,7 @@ export function ReadinessCheckin() {
         className="self-start"
         onClick={() => setOpen(true)}
       >
-        <HeartPulse className="size-4" />
+        <HeartbeatIcon className="size-4" />
         <span className="ml-2">{saved ? t('update') : t('open')}</span>
       </Button>
     );

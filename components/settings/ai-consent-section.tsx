@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Loader2, Sparkles } from 'lucide-react';
+import { CircleNotchIcon, SparkleIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -48,7 +48,7 @@ export function AiConsentSection({
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
-          <Sparkles className="size-5" />
+          <SparkleIcon className="size-5" />
           <h2 className="text-base font-semibold">{t('settingsTitle')}</h2>
         </div>
       </CardHeader>
@@ -62,7 +62,7 @@ export function AiConsentSection({
             disabled={withdrawing}
             className="min-h-tap"
           >
-            {withdrawing && <Loader2 className="size-4 animate-spin" />}
+            {withdrawing && <CircleNotchIcon className="size-4 animate-spin" />}
             <span className={withdrawing ? 'ml-2' : undefined}>{t('settingsWithdraw')}</span>
           </Button>
         </div>

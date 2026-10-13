@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Building2 } from 'lucide-react';
+import { BuildingsIcon } from '@/components/ui/icon';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -43,7 +43,7 @@ export function WorkoutStartList({
       {gyms.length > 0 && (
         <div className="space-y-2 rounded-md border p-3">
           <Label className="flex items-center gap-2">
-            <Building2 className="size-4" />
+            <BuildingsIcon className="size-4" />
             {t('trainingGym')}
           </Label>
           <Select value={gymId} onValueChange={setGymId}>

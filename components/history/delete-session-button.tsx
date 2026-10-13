@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
-import { Loader2, Trash2 } from 'lucide-react';
+import { CircleNotchIcon, TrashIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -62,7 +62,7 @@ export function DeleteSessionButton({ sessionId, workoutName, startedAt }: Props
           size="sm"
           className="text-rose-600 hover:bg-rose-500/10 hover:text-rose-600"
         >
-          <Trash2 className="size-4" />
+          <TrashIcon className="size-4" />
           <span className="ml-1">{t('button')}</span>
         </Button>
       </AlertDialogTrigger>
@@ -82,7 +82,7 @@ export function DeleteSessionButton({ sessionId, workoutName, startedAt }: Props
           >
             {pending ? (
               <>
-                <Loader2 className="size-4 animate-spin" />
+                <CircleNotchIcon className="size-4 animate-spin" />
                 <span className="ml-2">{t('deleting')}</span>
               </>
             ) : (

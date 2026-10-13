@@ -2,7 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Dumbbell, Loader2, MessageSquarePlus, Send } from 'lucide-react';
+import {
+  BarbellIcon,
+  CircleNotchIcon,
+  ChatCenteredDotsIcon,
+  PaperPlaneRightIcon,
+} from '@/components/ui/icon';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -167,7 +172,7 @@ export function ChatClient({
 
       {sessionId && (
         <div className="flex items-center gap-2 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm">
-          <Dumbbell className="size-4 shrink-0 text-primary" />
+          <BarbellIcon className="size-4 shrink-0 text-primary" />
           <p className="text-xs text-muted-foreground">
             <span className="font-medium text-foreground">{t('liveSession')}</span>{' '}
             {t('liveSessionDescription')}
@@ -183,7 +188,7 @@ export function ChatClient({
           onClick={newConversation}
           className="shrink-0"
         >
-          <MessageSquarePlus className="size-4" />
+          <ChatCenteredDotsIcon className="size-4" />
           <span className="ml-1.5">{t('new')}</span>
         </Button>
         {conversations.map((c) => (
@@ -231,7 +236,7 @@ export function ChatClient({
             >
               {m.role === 'assistant' ? (
                 m.content === '' && streaming ? (
-                  <Loader2 className="size-4 animate-spin" />
+                  <CircleNotchIcon className="size-4 animate-spin" />
                 ) : (
                   <article className="prose prose-sm dark:prose-invert max-w-none">
                     <ReactMarkdown>{m.content}</ReactMarkdown>
@@ -264,9 +269,9 @@ export function ChatClient({
           aria-label={t('send')}
         >
           {streaming ? (
-            <Loader2 className="size-4 animate-spin" />
+            <CircleNotchIcon className="size-4 animate-spin" />
           ) : (
-            <Send className="size-4" />
+            <PaperPlaneRightIcon className="size-4" />
           )}
         </Button>
       </div>

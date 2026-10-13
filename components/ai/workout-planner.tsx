@@ -3,7 +3,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { Check, Loader2, RefreshCw, Sparkles, Trash2, TriangleAlert } from 'lucide-react';
+import {
+  CheckIcon,
+  CircleNotchIcon,
+  ArrowsClockwiseIcon,
+  SparkleIcon,
+  TrashIcon,
+  WarningIcon,
+} from '@/components/ui/icon';
 import { toast } from 'sonner';
 import type { MuscleGroup } from '@/lib/prisma-client';
 import {
@@ -191,7 +198,7 @@ export function WorkoutPlanner({
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="size-5" />
+            <SparkleIcon className="size-5" />
             <h2 className="text-base font-semibold">{t('planner.title')}</h2>
           </div>
           <p className="text-xs text-muted-foreground">{t('planner.description')}</p>
@@ -218,11 +225,11 @@ export function WorkoutPlanner({
               className="min-h-tap"
             >
               {generating ? (
-                <Loader2 className="size-4 animate-spin" />
+                <CircleNotchIcon className="size-4 animate-spin" />
               ) : plan ? (
-                <RefreshCw className="size-4" />
+                <ArrowsClockwiseIcon className="size-4" />
               ) : (
-                <Sparkles className="size-4" />
+                <SparkleIcon className="size-4" />
               )}
               <span className="ml-2">{plan ? t('planner.regenerate') : t('planner.generate')}</span>
             </Button>
@@ -241,9 +248,9 @@ export function WorkoutPlanner({
                   }
                 >
                   {i < step ? (
-                    <Check className="size-4" />
+                    <CheckIcon className="size-4" />
                   ) : i === step ? (
-                    <Loader2 className="size-4 animate-spin" />
+                    <CircleNotchIcon className="size-4 animate-spin" />
                   ) : (
                     <span className="size-4" />
                   )}
@@ -273,7 +280,7 @@ export function WorkoutPlanner({
             {validation.warnings.length > 0 && (
               <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-3">
                 <h3 className="mb-1 flex items-center gap-2 text-sm font-medium">
-                  <TriangleAlert className="size-4" />
+                  <WarningIcon className="size-4" />
                   {t('preview.warnings')}
                 </h3>
                 <ul className="list-disc space-y-0.5 pl-5 text-sm">
@@ -361,7 +368,7 @@ export function WorkoutPlanner({
                           onClick={() => setPlan(withoutExercise(plan, wi, ei))}
                           aria-label={t('preview.removeExercise')}
                         >
-                          <Trash2 className="size-4 text-rose-600" />
+                          <TrashIcon className="size-4 text-rose-600" />
                         </Button>
                       </li>
                     );
@@ -389,9 +396,9 @@ export function WorkoutPlanner({
                 className="min-h-tap"
               >
                 {saving ? (
-                  <Loader2 className="size-4 animate-spin" />
+                  <CircleNotchIcon className="size-4 animate-spin" />
                 ) : (
-                  <Check className="size-4" />
+                  <CheckIcon className="size-4" />
                 )}
                 <span className="ml-2">{t('preview.saveAndActivate')}</span>
               </Button>

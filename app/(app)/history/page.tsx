@@ -1,5 +1,5 @@
 import { getLocale, getTimeZone, getTranslations } from 'next-intl/server';
-import { CalendarDays } from 'lucide-react';
+import { CalendarDotsIcon } from '@/components/ui/icon';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -152,7 +152,7 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
     <main className="flex-1 px-4 py-6">
       <div className="mx-auto flex max-w-2xl flex-col gap-6">
         <div className="flex items-center gap-3">
-          <CalendarDays className="size-6" />
+          <CalendarDotsIcon className="size-6" />
           <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
         </div>
 
@@ -170,7 +170,7 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
 
         {totalHistoryCount === 0 ? (
           <EmptyState
-            icon={CalendarDays}
+            icon={CalendarDotsIcon}
             title={t('emptyTitle')}
             description={t('emptyDescription')}
             action={{ label: t('firstSession'), href: '/session/new' }}

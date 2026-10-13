@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import {
-  ChevronDown,
-  ChevronUp,
-  HelpCircle,
-  Lightbulb,
-  MoreHorizontal,
-  TrendingUp,
-} from 'lucide-react';
+  CaretDownIcon,
+  CaretUpIcon,
+  QuestionIcon,
+  LightbulbIcon,
+  DotsThreeIcon,
+  TrendUpIcon,
+} from '@/components/ui/icon';
 import type { Exercise, ProgramExercise, WeightUnit } from '@/lib/prisma-client';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -163,7 +163,7 @@ export function ExerciseCard({
               aria-label={t('actions')}
               className="-mr-2 -mt-2 min-h-tap min-w-tap shrink-0"
             >
-              <MoreHorizontal className="size-5" aria-hidden />
+              <DotsThreeIcon className="size-5" aria-hidden />
             </Button>
           )}
         </div>
@@ -191,7 +191,7 @@ export function ExerciseCard({
             the collapsible program-notes block below are unchanged. */}
         {exo.notes && (
           <p className="mt-1.5 flex items-start gap-1.5 text-sm text-muted-foreground">
-            <Lightbulb className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+            <LightbulbIcon className="mt-0.5 size-3.5 shrink-0" aria-hidden />
             <span className="whitespace-pre-line">{exo.notes}</span>
           </p>
         )}
@@ -245,9 +245,9 @@ export function ExerciseCard({
           <div className="rounded-md border border-primary/30 bg-primary/5 p-3 text-sm">
             <div className="flex items-center gap-2">
               {suggestion.reason === 'progression' ? (
-                <TrendingUp className="size-4 text-primary" />
+                <TrendUpIcon className="size-4 text-primary" />
               ) : (
-                <Lightbulb className="size-4 text-primary" />
+                <LightbulbIcon className="size-4 text-primary" />
               )}
               <span className="flex-1">
                 {t('suggestion')}{' '}
@@ -284,7 +284,7 @@ export function ExerciseCard({
                 aria-expanded={helpOpen}
                 className="text-muted-foreground hover:text-foreground"
               >
-                <HelpCircle className="size-4" />
+                <QuestionIcon className="size-4" />
               </button>
             </div>
             {helpOpen && (
@@ -301,7 +301,7 @@ export function ExerciseCard({
               onClick={() => setNotesOpen((v) => !v)}
               className="-ml-2"
             >
-              {notesOpen ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+              {notesOpen ? <CaretUpIcon className="size-4" /> : <CaretDownIcon className="size-4" />}
               <span className="ml-1">{t('notes')}</span>
             </Button>
             {notesOpen && (

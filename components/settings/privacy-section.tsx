@@ -2,7 +2,12 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Download, Loader2, ShieldAlert, Trash2 } from 'lucide-react';
+import {
+  DownloadSimpleIcon,
+  CircleNotchIcon,
+  ShieldWarningIcon,
+  TrashIcon,
+} from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -76,7 +81,7 @@ export function PrivacySection({ email }: { email: string }) {
     <Card>
       <CardHeader className="pb-3">
         <h2 className="flex items-center gap-2 text-base font-semibold">
-          <ShieldAlert className="size-4" />
+          <ShieldWarningIcon className="size-4" />
           {t('title')}
         </h2>
       </CardHeader>
@@ -86,7 +91,7 @@ export function PrivacySection({ email }: { email: string }) {
           <p className="text-muted-foreground">{t('exportDescription')}</p>
           <Button asChild variant="outline" className="min-h-tap">
             <a href="/api/account/export" download>
-              <Download className="size-4" />
+              <DownloadSimpleIcon className="size-4" />
               <span className="ml-2">{t('exportAction')}</span>
             </a>
           </Button>
@@ -96,7 +101,7 @@ export function PrivacySection({ email }: { email: string }) {
           <h3 className="font-medium text-destructive">{t('deleteTitle')}</h3>
           <p className="text-muted-foreground">{t('deleteDescription')}</p>
           <Button variant="destructive" className="min-h-tap" onClick={() => setOpen(true)}>
-            <Trash2 className="size-4" />
+            <TrashIcon className="size-4" />
             <span className="ml-2">{t('deleteAction')}</span>
           </Button>
         </section>
@@ -153,7 +158,7 @@ export function PrivacySection({ email }: { email: string }) {
                 variant="destructive"
                 disabled={deleting || !password || !confirmEmail}
               >
-                {deleting && <Loader2 className="size-4 animate-spin" />}
+                {deleting && <CircleNotchIcon className="size-4 animate-spin" />}
                 <span className={deleting ? 'ml-2' : undefined}>
                   {deleting ? t('deleting') : t('confirmAction')}
                 </span>

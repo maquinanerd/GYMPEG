@@ -2,16 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Check,
-  ChevronDown,
-  ChevronUp,
-  Loader2,
-  Pencil,
-  Plus,
-  RotateCcw,
-  Trash2,
-  Trophy,
-} from 'lucide-react';
+  CheckIcon,
+  CaretDownIcon,
+  CaretUpIcon,
+  CircleNotchIcon,
+  PencilSimpleIcon,
+  PlusIcon,
+  ArrowCounterClockwiseIcon,
+  TrashIcon,
+  TrophyIcon,
+} from '@/components/ui/icon';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Exercise, ProgramExercise, SetType, WeightUnit } from '@/lib/prisma-client';
 import { resolveSetType, RPE_VALUES } from '@/lib/schemas/set';
@@ -611,7 +611,7 @@ export function EditableSetsTable({
                 title={t('weightEditor.open')}
                 className="size-10 shrink-0"
               >
-                <Pencil className="size-4" />
+                <PencilSimpleIcon className="size-4" />
               </Button>
             )}
           </div>
@@ -648,7 +648,7 @@ export function EditableSetsTable({
                 aria-label={t('deleteWarmup', { number: index + 1 })}
                 className="-mr-1 rounded-full p-1 text-muted-foreground hover:text-destructive"
               >
-                <Trash2 className="size-3.5" />
+                <TrashIcon className="size-3.5" />
               </button>
             </span>
           ))}
@@ -664,7 +664,7 @@ export function EditableSetsTable({
                 title={t('logWarmupHint', { percent: step.percent })}
                 className="inline-flex min-h-8 items-center gap-1 rounded-full border border-dashed border-primary/60 px-2.5 py-1 tabular-nums text-primary hover:bg-primary/10 disabled:opacity-50"
               >
-                <Plus className="size-3.5" />
+                <PlusIcon className="size-3.5" />
                 {weight} × {step.reps}
               </button>
             );
@@ -697,7 +697,7 @@ export function EditableSetsTable({
                     title={t('metrics.open')}
                     className="-my-2 size-11 text-muted-foreground"
                   >
-                    <Pencil className="size-3.5" />
+                    <PencilSimpleIcon className="size-3.5" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -751,7 +751,7 @@ export function EditableSetsTable({
                       className="gap-1 px-1.5 text-[0.625rem]"
                       title={prT(pr === 'weight' ? 'weightPrTitle' : 'oneRmPrTitle')}
                     >
-                      <Trophy className="size-2.5" />
+                      <TrophyIcon className="size-2.5" />
                       {prT(pr === 'weight' ? 'weightPr' : 'oneRmPr')}
                     </Badge>
                   ))}
@@ -798,7 +798,7 @@ export function EditableSetsTable({
                 ))}
                 <span className="flex items-center justify-center">
                   {isUpdating ? (
-                    <Loader2 className="size-4 animate-spin" />
+                    <CircleNotchIcon className="size-4 animate-spin" />
                   ) : (
                     <Button
                       type="button"
@@ -813,9 +813,9 @@ export function EditableSetsTable({
                       className="size-9 text-muted-foreground hover:text-destructive"
                     >
                       {set.localId === latestWorkingSetId ? (
-                        <RotateCcw className="size-4" />
+                        <ArrowCounterClockwiseIcon className="size-4" />
                       ) : (
-                        <Trash2 className="size-4" />
+                        <TrashIcon className="size-4" />
                       )}
                     </Button>
                   )}
@@ -909,9 +909,9 @@ export function EditableSetsTable({
               className="size-11"
             >
               {submitting ? (
-                <Loader2 className="size-5 animate-spin" />
+                <CircleNotchIcon className="size-5 animate-spin" />
               ) : (
-                <Check className="size-6" />
+                <CheckIcon className="size-6" />
               )}
             </Button>
           </div>
@@ -967,7 +967,7 @@ export function EditableSetsTable({
           <span className="font-medium">{t('options.toggle')}</span>
           <span className="flex items-center gap-2 text-muted-foreground">
             {optionsSummary && <span className="text-xs">{optionsSummary}</span>}
-            {optionsOpen ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+            {optionsOpen ? <CaretUpIcon className="size-4" /> : <CaretDownIcon className="size-4" />}
           </span>
         </button>
         {optionsOpen && (

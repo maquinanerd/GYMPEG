@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { KeyRound, Loader2, LogOut, ShieldCheck } from 'lucide-react';
+import { KeyIcon, CircleNotchIcon, SignOutIcon, ShieldCheckIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -83,7 +83,7 @@ export function SecuritySection({ otherSessions: initialOtherSessions }: Props) 
     <Card>
       <CardHeader className="pb-3">
         <h2 className="flex items-center gap-2 text-base font-semibold">
-          <ShieldCheck className="size-4" aria-hidden="true" />
+          <ShieldCheckIcon className="size-4" aria-hidden="true" />
           {t('title')}
         </h2>
       </CardHeader>
@@ -134,9 +134,9 @@ export function SecuritySection({ otherSessions: initialOtherSessions }: Props) 
             className="min-h-tap w-full sm:w-auto"
           >
             {saving ? (
-              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              <CircleNotchIcon className="size-4 animate-spin" aria-hidden="true" />
             ) : (
-              <KeyRound className="size-4" aria-hidden="true" />
+              <KeyIcon className="size-4" aria-hidden="true" />
             )}
             <span className="ml-2">{saving ? t('saving') : t('submit')}</span>
           </Button>
@@ -155,9 +155,9 @@ export function SecuritySection({ otherSessions: initialOtherSessions }: Props) 
             className="min-h-tap w-full sm:w-auto"
           >
             {signingOut ? (
-              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              <CircleNotchIcon className="size-4 animate-spin" aria-hidden="true" />
             ) : (
-              <LogOut className="size-4" aria-hidden="true" />
+              <SignOutIcon className="size-4" aria-hidden="true" />
             )}
             <span className="ml-2">{t('signOutOthers')}</span>
           </Button>

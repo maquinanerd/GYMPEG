@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { toast } from 'sonner';
-import { Camera, Trash2 } from 'lucide-react';
+import { CameraIcon, TrashIcon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -117,7 +117,7 @@ export function PhotosCard({ photos }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <h2 className="flex items-center gap-2 text-base font-semibold">
-          <Camera className="size-4" />
+          <CameraIcon className="size-4" />
           Progress photos
         </h2>
       </CardHeader>
@@ -193,7 +193,7 @@ export function PhotosCard({ photos }: Props) {
                     onClick={() => void deletePhoto(p)}
                     disabled={busy}
                   >
-                    <Trash2 className="size-3.5" />
+                    <TrashIcon className="size-3.5" />
                   </Button>
                 </figure>
               ))}

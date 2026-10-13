@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
-  ChevronLeft,
-  Dumbbell,
-  History,
-  ListOrdered,
-  TrendingUp,
-  TriangleAlert,
-} from 'lucide-react';
+  CaretLeftIcon,
+  BarbellIcon,
+  ClockCounterClockwiseIcon,
+  ListNumbersIcon,
+  TrendUpIcon,
+  WarningIcon,
+} from '@/components/ui/icon';
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
@@ -92,7 +92,7 @@ export default async function ExerciseDetailPage({ params, searchParams }: Props
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
         <Button asChild variant="ghost" size="sm" className="self-start">
           <Link href={returnTo ?? '/exercises'}>
-            <ChevronLeft className="size-4" />
+            <CaretLeftIcon className="size-4" />
             <span className="ml-1">{t(returnTo ? 'backToSession' : 'back')}</span>
           </Link>
         </Button>
@@ -126,7 +126,7 @@ export default async function ExerciseDetailPage({ params, searchParams }: Props
 
         <section className="space-y-3 border-t border-border pt-5">
           <h2 className="flex items-center gap-2 text-base font-semibold">
-            <Dumbbell className="size-4" />
+            <BarbellIcon className="size-4" />
             {t('information')}
           </h2>
           <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm sm:grid-cols-3">
@@ -181,7 +181,7 @@ export default async function ExerciseDetailPage({ params, searchParams }: Props
         {exercise.instructionsPtBr.length > 0 && (
           <section className="space-y-3 border-t border-border pt-5" lang="pt-BR">
             <h2 className="flex items-center gap-2 text-base font-semibold">
-              <ListOrdered className="size-4" />
+              <ListNumbersIcon className="size-4" />
               {t('howTo')}
             </h2>
             <ol className="list-decimal space-y-2 pl-5 text-sm">
@@ -192,7 +192,7 @@ export default async function ExerciseDetailPage({ params, searchParams }: Props
             {exercise.commonMistakesPtBr.length > 0 && (
               <div className="space-y-2 rounded-md bg-muted/40 p-3">
                 <h3 className="flex items-center gap-2 text-sm font-medium">
-                  <TriangleAlert className="size-4" />
+                  <WarningIcon className="size-4" />
                   {t('commonMistakes')}
                 </h3>
                 <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
@@ -208,12 +208,12 @@ export default async function ExerciseDetailPage({ params, searchParams }: Props
         <section className="space-y-3 border-t border-border pt-5">
           <div className="flex items-center justify-between gap-3">
             <h2 className="flex items-center gap-2 text-base font-semibold">
-              <History className="size-4" />
+              <ClockCounterClockwiseIcon className="size-4" />
               {t('history')}
             </h2>
             <Button asChild variant="outline" size="sm">
               <Link href={`/progress?exerciseId=${exercise.id}`}>
-                <TrendingUp className="size-4" />
+                <TrendUpIcon className="size-4" />
                 <span className="ml-2">{t('openChart')}</span>
               </Link>
             </Button>

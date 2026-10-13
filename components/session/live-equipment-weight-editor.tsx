@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Loader2, Save } from 'lucide-react';
+import { CircleNotchIcon, FloppyDiskIcon } from '@/components/ui/icon';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import type { EquipmentType, WeightUnit } from '@/lib/prisma-client';
@@ -161,7 +161,7 @@ export function LiveEquipmentWeightEditor({
           </div>
         </div>
         <Button type="button" onClick={save} disabled={saving || !parsed.ok} className="w-full">
-          {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+          {saving ? <CircleNotchIcon className="size-4 animate-spin" /> : <FloppyDiskIcon className="size-4" />}
           <span className="ml-2">{t('save')}</span>
         </Button>
       </DialogContent>

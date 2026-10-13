@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
-import { FileUp, Loader2 } from 'lucide-react';
+import { FileArrowUpIcon, CircleNotchIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -443,7 +443,7 @@ export function ImportSection() {
             </div>
           )}
           <Button variant="outline" onClick={pickFile} disabled={busy} className="min-h-tap">
-            {busy ? <Loader2 className="size-4 animate-spin" /> : <FileUp className="size-4" />}
+            {busy ? <CircleNotchIcon className="size-4 animate-spin" /> : <FileArrowUpIcon className="size-4" />}
             <span className="ml-2">
               {isFit
                 ? t('chooseFitFiles')
@@ -508,7 +508,7 @@ export function ImportSection() {
                 disabled={busy || fitBatch.importable === 0}
                 className="min-h-tap"
               >
-                {busy ? <Loader2 className="size-4 animate-spin" /> : null}
+                {busy ? <CircleNotchIcon className="size-4 animate-spin" /> : null}
                 <span className={busy ? 'ml-2' : ''}>
                   {t('importSessions', { count: fitBatch.importable })}
                 </span>
@@ -548,7 +548,7 @@ export function ImportSection() {
             </ul>
             <div className="mt-3 flex gap-2">
               <Button size="sm" onClick={confirmImport} disabled={busy} className="min-h-tap">
-                {busy ? <Loader2 className="size-4 animate-spin" /> : null}
+                {busy ? <CircleNotchIcon className="size-4 animate-spin" /> : null}
                 <span className={busy ? 'ml-2' : ''}>{t('confirm')}</span>
               </Button>
               <Button size="sm" variant="ghost" onClick={cancel} disabled={busy}>
@@ -654,7 +654,7 @@ export function ImportSection() {
                 disabled={busy || preview.sets === 0}
                 className="min-h-tap"
               >
-                {busy ? <Loader2 className="size-4 animate-spin" /> : null}
+                {busy ? <CircleNotchIcon className="size-4 animate-spin" /> : null}
                 <span className={busy ? 'ml-2' : ''}>{t('confirm')}</span>
               </Button>
               <Button size="sm" variant="ghost" onClick={cancel} disabled={busy}>

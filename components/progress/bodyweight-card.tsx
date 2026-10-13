@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { Scale, Trash2 } from 'lucide-react';
+import { ScalesIcon, TrashIcon } from '@/components/ui/icon';
 import {
   CartesianGrid,
   Line,
@@ -150,7 +150,7 @@ export function BodyweightCard({ entries, trend, unit, listLimit = 5 }: Props) {
       <CardHeader className="pb-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="flex items-center gap-2 text-base font-semibold">
-            <Scale className="size-4" />
+            <ScalesIcon className="size-4" />
             {t('title')}
           </h2>
           {latest && (
@@ -282,7 +282,7 @@ export function BodyweightCard({ entries, trend, unit, listLimit = 5 }: Props) {
                   onClick={() => void deleteEntry(e.id)}
                   disabled={busy}
                 >
-                  <Trash2 className="size-4" />
+                  <TrashIcon className="size-4" />
                 </Button>
               </li>
             ))}

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Flame } from 'lucide-react';
+import { FireIcon } from '@/components/ui/icon';
 import type { WeightUnit } from '@/lib/prisma-client';
 import {
   Dialog,
@@ -57,7 +57,7 @@ export function WarmupCalculator({ weightKg, unit, barWeightsKg }: Props) {
           className="h-7 gap-1 px-2 text-xs text-muted-foreground"
           aria-label={t('openWarmup')}
         >
-          <Flame className="size-4" />
+          <FireIcon className="size-4" />
           {t('warmupButton')}
         </Button>
       </DialogTrigger>

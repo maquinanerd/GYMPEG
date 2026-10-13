@@ -3,7 +3,7 @@
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Moon, Sun } from 'lucide-react';
+import { MoonIcon, SunIcon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 
 // Light/dark toggle button. Avoids the hydration mismatch by only showing
@@ -25,11 +25,11 @@ export function ThemeToggle() {
       aria-label={next === 'dark' ? t('switchToDark') : t('switchToLight')}
     >
       {!mounted ? (
-        <Sun className="size-4" />
+        <SunIcon className="size-4" />
       ) : current === 'dark' ? (
-        <Sun className="size-4" />
+        <SunIcon className="size-4" />
       ) : (
-        <Moon className="size-4" />
+        <MoonIcon className="size-4" />
       )}
     </Button>
   );

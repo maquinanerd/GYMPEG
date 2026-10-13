@@ -1,4 +1,4 @@
-import { CalendarCheck, Flame } from 'lucide-react';
+import { CalendarCheckIcon, FireIcon } from '@/components/ui/icon';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import type { ConsistencyWeek } from '@/lib/stats';
@@ -25,7 +25,7 @@ export function ConsistencyCard({ weeks, currentStreak, weeklyFrequency }: Props
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
-          <CalendarCheck className="size-4 text-muted-foreground" />
+          <CalendarCheckIcon className="size-4 text-muted-foreground" />
           <h2 className="text-base font-semibold">{t('title')}</h2>
         </div>
         <p className="text-xs text-muted-foreground">
@@ -37,7 +37,7 @@ export function ConsistencyCard({ weeks, currentStreak, weeklyFrequency }: Props
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
-          <Flame
+          <FireIcon
             className={`size-5 ${currentStreak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`}
           />
           <span className="text-2xl font-bold tabular-nums">{currentStreak}</span>

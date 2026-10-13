@@ -1,4 +1,4 @@
-import { Trophy } from 'lucide-react';
+import { TrophyIcon } from '@/components/ui/icon';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import type { WeightUnit } from '@/lib/prisma-client';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -43,7 +43,7 @@ export function RecordsCard({ records, unit }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
-          <Trophy className="size-4 text-amber-500" />
+          <TrophyIcon className="size-4 text-amber-500" />
           <h2 className="text-base font-semibold">{t('title')}</h2>
         </div>
         <p className="text-xs text-muted-foreground">{t('description')}</p>

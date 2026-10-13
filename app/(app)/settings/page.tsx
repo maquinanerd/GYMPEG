@@ -1,4 +1,4 @@
-import { Settings as SettingsIcon } from 'lucide-react';
+import { GearIcon } from '@/components/ui/icon';
 import { getTranslations } from 'next-intl/server';
 import { requireSession } from '@/lib/auth';
 import { db } from '@/lib/db';
@@ -71,7 +71,7 @@ export default async function SettingsPage() {
     <main className="flex-1 px-4 py-6">
       <div className="mx-auto flex max-w-2xl flex-col gap-6">
         <div className="flex items-center gap-3">
-          <SettingsIcon className="size-6" />
+          <GearIcon className="size-6" />
           <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
         </div>
 

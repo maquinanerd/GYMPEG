@@ -1,4 +1,4 @@
-import { Wand2 } from 'lucide-react';
+import { MagicWandIcon } from '@/components/ui/icon';
 import { getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
@@ -17,7 +17,7 @@ export default async function GenerateProgramPage() {
     <main className="flex-1 px-4 py-6">
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
         <div className="flex items-center gap-3">
-          <Wand2 className="size-6" />
+          <MagicWandIcon className="size-6" />
           <h1 className="text-2xl font-bold tracking-tight">{t('aiProgram')}</h1>
         </div>
         <WorkoutPlanner

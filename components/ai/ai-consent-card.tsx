@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Loader2, ShieldCheck } from 'lucide-react';
+import { CircleNotchIcon, ShieldCheckIcon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
@@ -44,7 +44,7 @@ export function AiConsentCard({
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="size-5" />
+          <ShieldCheckIcon className="size-5" />
           <h2 className="text-base font-semibold">{t('title')}</h2>
         </div>
       </CardHeader>
@@ -59,7 +59,7 @@ export function AiConsentCard({
         <p className="text-xs text-muted-foreground">{t('withdraw')}</p>
         <div>
           <Button type="button" onClick={accept} disabled={saving} className="min-h-tap">
-            {saving && <Loader2 className="size-4 animate-spin" />}
+            {saving && <CircleNotchIcon className="size-4 animate-spin" />}
             <span className={saving ? 'ml-2' : undefined}>{t('accept')}</span>
           </Button>
         </div>

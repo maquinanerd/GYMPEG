@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Loader2 } from 'lucide-react';
+import { CircleNotchIcon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SessionRunner } from '@/components/session/session-runner';
@@ -49,7 +49,7 @@ export function LocalSessionRunner({
   if (state.kind === 'loading') {
     return (
       <main className="flex flex-1 items-center justify-center gap-2 p-6 text-muted-foreground">
-        <Loader2 className="size-5 animate-spin" />
+        <CircleNotchIcon className="size-5 animate-spin" />
         <span>{t('loading')}</span>
       </main>
     );

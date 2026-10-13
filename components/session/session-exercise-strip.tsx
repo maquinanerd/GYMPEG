@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef } from 'react';
-import { Check } from 'lucide-react';
+import { CheckIcon } from '@/components/ui/icon';
 import type { Exercise, ProgramExercise } from '@/lib/prisma-client';
 import { getExerciseMedia } from '@/lib/exercise-media';
 import { useExerciseName } from '@/components/shared/use-exercise-name';
@@ -112,7 +112,7 @@ export function SessionExerciseStrip({
                 )}
                 {isComplete && (
                   <span className="absolute right-1 top-1 flex size-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
-                    <Check className="size-3.5" strokeWidth={3} aria-hidden />
+                    <CheckIcon className="size-3.5" aria-hidden />
                   </span>
                 )}
               </span>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
-import { AlertTriangle, Loader2, MessageCircle, Sparkles } from 'lucide-react';
+import { WarningIcon, CircleNotchIcon, ChatCircleIcon, SparkleIcon } from '@/components/ui/icon';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -87,7 +87,7 @@ export function CoachClient({
       {!hasApiKey && (
         <Card className="border-amber-500/40 bg-amber-500/5">
           <CardContent className="flex items-start gap-3 py-4 text-sm">
-            <AlertTriangle className="size-5 shrink-0 text-amber-600" />
+            <WarningIcon className="size-5 shrink-0 text-amber-600" />
             <div>
               <p className="font-medium text-amber-900 dark:text-amber-100">
                 {t('client.keyMissing', { provider: providerLabel })}
@@ -109,12 +109,12 @@ export function CoachClient({
           >
             {pending ? (
               <>
-                <Loader2 className="size-5 animate-spin" />
+                <CircleNotchIcon className="size-5 animate-spin" />
                 <span className="ml-2">{t('client.generating')}</span>
               </>
             ) : (
               <>
-                <Sparkles className="size-5" />
+                <SparkleIcon className="size-5" />
                 <span className="ml-2">{t('client.request')}</span>
               </>
             )}
@@ -138,7 +138,7 @@ export function CoachClient({
       ) : (
         <Card>
           <CardContent className="flex items-center gap-3 py-8 text-sm text-muted-foreground">
-            <MessageCircle className="size-5" />
+            <ChatCircleIcon className="size-5" />
             <span>{t('client.empty')}</span>
           </CardContent>
         </Card>

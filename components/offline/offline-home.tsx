@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { CloudOff, Play, RotateCw } from 'lucide-react';
+import { CloudSlashIcon, PlayIcon, ArrowClockwiseIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -75,7 +75,7 @@ export function OfflineHome() {
     <main className="flex-1 px-4 py-6">
       <div className="mx-auto flex max-w-2xl flex-col gap-4">
         <div className="flex items-start gap-3">
-          <CloudOff className="mt-1 size-5 shrink-0 text-muted-foreground" />
+          <CloudSlashIcon className="mt-1 size-5 shrink-0 text-muted-foreground" />
           <div>
             <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
             <p className="text-sm text-muted-foreground">{t('description')}</p>
@@ -92,7 +92,7 @@ export function OfflineHome() {
           className="self-start"
           onClick={() => window.location.assign('/')}
         >
-          <RotateCw className="size-4" />
+          <ArrowClockwiseIcon className="size-4" />
           <span className="ml-2">{online ? t('reconnect') : t('retry')}</span>
         </Button>
 
@@ -139,7 +139,7 @@ export function OfflineHome() {
                     >
                       <span>{trainingName(workout.name)}</span>
                       <span className="flex items-center gap-1">
-                        <Play className="size-4" />
+                        <PlayIcon className="size-4" />
                         {t('start')}
                       </span>
                     </Button>

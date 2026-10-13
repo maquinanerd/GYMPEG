@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { Target } from 'lucide-react';
+import { TargetIcon } from '@/components/ui/icon';
 import type { WeightUnit } from '@/lib/prisma-client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -126,7 +126,7 @@ export function ExerciseGoalCard({
       <CardHeader className="pb-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="flex items-center gap-2 text-base font-semibold">
-            <Target className="size-4" />
+            <TargetIcon className="size-4" />
             {t('title', { exercise: exerciseName })}
           </h2>
           <div className="flex items-center gap-2">

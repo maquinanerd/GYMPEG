@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Check, Minus, Plus } from 'lucide-react';
+import { CheckIcon, MinusIcon, PlusIcon } from '@/components/ui/icon';
 import type { Exercise, ProgramExercise, WeightUnit } from '@/lib/prisma-client';
 import {
   displayIncrement,
@@ -494,7 +494,7 @@ export function SetInput({
                   className="min-h-tap min-w-tap"
                   aria-label={`-${stepDisplay} ${unitLabel(unit)}`}
                 >
-                  <Minus className="size-5" />
+                  <MinusIcon className="size-5" />
                 </Button>
                 <Input
                   type="number"
@@ -517,7 +517,7 @@ export function SetInput({
                   className="min-h-tap min-w-tap"
                   aria-label={`+${stepDisplay} ${unitLabel(unit)}`}
                 >
-                  <Plus className="size-5" />
+                  <PlusIcon className="size-5" />
                 </Button>
               </div>
             </div>
@@ -536,7 +536,7 @@ export function SetInput({
                   className="min-h-tap min-w-tap"
                   aria-label="-1 rep"
                 >
-                  <Minus className="size-5" />
+                  <MinusIcon className="size-5" />
                 </Button>
                 <Input
                   type="number"
@@ -555,7 +555,7 @@ export function SetInput({
                   className="min-h-tap min-w-tap"
                   aria-label="+1 rep"
                 >
-                  <Plus className="size-5" />
+                  <PlusIcon className="size-5" />
                 </Button>
               </div>
             </div>
@@ -624,7 +624,7 @@ export function SetInput({
           disabled={submitting || cardioInvalid}
           className="h-20 w-full text-lg font-semibold"
         >
-          <Check className="size-6" />
+          <CheckIcon className="size-6" />
           <span className="ml-2">{submitting ? common('actions.saving') : t('logSet')}</span>
         </Button>
       </CardContent>

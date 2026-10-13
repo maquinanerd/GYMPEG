@@ -1,6 +1,6 @@
 'use client';
 
-import { HeartPulse } from 'lucide-react';
+import { HeartbeatIcon } from '@/components/ui/icon';
 import { useFormatter, useTranslations } from 'next-intl';
 import {
   Bar,
@@ -51,7 +51,7 @@ export function ConditioningCard({ weeks }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
-          <HeartPulse className="size-4 text-primary" />
+          <HeartbeatIcon className="size-4 text-primary" />
           <h2 className="text-base font-semibold">{t('title')}</h2>
         </div>
         <p className="text-xs text-muted-foreground">

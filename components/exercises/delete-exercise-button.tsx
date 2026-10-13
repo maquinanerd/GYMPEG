@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Trash2 } from 'lucide-react';
+import { TrashIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import {
   AlertDialog,
@@ -53,7 +53,7 @@ export function DeleteExerciseButton({
           aria-label={common('actions.delete')}
           className="min-h-tap min-w-tap text-destructive hover:text-destructive"
         >
-          <Trash2 className="size-4" />
+          <TrashIcon className="size-4" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

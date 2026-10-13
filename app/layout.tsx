@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Urbanist } from 'next/font/google';
 import { headers } from 'next/headers';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
@@ -7,6 +8,14 @@ import { ThemeProvider } from '@/components/shared/theme-provider';
 import { PwaUpdateManager } from '@/components/shared/pwa-update-manager';
 import { NONCE_HEADER } from '@/lib/csp';
 import './globals.css';
+
+// Brand typeface (OFL), self-hosted by next/font so the CSP keeps font-src 'self'.
+const urbanist = Urbanist({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-urbanist',
+  display: 'swap',
+});
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('common.metadata');
@@ -18,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
     manifest: '/manifest.json',
     appleWebApp: {
       capable: true,
-      statusBarStyle: 'black-translucent',
+      statusBarStyle: 'default',
       title: 'GYM Peg',
     },
     icons: {
@@ -32,7 +41,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#000000',
+  // Light is the default theme: the browser chrome matches its background.
+  themeColor: '#F9F9F9',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -46,10 +56,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // script of next-themes.
   const nonce = (await headers()).get(NONCE_HEADER) ?? undefined;
 
-  // Dark mode by default (locker rooms), togglable via next-themes (/settings page
-  // or button in the header).
+  // Light theme for everyone; dark is opt-in from Perfil > Tema (next-themes).
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} className={urbanist.variable} suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider nonce={nonce}>

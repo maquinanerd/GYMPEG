@@ -3,7 +3,7 @@
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Play } from 'lucide-react';
+import { PlayIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { startSession } from '@/lib/session-lifecycle';
@@ -47,7 +47,7 @@ export function StartWorkoutButton({
       disabled={disabled || isPending}
       className="min-h-tap w-full text-base"
     >
-      <Play className="size-5" />
+      <PlayIcon className="size-5" />
       <span className="ml-2">{isPending ? t('starting') : t('startThis')}</span>
     </Button>
   );

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Plus, Pencil, Search } from 'lucide-react';
+import { PlusIcon, PencilSimpleIcon, MagnifyingGlassIcon } from '@/components/ui/icon';
 import type { Exercise, MuscleGroup } from '@/lib/prisma-client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -52,14 +52,14 @@ export function ExercisesView({ exercises }: ExercisesViewProps) {
           </p>
         </div>
         <Button onClick={() => setCreateOpen(true)} className="min-h-tap">
-          <Plus className="size-4" />
+          <PlusIcon className="size-4" />
           <span className="ml-2">{common('actions.add')}</span>
         </Button>
       </div>
 
       {exercises.length > 0 && (
         <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
             value={query}
@@ -166,7 +166,7 @@ function ExerciseRow({ exercise, onEdit }: { exercise: Exercise; onEdit: () => v
               aria-label={t('editTitle')}
               className="min-h-tap min-w-tap"
             >
-              <Pencil className="size-4" />
+              <PencilSimpleIcon className="size-4" />
             </Button>
             <DeleteExerciseButton exerciseId={exercise.id} exerciseName={displayName} />
           </div>

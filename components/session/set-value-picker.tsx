@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, ChevronLeft, ChevronRight, LockKeyhole } from 'lucide-react';
+import { CheckIcon, CaretLeftIcon, CaretRightIcon, LockKeyIcon } from '@/components/ui/icon';
 import { useLocale, useTranslations } from 'next-intl';
 import type { WeightUnit } from '@/lib/prisma-client';
 import type { GymLoadConstraints } from '@/lib/gym-loads';
@@ -247,7 +247,7 @@ export function SetValuePicker({
             disabled={manualValueInvalid}
             aria-label={t('applyValue')}
           >
-            <Check className="size-6" />
+            <CheckIcon className="size-6" />
           </Button>
         </div>
 
@@ -260,7 +260,7 @@ export function SetValuePicker({
             compact
           >
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              {plateLoad.exact ? <LockKeyhole className="size-3 text-emerald-500" /> : null}
+              {plateLoad.exact ? <LockKeyIcon className="size-3 text-emerald-500" /> : null}
               <span>
                 {calculatorT('achieved', {
                   weight: `${formatDisplayNumber(plateLoad.achievedWeight, locale)} ${label}`,
@@ -317,8 +317,8 @@ export function SetValuePicker({
               aria-hidden="true"
               className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center justify-between text-primary"
             >
-              <ChevronRight className="size-8" />
-              <ChevronLeft className="size-8" />
+              <CaretRightIcon className="size-8" />
+              <CaretLeftIcon className="size-8" />
             </div>
           ) : null}
         </div>

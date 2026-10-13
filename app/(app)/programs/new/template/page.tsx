@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ChevronLeft } from 'lucide-react';
+import { CaretLeftIcon } from '@/components/ui/icon';
 import { getTranslations } from 'next-intl/server';
 import { requireSession } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,7 @@ export default async function TemplateProgramPage() {
       <div className="mx-auto flex max-w-2xl flex-col gap-4">
         <Button asChild variant="ghost" size="sm" className="self-start">
           <Link href="/programs/new">
-            <ChevronLeft className="size-4" />
+            <CaretLeftIcon className="size-4" />
             <span className="ml-1">{common('actions.back')}</span>
           </Link>
         </Button>

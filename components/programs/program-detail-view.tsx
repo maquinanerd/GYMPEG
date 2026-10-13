@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ChevronLeft, Plus, Printer } from 'lucide-react';
+import { CaretLeftIcon, PlusIcon, PrinterIcon } from '@/components/ui/icon';
 import type { Exercise, Program, ProgramExercise, Workout } from '@/lib/prisma-client';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -68,7 +68,7 @@ export function ProgramDetailView({ program, catalog }: Props) {
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
       <Button asChild variant="ghost" size="sm" className="self-start">
         <Link href="/programs">
-          <ChevronLeft className="size-4" />
+          <CaretLeftIcon className="size-4" />
           <span className="ml-1">{common('actions.back')}</span>
         </Link>
       </Button>
@@ -113,7 +113,7 @@ export function ProgramDetailView({ program, catalog }: Props) {
           </Button>
           <Button asChild variant="outline" size="sm" className="min-h-tap">
             <Link href={`/programs/${program.id}/print`}>
-              <Printer className="size-4" />
+              <PrinterIcon className="size-4" />
               <span className="ml-2">{t('print.action')}</span>
             </Link>
           </Button>
@@ -129,7 +129,7 @@ export function ProgramDetailView({ program, catalog }: Props) {
           onClick={() => setAddWorkoutOpen(true)}
           className="min-h-tap"
         >
-          <Plus className="size-4" />
+          <PlusIcon className="size-4" />
           <span className="ml-2">{t('addSession')}</span>
         </Button>
       </div>

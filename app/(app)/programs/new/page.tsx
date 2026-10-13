@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ChevronLeft, LayoutTemplate } from 'lucide-react';
+import { CaretLeftIcon, LayoutIcon } from '@/components/ui/icon';
 import { getTranslations } from 'next-intl/server';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,7 +14,7 @@ export default async function NewProgramPage() {
       <div className="mx-auto flex max-w-2xl flex-col gap-4">
         <Button asChild variant="ghost" size="sm" className="self-start">
           <Link href="/programs">
-            <ChevronLeft className="size-4" />
+            <CaretLeftIcon className="size-4" />
             <span className="ml-1">{common('actions.back')}</span>
           </Link>
         </Button>
@@ -23,7 +23,7 @@ export default async function NewProgramPage() {
         <Card>
           <CardContent className="flex items-center justify-between gap-3 pt-6">
             <div className="flex min-w-0 items-start gap-3">
-              <LayoutTemplate className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
+              <LayoutIcon className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
               <div className="min-w-0">
                 <p className="text-sm font-medium">{t('startFromTemplate')}</p>
                 <p className="text-xs text-muted-foreground">

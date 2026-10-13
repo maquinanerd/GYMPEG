@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Copy } from 'lucide-react';
+import { CopyIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 
@@ -60,7 +60,7 @@ export function CopyWorkoutButton({ text }: Props) {
 
   return (
     <Button variant="outline" size="sm" onClick={handleCopy}>
-      <Copy className="size-4" />
+      <CopyIcon className="size-4" />
       <span className="ml-1">{t('button')}</span>
     </Button>
   );

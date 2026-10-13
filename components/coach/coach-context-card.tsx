@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { ChevronDown, ChevronRight, Eye } from 'lucide-react';
+import { CaretDownIcon, CaretRightIcon, EyeIcon } from '@/components/ui/icon';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { CoachContextSummary } from '@/lib/coach-context';
@@ -32,11 +32,11 @@ export function CoachContextCard({ summary }: Props) {
           className="flex w-full items-center gap-2 text-left"
         >
           {open ? (
-            <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
+            <CaretDownIcon className="size-4 shrink-0 text-muted-foreground" />
           ) : (
-            <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+            <CaretRightIcon className="size-4 shrink-0 text-muted-foreground" />
           )}
-          <Eye className="size-4 text-primary" />
+          <EyeIcon className="size-4 text-primary" />
           <h2 className="text-base font-semibold">{t('title')}</h2>
         </button>
         {!open && <p className="pl-6 text-xs text-muted-foreground">{t('teaser')}</p>}

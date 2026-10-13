@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState, useTransition } from 'react';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
-import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CalendarDotsIcon, CaretLeftIcon, CaretRightIcon } from '@/components/ui/icon';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -169,7 +169,7 @@ export function HistoryCalendar({ monthKey, initialDay, sessions, filters = {}, 
               disabled={isPending}
               aria-label={t('previousMonth')}
             >
-              <ChevronLeft className="size-5" />
+              <CaretLeftIcon className="size-5" />
             </Button>
             <div className="min-w-0 text-center">
               <div className="truncate text-lg font-semibold capitalize">{monthLabel}</div>
@@ -192,7 +192,7 @@ export function HistoryCalendar({ monthKey, initialDay, sessions, filters = {}, 
               disabled={isPending}
               aria-label={t('nextMonth')}
             >
-              <ChevronRight className="size-5" />
+              <CaretRightIcon className="size-5" />
             </Button>
           </div>
 
@@ -264,7 +264,7 @@ export function HistoryCalendar({ monthKey, initialDay, sessions, filters = {}, 
 
       <section className="flex flex-col gap-2" aria-labelledby="selected-day-heading">
         <div className="flex items-center gap-2">
-          <CalendarDays className="size-5 text-muted-foreground" />
+          <CalendarDotsIcon className="size-5 text-muted-foreground" />
           <h2 id="selected-day-heading" className="text-lg font-semibold capitalize">
             {selectedDateLabel}
           </h2>
@@ -329,7 +329,7 @@ export function HistoryCalendar({ monthKey, initialDay, sessions, filters = {}, 
                             )}
                           </div>
                         </div>
-                        <ChevronRight className="size-5 shrink-0 text-muted-foreground" />
+                        <CaretRightIcon className="size-5 shrink-0 text-muted-foreground" />
                       </CardContent>
                     </Card>
                   </Link>
