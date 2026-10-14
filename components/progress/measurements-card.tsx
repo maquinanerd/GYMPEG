@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useId, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -53,6 +53,7 @@ interface Props {
 // delete bad entries. Storage is always cm; the unit only affects display.
 export function MeasurementsCard({ entries, unit, listLimit = 5, bodyFat = null }: Props) {
   const t = useTranslations('progress.measurements');
+  const headingId = useId();
   const siteT = useTranslations('progress.measurements.sites');
   const common = useTranslations('common');
   const format = useFormatter();
@@ -138,10 +139,10 @@ export function MeasurementsCard({ entries, unit, listLimit = 5, bodyFat = null 
   }
 
   return (
-    <Card>
+    <Card role="region" aria-labelledby={headingId}>
       <CardHeader className="pb-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="flex items-center gap-2 text-base font-semibold">
+          <h2 id={headingId} className="flex items-center gap-2 text-base font-semibold">
             <RulerIcon className="size-4" />
             {t('title')}
           </h2>

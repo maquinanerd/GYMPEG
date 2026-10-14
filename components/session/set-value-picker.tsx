@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   CaretLeftIcon,
   CaretRightIcon,
@@ -57,8 +57,18 @@ export function SetValuePicker({
   // tap and the wheel all write into it, and the highlighted row and the plate
   // preview are derived from it.
   const [manualValue, setManualValue] = useState(String(value));
-  const [wheelPadding, setWheelPadding] = useState(12);
-  const listRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
+  // The sheet mounts its content after `open` flips, so the list is tracked as
+  // state: measuring starts when the element exists, not when the picker opens.
+  const [listElement, setListElement] = useState<HTMLDivElement | null>(null);
+  const attachList = useCallback((element: HTMLDivElement | null) => {
+    listRef.current = element;
+    setListElement(element);
+  }, []);
+  const [listHeight, setListHeight] = useState(0);
+  // Room above the first row and below the last so every row can sit in the
+  // middle of the wheel.
+  const wheelPadding = Math.max(12, (listHeight - 64) / 2);
   // Which kind the open picker was last seeded for; null while closed.
   const seededKind = useRef<Props['kind'] | null>(null);
   // The value the picker opened on, until the lifter changes anything.
@@ -112,15 +122,26 @@ export function SetValuePicker({
   );
 
   useEffect(() => {
-    if (!open || kind !== 'weight' || !listRef.current) return;
-    const list = listRef.current;
-    const updatePadding = () => setWheelPadding(Math.max(12, (list.clientHeight - 64) / 2));
-    updatePadding();
+    if (!open || kind !== 'weight' || !listElement) return;
+    const updateHeight = () => setListHeight(listElement.clientHeight);
+    updateHeight();
     if (typeof ResizeObserver === 'undefined') return;
-    const observer = new ResizeObserver(updatePadding);
-    observer.observe(list);
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(listElement);
     return () => observer.disconnect();
-  }, [kind, open]);
+  }, [kind, listElement, open]);
+
+  // The list changes height while open (the plate diagram appears with the
+  // first pick and the sheet reaches its maximum height): put the resting row
+  // back in the middle. Skipped during a wheel gesture so it never fights the
+  // lifter; while disarmed, this scroll cannot change the value.
+  useLayoutEffect(() => {
+    if (kind !== 'weight' || userScrolling.current || centeredValue.current == null) return;
+    const list = listRef.current;
+    const element = anchorElement(list, centeredValue.current);
+    if (!list || !element) return;
+    list.scrollTop = element.offsetTop - (list.clientHeight - element.offsetHeight) / 2;
+  }, [kind, listHeight]);
 
   function selectOption(option: PickerOption, element: HTMLElement) {
     // A tap pins its value: the recentering scroll it starts is not a gesture,
@@ -306,9 +327,12 @@ export function SetValuePicker({
           </BarbellSideDiagram>
         ) : null}
 
-        <div className="relative min-h-0">
+        {/* When the sheet runs out of height, the list shrinks with this box and
+            scrolls inside it instead of spilling over the Apply button below
+            (the wheel padding follows the new height). */}
+        <div className="relative flex min-h-0 flex-col">
           <div
-            ref={listRef}
+            ref={attachList}
             data-testid="set-value-options"
             data-weight-picker-list={kind === 'weight' ? 'true' : undefined}
             onPointerDown={startWheelGesture}
@@ -321,7 +345,7 @@ export function SetValuePicker({
                 ? { paddingTop: wheelPadding, paddingBottom: wheelPadding }
                 : undefined
             }
-            className={`max-h-[55vh] space-y-2 overflow-y-auto overscroll-contain ${
+            className={`max-h-[55vh] min-h-0 space-y-2 overflow-y-auto overscroll-contain ${
               kind === 'weight' ? 'snap-y snap-mandatory motion-safe:scroll-smooth' : 'py-1'
             }`}
           >

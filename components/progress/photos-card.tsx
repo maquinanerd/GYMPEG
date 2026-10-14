@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { toast } from 'sonner';
@@ -41,6 +41,7 @@ function imageUrl(id: string) {
 // server, served only to its owner), browse the gallery, delete, and compare
 // two photos side by side to see visual progress.
 export function PhotosCard({ photos }: Props) {
+  const headingId = useId();
   const router = useRouter();
   const locale = useLocale();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -114,9 +115,9 @@ export function PhotosCard({ photos }: Props) {
   }
 
   return (
-    <Card>
+    <Card role="region" aria-labelledby={headingId}>
       <CardHeader className="pb-3">
-        <h2 className="flex items-center gap-2 text-base font-semibold">
+        <h2 id={headingId} className="flex items-center gap-2 text-base font-semibold">
           <CameraIcon className="size-4" />
           Progress photos
         </h2>
