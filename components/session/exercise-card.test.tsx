@@ -6,6 +6,12 @@ import { ExerciseCard } from './exercise-card';
 import type { SerializedLastPerformance } from './session-runner';
 import { exerciseFixture } from '@/tests/fixtures/exercise';
 
+// The media branch runs on a fixture, not the real frame catalog.
+vi.mock(
+  '@/lib/exercise-media',
+  async () => (await import('@/tests/fixtures/exercise-media-mock')).exerciseMediaMock,
+);
+
 const exo: Exercise = exerciseFixture({
   id: 'e1',
   userId: 'u',
@@ -85,6 +91,36 @@ describe('ExerciseCard mobile title layout', () => {
       'w-max',
       'whitespace-nowrap',
     );
+  });
+});
+
+describe('ExerciseCard technique media', () => {
+  it('shows the start frame next to the title and opens the technique dialog', () => {
+    const bench = { ...pe, exercise: { ...exo, name: 'Barbell bench press' } };
+    render(
+      <ExerciseCard
+        programExercise={bench}
+        lastPerformance={lastPerf}
+        readiness={null}
+        deloadActive={false}
+        unit="KG"
+      />,
+    );
+
+    const thumbnail = screen.getByRole('button', {
+      name: 'View technique for Barbell bench press',
+    });
+    expect(thumbnail.querySelector('img')).toHaveAttribute(
+      'src',
+      '/exercise-media/test-fixture/Barbell_Bench_Press/0.jpg',
+    );
+    fireEvent.click(thumbnail);
+    expect(screen.getByRole('dialog', { name: 'Barbell bench press' })).toBeInTheDocument();
+  });
+
+  it('shows no thumbnail when the exercise has no frames', () => {
+    renderCard(null);
+    expect(screen.queryByRole('button', { name: /View technique/ })).not.toBeInTheDocument();
   });
 });
 

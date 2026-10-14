@@ -16,12 +16,12 @@ interface MediaGroup {
   approximate: boolean;
 }
 
-// Media is served only from a source whose license was verified for
-// commercial use (docs/EXERCISE_MEDIA_AUDIT.md). The bundled free-exercise-db
-// mapping is not: its images were scraped from the web upstream, so the files
-// are not shipped and getExerciseMedia() returns null until a licensed or
-// in-house source replaces it. The name -> dataset id mapping is kept because
-// the dataset metadata (names, muscles, equipment) is still usable.
+// Media is served only from a source the product owner approved for
+// production. The bundled free-exercise-db frames are approved although their
+// provenance is not verified (docs/EXERCISE_MEDIA_AUDIT.md, ADR-005 revision of
+// 2026-10-14); setting approvedForProduction to false turns every frame off
+// again while keeping the name -> dataset id mapping for metadata. The groups
+// and the files under public/ come from scripts/sync-exercise-media.mjs.
 export const exerciseMediaApproved = catalog.source.approvedForProduction === true;
 
 const groupByName = new Map<string, MediaGroup>();

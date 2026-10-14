@@ -25,6 +25,14 @@ O free-exercise-db (876 exercícios, Unlicense declarada) cobre 91% das variante
 - Importações, templates, gerador de programa e MCP resolvem nomes pelo catálogo (`findUsableExerciseByName`) antes de criar um exercício customizado.
 - O navegador usa `data/catalog/search-index.json` (gerado por `scripts/build-catalog-index.ts`) para nomes pt-BR e busca por aliases.
 
+## Revisão (2026-10-14): imagens do free-exercise-db liberadas
+
+- **Decisão do dono do produto:** as imagens do free-exercise-db voltam a ser servidas em produção, **independentemente da licença**, até existir mídia própria ou licenciada. O risco descrito na auditoria (origem raspada da web, provável Bodybuilding.com, direito de imagem dos modelos) foi apresentado e aceito.
+- `data/exercise-media.json` registra `license = Unlicense` (a declarada pelo dataset), `licenseVerified = false` e `approvedForProduction = true`. Voltar `approvedForProduction` para `false` desliga toda a mídia de uma vez.
+- `scripts/sync-exercise-media.mjs <checkout do free-exercise-db>` liga cada exercício do catálogo global ao seu `sourceRef` (nome canônico e `legacyNames`) e copia os dois frames de cada um para `public/exercise-media/free-exercise-db/`. Cobertura: 209 dos 229 exercícios do catálogo (4 por variante semelhante); os 20 sem frame são em geral máquinas sem equivalente no dataset.
+- O card do treino em andamento mostra o frame inicial ao lado do nome; o toque abre a animação início/fim. O service worker não pré-carrega os frames (≈28 MB): cada um é guardado em cache na primeira exibição.
+- Continua valendo: as instruções em pt-BR são nossas; o texto do dataset não é importado.
+
 ## Consequências
 
 - A Fase 1 de mídia exige produção ou licenciamento de imagens (decisão de orçamento pendente).
