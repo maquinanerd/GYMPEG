@@ -3,553 +3,957 @@
     "id": "free-exercise-db",
     "name": "free-exercise-db",
     "url": "https://github.com/yuhonas/free-exercise-db",
-    "license": "UNVERIFIED",
-    "approvedForProduction": false,
-    "note": "Images were scraped from the web by the upstream dataset (wrkout/exercises.json CONTRIBUTING); not licensed for commercial use. Only the name-to-dataset mapping is kept. See docs/EXERCISE_MEDIA_AUDIT.md."
+    "license": "Unlicense",
+    "licenseVerified": false,
+    "approvedForProduction": true,
+    "note": "License as declared by the dataset. Provenance not verified: the upstream dataset (wrkout/exercises.json CONTRIBUTING) says the images were scraped from the web. Shipped by product owner decision on 2026-10-14, accepting that risk (ADR-005). See docs/EXERCISE_MEDIA_AUDIT.md."
   },
   "groups": [
     {
       "datasetId": "Hyperextensions_Back_Extensions",
-      "names": [
-        "Back extension (hyperextension)",
-        "Hyperextensions on Roman Chair · Bodyweight"
-      ]
+      "names": ["Hyperextensions on Roman Chair · Bodyweight", "Back extension (hyperextension)"]
     },
     {
       "datasetId": "Barbell_Bench_Press_-_Medium_Grip",
-      "names": [
-        "Barbell bench press",
-        "Bench Press · Barbell"
-      ]
+      "names": ["Bench Press · Barbell", "Barbell bench press", "Bench Press"]
     },
     {
       "datasetId": "Close-Grip_Barbell_Bench_Press",
-      "names": [
-        "Bench Press with Close Grip · Barbell",
-        "Close-grip bench press"
-      ]
+      "names": ["Bench Press with Close Grip · Barbell", "Close-grip bench press"]
     },
     {
       "datasetId": "Dumbbell_Bench_Press",
-      "names": [
-        "Bench Press · Dumbbells",
-        "Flat dumbbell bench press"
-      ]
+      "names": ["Bench Press · Dumbbells", "Flat dumbbell bench press"]
     },
     {
       "datasetId": "Smith_Machine_Bench_Press",
-      "names": [
-        "Bench Press · Smith machine"
-      ]
+      "names": ["Bench Press · Smith machine", "Smith machine bench press"]
     },
     {
       "datasetId": "Barbell_Incline_Bench_Press_-_Medium_Grip",
       "names": [
-        "Incline Bench Press · Barbell"
+        "Incline Bench Press · Barbell",
+        "Incline barbell bench press",
+        "Incline Bench Press"
       ]
     },
     {
       "datasetId": "Incline_Dumbbell_Press",
       "names": [
         "Incline Bench Press · Dumbbells",
-        "Incline dumbbell press (30 deg)"
-      ]
-    },
-    {
-      "datasetId": "Good_Morning",
-      "names": [
-        "Barbell good morning"
-      ]
-    },
-    {
-      "datasetId": "Barbell_Hip_Thrust",
-      "names": [
-        "Barbell hip thrust (or machine)"
-      ]
-    },
-    {
-      "datasetId": "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench",
-      "names": [
-        "Barbell wrist curl"
+        "Incline dumbbell press (30 deg)",
+        "Incline Dumbbell Press"
       ]
     },
     {
       "datasetId": "Standing_Biceps_Cable_Curl",
-      "names": [
-        "Behind-the-Back Curls · Cable",
-        "Standing cable curl (straight bar)"
-      ],
+      "names": ["Behind-the-Back Curls · Cable"],
       "approximate": true
     },
     {
       "datasetId": "Reverse_Grip_Bent-Over_Rows",
-      "names": [
-        "Bent-Over Rows with Reverse Grip · Barbell"
-      ]
-    },
-    {
-      "datasetId": "Bent_Over_Barbell_Row",
-      "names": [
-        "Bent-over barbell row"
-      ]
+      "names": ["Bent-Over Rows with Reverse Grip · Barbell", "Reverse-grip barbell row"]
     },
     {
       "datasetId": "Split_Squat_with_Dumbbells",
-      "names": [
-        "Bulgarian Split Squats · Dumbbells",
-        "Bulgarian split squat"
-      ],
+      "names": ["Bulgarian Split Squats · Dumbbells"],
       "approximate": true
     },
     {
       "datasetId": "Butterfly",
-      "names": [
-        "Butterfly with Close Grip · Machine",
-        "Pec deck (or cable fly)"
-      ]
-    },
-    {
-      "datasetId": "Cable_Crunch",
-      "names": [
-        "Cable crunch (kneeling)"
-      ]
-    },
-    {
-      "datasetId": "Glute_Kickback",
-      "names": [
-        "Cable glute kickback"
-      ],
-      "approximate": true
+      "names": ["Butterfly with Close Grip · Machine", "Pec deck (or cable fly)"]
     },
     {
       "datasetId": "Cable_Seated_Lateral_Raise",
-      "names": [
-        "Cable lateral raises"
-      ],
+      "names": ["Cable lateral raises"],
       "approximate": true
     },
     {
       "datasetId": "Leverage_Iso_Row",
-      "names": [
-        "Chest-supported machine row"
-      ],
+      "names": ["Chest-supported machine row"],
       "approximate": true
     },
     {
-      "datasetId": "Concentration_Curls",
-      "names": [
-        "Concentration curl"
-      ]
-    },
-    {
-      "datasetId": "Bicycling",
-      "names": [
-        "Cycling"
-      ]
-    },
-    {
       "datasetId": "Barbell_Deadlift",
-      "names": [
-        "Deadlifts · Barbell"
-      ]
+      "names": ["Deadlifts · Barbell", "Barbell deadlift", "Deadlift"]
     },
     {
       "datasetId": "Decline_Crunch",
-      "names": [
-        "Decline Sit-Ups · Bodyweight"
-      ],
+      "names": ["Decline Sit-Ups · Bodyweight"],
       "approximate": true
     },
     {
       "datasetId": "Stiff-Legged_Dumbbell_Deadlift",
-      "names": [
-        "Dumbbell Romanian Deadlift"
-      ],
+      "names": ["Dumbbell Romanian Deadlift"],
       "approximate": true
     },
     {
       "datasetId": "Side_Lateral_Raise",
-      "names": [
-        "Dumbbell lateral raise",
-        "Lateral Raises · Dumbbells"
-      ]
-    },
-    {
-      "datasetId": "EZ-Bar_Curl",
-      "names": [
-        "EZ-bar curl"
-      ]
+      "names": ["Lateral Raises · Dumbbells", "Dumbbell lateral raise", "Lateral Raise"]
     },
     {
       "datasetId": "EZ-Bar_Skullcrusher",
-      "names": [
-        "EZ-bar skull crusher",
-        "Skull Crushers · EZ bar"
-      ]
+      "names": ["Skull Crushers · EZ bar", "EZ-bar skull crusher", "Skullcrusher"]
     },
     {
       "datasetId": "Face_Pull",
-      "names": [
-        "Face Pulls with Rope · Cable",
-        "Face pull (rope)"
-      ]
-    },
-    {
-      "datasetId": "Goblet_Squat",
-      "names": [
-        "Goblet squat"
-      ]
+      "names": ["Face Pulls with Rope · Cable", "Face pull (rope)", "Face Pull"]
     },
     {
       "datasetId": "Hammer_Curls",
-      "names": [
-        "Hammer Curls · Dumbbells",
-        "Hammer curl (dumbbell)"
-      ]
-    },
-    {
-      "datasetId": "Hanging_Leg_Raise",
-      "names": [
-        "Hanging leg raises"
-      ]
+      "names": ["Hammer Curls · Dumbbells", "Hammer curl (dumbbell)", "Hammer Curl"]
     },
     {
       "datasetId": "Flat_Bench_Lying_Leg_Raise",
-      "names": [
-        "Leg Raises · Bodyweight"
-      ],
-      "approximate": true
-    },
-    {
-      "datasetId": "Cable_Hip_Adduction",
-      "names": [
-        "Hip adduction machine"
-      ],
+      "names": ["Leg Raises · Bodyweight"],
       "approximate": true
     },
     {
       "datasetId": "Incline_Dumbbell_Flyes",
-      "names": [
-        "Incline Flys · Dumbbells"
-      ]
+      "names": ["Incline Flys · Dumbbells", "Incline dumbbell fly"]
     },
     {
       "datasetId": "Dumbbell_Lying_Rear_Lateral_Raise",
-      "names": [
-        "Incline Reverse Flys · Dumbbells"
-      ],
+      "names": ["Incline Reverse Flys · Dumbbells"],
       "approximate": true
     },
     {
       "datasetId": "Decline_EZ_Bar_Triceps_Extension",
-      "names": [
-        "Incline Skull Crushers · EZ bar"
-      ],
+      "names": ["Incline Skull Crushers · EZ bar"],
       "approximate": true
     },
     {
       "datasetId": "Alternate_Incline_Dumbbell_Curl",
-      "names": [
-        "Incline Twist Curls · Dumbbells"
-      ]
-    },
-    {
-      "datasetId": "Incline_Dumbbell_Curl",
-      "names": [
-        "Incline dumbbell curl (bench 60 deg)"
-      ]
-    },
-    {
-      "datasetId": "Rope_Jumping",
-      "names": [
-        "Jump rope"
-      ]
+      "names": ["Incline Twist Curls · Dumbbells"]
     },
     {
       "datasetId": "V-Bar_Pulldown",
       "names": [
         "Lat Pulldowns with Close Neutral Grip · Cable",
-        "Neutral-grip lat pulldown"
+        "Neutral-grip lat pulldown",
+        "V-bar lat pulldown"
       ]
     },
     {
       "datasetId": "Close-Grip_Front_Lat_Pulldown",
-      "names": [
-        "Lat Pulldowns with Close Overhand Grip · Cable"
-      ]
-    },
-    {
-      "datasetId": "Wide-Grip_Lat_Pulldown",
-      "names": [
-        "Lat pulldown (wide grip)"
-      ]
+      "names": ["Lat Pulldowns with Close Overhand Grip · Cable", "Close-grip lat pulldown"]
     },
     {
       "datasetId": "Seated_Leg_Curl",
-      "names": [
-        "Leg Curls on Leg Extension Machine · Machine",
-        "Seated leg curl"
-      ],
+      "names": ["Leg Curls on Leg Extension Machine · Machine"],
       "approximate": true
     },
     {
       "datasetId": "Leg_Extensions",
-      "names": [
-        "Leg Extensions · Machine",
-        "Leg extension"
-      ]
+      "names": ["Leg Extensions · Machine", "Leg Extension"]
     },
     {
       "datasetId": "Leg_Press",
-      "names": [
-        "Leg Press · Machine",
-        "Leg press (45 deg)"
-      ]
+      "names": ["Leg Press · Machine", "Leg press (45 deg)", "Leg Press"]
     },
     {
       "datasetId": "Lying_Leg_Curls",
-      "names": [
-        "Lying Leg Curls · Machine",
-        "Lying leg curl"
-      ]
-    },
-    {
-      "datasetId": "Leverage_Chest_Press",
-      "names": [
-        "Machine chest press"
-      ]
-    },
-    {
-      "datasetId": "Ab_Crunch_Machine",
-      "names": [
-        "Machine crunch"
-      ]
-    },
-    {
-      "datasetId": "Dip_Machine",
-      "names": [
-        "Machine dips or parallel bars"
-      ],
-      "approximate": true
-    },
-    {
-      "datasetId": "Reverse_Flyes",
-      "names": [
-        "Machine rear delt fly"
-      ],
-      "approximate": true
-    },
-    {
-      "datasetId": "Hack_Squat",
-      "names": [
-        "Machine squat (or Hack squat)"
-      ]
+      "names": ["Lying Leg Curls · Machine", "Lying leg curl", "Leg Curl"]
     },
     {
       "datasetId": "One-Arm_Dumbbell_Row",
-      "names": [
-        "One-Arm Rows · Dumbbells",
-        "Single-arm dumbbell row"
-      ]
+      "names": ["One-Arm Rows · Dumbbells", "Single-arm dumbbell row", "Dumbbell Row"]
     },
     {
       "datasetId": "Standing_Overhead_Barbell_Triceps_Extension",
-      "names": [
-        "Overhead Triceps Extensions · EZ bar"
-      ],
-      "approximate": true
-    },
-    {
-      "datasetId": "Cable_Rope_Overhead_Triceps_Extension",
-      "names": [
-        "Overhead cable triceps extension"
-      ]
-    },
-    {
-      "datasetId": "Push_Up_to_Side_Plank",
-      "names": [
-        "Plank + side plank"
-      ],
+      "names": ["Overhead Triceps Extensions · EZ bar"],
       "approximate": true
     },
     {
       "datasetId": "Preacher_Curl",
-      "names": [
-        "Preacher Curls · EZ bar"
-      ]
-    },
-    {
-      "datasetId": "Weighted_Pull_Ups",
-      "names": [
-        "Pronated pull-ups (weighted if possible)"
-      ]
+      "names": ["Preacher Curls · EZ bar", "EZ-bar preacher curl"]
     },
     {
       "datasetId": "Wide-Grip_Rear_Pull-Up",
-      "names": [
-        "Pull-Ups with Wide Overhand Grip · Bodyweight"
-      ],
+      "names": ["Pull-Ups with Wide Overhand Grip · Bodyweight"],
       "approximate": true
     },
     {
       "datasetId": "Straight-Arm_Dumbbell_Pullover",
-      "names": [
-        "Pullovers on Bench · Dumbbells"
-      ]
+      "names": ["Pullovers on Bench · Dumbbells"]
     },
     {
       "datasetId": "Rope_Straight-Arm_Pulldown",
-      "names": [
-        "Pullovers with Rope · Cable"
-      ]
+      "names": ["Pullovers with Rope · Cable", "Rope straight-arm pulldown"]
     },
     {
       "datasetId": "Reverse_Barbell_Curl",
-      "names": [
-        "Reverse Curls · EZ bar",
-        "Reverse EZ-bar curl"
-      ]
+      "names": ["Reverse Curls · EZ bar", "Reverse EZ-bar curl", "Reverse barbell curl"]
     },
     {
       "datasetId": "Romanian_Deadlift",
-      "names": [
-        "Romanian Deadlifts · Barbell"
-      ]
+      "names": ["Romanian Deadlifts · Barbell", "Barbell Romanian deadlift", "Romanian Deadlift"]
     },
     {
       "datasetId": "Smith_Machine_Stiff-Legged_Deadlift",
-      "names": [
-        "Romanian Deadlifts · Smith machine"
-      ],
+      "names": ["Romanian Deadlifts · Smith machine"],
       "approximate": true
-    },
-    {
-      "datasetId": "Rowing_Stationary",
-      "names": [
-        "Rowing machine"
-      ]
     },
     {
       "datasetId": "Seated_Cable_Rows",
       "names": [
         "Rows with Close Grip · Cable",
         "Rows with Reverse Grip · Cable",
-        "Rows with Wide Neutral Grip · Cable",
-        "Seated cable row (close handles)"
+        "Rows with Wide Neutral Grip · Cable"
       ],
       "approximate": true
     },
     {
       "datasetId": "Elevated_Cable_Rows",
-      "names": [
-        "Rows with Wide Grip · Cable"
-      ],
+      "names": ["Rows with Wide Grip · Cable"],
       "approximate": true
     },
     {
-      "datasetId": "Running_Treadmill",
-      "names": [
-        "Running"
-      ]
-    },
-    {
       "datasetId": "Dumbbell_Incline_Row",
-      "names": [
-        "Seal Rows · Dumbbells"
-      ],
+      "names": ["Seal Rows · Dumbbells"],
       "approximate": true
     },
     {
       "datasetId": "Seated_Calf_Raise",
-      "names": [
-        "Seated Calf Raises · Machine",
-        "Seated calf raise machine"
-      ]
+      "names": ["Seated Calf Raises · Machine", "Seated calf raise machine", "Seated Calf Raise"]
     },
     {
       "datasetId": "Seated_Dumbbell_Press",
       "names": [
         "Seated Shoulder Press with Close Grip · Dumbbells",
-        "Seated Shoulder Press · Dumbbells",
-        "Seated dumbbell overhead press"
+        "Seated Shoulder Press · Dumbbells"
       ]
     },
     {
       "datasetId": "Barbell_Shrug",
-      "names": [
-        "Shrugs · Barbell"
-      ]
+      "names": ["Shrugs · Barbell", "Barbell shrug"]
     },
     {
       "datasetId": "Smith_Machine_Squat",
-      "names": [
-        "Squats with Feet Forward · Smith machine"
-      ],
+      "names": ["Squats with Feet Forward · Smith machine"],
       "approximate": true
     },
     {
       "datasetId": "Barbell_Squat",
-      "names": [
-        "Squats · Barbell"
-      ]
+      "names": ["Squats · Barbell", "Barbell back squat", "Back Squat"]
     },
     {
       "datasetId": "Barbell_Shoulder_Press",
-      "names": [
-        "Standing Shoulder Press · Barbell",
-        "Standing barbell overhead press"
-      ]
-    },
-    {
-      "datasetId": "Standing_Calf_Raises",
-      "names": [
-        "Standing calf raise (or machine)"
-      ]
-    },
-    {
-      "datasetId": "Straight-Arm_Pulldown",
-      "names": [
-        "Straight-arm cable pulldown"
-      ]
+      "names": ["Standing Shoulder Press · Barbell"]
     },
     {
       "datasetId": "Sumo_Deadlift",
-      "names": [
-        "Sumo Deadlifts · Barbell"
-      ]
+      "names": ["Sumo Deadlifts · Barbell", "Sumo deadlift"]
     },
     {
       "datasetId": "Triceps_Pushdown_-_Rope_Attachment",
-      "names": [
-        "Triceps Pushdowns with Rope · Cable",
-        "Triceps pushdown (rope)"
-      ]
+      "names": ["Triceps Pushdowns with Rope · Cable", "Triceps pushdown (rope)"]
     },
     {
       "datasetId": "Standing_Dumbbell_Upright_Row",
-      "names": [
-        "Upright Rows · Dumbbells"
-      ]
+      "names": ["Upright Rows · Dumbbells", "Dumbbell upright row"]
     },
     {
       "datasetId": "Upright_Barbell_Row",
-      "names": [
-        "Upright Rows · EZ bar"
-      ],
+      "names": ["Upright Rows · EZ bar"],
       "approximate": true
     },
     {
       "datasetId": "Dumbbell_Lunges",
-      "names": [
-        "Walking lunges with dumbbells"
-      ],
+      "names": ["Walking lunges with dumbbells"],
       "approximate": true
     },
     {
       "datasetId": "Lying_Face_Down_Plate_Neck_Resistance",
-      "names": [
-        "Шея зад · Misc"
-      ]
+      "names": ["Шея зад · Misc"]
+    },
+    {
+      "datasetId": "Wide-Grip_Barbell_Bench_Press",
+      "names": ["Wide-grip barbell bench press"]
+    },
+    {
+      "datasetId": "Dumbbell_Bench_Press_with_Neutral_Grip",
+      "names": ["Neutral-grip dumbbell bench press"]
+    },
+    {
+      "datasetId": "Machine_Bench_Press",
+      "names": ["Machine chest press"]
+    },
+    {
+      "datasetId": "Leverage_Chest_Press",
+      "names": ["Plate-loaded chest press"]
+    },
+    {
+      "datasetId": "Hammer_Grip_Incline_DB_Bench_Press",
+      "names": ["Neutral-grip incline dumbbell press"]
+    },
+    {
+      "datasetId": "Leverage_Incline_Chest_Press",
+      "names": ["Incline machine chest press"]
+    },
+    {
+      "datasetId": "Smith_Machine_Incline_Bench_Press",
+      "names": ["Smith machine incline bench press"]
+    },
+    {
+      "datasetId": "Decline_Barbell_Bench_Press",
+      "names": ["Decline barbell bench press"]
+    },
+    {
+      "datasetId": "Decline_Dumbbell_Bench_Press",
+      "names": ["Decline dumbbell bench press"]
+    },
+    {
+      "datasetId": "Leverage_Decline_Chest_Press",
+      "names": ["Decline machine chest press"]
+    },
+    {
+      "datasetId": "Smith_Machine_Decline_Press",
+      "names": ["Smith machine decline bench press"]
+    },
+    {
+      "datasetId": "Dumbbell_Flyes",
+      "names": ["Flat dumbbell fly"]
+    },
+    {
+      "datasetId": "Cable_Crossover",
+      "names": ["Cable crossover (high pulley)", "Cable Fly"]
+    },
+    {
+      "datasetId": "Low_Cable_Crossover",
+      "names": ["Low-to-high cable fly"]
+    },
+    {
+      "datasetId": "Single-Arm_Cable_Crossover",
+      "names": ["Single-arm cable crossover"]
+    },
+    {
+      "datasetId": "Flat_Bench_Cable_Flyes",
+      "names": ["Flat bench cable fly"]
+    },
+    {
+      "datasetId": "Pushups",
+      "names": ["Push-up"]
+    },
+    {
+      "datasetId": "Push-Up_Wide",
+      "names": ["Wide push-up"]
+    },
+    {
+      "datasetId": "Incline_Push-Up",
+      "names": ["Incline push-up"]
+    },
+    {
+      "datasetId": "Decline_Push-Up",
+      "names": ["Decline push-up"]
+    },
+    {
+      "datasetId": "Push-Ups_-_Close_Triceps_Position",
+      "names": ["Close-grip push-up"]
+    },
+    {
+      "datasetId": "Dips_-_Chest_Version",
+      "names": ["Chest dip"]
+    },
+    {
+      "datasetId": "Bent-Arm_Dumbbell_Pullover",
+      "names": ["Dumbbell pullover"]
+    },
+    {
+      "datasetId": "Wide-Grip_Lat_Pulldown",
+      "names": ["Lat pulldown (wide grip)", "Lat Pulldown"]
+    },
+    {
+      "datasetId": "Underhand_Cable_Pulldowns",
+      "names": ["Underhand lat pulldown"]
+    },
+    {
+      "datasetId": "One_Arm_Lat_Pulldown",
+      "names": ["Single-arm lat pulldown"]
+    },
+    {
+      "datasetId": "Wide-Grip_Pulldown_Behind_The_Neck",
+      "names": ["Behind-the-neck lat pulldown"]
+    },
+    {
+      "datasetId": "Straight-Arm_Pulldown",
+      "names": ["Straight-arm cable pulldown"]
+    },
+    {
+      "datasetId": "Pullups",
+      "names": ["Pronated pull-ups (weighted if possible)", "Pull-up"]
+    },
+    {
+      "datasetId": "Chin-Up",
+      "names": ["Chin-up"]
+    },
+    {
+      "datasetId": "V-Bar_Pullup",
+      "names": ["Neutral-grip pull-up"]
+    },
+    {
+      "datasetId": "Band_Assisted_Pull-Up",
+      "names": ["Band-assisted pull-up"]
+    },
+    {
+      "datasetId": "Bent_Over_Barbell_Row",
+      "names": ["Bent-over barbell row", "Barbell Row"]
+    },
+    {
+      "datasetId": "Bent_Over_Two-Dumbbell_Row",
+      "names": ["Bent-over dumbbell row"]
+    },
+    {
+      "datasetId": "Seated_Cable_Rows",
+      "names": ["Seated cable row (close handles)", "Seated Cable Row"]
+    },
+    {
+      "datasetId": "Seated_One-arm_Cable_Pulley_Rows",
+      "names": ["Single-arm seated cable row"]
+    },
+    {
+      "datasetId": "T-Bar_Row_with_Handle",
+      "names": ["T-bar row"]
+    },
+    {
+      "datasetId": "Lying_T-Bar_Row",
+      "names": ["Chest-supported T-bar row"]
+    },
+    {
+      "datasetId": "Leverage_Iso_Row",
+      "names": ["Plate-loaded iso-lateral row"]
+    },
+    {
+      "datasetId": "Leverage_High_Row",
+      "names": ["Plate-loaded high row"]
+    },
+    {
+      "datasetId": "Smith_Machine_Bent_Over_Row",
+      "names": ["Smith machine bent-over row"]
+    },
+    {
+      "datasetId": "Dumbbell_Incline_Row",
+      "names": ["Chest-supported dumbbell row"]
+    },
+    {
+      "datasetId": "Inverted_Row",
+      "names": ["Inverted row"]
+    },
+    {
+      "datasetId": "Dumbbell_Shrug",
+      "names": ["Dumbbell shrug"]
+    },
+    {
+      "datasetId": "Leverage_Shrug",
+      "names": ["Machine shrug"]
+    },
+    {
+      "datasetId": "Cable_Shrugs",
+      "names": ["Cable shrug"]
+    },
+    {
+      "datasetId": "Deficit_Deadlift",
+      "names": ["Deficit deadlift"]
+    },
+    {
+      "datasetId": "Stiff-Legged_Barbell_Deadlift",
+      "names": ["Stiff-legged barbell deadlift"]
+    },
+    {
+      "datasetId": "Stiff-Legged_Dumbbell_Deadlift",
+      "names": ["Stiff-legged dumbbell deadlift"]
+    },
+    {
+      "datasetId": "Smith_Machine_Stiff-Legged_Deadlift",
+      "names": ["Smith machine stiff-legged deadlift"]
+    },
+    {
+      "datasetId": "Trap_Bar_Deadlift",
+      "names": ["Trap bar deadlift"]
+    },
+    {
+      "datasetId": "Good_Morning",
+      "names": ["Barbell good morning"]
+    },
+    {
+      "datasetId": "Barbell_Hip_Thrust",
+      "names": ["Barbell hip thrust (or machine)"]
+    },
+    {
+      "datasetId": "Barbell_Glute_Bridge",
+      "names": ["Barbell glute bridge"]
+    },
+    {
+      "datasetId": "Butt_Lift_Bridge",
+      "names": ["Glute bridge"]
+    },
+    {
+      "datasetId": "Single_Leg_Glute_Bridge",
+      "names": ["Single-leg glute bridge"]
+    },
+    {
+      "datasetId": "Pull_Through",
+      "names": ["Cable pull-through"]
+    },
+    {
+      "datasetId": "Power_Clean",
+      "names": ["Power Clean"]
+    },
+    {
+      "datasetId": "Wide_Stance_Barbell_Squat",
+      "names": ["Wide-stance barbell squat"]
+    },
+    {
+      "datasetId": "Front_Barbell_Squat",
+      "names": ["Barbell front squat", "Front Squat"]
+    },
+    {
+      "datasetId": "Goblet_Squat",
+      "names": ["Goblet squat"]
+    },
+    {
+      "datasetId": "Plie_Dumbbell_Squat",
+      "names": ["Dumbbell sumo squat"]
+    },
+    {
+      "datasetId": "Smith_Machine_Squat",
+      "names": ["Smith machine squat"]
+    },
+    {
+      "datasetId": "Hack_Squat",
+      "names": ["Machine squat (or Hack squat)"]
+    },
+    {
+      "datasetId": "Lying_Machine_Squat",
+      "names": ["Lying machine squat"]
+    },
+    {
+      "datasetId": "Split_Squat_with_Dumbbells",
+      "names": ["Bulgarian Split Squat"]
+    },
+    {
+      "datasetId": "Smith_Single-Leg_Split_Squat",
+      "names": ["Smith machine Bulgarian split squat"]
+    },
+    {
+      "datasetId": "Dumbbell_Lunges",
+      "names": ["Dumbbell lunge"]
+    },
+    {
+      "datasetId": "Barbell_Walking_Lunge",
+      "names": ["Barbell walking lunge"]
+    },
+    {
+      "datasetId": "Barbell_Lunge",
+      "names": ["Barbell lunge"]
+    },
+    {
+      "datasetId": "Dumbbell_Rear_Lunge",
+      "names": ["Dumbbell reverse lunge"]
+    },
+    {
+      "datasetId": "Dumbbell_Step_Ups",
+      "names": ["Dumbbell step-up"]
+    },
+    {
+      "datasetId": "Bodyweight_Squat",
+      "names": ["Bodyweight squat"]
+    },
+    {
+      "datasetId": "Weighted_Sissy_Squat",
+      "names": ["Sissy squat"]
+    },
+    {
+      "datasetId": "Narrow_Stance_Leg_Press",
+      "names": ["Narrow-stance leg press"]
+    },
+    {
+      "datasetId": "Smith_Machine_Leg_Press",
+      "names": ["Vertical leg press"]
+    },
+    {
+      "datasetId": "Single-Leg_Leg_Extension",
+      "names": ["Single-leg extension"]
+    },
+    {
+      "datasetId": "Seated_Leg_Curl",
+      "names": ["Seated leg curl"]
+    },
+    {
+      "datasetId": "Standing_Leg_Curl",
+      "names": ["Standing leg curl"]
+    },
+    {
+      "datasetId": "Natural_Glute_Ham_Raise",
+      "names": ["Nordic hamstring curl"]
+    },
+    {
+      "datasetId": "Glute_Ham_Raise",
+      "names": ["Glute-ham raise"]
+    },
+    {
+      "datasetId": "Thigh_Abductor",
+      "names": ["Hip abduction machine"]
+    },
+    {
+      "datasetId": "Thigh_Adductor",
+      "names": ["Hip adduction machine"]
+    },
+    {
+      "datasetId": "Cable_Hip_Adduction",
+      "names": ["Cable hip adduction"]
+    },
+    {
+      "datasetId": "One-Legged_Cable_Kickback",
+      "names": ["Cable glute kickback"]
+    },
+    {
+      "datasetId": "Glute_Kickback",
+      "names": ["Quadruped glute kickback"]
+    },
+    {
+      "datasetId": "Standing_Military_Press",
+      "names": ["Standing barbell overhead press", "Overhead Press"]
+    },
+    {
+      "datasetId": "Seated_Barbell_Military_Press",
+      "names": ["Seated barbell overhead press"]
+    },
+    {
+      "datasetId": "Dumbbell_Shoulder_Press",
+      "names": ["Seated dumbbell overhead press"]
+    },
+    {
+      "datasetId": "Standing_Dumbbell_Press",
+      "names": ["Standing dumbbell shoulder press"]
+    },
+    {
+      "datasetId": "Arnold_Dumbbell_Press",
+      "names": ["Arnold press"]
+    },
+    {
+      "datasetId": "Machine_Shoulder_Military_Press",
+      "names": ["Machine shoulder press"]
+    },
+    {
+      "datasetId": "Leverage_Shoulder_Press",
+      "names": ["Plate-loaded shoulder press"]
+    },
+    {
+      "datasetId": "Smith_Machine_Overhead_Shoulder_Press",
+      "names": ["Smith machine shoulder press"]
+    },
+    {
+      "datasetId": "Cable_Shoulder_Press",
+      "names": ["Cable shoulder press"]
+    },
+    {
+      "datasetId": "Push_Press",
+      "names": ["Push press"]
+    },
+    {
+      "datasetId": "Seated_Side_Lateral_Raise",
+      "names": ["Seated dumbbell lateral raise"]
+    },
+    {
+      "datasetId": "One-Arm_Side_Laterals",
+      "names": ["Single-arm dumbbell lateral raise"]
+    },
+    {
+      "datasetId": "Cable_Seated_Lateral_Raise",
+      "names": ["Seated cable lateral raise"]
+    },
+    {
+      "datasetId": "Upright_Barbell_Row",
+      "names": ["Barbell upright row"]
+    },
+    {
+      "datasetId": "Upright_Cable_Row",
+      "names": ["Cable upright row"]
+    },
+    {
+      "datasetId": "Front_Two-Dumbbell_Raise",
+      "names": ["Dumbbell front raise"]
+    },
+    {
+      "datasetId": "Front_Dumbbell_Raise",
+      "names": ["Alternating dumbbell front raise"]
+    },
+    {
+      "datasetId": "Front_Cable_Raise",
+      "names": ["Cable front raise"]
+    },
+    {
+      "datasetId": "Front_Plate_Raise",
+      "names": ["Plate front raise"]
+    },
+    {
+      "datasetId": "Reverse_Machine_Flyes",
+      "names": ["Machine rear delt fly"]
+    },
+    {
+      "datasetId": "Reverse_Flyes",
+      "names": ["Bent-over dumbbell reverse fly", "Rear Delt Fly"]
+    },
+    {
+      "datasetId": "Cable_Rear_Delt_Fly",
+      "names": ["Cable reverse fly"]
+    },
+    {
+      "datasetId": "Barbell_Curl",
+      "names": ["Barbell Curl"]
+    },
+    {
+      "datasetId": "EZ-Bar_Curl",
+      "names": ["EZ-bar curl"]
+    },
+    {
+      "datasetId": "Dumbbell_Bicep_Curl",
+      "names": ["Dumbbell biceps curl"]
+    },
+    {
+      "datasetId": "Dumbbell_Alternate_Bicep_Curl",
+      "names": ["Alternating dumbbell curl"]
+    },
+    {
+      "datasetId": "Seated_Dumbbell_Curl",
+      "names": ["Seated dumbbell curl"]
+    },
+    {
+      "datasetId": "Alternate_Hammer_Curl",
+      "names": ["Alternating hammer curl"]
+    },
+    {
+      "datasetId": "Cross_Body_Hammer_Curl",
+      "names": ["Cross-body hammer curl"]
+    },
+    {
+      "datasetId": "Cable_Hammer_Curls_-_Rope_Attachment",
+      "names": ["Cable rope hammer curl"]
+    },
+    {
+      "datasetId": "One_Arm_Dumbbell_Preacher_Curl",
+      "names": ["Single-arm dumbbell preacher curl"]
+    },
+    {
+      "datasetId": "Machine_Preacher_Curls",
+      "names": ["Machine preacher curl"]
+    },
+    {
+      "datasetId": "Standing_Biceps_Cable_Curl",
+      "names": ["Standing cable curl (straight bar)", "Cable Curl"]
+    },
+    {
+      "datasetId": "Standing_One-Arm_Cable_Curl",
+      "names": ["Single-arm cable curl"]
+    },
+    {
+      "datasetId": "High_Cable_Curls",
+      "names": ["High cable curl"]
+    },
+    {
+      "datasetId": "Concentration_Curls",
+      "names": ["Concentration curl"]
+    },
+    {
+      "datasetId": "Incline_Dumbbell_Curl",
+      "names": ["Incline dumbbell curl (bench 60 deg)"]
+    },
+    {
+      "datasetId": "Machine_Bicep_Curl",
+      "names": ["Machine biceps curl"]
+    },
+    {
+      "datasetId": "Spider_Curl",
+      "names": ["Spider curl"]
+    },
+    {
+      "datasetId": "Seated_Palm-Up_Barbell_Wrist_Curl",
+      "names": ["Barbell wrist curl"]
+    },
+    {
+      "datasetId": "Seated_Palms-Down_Barbell_Wrist_Curl",
+      "names": ["Reverse wrist curl"]
+    },
+    {
+      "datasetId": "Triceps_Pushdown",
+      "names": ["Triceps pushdown (straight bar)", "Triceps Pushdown"]
+    },
+    {
+      "datasetId": "Triceps_Pushdown_-_V-Bar_Attachment",
+      "names": ["Triceps pushdown (V-bar)"]
+    },
+    {
+      "datasetId": "Reverse_Grip_Triceps_Pushdown",
+      "names": ["Reverse-grip triceps pushdown"]
+    },
+    {
+      "datasetId": "Standing_Dumbbell_Triceps_Extension",
+      "names": ["Overhead dumbbell triceps extension", "Overhead Triceps Extension"]
+    },
+    {
+      "datasetId": "Standing_One-Arm_Dumbbell_Triceps_Extension",
+      "names": ["Single-arm overhead dumbbell extension"]
+    },
+    {
+      "datasetId": "Cable_Rope_Overhead_Triceps_Extension",
+      "names": ["Overhead cable triceps extension"]
+    },
+    {
+      "datasetId": "Standing_Overhead_Barbell_Triceps_Extension",
+      "names": ["Overhead EZ-bar triceps extension"]
+    },
+    {
+      "datasetId": "Lying_Dumbbell_Tricep_Extension",
+      "names": ["Dumbbell skull crusher"]
+    },
+    {
+      "datasetId": "Tricep_Dumbbell_Kickback",
+      "names": ["Dumbbell triceps kickback"]
+    },
+    {
+      "datasetId": "Machine_Triceps_Extension",
+      "names": ["Machine triceps extension"]
+    },
+    {
+      "datasetId": "Dips_-_Triceps_Version",
+      "names": ["Machine dips or parallel bars"]
+    },
+    {
+      "datasetId": "Bench_Dips",
+      "names": ["Bench dip"]
+    },
+    {
+      "datasetId": "Dip_Machine",
+      "names": ["Seated dip machine"]
+    },
+    {
+      "datasetId": "Standing_Calf_Raises",
+      "names": ["Standing calf raise (or machine)", "Standing Calf Raise"]
+    },
+    {
+      "datasetId": "Calf_Press_On_The_Leg_Press_Machine",
+      "names": ["Calf press on leg press"]
+    },
+    {
+      "datasetId": "Smith_Machine_Calf_Raise",
+      "names": ["Smith machine calf raise"]
+    },
+    {
+      "datasetId": "Standing_Dumbbell_Calf_Raise",
+      "names": ["Standing dumbbell calf raise"]
+    },
+    {
+      "datasetId": "Donkey_Calf_Raises",
+      "names": ["Donkey calf raise"]
+    },
+    {
+      "datasetId": "Crunches",
+      "names": ["Crunch"]
+    },
+    {
+      "datasetId": "Weighted_Crunches",
+      "names": ["Weighted crunch"]
+    },
+    {
+      "datasetId": "Decline_Crunch",
+      "names": ["Decline crunch"]
+    },
+    {
+      "datasetId": "Oblique_Crunches",
+      "names": ["Oblique crunch"]
+    },
+    {
+      "datasetId": "Air_Bike",
+      "names": ["Bicycle crunch"]
+    },
+    {
+      "datasetId": "Reverse_Crunch",
+      "names": ["Reverse crunch"]
+    },
+    {
+      "datasetId": "Sit-Up",
+      "names": ["Sit-up"]
+    },
+    {
+      "datasetId": "Hanging_Leg_Raise",
+      "names": ["Hanging leg raises", "Hanging Leg Raise"]
+    },
+    {
+      "datasetId": "Knee_Hip_Raise_On_Parallel_Bars",
+      "names": ["Captain's chair knee raise"]
+    },
+    {
+      "datasetId": "Flat_Bench_Lying_Leg_Raise",
+      "names": ["Lying leg raise"]
+    },
+    {
+      "datasetId": "Plank",
+      "names": ["Plank + side plank"]
+    },
+    {
+      "datasetId": "Side_Bridge",
+      "names": ["Side plank"]
+    },
+    {
+      "datasetId": "Cable_Crunch",
+      "names": ["Cable crunch (kneeling)"]
+    },
+    {
+      "datasetId": "Ab_Crunch_Machine",
+      "names": ["Machine crunch"]
+    },
+    {
+      "datasetId": "Ab_Roller",
+      "names": ["Ab wheel rollout"]
+    },
+    {
+      "datasetId": "Pallof_Press",
+      "names": ["Pallof press"]
+    },
+    {
+      "datasetId": "Russian_Twist",
+      "names": ["Russian twist"]
+    },
+    {
+      "datasetId": "Standing_Cable_Wood_Chop",
+      "names": ["Cable wood chop"]
+    },
+    {
+      "datasetId": "Dead_Bug",
+      "names": ["Dead bug"]
+    },
+    {
+      "datasetId": "Running_Treadmill",
+      "names": ["Running"]
+    },
+    {
+      "datasetId": "Walking_Treadmill",
+      "names": ["Walking"]
+    },
+    {
+      "datasetId": "Bicycling_Stationary",
+      "names": ["Cycling"]
+    },
+    {
+      "datasetId": "Rowing_Stationary",
+      "names": ["Rowing machine"]
+    },
+    {
+      "datasetId": "Rope_Jumping",
+      "names": ["Jump rope"]
+    },
+    {
+      "datasetId": "Elliptical_Trainer",
+      "names": ["Elliptical trainer"]
+    },
+    {
+      "datasetId": "Stairmaster",
+      "names": ["Stair climber"]
+    },
+    {
+      "datasetId": "Farmers_Walk",
+      "names": ["Farmer's walk"]
     }
   ]
 }
