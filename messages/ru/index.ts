@@ -8,6 +8,7 @@ import { history } from './history';
 import { navigation } from './navigation';
 import { onboarding } from './onboarding';
 import { programs } from './programs';
+import { programTemplates } from './program-templates';
 import { progress } from './progress';
 import { session } from './session';
 import { settings } from './settings';
@@ -23,6 +24,7 @@ const messages = {
   navigation,
   onboarding,
   programs,
+  programTemplates,
   progress,
   session,
   settings,

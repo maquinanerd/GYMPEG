@@ -1,15 +1,21 @@
 import Link from 'next/link';
 import { CaretLeftIcon } from '@/components/ui/icon';
-import { getTranslations } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { requireSession } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import { TemplatePicker } from '@/components/programs/template-picker';
-import { programTemplates } from '@/lib/programs/templates';
+import { localizeProgramTemplate, programTemplates } from '@/lib/programs/templates';
 
 export default async function TemplateProgramPage() {
   const t = await getTranslations('programs');
   const common = await getTranslations('common');
   await requireSession();
+  // In the user's language: the picker shows these texts and the program is
+  // saved with them.
+  const messages = await getMessages();
+  const templates = programTemplates.map((template) =>
+    localizeProgramTemplate(template, messages.programTemplates),
+  );
 
   return (
     <main className="flex-1 px-4 py-6">
@@ -26,7 +32,7 @@ export default async function TemplateProgramPage() {
             {t('templateDescription')}
           </p>
         </div>
-        <TemplatePicker templates={programTemplates} />
+        <TemplatePicker templates={templates} />
       </div>
     </main>
   );
