@@ -14,6 +14,8 @@ const WRITE =
 const RECORDS = /recordProgramRevision|restoreProgramRevision/;
 
 const NOT_STRUCTURAL: Record<string, string> = {
+  'app/api/ai/workout-plan/confirm/route.ts':
+    'activates the program; saveWorkoutPlan (lib/ai/planner) records its first version',
   'app/api/programs/[id]/activate/route.ts': 'only flips isActive, which is not part of a version',
   'app/api/programs/from-template/route.ts':
     'activates the program; buildProgramFromGenerated records its first version',

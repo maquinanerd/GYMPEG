@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useId, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -61,6 +61,7 @@ const PERIODS = ['d7', 'd30', 'd90'] as const;
 // measurements).
 export function BodyweightCard({ entries, trend, unit, listLimit = 5 }: Props) {
   const t = useTranslations('progress.bodyweight');
+  const headingId = useId();
   const common = useTranslations('common');
   const locale = useLocale();
   const format = useFormatter();
@@ -146,10 +147,10 @@ export function BodyweightCard({ entries, trend, unit, listLimit = 5 }: Props) {
   }
 
   return (
-    <Card>
+    <Card role="region" aria-labelledby={headingId}>
       <CardHeader className="pb-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="flex items-center gap-2 text-base font-semibold">
+          <h2 id={headingId} className="flex items-center gap-2 text-base font-semibold">
             <ScalesIcon className="size-4" />
             {t('title')}
           </h2>

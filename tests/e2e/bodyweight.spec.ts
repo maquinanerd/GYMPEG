@@ -22,9 +22,7 @@ test('a lifter can log and delete a bodyweight entry on the progress page', asyn
   await page.goto('/progress');
   // Scope to the Bodyweight card (the page also has a Measurements card whose
   // own "Log" button would otherwise be ambiguous).
-  const card = page
-    .locator('div.rounded-xl', { has: page.getByRole('heading', { name: 'Bodyweight' }) })
-    .first();
+  const card = page.getByRole('region', { name: 'Bodyweight' });
   await expect(card.getByRole('heading', { name: 'Bodyweight' })).toBeVisible();
   await expect(card.getByText(/no bodyweight logged yet/i)).toBeVisible();
 

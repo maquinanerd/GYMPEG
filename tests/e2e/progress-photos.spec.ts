@@ -28,11 +28,7 @@ test('a lifter can upload a progress photo and see it in the gallery', async ({
 
   await page.goto('/progress');
   // Scope to the Progress photos card (the page has several cards).
-  const card = page
-    .locator('div.rounded-xl', {
-      has: page.getByRole('heading', { name: 'Progress photos' }),
-    })
-    .first();
+  const card = page.getByRole('region', { name: 'Progress photos' });
   await expect(card.getByRole('heading', { name: 'Progress photos' })).toBeVisible();
   await expect(card.getByText(/no progress photos yet/i)).toBeVisible();
 

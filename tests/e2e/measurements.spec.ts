@@ -22,9 +22,7 @@ test('a lifter can log and delete a body measurement on the progress page', asyn
 
   await page.goto('/progress');
   // Scope to the Measurements card (the page also has a Bodyweight card).
-  const card = page
-    .locator('div.rounded-xl', { has: page.getByRole('heading', { name: 'Measurements' }) })
-    .first();
+  const card = page.getByRole('region', { name: 'Measurements' });
   await expect(card.getByRole('heading', { name: 'Measurements' })).toBeVisible();
   await expect(card.getByText(/no waist measurement yet/i)).toBeVisible();
 
