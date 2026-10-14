@@ -44,6 +44,9 @@ export const session = {
   noExercises: 'Nenhum exercício neste treino.',
   exerciseProgress: 'Exercício {current}/{total} · {name}',
   exerciseStripLabel: 'Exercícios do treino',
+  exerciseOf: 'Exercício {current} de {total}',
+  upNext: 'A seguir',
+  progressLabel: 'Exercícios concluídos',
   exerciseCompleted: 'Concluído',
   superset: 'Superset {label}',
   deloadWeek: 'Semana de deload',
@@ -213,6 +216,12 @@ export const session = {
     oneRmPrTitle: 'Melhor 1RM estimado desde o último treino',
   },
   editableSets: {
+    title: 'Séries',
+    tapToAdjust: 'toque num número para ajustar',
+    warmupHint: 'toque para registrar',
+    chooseRir: 'Repetições em reserva (RIR)',
+    increase: 'Aumentar',
+    decrease: 'Diminuir',
     options: {
       toggle: 'Opções da série',
       type: 'Tipo',
@@ -243,7 +252,7 @@ export const session = {
     delete: 'Excluir a série {number}',
     chooseWeight: 'Escolher a carga ({unit})',
     chooseReps: 'Escolher as repetições',
-    applyValue: 'Aplicar valor',
+    applyValue: 'Aplicar',
     repsShort: 'reps',
     weightEditor: {
       open: 'Editar cargas do equipamento',
@@ -312,6 +321,12 @@ export const session = {
     removeError: 'Não foi possível remover o exercício.',
   },
   exerciseCard: {
+    setsReps: '{sets} × {reps}',
+    rir: 'RIR {rir}',
+    rest: '{seconds} s',
+    tempo: 'Cadência {tempo}',
+    method:
+      'A sugestão sai das suas séries do último treino: se todas chegaram ao topo da faixa de repetições com o RIR alvo, a carga sobe; se ficaram abaixo, desce. A prontidão de hoje e a semana de descarga podem segurar ou reduzir a carga.',
     actions: 'Ações do exercício',
     notAvailable: 'Indisponível nesta academia',
     cardioPrescription: '{sets, plural, one {# série} other {# séries}} · Descanso {seconds}s',

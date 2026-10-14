@@ -93,8 +93,10 @@ test('a lifter can pair two exercises as a superset and run the A1/A2 flow', asy
 
   // Runner: A1 first, with the superset badge.
   await page.goto(`/session/${session.id}`);
+  // The header reads "Exercise N of M" and the card names the exercise.
   await expect(page.getByText('Superset A1')).toBeVisible();
-  await expect(page.getByText(/Exercise 1\/2 · E2E Bench/)).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'E2E Bench' })).toBeVisible();
+  await expect(page.getByText(/Exercise 1 of 2/)).toBeVisible();
 
   // Log a working set on A1. For a same-superset transition, the runner shows
   // A2 immediately while the short rest is still counting down so the lifter
@@ -102,15 +104,18 @@ test('a lifter can pair two exercises as a superset and run the A1/A2 flow', asy
   await page.getByRole('button', { name: /^confirm set \d+$/i }).click();
   await expect(page.getByTestId('rest-remaining')).toBeVisible();
   await expect(page.getByText('Superset A2')).toBeVisible();
-  await expect(page.getByText(/Exercise 2\/2 · E2E Row/)).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'E2E Row' })).toBeVisible();
+  await expect(page.getByText(/Exercise 2 of 2/)).toBeVisible();
   await page.getByRole('button', { name: /skip/i }).click();
   await expect(page.getByText('Superset A2')).toBeVisible();
-  await expect(page.getByText(/Exercise 2\/2 · E2E Row/)).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'E2E Row' })).toBeVisible();
+  await expect(page.getByText(/Exercise 2 of 2/)).toBeVisible();
 
   // Next from the last member cycles back into the group while sets remain.
   await page.getByRole('button', { name: /next/i }).click();
   await expect(page.getByText('Superset A1')).toBeVisible();
-  await expect(page.getByText(/Exercise 1\/2 · E2E Bench/)).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'E2E Bench' })).toBeVisible();
+  await expect(page.getByText(/Exercise 1 of 2/)).toBeVisible();
 });
 
 // Supersets slice 2 (issue #189): the rest between superset members is short

@@ -31,6 +31,8 @@ interface Props {
   displayName: string;
   equipmentType: EquipmentType;
   compact?: boolean;
+  // A full-width row of an action sheet (the workout's exercise menu).
+  asMenuItem?: boolean;
 }
 
 export function ExerciseMediaDialog({
@@ -38,6 +40,7 @@ export function ExerciseMediaDialog({
   displayName,
   equipmentType,
   compact = false,
+  asMenuItem = false,
 }: Props) {
   const t = useTranslations('exercises.media');
   const exerciseT = useTranslations('exercises');
@@ -97,6 +100,16 @@ export function ExerciseMediaDialog({
             ) : (
               <PlayCircleIcon className="size-4 text-muted-foreground" />
             )}
+          </Button>
+        ) : asMenuItem ? (
+          <Button
+            type="button"
+            variant="outline"
+            className="min-h-tap w-full justify-start"
+            aria-label={t('open', { name: displayName })}
+          >
+            <PlayCircleIcon />
+            <span>{t('button')}</span>
           </Button>
         ) : (
           <Button

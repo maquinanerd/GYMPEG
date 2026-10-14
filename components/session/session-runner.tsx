@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { CaretLeftIcon, CaretRightIcon, FlagIcon, ChatTextIcon, XIcon } from '@/components/ui/icon';
+import { CaretLeftIcon, CaretRightIcon } from '@/components/ui/icon';
 import type {
   Exercise,
   Program,
@@ -21,9 +21,10 @@ import type {
 import { resolveSetType } from '@/lib/schemas/set';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import { Button, IconButton } from '@/components/ui/button';
+import { ProgressSegments } from '@/components/ui/progress-segments';
+import { CoachFab } from '@/components/coach/coach-fab';
+import { SyncIndicator } from '@/components/offline/sync-indicator';
 import { acquireWakeLock, bindWakeLockToVisibility, releaseWakeLock } from '@/lib/wake-lock';
 import { vibrate, VIBRATION_PATTERNS } from '@/lib/vibrate';
 import { generateLocalId, getDB, type PendingSet } from '@/lib/indexeddb';
@@ -158,6 +159,7 @@ export function SessionRunner({
   catalog,
 }: SessionRunnerProps) {
   const t = useTranslations('session');
+  const cardT = useTranslations('session.exerciseCard');
   const exerciseName = useExerciseName();
   const trainingName = useTrainingName();
   const router = useRouter();
@@ -444,15 +446,6 @@ export function SessionRunner({
     return out;
   }, [lastPerformances]);
 
-  const completedExerciseCount = useMemo(() => {
-    let count = 0;
-    for (const pe of effectiveProgramExercises) {
-      const done = setsByExercise.get(pe.exerciseId)?.filter((s) => !s.isWarmup).length ?? 0;
-      if (done >= pe.targetSets) count += 1;
-    }
-    return count;
-  }, [effectiveProgramExercises, setsByExercise]);
-
   // Keyed by ProgramExercise row: a workout that programs the same exercise
   // twice shares one set pool (sets carry only exerciseId), so both rows read
   // the same count and each is complete once the pool covers its own target.
@@ -464,11 +457,6 @@ export function SessionRunner({
     }
     return completed;
   }, [effectiveProgramExercises, setsByExercise]);
-
-  const progressPct =
-    programExercises.length === 0
-      ? 0
-      : Math.round((completedExerciseCount / programExercises.length) * 100);
 
   async function handleValidate(values: {
     weight: number;
@@ -789,64 +777,80 @@ export function SessionRunner({
         )
       : null;
 
+  const completedIndexes = new Set(
+    programExercises.flatMap((pe, index) => (completedProgramExerciseIds.has(pe.id) ? [index] : [])),
+  );
+  const upNext = navNextIdx != null ? (effectiveProgramExercises[navNextIdx] ?? null) : null;
+  // The plate calculator of the exercise sheet breaks down today's load: the
+  // last working set, else the next-set recommendation, else last time's top.
+  const plateWeightKg =
+    currentSets.filter((set) => !set.isWarmup).at(-1)?.weight ??
+    currentRecommendation?.weight ??
+    lastPerf?.maxWeight ??
+    0;
+  const programName = workout.program?.name ? trainingName(workout.program.name) : null;
+
   return (
     <main className="flex flex-1 flex-col">
       <RestEndFlash count={restFlashCount} />
-      {/* Sticky header with progress and exit button */}
-      <div className="sticky top-0 z-10 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="truncate text-xs text-muted-foreground">{trainingName(workout.name)}</p>
-            <p className="text-sm font-medium">
-              {t('exerciseProgress', {
-                current: currentIdx + 1,
-                total: programExercises.length,
-                name: exerciseName(currentPE.exercise.name),
-              })}
-            </p>
-            {supersetView.labels.has(currentPE.id) && (
-              <Badge variant="secondary" className="mt-1">
-                {t('superset', { label: supersetView.labels.get(currentPE.id) ?? '' })}
-              </Badge>
-            )}
-            {deloadActive && (
-              <Badge variant="secondary" className="mt-1 text-emerald-700 dark:text-emerald-400">
-                {t('deloadWeek')}
-              </Badge>
-            )}
+      {/* One fixed header: back, workout, coach, sync, progress and the
+          exercise chips. Nothing else of the app chrome shows in a workout. */}
+      <header className="sticky top-0 z-20 bg-background px-5 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))]">
+        <div className="mx-auto flex max-w-2xl flex-col gap-3.5">
+          <div className="flex items-center gap-3">
+            <IconButton asChild aria-label={t('quit')} title={t('quit')}>
+              <Link href="/">
+                <CaretLeftIcon />
+              </Link>
+            </IconButton>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-subtitle">{trainingName(workout.name)}</p>
+              <p className="truncate text-caption text-muted-foreground">
+                {[
+                  programName,
+                  t('exerciseOf', { current: currentIdx + 1, total: programExercises.length }),
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
+              </p>
+            </div>
+            {/* In-session coach access (issue #111): the chat with this
+                session attached, so the advice is grounded in the live
+                workout. Always available, never auto-triggered. */}
+            <CoachFab
+              variant="header"
+              href={`/coach?sessionId=${session.id}`}
+              label={t('askCoach')}
+            />
+            <SyncIndicator size="lg" />
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className="text-muted-foreground"
-            aria-label={t('quit')}
-          >
-            <Link href="/">
-              <XIcon className="size-4" />
-            </Link>
-          </Button>
+          <ProgressSegments
+            total={programExercises.length}
+            done={completedIndexes}
+            current={currentIdx}
+            label={t('progressLabel')}
+          />
+          <SessionExerciseStrip
+            exercises={programExercises}
+            currentIndex={currentIdx}
+            completedProgramExerciseIds={completedProgramExerciseIds}
+            supersetLabels={supersetView.labels}
+            disabled={mode.kind !== 'input'}
+            onSelect={(index) => {
+              selectExercise(index);
+              setMode({ kind: 'input' });
+            }}
+            onOpen={(index) => {
+              const pe = programExercises[index];
+              if (!pe) return;
+              const returnTo = sessionExercisePath(session.id, pe.id);
+              router.push(exerciseDetailPath(pe.exerciseId, returnTo));
+            }}
+          />
         </div>
-        <Progress value={progressPct} className="mt-2 h-1.5" />
-        <SessionExerciseStrip
-          exercises={programExercises}
-          currentIndex={currentIdx}
-          completedProgramExerciseIds={completedProgramExerciseIds}
-          disabled={mode.kind !== 'input'}
-          onSelect={(index) => {
-            selectExercise(index);
-            setMode({ kind: 'input' });
-          }}
-          onOpen={(index) => {
-            const pe = programExercises[index];
-            if (!pe) return;
-            const returnTo = sessionExercisePath(session.id, pe.id);
-            router.push(exerciseDetailPath(pe.exerciseId, returnTo));
-          }}
-        />
-      </div>
+      </header>
 
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-4 py-4">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-5 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-1">
         <ExerciseCard
           programExercise={currentPE}
           lastPerformance={lastPerf}
@@ -855,6 +859,7 @@ export function SessionRunner({
           unit={unit}
           gymName={session.gym?.name ?? null}
           loadConstraints={loadConstraintsFor(currentPE)}
+          supersetLabel={supersetView.labels.get(currentPE.id) ?? null}
           onOpenMenu={() => setExerciseMenuOpen(true)}
           menuDisabled={mode.kind !== 'input'}
         />
@@ -865,6 +870,11 @@ export function SessionRunner({
           programExercises={programExercises}
           catalog={catalog}
           loggedSetCount={currentSets.length}
+          plates={{
+            weightKg: plateWeightKg,
+            unit,
+            loadConstraints: loadConstraintsFor(currentTarget),
+          }}
           onSwapForSession={(exercise) => handleSwapForSession(currentPE.id, exercise)}
           onChanged={(options) => {
             setExerciseMenuOpen(false);
@@ -916,7 +926,7 @@ export function SessionRunner({
           />
         )}
 
-        {/* One logger: for strength the table above is the logger (prefilled
+        {/* One logger: for strength the rows above are the logger (prefilled
             with the suggestion, set type, RPE and note in its options). The
             full card stays one tap away for text shortcuts and AI parsing;
             cardio keeps it as its only input. */}
@@ -924,12 +934,12 @@ export function SessionRunner({
           currentPE.exercise.category === 'CARDIO' ? (
             setInputCard
           ) : (
-            <details className="group rounded-md border border-border">
-              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between px-3 text-sm font-medium">
+            <details className="group rounded border border-border bg-card">
+              <summary className="flex min-h-tap cursor-pointer list-none items-center justify-between rounded px-4 text-caption font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 {t('detailedEntry')}
-                <CaretRightIcon className="size-4 transition-transform group-open:rotate-90" />
+                <CaretRightIcon className="size-4 transition-transform group-open:rotate-90 motion-reduce:transition-none" />
               </summary>
-              <div className="border-t border-border p-3">{setInputCard}</div>
+              <div className="border-t border-border p-4">{setInputCard}</div>
             </details>
           )
         ) : (
@@ -948,50 +958,65 @@ export function SessionRunner({
           />
         )}
 
-        {/* In-session coach access (issue #111): opens the chat with this
-            session attached so the advice is grounded in the live workout.
-            Always available, never auto-triggered. */}
-        <Button variant="outline" size="sm" asChild className="min-h-tap">
-          <Link href={`/coach?sessionId=${session.id}`}>
-            <ChatTextIcon className="size-4" />
-            <span className="ml-2">{t('askCoach')}</span>
-          </Link>
-        </Button>
+        {upNext && mode.kind === 'input' && (
+          <div className="flex items-center gap-3 rounded border border-border bg-card p-3">
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-sm bg-pill text-subtitle tabular-nums">
+              {supersetView.labels.get(upNext.id) ?? (navNextIdx ?? 0) + 1}
+            </span>
+            <div className="flex min-w-0 flex-col gap-0.5">
+              <span className="text-small text-muted-foreground">{t('upNext')}</span>
+              <span className="truncate text-body font-semibold">
+                {exerciseName(upNext.exercise.name)}
+              </span>
+              {upNext.exercise.category !== 'CARDIO' && (
+                <span className="text-small text-muted-foreground tabular-nums">
+                  {[
+                    cardT('setsReps', {
+                      sets: upNext.targetSets,
+                      reps:
+                        upNext.targetRepsMin === upNext.targetRepsMax
+                          ? `${upNext.targetRepsMin}`
+                          : `${upNext.targetRepsMin}‑${upNext.targetRepsMax}`,
+                    }),
+                    cardT('rir', { rir: upNext.targetRIR }),
+                    cardT('rest', { seconds: upNext.restSec }),
+                  ].join(' • ')}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
 
-        <div className="flex items-center justify-between gap-2 border-t border-border pt-4">
-          <Button
-            variant="outline"
-            size="sm"
+      {/* Fixed footer: previous, finish, next; 64px targets above the safe
+          area. */}
+      <footer className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background px-5 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3">
+        <div className="mx-auto flex max-w-2xl gap-3">
+          <IconButton
+            size="session"
+            tone="pill"
             onClick={goPrev}
             disabled={currentIdx === 0 || mode.kind !== 'input'}
-            className="min-h-tap"
+            aria-label={t('previous')}
+            title={t('previous')}
           >
-            <CaretLeftIcon className="size-4" />
-            <span className="ml-1">{t('previous')}</span>
+            <CaretLeftIcon />
+          </IconButton>
+          <Button size="session" onClick={() => setMode({ kind: 'summary' })} className="flex-1">
+            {t('finish')}
           </Button>
-
-          <Button
-            variant="default"
-            size="sm"
-            onClick={() => setMode({ kind: 'summary' })}
-            className="min-h-tap"
-          >
-            <FlagIcon className="size-4" />
-            <span className="ml-2">{t('finish')}</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
+          <IconButton
+            size="session"
+            tone="pill"
             onClick={goNext}
             disabled={navNextIdx == null || mode.kind !== 'input'}
-            className="min-h-tap"
+            aria-label={t('next')}
+            title={t('next')}
           >
-            <span className="mr-1">{t('next')}</span>
-            <CaretRightIcon className="size-4" />
-          </Button>
+            <CaretRightIcon />
+          </IconButton>
         </div>
-      </div>
+      </footer>
     </main>
   );
 }

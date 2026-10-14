@@ -8,7 +8,16 @@ import type { Exercise, ProgramExercise } from '@/lib/prisma-client';
 import { defaultIntraSetConfig } from '@/lib/intra-set-autoregulation';
 import { useExerciseName } from '@/components/shared/use-exercise-name';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import {
+  BottomSheet,
+  BottomSheetContent,
+  BottomSheetDescription,
+  BottomSheetTitle,
+} from '@/components/ui/bottom-sheet';
+import { ExerciseMediaDialog } from '@/components/exercises/exercise-media-dialog';
+import { PlateCalculator } from '@/components/session/plate-calculator';
+import type { WeightUnit } from '@/lib/prisma-client';
+import type { GymLoadConstraints } from '@/lib/gym-loads';
 import { Input } from '@/components/ui/input';
 import { matchesExerciseQuery } from '@/lib/catalog/search-index';
 
@@ -30,6 +39,9 @@ interface Props {
   programExercises: SessionProgramExercise[];
   catalog: SessionCatalogExercise[];
   loggedSetCount: number;
+  // The plate calculator row (barbell exercises): the load to break down, in
+  // kg, with the gym's bars and plates when it has them.
+  plates?: { weightKg: number; unit: WeightUnit; loadConstraints: GymLoadConstraints | null };
   // Replaces the exercise for this session only (the saved program does not
   // change). Rejects when it could not be recorded.
   onSwapForSession: (exercise: SessionCatalogExercise) => Promise<void>;
@@ -95,6 +107,7 @@ export function SessionExerciseMenu({
   programExercises,
   catalog,
   loggedSetCount,
+  plates,
   onSwapForSession,
   onChanged,
 }: Props) {
@@ -271,9 +284,9 @@ export function SessionExerciseMenu({
   }
 
   return (
-    <Dialog open={open} onOpenChange={close}>
-      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
-        <DialogTitle>
+    <BottomSheet open={open} onOpenChange={close}>
+      <BottomSheetContent className="sm:max-w-lg">
+        <BottomSheetTitle>
           {view === 'actions'
             ? t('actions')
             : view === 'replace'
@@ -281,8 +294,8 @@ export function SessionExerciseMenu({
               : view === 'add'
                 ? t('addExercises')
                 : t('remove')}
-        </DialogTitle>
-        <DialogDescription>
+        </BottomSheetTitle>
+        <BottomSheetDescription>
           {view === 'actions'
             ? t('actionsDescription')
             : view === 'replace'
@@ -290,7 +303,7 @@ export function SessionExerciseMenu({
               : view === 'add'
                 ? t('addDescription')
                 : t('removeDescription')}
-        </DialogDescription>
+        </BottomSheetDescription>
 
         {view === 'actions' && (
           <div className="flex flex-col gap-2">
@@ -312,6 +325,21 @@ export function SessionExerciseMenu({
               <PlusIcon className="mr-2 size-4" aria-hidden />
               {t('addExercises')}
             </Button>
+            <ExerciseMediaDialog
+              exerciseName={programExercise.exercise.name}
+              displayName={exerciseName(programExercise.exercise.name)}
+              equipmentType={programExercise.exercise.equipmentType}
+              asMenuItem
+            />
+            {plates && programExercise.exercise.equipmentType === 'BARBELL' && (
+              <PlateCalculator
+                weightKg={plates.weightKg}
+                unit={plates.unit}
+                barWeightsKg={plates.loadConstraints?.barWeights}
+                plateWeightsKg={plates.loadConstraints?.plateWeights}
+                asMenuItem
+              />
+            )}
             <Button
               type="button"
               variant="destructive"
@@ -446,7 +474,7 @@ export function SessionExerciseMenu({
             </Button>
           </>
         ) : null}
-      </DialogContent>
-    </Dialog>
+      </BottomSheetContent>
+    </BottomSheet>
   );
 }

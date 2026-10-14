@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { FastForwardIcon, MinusIcon, PauseIcon, PlayIcon, PlusIcon } from '@/components/ui/icon';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { REST_ADJUST_STEP_MS, restRemainingMs } from '@/lib/rest-timer';
 import { playRestEndBeep } from '@/lib/sound';
@@ -68,86 +67,95 @@ export function RestTimer({
   const remainingSec = Math.ceil(remainingMs / 1000);
   const progress = Math.min(100, (remainingMs / (totalSec * 1000)) * 100);
 
+  // Ring: lime over the track, emptying as the rest runs out.
+  const radius = 96;
+  const circumference = 2 * Math.PI * radius;
+  const ratio = Math.max(0, Math.min(1, progress / 100));
+
   return (
-    <Card>
-      <CardContent className="flex flex-col items-center gap-4 py-8">
-        <p className="text-xs uppercase tracking-wider text-muted-foreground">
-          {paused ? t('pausedTitle') : t('title')}
-        </p>
+    <section className="flex flex-col items-center gap-5 rounded-lg border border-border bg-card px-4 py-6">
+      <p className="text-caption text-muted-foreground">{paused ? t('pausedTitle') : t('title')}</p>
 
-        <div className="relative">
-          <p className="text-7xl font-bold tabular-nums">
-            <span data-testid="rest-remaining">{remainingSec}</span>
-            <span className="ml-2 text-2xl text-muted-foreground">{t('seconds')}</span>
-          </p>
-        </div>
-
-        <div className="h-2 w-full max-w-xs overflow-hidden rounded-full bg-muted">
-          <div
-            className="h-full bg-primary transition-[width] duration-100 ease-linear"
-            style={{ width: `${progress}%` }}
+      <div className="relative flex size-[13.5rem] items-center justify-center">
+        <svg viewBox="0 0 216 216" className="absolute inset-0 size-full -rotate-90" aria-hidden>
+          <circle cx={108} cy={108} r={radius} fill="none" strokeWidth={10} className="stroke-track" />
+          <circle
+            cx={108}
+            cy={108}
+            r={radius}
+            fill="none"
+            strokeWidth={10}
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={circumference * (1 - ratio)}
+            className="stroke-primary transition-[stroke-dashoffset] duration-100 ease-linear motion-reduce:transition-none"
           />
-        </div>
+        </svg>
+        <p className="relative flex items-baseline gap-1 tabular-nums">
+          <span data-testid="rest-remaining" className="text-timer">
+            {remainingSec}
+          </span>
+          <span className="text-subtitle text-muted-foreground">{t('seconds')}</span>
+        </p>
+      </div>
 
-        {nextLabel && (
-          <p className="text-center text-sm text-muted-foreground">
-            {t('next', { name: nextLabel })}
+      {nextLabel && (
+        <p className="text-center text-caption text-muted-foreground">
+          {t('next', { name: nextLabel })}
+        </p>
+      )}
+
+      {recommendation && (
+        <div className="w-full rounded-[18px] bg-suggestion p-3.5 text-center text-suggestion-foreground">
+          <p className="text-small">{autoT('nextSet')}</p>
+          <p className="mt-1 text-heading tabular-nums">
+            {formatWeight(recommendation.weight, unit, {
+              decimals: 2,
+              group: false,
+              locale,
+            })}{' '}
+            × {recommendation.reps} · RIR {recommendation.rir}
           </p>
-        )}
-
-        {recommendation && (
-          <div className="w-full max-w-sm rounded-md border border-primary/30 bg-primary/5 p-3 text-center">
-            <p className="text-xs font-medium uppercase text-muted-foreground">
-              {autoT('nextSet')}
-            </p>
-            <p className="mt-1 text-xl font-semibold">
-              {formatWeight(recommendation.weight, unit, {
-                decimals: 2,
-                group: false,
-                locale,
-              })}{' '}
-              × {recommendation.reps} · RIR {recommendation.rir}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {autoT(`reasons.${recommendation.reason}`)}
-            </p>
-          </div>
-        )}
-
-        <div className="flex w-full max-w-sm gap-2">
-          <Button
-            variant="outline"
-            onClick={() => onAdjust(-REST_ADJUST_STEP_MS)}
-            disabled={remainingMs <= 0}
-            aria-label={t('removeFifteenLabel')}
-            className="min-h-tap flex-1"
-          >
-            <MinusIcon className="size-4" />
-            <span className="ml-1">{t('fifteen')}</span>
-          </Button>
-          <Button
-            variant="outline"
-            onClick={paused ? onResume : onPause}
-            className="min-h-tap flex-1"
-          >
-            {paused ? <PlayIcon className="size-4" /> : <PauseIcon className="size-4" />}
-            <span className="ml-1">{paused ? t('resume') : t('pause')}</span>
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => onAdjust(REST_ADJUST_STEP_MS)}
-            aria-label={t('addFifteenLabel')}
-            className="min-h-tap flex-1"
-          >
-            <PlusIcon className="size-4" />
-            <span className="ml-1">{t('fifteen')}</span>
-          </Button>
+          <p className="text-small">{autoT(`reasons.${recommendation.reason}`)}</p>
         </div>
-        <Button variant="default" onClick={onSkip} className="min-h-tap w-full max-w-sm">
-          <FastForwardIcon className="size-4" />
-          <span className="ml-1">{t('skip')}</span>
+      )}
+
+      <div className="flex w-full gap-2">
+        <Button
+          variant="secondary"
+          size="session"
+          onClick={() => onAdjust(-REST_ADJUST_STEP_MS)}
+          disabled={remainingMs <= 0}
+          aria-label={t('removeFifteenLabel')}
+          className="flex-1 px-2"
+        >
+          <MinusIcon />
+          <span>{t('fifteen')}</span>
         </Button>
-      </CardContent>
-    </Card>
+        <Button
+          variant="secondary"
+          size="session"
+          onClick={paused ? onResume : onPause}
+          className="flex-1 px-2"
+        >
+          {paused ? <PlayIcon /> : <PauseIcon />}
+          <span>{paused ? t('resume') : t('pause')}</span>
+        </Button>
+        <Button
+          variant="secondary"
+          size="session"
+          onClick={() => onAdjust(REST_ADJUST_STEP_MS)}
+          aria-label={t('addFifteenLabel')}
+          className="flex-1 px-2"
+        >
+          <PlusIcon />
+          <span>{t('fifteen')}</span>
+        </Button>
+      </div>
+      <Button size="session" onClick={onSkip} className="w-full">
+        <FastForwardIcon />
+        <span>{t('skip')}</span>
+      </Button>
+    </section>
   );
 }

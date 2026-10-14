@@ -45,6 +45,9 @@ export const session = {
   noExercises: 'Aucun exercice dans cette séance.',
   exerciseProgress: 'Exercice {current}/{total} · {name}',
   exerciseStripLabel: 'Exercices de la séance',
+  exerciseOf: 'Exercice {current} sur {total}',
+  upNext: 'Ensuite',
+  progressLabel: 'Exercices terminés',
   exerciseCompleted: 'Terminé',
   superset: 'Superset {label}',
   deloadWeek: 'Semaine de décharge',
@@ -218,6 +221,12 @@ export const session = {
     oneRmPrTitle: 'Meilleur 1RM estimé depuis votre dernière séance',
   },
   editableSets: {
+    title: 'Séries',
+    tapToAdjust: 'touchez un nombre pour ajuster',
+    warmupHint: 'touchez pour enregistrer',
+    chooseRir: 'Répétitions en réserve (RIR)',
+    increase: 'Augmenter',
+    decrease: 'Diminuer',
     options: {
       toggle: 'Options de la série',
       type: 'Type',
@@ -319,6 +328,12 @@ export const session = {
     removeError: 'Impossible de supprimer l’exercice.',
   },
   exerciseCard: {
+    setsReps: '{sets} × {reps}',
+    rir: 'RIR {rir}',
+    rest: '{seconds} s',
+    tempo: 'Tempo {tempo}',
+    method:
+      "La suggestion vient des séries de votre dernière séance : si toutes ont atteint le haut de la fourchette au RIR visé, la charge monte ; si elles sont restées en dessous, elle baisse. La forme du jour et une semaine de décharge peuvent la maintenir ou la réduire.",
     actions: 'Actions de l’exercice',
     notAvailable: 'Indisponible dans cette salle',
     cardioPrescription: '{sets, plural, one {# série} other {# séries}} · Repos {seconds} s',

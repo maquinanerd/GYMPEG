@@ -2,13 +2,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { SessionExerciseStrip } from './session-exercise-strip';
 
-// Production serves no media until a licensed source is approved; cover the
-// media branch with a fixture instead of the real catalog.
-vi.mock(
-  '@/lib/exercise-media',
-  async () => (await import('@/tests/fixtures/exercise-media-mock')).exerciseMediaMock,
-);
-
 vi.mock('@/components/shared/use-exercise-name', () => ({
   useExerciseName: () => (name: string) => name,
 }));
@@ -39,7 +32,7 @@ const exercises = [
 ] as never;
 
 describe('SessionExerciseStrip', () => {
-  it('shows media, completion state, fallback initials, and selects an exercise', () => {
+  it('shows the completion state, highlights the current chip and selects an exercise', () => {
     const onSelect = vi.fn();
     const onOpen = vi.fn();
     render(
@@ -52,11 +45,6 @@ describe('SessionExerciseStrip', () => {
       />,
     );
 
-    expect(screen.getByRole('presentation')).toHaveAttribute(
-      'src',
-      expect.stringContaining('Barbell_Squat'),
-    );
-    expect(screen.getByText('CRD')).toBeInTheDocument();
     expect(screen.getByRole('group', { name: 'Workout exercises' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '1. Squats · Barbell · Completed' })).toHaveAttribute(
       'aria-current',
@@ -65,8 +53,9 @@ describe('SessionExerciseStrip', () => {
 
     const active = screen.getByRole('button', { name: '1. Squats · Barbell · Completed' });
     const inactive = screen.getByRole('button', { name: '2. Custom Rear Delt Raise' });
-    expect(active).toHaveClass('opacity-100');
-    expect(inactive).toHaveClass('opacity-45');
+    // The current exercise is the lime chip, the others sit on the pill fill.
+    expect(active).toHaveClass('bg-primary', 'h-12');
+    expect(inactive).toHaveClass('bg-pill', 'h-12');
 
     fireEvent.click(inactive);
     expect(onSelect).toHaveBeenCalledWith(1);
@@ -122,29 +111,32 @@ describe('SessionExerciseStrip', () => {
     expect(screen.getByRole('button', { name: '4. Squats · Barbell' })).toBeInTheDocument();
   });
 
-  it('connects adjacent superset exercises and leaves standalone exercises unmarked', () => {
+  it('labels superset members A1/A2 and leaves standalone exercises numbered', () => {
     render(
       <SessionExerciseStrip
         exercises={exercises}
         currentIndex={0}
         completedProgramExerciseIds={new Set()}
+        supersetLabels={
+          new Map([
+            ['pe-1', 'A1'],
+            ['pe-2', 'A2'],
+          ])
+        }
         onSelect={vi.fn()}
         onOpen={vi.fn()}
       />,
     );
 
-    const firstLine = screen
-      .getByRole('button', { name: '1. Squats · Barbell' })
-      .querySelector('[data-superset-group="1"]');
-    const secondLine = screen
-      .getByRole('button', { name: '2. Custom Rear Delt Raise' })
-      .querySelector('[data-superset-group="1"]');
-    const standaloneLine = screen
-      .getByRole('button', { name: '3. Standing Calf Raise' })
-      .querySelector('[data-superset-group]');
+    const first = screen.getByRole('button', { name: '1. Squats · Barbell' });
+    const second = screen.getByRole('button', { name: '2. Custom Rear Delt Raise' });
+    const standalone = screen.getByRole('button', { name: '3. Standing Calf Raise' });
 
-    expect(firstLine).toHaveClass('-mr-1', 'rounded-l-full', 'rounded-r-none');
-    expect(secondLine).toHaveClass('-ml-1', 'rounded-l-none', 'rounded-r-full');
-    expect(standaloneLine).not.toBeInTheDocument();
+    expect(first).toHaveTextContent('A1');
+    expect(first).toHaveAttribute('data-superset-group', '1');
+    expect(second).toHaveTextContent('A2');
+    expect(second).toHaveAttribute('data-superset-group', '1');
+    expect(standalone).toHaveTextContent(/^3/);
+    expect(standalone).not.toHaveAttribute('data-superset-group');
   });
 });

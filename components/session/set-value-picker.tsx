@@ -1,7 +1,13 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { CheckIcon, CaretLeftIcon, CaretRightIcon, LockKeyIcon } from '@/components/ui/icon';
+import {
+  CaretLeftIcon,
+  CaretRightIcon,
+  LockKeyIcon,
+  MinusIcon,
+  PlusIcon,
+} from '@/components/ui/icon';
 import { useLocale, useTranslations } from 'next-intl';
 import type { WeightUnit } from '@/lib/prisma-client';
 import type { GymLoadConstraints } from '@/lib/gym-loads';
@@ -9,8 +15,8 @@ import { computeBestPlateLoad } from '@/lib/plates';
 import { plateConfigForUnit } from '@/lib/preferences';
 import { roundWeight, toDisplayWeight, unitLabel } from '@/lib/units';
 import { BarbellSideDiagram } from '@/components/session/barbell-side-diagram';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Button, IconButton } from '@/components/ui/button';
+import { BottomSheet, BottomSheetContent, BottomSheetTitle } from '@/components/ui/bottom-sheet';
 import { Input } from '@/components/ui/input';
 
 interface PickerOption {
@@ -190,6 +196,30 @@ export function SetValuePicker({
     return computeBestPlateLoad(candidateValue, bars, plates, fallback.barWeight);
   }, [candidateValue, kind, loadConstraints, unit]);
 
+  // The -/+ buttons move to the neighbouring option (the loads this gym can
+  // actually make, or the next rep count); without options, by one.
+  function step(direction: 1 | -1) {
+    const current = candidateValue ?? value;
+    const values = options.map((option) => option.value).sort((a, b) => a - b);
+    const next =
+      values.length > 0
+        ? direction > 0
+          ? values.find((option) => option > current + 1e-9)
+          : [...values].reverse().find((option) => option < current - 1e-9)
+        : Math.max(kind === 'reps' ? 1 : 0, Math.round(current) + direction);
+    if (next == null) return;
+    userScrolling.current = false;
+    untouchedSeed.current = null;
+    centeredValue.current = next;
+    setManualValue(String(next));
+    if (kind !== 'weight') return;
+    const list = listRef.current;
+    const element = list?.querySelector<HTMLElement>(`[data-picker-option-value="${next}"]`);
+    if (!list || !element) return;
+    const top = element.offsetTop - (list.clientHeight - element.offsetHeight) / 2;
+    list.scrollTo?.({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  }
+
   function applyManual() {
     if (manualValueInvalid) return;
     const parsed = parsedManualValue;
@@ -213,16 +243,22 @@ export function SetValuePicker({
   const label = unitLabel(unit);
 
   return (
-    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
-      <DialogContent
-        aria-describedby={undefined}
-        className="bottom-0 left-0 top-auto max-h-[82vh] w-full max-w-none translate-x-0 translate-y-0 gap-3 rounded-t-lg border-x-0 border-b-0 p-4 sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-lg sm:border"
-      >
-        <DialogTitle>
+    <BottomSheet open={open} onOpenChange={(next) => !next && onClose()}>
+      <BottomSheetContent aria-describedby={undefined} className="gap-3">
+        <BottomSheetTitle>
           {kind === 'weight' ? t('chooseWeight', { unit }) : t('chooseReps')}
-        </DialogTitle>
+        </BottomSheetTitle>
 
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <IconButton
+            type="button"
+            size="session"
+            tone="pill"
+            onClick={() => step(-1)}
+            aria-label={t('decrease')}
+          >
+            <MinusIcon />
+          </IconButton>
           <Input
             autoFocus
             type="number"
@@ -237,18 +273,17 @@ export function SetValuePicker({
               userScrolling.current = false;
               setManualValue(event.target.value);
             }}
-            className="h-12 text-center text-xl font-semibold tabular-nums"
+            className="h-16 flex-1 rounded-pill border-transparent bg-pill text-center text-number tabular-nums"
           />
-          <Button
+          <IconButton
             type="button"
-            size="icon"
-            className="size-12 shrink-0"
-            onClick={applyManual}
-            disabled={manualValueInvalid}
-            aria-label={t('applyValue')}
+            size="session"
+            tone="pill"
+            onClick={() => step(1)}
+            aria-label={t('increase')}
           >
-            <CheckIcon className="size-6" />
-          </Button>
+            <PlusIcon />
+          </IconButton>
         </div>
 
         {kind === 'weight' && plateLoad ? (
@@ -260,7 +295,7 @@ export function SetValuePicker({
             compact
           >
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              {plateLoad.exact ? <LockKeyIcon className="size-3 text-emerald-500" /> : null}
+              {plateLoad.exact ? <LockKeyIcon className="size-3 text-brand" /> : null}
               <span>
                 {calculatorT('achieved', {
                   weight: `${formatDisplayNumber(plateLoad.achievedWeight, locale)} ${label}`,
@@ -300,9 +335,9 @@ export function SetValuePicker({
                   data-picker-option-value={kind === 'weight' ? option.value : undefined}
                   data-picker-selected={selected ? 'true' : undefined}
                   onClick={(event) => selectOption(option, event.currentTarget)}
-                  className={`mx-auto flex h-16 w-full max-w-[15rem] items-center justify-center rounded-md border text-xl font-semibold tabular-nums ${
+                  className={`mx-auto flex h-16 w-full max-w-[15rem] items-center justify-center rounded-pill text-heading tabular-nums ${
                     kind === 'weight' ? 'snap-center' : ''
-                  } ${selected ? 'border-primary bg-primary/10' : 'border-border bg-muted/40'}`}
+                  } ${selected ? 'bg-primary text-primary-foreground' : 'bg-pill text-foreground'}`}
                 >
                   {option.label ?? option.value}{' '}
                   {kind === 'weight' ? unit.toLowerCase() : t('repsShort')}
@@ -315,15 +350,25 @@ export function SetValuePicker({
             <div
               data-testid="weight-picker-pointer"
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center justify-between text-primary"
+              className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center justify-between text-brand"
             >
               <CaretRightIcon className="size-8" />
               <CaretLeftIcon className="size-8" />
             </div>
           ) : null}
         </div>
-      </DialogContent>
-    </Dialog>
+
+        <Button
+          type="button"
+          size="session"
+          className="w-full shrink-0"
+          onClick={applyManual}
+          disabled={manualValueInvalid}
+        >
+          {t('applyValue')}
+        </Button>
+      </BottomSheetContent>
+    </BottomSheet>
   );
 }
 

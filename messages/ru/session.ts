@@ -45,6 +45,9 @@ export const session = {
   noExercises: 'В этой тренировке нет упражнений.',
   exerciseProgress: 'Упражнение {current}/{total} · {name}',
   exerciseStripLabel: 'Упражнения тренировки',
+  exerciseOf: 'Упражнение {current} из {total}',
+  upNext: 'Далее',
+  progressLabel: 'Выполненные упражнения',
   exerciseCompleted: 'Завершено',
   superset: 'Суперсет {label}',
   deloadWeek: 'Неделя разгрузки',
@@ -209,6 +212,12 @@ export const session = {
     oneRmPrTitle: 'Лучший расчётный 1ПМ относительно прошлой тренировки',
   },
   editableSets: {
+    title: 'Подходы',
+    tapToAdjust: 'нажмите на число, чтобы изменить',
+    warmupHint: 'нажмите, чтобы записать',
+    chooseRir: 'Повторы в запасе (RIR)',
+    increase: 'Увеличить',
+    decrease: 'Уменьшить',
     options: {
       toggle: 'Параметры подхода',
       type: 'Тип',
@@ -309,6 +318,12 @@ export const session = {
     removeError: 'Не удалось удалить упражнение.',
   },
   exerciseCard: {
+    setsReps: '{sets} × {reps}',
+    rir: 'RIR {rir}',
+    rest: '{seconds} с',
+    tempo: 'Темп {tempo}',
+    method:
+      'Рекомендация строится по подходам прошлой тренировки: если все дошли до верха диапазона повторений с целевым RIR, вес растёт; если не дошли, снижается. Самочувствие сегодня и неделя разгрузки могут удержать или снизить вес.',
     actions: 'Действия с упражнением',
     notAvailable: 'Нет в этом зале',
     cardioPrescription:

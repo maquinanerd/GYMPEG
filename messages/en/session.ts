@@ -41,6 +41,9 @@ export const session = {
   noExercises: 'No exercises in this session.',
   exerciseProgress: 'Exercise {current}/{total} · {name}',
   exerciseStripLabel: 'Workout exercises',
+  exerciseOf: 'Exercise {current} of {total}',
+  upNext: 'Up next',
+  progressLabel: 'Exercises done',
   exerciseCompleted: 'Completed',
   superset: 'Superset {label}',
   deloadWeek: 'Deload week',
@@ -205,6 +208,12 @@ export const session = {
     oneRmPrTitle: 'Best estimated 1RM since your last session',
   },
   editableSets: {
+    title: 'Sets',
+    tapToAdjust: 'tap a number to adjust',
+    warmupHint: 'tap to log',
+    chooseRir: 'Reps in reserve (RIR)',
+    increase: 'Increase',
+    decrease: 'Decrease',
     options: {
       toggle: 'Set options',
       type: 'Type',
@@ -304,6 +313,12 @@ export const session = {
     removeError: 'Could not remove the exercise.',
   },
   exerciseCard: {
+    setsReps: '{sets} × {reps}',
+    rir: 'RIR {rir}',
+    rest: '{seconds} s',
+    tempo: 'Tempo {tempo}',
+    method:
+      "The suggestion comes from your last session's sets: when every set reached the top of the rep range at the target RIR the load goes up; when they fell short it comes down. Today's readiness and a deload week can hold or lower it.",
     actions: 'Exercise actions',
     notAvailable: 'Not available in this gym',
     cardioPrescription: '{sets, plural, one {# set} other {# sets}} · Rest {seconds}s',

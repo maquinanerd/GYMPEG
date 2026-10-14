@@ -367,8 +367,10 @@ describe('EditableSetsTable', () => {
     fireEvent.click(screen.getByRole('button', { name: /repetitions/i }));
     fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '10' } });
     fireEvent.click(screen.getByRole('button', { name: /apply value/i }));
-    await user.click(screen.getByRole('combobox', { name: /reps in reserve/i }));
+    // RIR is picked on its own sheet (wheel, -/+) and applied.
+    await user.click(screen.getByRole('button', { name: /reps in reserve/i }));
     await user.click(screen.getByRole('option', { name: '1' }));
+    await user.click(screen.getByRole('button', { name: /apply value/i }));
 
     expect(screen.getByTestId('active-set-metric-1RM')).toHaveTextContent(/^133\.3 kg$/);
     fireEvent.click(screen.getByRole('button', { name: /confirm set 1/i }));
@@ -524,8 +526,9 @@ describe('EditableSetsTable', () => {
 
     // An RIR-only edit must not touch the stored weight: 40 is not a Pendulum
     // Squat load, and snapping to that machine would silently save 50.
-    await user.click(screen.getAllByRole('combobox', { name: /set 1 reps in reserve/i })[0]!);
+    await user.click(screen.getByRole('button', { name: /set 1 reps in reserve/i }));
     await user.click(screen.getByRole('option', { name: '1' }));
+    await user.click(screen.getByRole('button', { name: /apply value/i }));
     await waitFor(() =>
       expect(onUpdateSet).toHaveBeenCalledWith(loggedSet, { weight: 40, reps: 8, rir: 1 }),
     );
@@ -800,7 +803,9 @@ describe('EditableSetsTable', () => {
     expect(onSubmit.mock.calls[0]?.[0]).not.toMatchObject({ weight: 100 });
   });
 
-  it('keeps the table horizontally scrollable at narrow widths with touch-sized active controls', () => {
+  // Design round 1: every control of the running workout is a 64px target and
+  // the rows fit a phone screen, so the old sideways-scrolling grid is gone.
+  it('gives the set row controls 64px targets without sideways scrolling', () => {
     render(
       <EditableSetsTable
         programExercise={programExercise}
@@ -815,14 +820,12 @@ describe('EditableSetsTable', () => {
       />,
     );
 
-    expect(screen.getByTestId('editable-sets-scroll')).toHaveClass(
-      'overflow-x-auto',
-      'overscroll-x-contain',
-    );
-    expect(screen.getByTestId('editable-sets-grid')).toHaveClass('min-w-[31rem]');
-    expect(screen.getByRole('button', { name: /set 1 weight/i })).toHaveClass('h-11');
-    expect(screen.getByRole('button', { name: /set 1 repetitions/i })).toHaveClass('h-11');
-    expect(screen.getByRole('button', { name: /confirm set 1/i })).toHaveClass('size-11');
+    expect(screen.queryByTestId('editable-sets-scroll')).not.toBeInTheDocument();
+    expect(screen.getByTestId('editable-sets-grid')).not.toHaveClass('overflow-x-auto');
+    expect(screen.getByRole('button', { name: /set 1 weight/i })).toHaveClass('h-16');
+    expect(screen.getByRole('button', { name: /set 1 repetitions/i })).toHaveClass('h-16');
+    expect(screen.getByRole('button', { name: /set 1 reps in reserve/i })).toHaveClass('h-16');
+    expect(screen.getByRole('button', { name: /confirm set 1/i })).toHaveClass('size-16');
   });
 
   it('uses persisted set numbers and exposes undo only for the latest completed set', () => {
@@ -992,7 +995,7 @@ describe('EditableSetsTable', () => {
     fireEvent.click(applyRecommendation);
     expect(screen.getByRole('button', { name: /set 2 weight/i })).toHaveTextContent('75');
     expect(screen.getByRole('button', { name: /set 2 repetitions/i })).toHaveTextContent('10');
-    expect(screen.getByRole('combobox', { name: /set 2 reps in reserve/i })).toHaveTextContent('1');
+    expect(screen.getByRole('button', { name: /set 2 reps in reserve/i })).toHaveTextContent('1');
     expect(screen.queryByTestId('set-recommendation-dot')).not.toBeInTheDocument();
     expect(applyRecommendation).toBeDisabled();
 
@@ -1083,12 +1086,14 @@ describe('EditableSetsTable', () => {
         onUpdateSet={failedUpdate}
       />,
     );
-    await user.click(screen.getAllByRole('combobox', { name: /set 2 reps in reserve/i })[0]!);
+    // The logged set is numbered 2 like the next one: the first match is it.
+    await user.click(screen.getAllByRole('button', { name: /set 2 reps in reserve/i })[0]!);
     await user.click(screen.getByRole('option', { name: '1' }));
+    await user.click(screen.getByRole('button', { name: /apply value/i }));
     await waitFor(() => expect(failedUpdate).toHaveBeenCalled());
     await waitFor(() =>
       expect(
-        screen.getAllByRole('combobox', { name: /set 2 reps in reserve/i })[0],
+        screen.getAllByRole('button', { name: /set 2 reps in reserve/i })[0],
       ).toHaveTextContent('2'),
     );
   });

@@ -7,9 +7,7 @@ import {
   CaretUpIcon,
   CircleNotchIcon,
   PencilSimpleIcon,
-  PlusIcon,
-  ArrowCounterClockwiseIcon,
-  TrashIcon,
+  SlidersHorizontalIcon,
   TrophyIcon,
 } from '@/components/ui/icon';
 import { useLocale, useTranslations } from 'next-intl';
@@ -35,11 +33,20 @@ import {
   setTableMetricEnabled,
   type SetTableMetric,
 } from '@/lib/preferences';
-import { formatWeight, fromDisplayWeight, roundWeight, toDisplayWeight } from '@/lib/units';
+import {
+  formatWeight,
+  fromDisplayWeight,
+  roundWeight,
+  toDisplayWeight,
+  unitLabel,
+} from '@/lib/units';
 import { detectPRs, type PRType } from '@/lib/records';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { IconButton } from '@/components/ui/button';
+import { Chip } from '@/components/ui/chip';
+import { Tag } from '@/components/ui/tag';
 import { SetValuePicker } from '@/components/session/set-value-picker';
+import { RirPicker } from '@/components/session/rir-picker';
+import { cn } from '@/lib/utils';
 import {
   Select,
   SelectContent,
@@ -102,10 +109,6 @@ const SET_TYPE_OPTIONS = [
   { type: 'FAILURE', key: 'failure' },
   { type: 'BACKOFF', key: 'backoff' },
 ] as const satisfies readonly { type: SetType; key: string }[];
-
-const SINGLE_METRIC_GRID_COLUMNS = 'grid-cols-[2.5rem_minmax(5rem,1fr)_4.5rem_4rem_5rem_3.25rem]';
-const DUAL_METRIC_GRID_COLUMNS =
-  'grid-cols-[2.25rem_minmax(4.5rem,1fr)_4rem_3.75rem_4.5rem_4.5rem_3rem]';
 
 function metricValue(metric: SetTableMetric, draft: DraftSet): number {
   if (metric === 'VOLUME') return draft.weight * draft.reps;
@@ -226,6 +229,8 @@ export function EditableSetsTable({
   const [editingSet, setEditingSet] = useState<{ set: PendingSet; draft: DraftSet } | null>(null);
   const [updatingSetId, setUpdatingSetId] = useState<string | null>(null);
   const [picker, setPicker] = useState<'weight' | 'reps' | null>(null);
+  // The RIR sheet: open for a logged set, or for the next one (no set).
+  const [rirTarget, setRirTarget] = useState<{ set?: PendingSet } | null>(null);
   const [appliedRecommendationKey, setAppliedRecommendationKey] = useState<string | null>(null);
   const [gymEquipmentId, setGymEquipmentId] = useState('');
   const [weightEditorOpen, setWeightEditorOpen] = useState(false);
@@ -321,6 +326,7 @@ export function EditableSetsTable({
     }
     setEditingSet(null);
     setPicker(null);
+    setRirTarget(null);
     setAppliedRecommendationKey(null);
     if (previous.id !== programExercise.id) resetNextOptions();
     const recentEquipmentId = workingSets.at(-1)?.gymEquipmentId ?? '';
@@ -406,7 +412,6 @@ export function EditableSetsTable({
     locale,
     withUnit: false,
   });
-  const gridColumns = metrics.length > 1 ? DUAL_METRIC_GRID_COLUMNS : SINGLE_METRIC_GRID_COLUMNS;
   const availableWeights = useMemo(() => {
     const constrained = gymWeightOptions(pickerLoadConstraints, pickerReferenceWeight);
     if (constrained.length > 0) return constrained;
@@ -450,6 +455,16 @@ export function EditableSetsTable({
       setEditingSet(null);
     }
     setPicker(kind);
+  }
+
+  function openRir(set?: PendingSet) {
+    if (set && editingSet?.set.localId !== set.localId) {
+      setEditingSet({ set, draft: { weight: set.weight, reps: set.reps, rir: set.rir } });
+    } else if (!set) {
+      setEditingSet(null);
+    }
+    setPicker(null);
+    setRirTarget({ set });
   }
 
   function chooseValue(value: number, canonicalWeight?: number) {
@@ -572,14 +587,30 @@ export function EditableSetsTable({
     .filter(Boolean)
     .join(' · ');
 
+  // The RIR sheet edits either a logged set or the next one.
+  function chooseRir(value: number | null) {
+    const target = rirTarget;
+    setRirTarget(null);
+    if (!target) return;
+    if (target.set) {
+      updateEditingRir(target.set, value);
+      return;
+    }
+    setDraft((current) => ({ ...current, rir: value }));
+    setAppliedRecommendationKey(null);
+  }
+
+  const rirPickerValue = rirTarget?.set
+    ? editingSet?.set.localId === rirTarget.set.localId
+      ? editingSet.draft.rir
+      : rirTarget.set.rir
+    : draft.rir;
+
   return (
-    <section className="overflow-hidden rounded-md border border-border">
+    <section className="flex flex-col gap-5">
       {equipmentOptions.length > 0 && (
-        <div className="border-b border-border px-3 py-2">
-          <label
-            htmlFor="inline-gym-equipment"
-            className="mb-1 block text-xs uppercase tracking-wide text-muted-foreground"
-          >
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="inline-gym-equipment" className="text-caption text-muted-foreground">
             {inputT('equipment')}
           </label>
           <div className="flex gap-2">
@@ -588,7 +619,7 @@ export function EditableSetsTable({
               disabled={disabled}
               onValueChange={(value) => setGymEquipmentId(value === 'none' ? '' : value)}
             >
-              <SelectTrigger id="inline-gym-equipment" className="h-10 flex-1">
+              <SelectTrigger id="inline-gym-equipment" className="h-12 flex-1 rounded-pill">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -601,18 +632,15 @@ export function EditableSetsTable({
               </SelectContent>
             </Select>
             {canEditSelectedEquipment && (
-              <Button
+              <IconButton
                 type="button"
-                variant="outline"
-                size="icon"
                 disabled={disabled}
                 onClick={() => setWeightEditorOpen(true)}
                 aria-label={t('weightEditor.open')}
                 title={t('weightEditor.open')}
-                className="size-10 shrink-0"
               >
-                <PencilSimpleIcon className="size-4" />
-              </Button>
+                <PencilSimpleIcon />
+              </IconButton>
             )}
           </div>
         </div>
@@ -627,385 +655,348 @@ export function EditableSetsTable({
           onSaved={(equipment) => onEquipmentWeightsUpdated?.(equipment)}
         />
       )}
+
+      {/* Warm-up ramp: suggested steps are outlined (a tap logs one), logged
+          ones are filled (a tap removes it again). */}
       {(warmupSets.length > 0 || warmupSuggestions.length > 0) && (
-        <div
-          data-testid="warmup-sets"
-          className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2 text-sm"
-        >
-          <span className="text-xs uppercase tracking-wide text-muted-foreground">
-            {t('warmups')}
-          </span>
-          {warmupSets.map((set, index) => (
-            <span
-              key={set.localId}
-              className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 tabular-nums"
-            >
-              {formatWeight(set.weight, unit, { decimals: 2, group: false, locale })} × {set.reps}
+        <div data-testid="warmup-sets" className="flex flex-col gap-2.5">
+          <div className="flex items-baseline justify-between gap-3">
+            <h3 className="text-subtitle">{t('warmups')}</h3>
+            <span className="text-small text-muted-foreground">{t('warmupHint')}</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {warmupSets.map((set, index) => (
               <button
+                key={set.localId}
                 type="button"
                 disabled={disabled}
                 onClick={() => void onDeleteSet(set)}
                 aria-label={t('deleteWarmup', { number: index + 1 })}
-                className="-mr-1 rounded-full p-1 text-muted-foreground hover:text-destructive"
+                className="flex h-16 min-w-[4.5rem] flex-1 flex-col items-center justify-center rounded-pill border-[1.5px] border-warmup bg-warmup text-warmup-foreground tabular-nums transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
               >
-                <TrashIcon className="size-3.5" />
+                <span className="text-subtitle">
+                  {formatWeight(set.weight, unit, { decimals: 2, group: false, locale })}
+                </span>{' '}
+                <span className="text-small">× {set.reps}</span>
               </button>
-            </span>
-          ))}
-          {warmupSuggestions.map((step) => {
-            const weight = formatWeight(step.weightKg, unit, { decimals: 2, group: false, locale });
-            return (
-              <button
-                key={`suggested-${step.weightKg}-${step.reps}`}
-                type="button"
-                disabled={disabled || submitting}
-                onClick={() => void logWarmup(step)}
-                aria-label={t('logWarmup', { weight, reps: step.reps })}
-                title={t('logWarmupHint', { percent: step.percent })}
-                className="inline-flex min-h-8 items-center gap-1 rounded-full border border-dashed border-primary/60 px-2.5 py-1 tabular-nums text-primary hover:bg-primary/10 disabled:opacity-50"
-              >
-                <PlusIcon className="size-3.5" />
-                {weight} × {step.reps}
-              </button>
-            );
-          })}
+            ))}
+            {warmupSuggestions.map((step) => {
+              const weight = formatWeight(step.weightKg, unit, {
+                decimals: 2,
+                group: false,
+                locale,
+              });
+              return (
+                <button
+                  key={`suggested-${step.weightKg}-${step.reps}`}
+                  type="button"
+                  disabled={disabled || submitting}
+                  onClick={() => void logWarmup(step)}
+                  aria-label={t('logWarmup', { weight, reps: step.reps })}
+                  title={t('logWarmupHint', { percent: step.percent })}
+                  className="flex h-16 min-w-[4.5rem] flex-1 flex-col items-center justify-center rounded-pill border-[1.5px] border-warmup bg-transparent text-foreground tabular-nums transition-colors hover:bg-warmup/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                >
+                  <span className="text-subtitle">{weight}</span>{' '}
+                  <span className="text-small">× {step.reps}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
-      <div data-testid="editable-sets-scroll" className="overflow-x-auto overscroll-x-contain">
-        <div data-testid="editable-sets-grid" className="min-w-[31rem]">
-          <div
-            data-testid="editable-sets-header"
-            className={`grid ${gridColumns} items-center gap-1 border-b border-border bg-muted/30 px-2 py-2 text-center text-[0.6875rem] font-medium uppercase text-muted-foreground`}
-          >
-            <span>#</span>
-            <span>{unit}</span>
-            <span>REPS</span>
-            <span>RIR</span>
-            {metrics.map((metric) => (
-              <span key={metric} data-testid={`set-metric-header-${metric}`}>
-                {metricLabel(metric, true)}
-              </span>
-            ))}
-            <span className="flex items-center justify-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    aria-label={t('metrics.open')}
-                    title={t('metrics.open')}
-                    className="-my-2 size-11 text-muted-foreground"
-                  >
-                    <PencilSimpleIcon className="size-3.5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>{t('metrics.label')}</DropdownMenuLabel>
-                  {SET_TABLE_METRICS.map((metric) => (
-                    <DropdownMenuCheckboxItem
-                      key={metric}
-                      checked={metrics.includes(metric)}
-                      disabled={metrics.length === 1 && metrics[0] === metric}
-                      onSelect={(event) => event.preventDefault()}
-                      onCheckedChange={(checked) => updateMetric(metric, checked === true)}
-                    >
-                      {metricLabel(metric)}
-                    </DropdownMenuCheckboxItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </span>
-          </div>
 
+      <div className="flex flex-col gap-2.5">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-subtitle">{t('title')}</h3>
+          <div className="flex min-w-0 items-center gap-1">
+            <span className="truncate text-small text-muted-foreground">{t('tapToAdjust')}</span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  aria-label={t('metrics.open')}
+                  title={t('metrics.open')}
+                  className="-my-2 flex size-11 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <SlidersHorizontalIcon className="size-5" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{t('metrics.label')}</DropdownMenuLabel>
+                {SET_TABLE_METRICS.map((metric) => (
+                  <DropdownMenuCheckboxItem
+                    key={metric}
+                    checked={metrics.includes(metric)}
+                    disabled={metrics.length === 1 && metrics[0] === metric}
+                    onSelect={(event) => event.preventDefault()}
+                    onCheckedChange={(checked) => updateMetric(metric, checked === true)}
+                  >
+                    {metricLabel(metric)}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+        {/* The calculated columns the lifter picked, read under each row. */}
+        <div className="-mt-1 flex gap-2 text-small text-muted-foreground" aria-hidden>
+          {metrics.map((metric) => (
+            <span key={metric} data-testid={`set-metric-header-${metric}`}>
+              {metricLabel(metric)}
+            </span>
+          ))}
+        </div>
+
+        <div data-testid="editable-sets-grid" className="flex flex-col gap-2">
           {workingSets.map((set, setIndex) => {
             const isEditing = editingSet?.set.localId === set.localId;
             const rowDraft = isEditing
               ? editingSet.draft
               : { weight: set.weight, reps: set.reps, rir: set.rir };
             const isUpdating = updatingSetId === set.localId;
+            const prs = prsFor(set, setIndex);
+            const isLatest = set.localId === latestWorkingSetId;
             return (
-              <div
-                key={set.localId}
-                className={`grid ${gridColumns} items-center gap-1 border-b border-border px-2 py-2 text-center text-sm tabular-nums`}
-              >
-                <span className="text-muted-foreground">{set.setNumber}</span>
-                <div className="flex min-w-0 flex-col items-center gap-1">
-                  <button
-                    type="button"
-                    disabled={disabled || isUpdating}
-                    onClick={() => openPicker('weight', set)}
-                    aria-label={t('weight', { number: set.setNumber, unit })}
-                    className="h-9 rounded-md border border-transparent bg-transparent font-medium hover:bg-muted/40"
-                  >
-                    {formatWeight(rowDraft.weight, unit, {
+              <div key={set.localId} className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-1.5 rounded-[26px] border-[1.5px] border-transparent p-[5px]">
+                  <SetNumber state="done">{set.setNumber}</SetNumber>
+                  <ValueField
+                    value={formatWeight(rowDraft.weight, unit, {
                       decimals: 2,
                       group: false,
                       locale,
                       withUnit: false,
                     })}
-                  </button>
-                  {prsFor(set, setIndex).map((pr) => (
-                    <Badge
-                      key={pr}
-                      className="gap-1 px-1.5 text-[0.625rem]"
-                      title={prT(pr === 'weight' ? 'weightPrTitle' : 'oneRmPrTitle')}
-                    >
-                      <TrophyIcon className="size-2.5" />
-                      {prT(pr === 'weight' ? 'weightPr' : 'oneRmPr')}
-                    </Badge>
-                  ))}
-                </div>
-                <button
-                  type="button"
-                  disabled={disabled || isUpdating}
-                  onClick={() => openPicker('reps', set)}
-                  aria-label={t('reps', { number: set.setNumber })}
-                  className="h-9 rounded-md border border-transparent bg-transparent font-medium hover:bg-muted/40"
-                >
-                  {rowDraft.reps}
-                </button>
-                <Select
-                  value={rowDraft.rir == null ? 'none' : String(rowDraft.rir)}
-                  disabled={disabled || isUpdating}
-                  onValueChange={(value) =>
-                    updateEditingRir(set, value === 'none' ? null : Number(value))
-                  }
-                >
-                  <SelectTrigger
+                    caption={unitLabel(unit)}
+                    disabled={disabled || isUpdating}
+                    onClick={() => openPicker('weight', set)}
+                    aria-label={t('weight', { number: set.setNumber, unit })}
+                  />
+                  <ValueField
+                    value={String(rowDraft.reps)}
+                    caption={t('repsShort')}
+                    disabled={disabled || isUpdating}
+                    onClick={() => openPicker('reps', set)}
+                    aria-label={t('reps', { number: set.setNumber })}
+                  />
+                  <ValueField
+                    value={rowDraft.rir == null ? '–' : String(rowDraft.rir)}
+                    caption="RIR"
+                    disabled={disabled || isUpdating}
+                    onClick={() => openRir(set)}
                     aria-label={t('rir', { number: set.setNumber })}
-                    className="h-9 border-transparent bg-transparent px-2 text-center [&>svg]:hidden"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">-</SelectItem>
-                    {[0, 1, 2, 3, 4, 5].map((value) => (
-                      <SelectItem key={value} value={String(value)}>
-                        {value}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {metrics.map((metric) => (
-                  <span
-                    key={metric}
-                    data-testid={`completed-set-${set.setNumber}-metric-${metric}`}
-                    className="text-muted-foreground"
-                  >
-                    {formatMetric(metric, rowDraft)}
-                  </span>
-                ))}
-                <span className="flex items-center justify-center">
+                  />
                   {isUpdating ? (
-                    <CircleNotchIcon className="size-4 animate-spin" />
+                    <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                      <CircleNotchIcon className="size-6 motion-safe:animate-spin" />
+                    </span>
                   ) : (
-                    <Button
+                    // A logged set: the filled check takes it back (undo for the
+                    // latest, delete for an older one), through the outbox.
+                    <button
                       type="button"
-                      variant="ghost"
-                      size="icon"
                       onClick={() => void onDeleteSet(set)}
                       aria-label={
-                        set.localId === latestWorkingSetId
+                        isLatest
                           ? t('undo', { number: set.setNumber })
                           : t('delete', { number: set.setNumber })
                       }
-                      className="size-9 text-muted-foreground hover:text-destructive"
+                      title={
+                        isLatest
+                          ? t('undo', { number: set.setNumber })
+                          : t('delete', { number: set.setNumber })
+                      }
+                      className="flex size-16 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     >
-                      {set.localId === latestWorkingSetId ? (
-                        <ArrowCounterClockwiseIcon className="size-4" />
-                      ) : (
-                        <TrashIcon className="size-4" />
-                      )}
-                    </Button>
+                      <CheckIcon className="size-7" />
+                    </button>
                   )}
-                </span>
+                </div>
+                {(prs.length > 0 || metrics.length > 0) && (
+                  <div className="ml-[39px] flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                    {prs.map((pr) => (
+                      <Tag
+                        key={pr}
+                        fill="pr"
+                        icon={TrophyIcon}
+                        title={prT(pr === 'weight' ? 'weightPrTitle' : 'oneRmPrTitle')}
+                      >
+                        {prT(pr === 'weight' ? 'weightPr' : 'oneRmPr')}
+                      </Tag>
+                    ))}
+                    {metrics.map((metric) => (
+                      <span key={metric} className="text-small text-muted-foreground tabular-nums">
+                        {metricLabel(metric, true)}{' '}
+                        <span data-testid={`completed-set-${set.setNumber}-metric-${metric}`}>
+                          {formatMetric(metric, rowDraft)}
+                        </span>
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}
 
-          <div
-            className={`grid ${gridColumns} items-center gap-1 border-b border-border bg-primary/5 px-2 py-2`}
-          >
-            {recommendation ? (
+          {/* The set being logged: prefilled with the suggestion, outlined in
+              lime, confirmed with the round button. */}
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-1.5 rounded-[26px] border-[1.5px] border-primary p-[5px]">
+              {recommendation ? (
+                <button
+                  type="button"
+                  onClick={applyRecommendation}
+                  disabled={disabled || !canApplyRecommendation}
+                  aria-label={t('applyRecommendation', { number: currentNumber })}
+                  title={t('applyRecommendation', { number: currentNumber })}
+                  className="relative -m-2 flex size-11 shrink-0 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default"
+                >
+                  <SetNumber state="current">{currentNumber}</SetNumber>
+                  {canApplyRecommendation && (
+                    <span
+                      data-testid="set-recommendation-dot"
+                      aria-hidden
+                      className="absolute right-1.5 top-1.5 size-2 rounded-full bg-brand ring-2 ring-card"
+                    />
+                  )}
+                </button>
+              ) : (
+                <SetNumber state="current">{currentNumber}</SetNumber>
+              )}
+              <ValueField
+                value={displayWeight}
+                caption={unitLabel(unit)}
+                onClick={() => openPicker('weight')}
+                aria-label={t('weight', { number: currentNumber, unit })}
+              />
+              <ValueField
+                value={String(draft.reps)}
+                caption={t('repsShort')}
+                onClick={() => openPicker('reps')}
+                aria-label={t('reps', { number: currentNumber })}
+              />
+              <ValueField
+                value={draft.rir == null ? '–' : String(draft.rir)}
+                caption="RIR"
+                onClick={() => openRir()}
+                aria-label={t('rir', { number: currentNumber })}
+              />
               <button
                 type="button"
-                onClick={applyRecommendation}
-                disabled={disabled || !canApplyRecommendation}
-                aria-label={t('applyRecommendation', { number: currentNumber })}
-                title={t('applyRecommendation', { number: currentNumber })}
-                className="relative mx-auto flex size-7 items-center justify-center rounded-md text-sm font-semibold text-primary hover:bg-primary/10 disabled:cursor-default disabled:opacity-100"
+                onClick={confirmRow}
+                disabled={disabled || submitting || draft.reps <= 0}
+                aria-label={t('confirm', { number: currentNumber })}
+                className="flex size-16 shrink-0 items-center justify-center rounded-full border-2 border-muted-foreground/40 bg-card text-muted-foreground transition-colors hover:border-brand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
               >
-                {currentNumber}
-                {canApplyRecommendation && (
-                  <span
-                    data-testid="set-recommendation-dot"
-                    aria-hidden
-                    className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-primary ring-2 ring-background"
-                  />
+                {submitting ? (
+                  <CircleNotchIcon className="size-6 motion-safe:animate-spin" />
+                ) : (
+                  <CheckIcon className="size-7" />
                 )}
               </button>
-            ) : (
-              <span className="text-center text-sm font-semibold text-primary">
-                {currentNumber}
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={() => openPicker('weight')}
-              aria-label={t('weight', { number: currentNumber, unit })}
-              className="h-11 rounded-md border border-input bg-background px-2 text-center text-base font-semibold tabular-nums"
-            >
-              {displayWeight}
-            </button>
-            <button
-              type="button"
-              onClick={() => openPicker('reps')}
-              aria-label={t('reps', { number: currentNumber })}
-              className="h-11 rounded-md border border-input bg-background px-1 text-center text-base font-semibold tabular-nums"
-            >
-              {draft.reps}
-            </button>
-            <Select
-              value={draft.rir == null ? 'none' : String(draft.rir)}
-              onValueChange={(value) => {
-                setDraft((current) => ({
-                  ...current,
-                  rir: value === 'none' ? null : Number(value),
-                }));
-                setAppliedRecommendationKey(null);
-              }}
-            >
-              <SelectTrigger
-                aria-label={t('rir', { number: currentNumber })}
-                className="h-11 px-2 text-center text-base font-semibold [&>svg]:hidden"
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">-</SelectItem>
-                {[0, 1, 2, 3, 4, 5].map((value) => (
-                  <SelectItem key={value} value={String(value)}>
-                    {value}
-                  </SelectItem>
+            </div>
+            {metrics.length > 0 && (
+              <div className="ml-[39px] flex flex-wrap gap-x-3 text-small text-muted-foreground tabular-nums">
+                {metrics.map((metric) => (
+                  <span key={metric}>
+                    {metricLabel(metric, true)}{' '}
+                    <span data-testid={`active-set-metric-${metric}`}>
+                      {formatMetric(metric, draft)}
+                    </span>
+                  </span>
                 ))}
-              </SelectContent>
-            </Select>
-            {metrics.map((metric) => (
-              <span
-                key={metric}
-                data-testid={`active-set-metric-${metric}`}
-                className="text-center text-sm font-medium tabular-nums text-muted-foreground"
-              >
-                {formatMetric(metric, draft)}
-              </span>
-            ))}
-            <Button
-              type="button"
-              size="icon"
-              onClick={confirmRow}
-              disabled={disabled || submitting || draft.reps <= 0}
-              aria-label={t('confirm', { number: currentNumber })}
-              className="size-11"
-            >
-              {submitting ? (
-                <CircleNotchIcon className="size-5 animate-spin" />
-              ) : (
-                <CheckIcon className="size-6" />
-              )}
-            </Button>
+              </div>
+            )}
           </div>
 
+          {/* Sets still to come, with last session's numbers as a reference. */}
           {Array.from({ length: Math.max(0, totalRows - currentNumber) }, (_, index) => {
             const rowNumber = currentNumber + index + 1;
             const previous = lastPerformance?.sets[rowNumber - 1];
             return (
               <div
                 key={`upcoming-${rowNumber}`}
-                className={`grid ${gridColumns} items-center gap-1 border-b border-border px-2 py-3 text-center text-sm text-muted-foreground last:border-b-0`}
+                className="flex items-center gap-1.5 rounded-[26px] border-[1.5px] border-transparent p-[5px] text-muted-foreground"
               >
-                <span>{rowNumber}</span>
-                <span>
-                  {previous
-                    ? formatWeight(previous.weight, unit, {
-                        decimals: 2,
-                        group: false,
-                        locale,
-                        withUnit: false,
-                      })
-                    : '-'}
-                </span>
-                <span>{previous?.reps ?? '-'}</span>
-                <span>{previous?.rir ?? '-'}</span>
-                {metrics.map((metric) => (
-                  <span key={metric}>
-                    {previous
-                      ? formatMetric(metric, {
-                          weight: previous.weight,
-                          reps: previous.reps,
-                          rir: previous.rir,
+                <SetNumber state="upcoming">{rowNumber}</SetNumber>
+                <ValueField
+                  muted
+                  value={
+                    previous
+                      ? formatWeight(previous.weight, unit, {
+                          decimals: 2,
+                          group: false,
+                          locale,
+                          withUnit: false,
                         })
-                      : '-'}
-                  </span>
-                ))}
-                <span />
+                      : '–'
+                  }
+                  caption={unitLabel(unit)}
+                />
+                <ValueField muted value={previous ? String(previous.reps) : '–'} caption={t('repsShort')} />
+                <ValueField
+                  muted
+                  value={previous?.rir != null ? String(previous.rir) : '–'}
+                  caption="RIR"
+                />
+                <span
+                  aria-hidden
+                  className="size-16 shrink-0 rounded-full border-2 border-dashed border-muted-foreground/25"
+                />
               </div>
             );
           })}
         </div>
       </div>
 
-      <div className="border-t border-border">
+      <div className="flex flex-col gap-3">
         <button
           type="button"
           onClick={() => setOptionsOpen((open) => !open)}
           aria-expanded={optionsOpen}
           aria-controls="next-set-options"
           disabled={disabled}
-          className="flex min-h-11 w-full items-center justify-between gap-2 px-3 text-left text-sm"
+          className="flex min-h-11 w-full items-center justify-between gap-2 rounded-pill text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
         >
-          <span className="font-medium">{t('options.toggle')}</span>
+          <span className="text-caption font-semibold">{t('options.toggle')}</span>
           <span className="flex items-center gap-2 text-muted-foreground">
-            {optionsSummary && <span className="text-xs">{optionsSummary}</span>}
-            {optionsOpen ? <CaretUpIcon className="size-4" /> : <CaretDownIcon className="size-4" />}
+            {optionsSummary && <span className="text-small">{optionsSummary}</span>}
+            {optionsOpen ? (
+              <CaretUpIcon className="size-4" />
+            ) : (
+              <CaretDownIcon className="size-4" />
+            )}
           </span>
         </button>
         {optionsOpen && (
-          <div id="next-set-options" className="flex flex-col gap-3 px-3 pb-3">
-            <fieldset className="space-y-1.5">
-              <legend className="text-xs uppercase tracking-wide text-muted-foreground">
-                {t('options.type')}
-              </legend>
+          <div
+            id="next-set-options"
+            className="flex flex-col gap-4 rounded border border-border bg-card p-4"
+          >
+            <fieldset className="flex flex-col gap-2">
+              <legend className="mb-2 text-caption text-muted-foreground">{t('options.type')}</legend>
               <div className="flex flex-wrap gap-2">
                 {SET_TYPE_OPTIONS.map((option) => (
-                  <button
+                  <Chip
                     key={option.type}
-                    type="button"
-                    aria-pressed={nextType === option.type}
+                    selected={nextType === option.type}
                     disabled={disabled}
                     onClick={() => setNextType(option.type)}
-                    className={`min-h-10 rounded-full border px-3 text-sm ${
-                      nextType === option.type
-                        ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-input bg-background hover:bg-muted'
-                    }`}
                   >
                     {t(`setTypes.${option.key}`)}
-                  </button>
+                  </Chip>
                 ))}
               </div>
             </fieldset>
-            <div className="grid grid-cols-[6rem_1fr] items-end gap-3">
-              <div className="space-y-1.5">
-                <span className="block text-xs uppercase tracking-wide text-muted-foreground">
-                  {t('options.rpe')}
-                </span>
+            <div className="grid grid-cols-[6.5rem_1fr] items-end gap-3">
+              <div className="flex flex-col gap-1.5">
+                <span className="text-caption text-muted-foreground">{t('options.rpe')}</span>
                 <Select
                   value={nextRpe == null ? 'none' : String(nextRpe)}
                   disabled={disabled}
                   onValueChange={(value) => setNextRpe(value === 'none' ? null : Number(value))}
                 >
-                  <SelectTrigger aria-label={t('options.rpe')} className="h-10">
+                  <SelectTrigger aria-label={t('options.rpe')}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1018,11 +1009,8 @@ export function EditableSetsTable({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="next-set-notes"
-                  className="block text-xs uppercase tracking-wide text-muted-foreground"
-                >
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="next-set-notes" className="text-caption text-muted-foreground">
                   {t('options.notes')}
                 </label>
                 <Input
@@ -1032,7 +1020,6 @@ export function EditableSetsTable({
                   disabled={disabled}
                   placeholder={t('options.notesPlaceholder')}
                   onChange={(event) => setNextNotes(event.target.value)}
-                  className="h-10"
                 />
               </div>
             </div>
@@ -1057,6 +1044,89 @@ export function EditableSetsTable({
         onClose={() => setPicker(null)}
         onChoose={chooseValue}
       />
+      <RirPicker
+        open={rirTarget != null}
+        value={rirPickerValue}
+        onClose={() => setRirTarget(null)}
+        onChoose={chooseRir}
+      />
     </section>
+  );
+}
+
+// Round set number: lime ring once logged, neutral for the current and the
+// coming ones.
+function SetNumber({
+  state,
+  children,
+}: {
+  state: 'done' | 'current' | 'upcoming';
+  children: React.ReactNode;
+}) {
+  return (
+    <span
+      className={cn(
+        'flex size-7 shrink-0 items-center justify-center rounded-full border-[1.5px] text-caption font-semibold tabular-nums',
+        state === 'done'
+          ? 'border-brand text-brand'
+          : state === 'current'
+            ? 'border-muted-foreground/40 text-foreground'
+            : 'border-muted-foreground/25 text-muted-foreground',
+      )}
+    >
+      {children}
+    </span>
+  );
+}
+
+// One 64px value of a set row (load, reps, RIR): the number in the number
+// style with its unit below. A button when it can be tapped to adjust.
+function ValueField({
+  value,
+  caption,
+  muted = false,
+  onClick,
+  disabled,
+  'aria-label': ariaLabel,
+}: {
+  value: string;
+  caption: string;
+  muted?: boolean;
+  onClick?: () => void;
+  disabled?: boolean;
+  'aria-label'?: string;
+}) {
+  const content = (
+    <>
+      <span
+        className={cn(
+          'leading-none tabular-nums',
+          value.length > 5 ? 'text-heading' : 'text-number',
+          muted && 'text-muted-foreground',
+        )}
+      >
+        {value}
+      </span>
+      <span className="text-small text-muted-foreground">{caption}</span>
+    </>
+  );
+  const box = cn(
+    'flex h-16 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-[20px]',
+    muted ? 'bg-pill/60' : 'bg-pill',
+  );
+  if (!onClick) return <div className={box}>{content}</div>;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={ariaLabel}
+      className={cn(
+        box,
+        'transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
+      )}
+    >
+      {content}
+    </button>
   );
 }

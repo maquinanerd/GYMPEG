@@ -24,12 +24,20 @@ interface Props {
   unit: WeightUnit;
   barWeightsKg?: number[];
   plateWeightsKg?: number[];
+  // A full-width row of an action sheet (the workout's exercise menu).
+  asMenuItem?: boolean;
 }
 
 // In-workout plate-loading calculator (issue #39). Reads the user's per-unit
 // bar weight + plate inventory from preferences and shows the plates to load
 // per side for the current target weight. Display-only; never mutates the set.
-export function PlateCalculator({ weightKg, unit, barWeightsKg, plateWeightsKg }: Props) {
+export function PlateCalculator({
+  weightKg,
+  unit,
+  barWeightsKg,
+  plateWeightsKg,
+  asMenuItem = false,
+}: Props) {
   const t = useTranslations('session.calculator');
   const [open, setOpen] = useState(false);
 
@@ -54,16 +62,28 @@ export function PlateCalculator({ weightKg, unit, barWeightsKg, plateWeightsKg }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          className="h-7 gap-1 px-2 text-xs text-muted-foreground"
-          aria-label={t('openPlates')}
-        >
-          <CalculatorIcon className="size-4" />
-          {t('plates')}
-        </Button>
+        {asMenuItem ? (
+          <Button
+            type="button"
+            variant="outline"
+            className="min-h-tap w-full justify-start"
+            aria-label={t('openPlates')}
+          >
+            <CalculatorIcon />
+            <span>{t('plates')}</span>
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-7 gap-1 px-2 text-xs text-muted-foreground"
+            aria-label={t('openPlates')}
+          >
+            <CalculatorIcon className="size-4" />
+            {t('plates')}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

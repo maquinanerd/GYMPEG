@@ -114,9 +114,11 @@ test('a lifter starts, logs and finishes a workout offline, and it syncs back on
     timeout: 20_000,
   });
   const sessionId = new URL(page.url()).pathname.split('/').pop()!;
-  await expect(page.getByText(/Exercise 1\/1 · E2E Offline Squat/)).toBeVisible({
+  // The runner header reads "Exercise N of M"; the card names the exercise.
+  await expect(page.getByRole('heading', { name: 'E2E Offline Squat' })).toBeVisible({
     timeout: 20_000,
   });
+  await expect(page.getByText(/Exercise 1 of 1/)).toBeVisible();
 
   // Log one set (prefilled from the prescription) and finish.
   await page.getByRole('button', { name: /^confirm set 1$/i }).click();
@@ -172,9 +174,11 @@ test('a set deleted offline is removed from the server once back online', async 
   // The started session's id, not /session/new itself.
   await expect(page).toHaveURL(/\/session\/[0-9a-f]{8}-[0-9a-f]{4}-/, { timeout: 20_000 });
   const sessionId = new URL(page.url()).pathname.split('/').pop()!;
-  await expect(page.getByText(/Exercise 1\/1 · E2E Offline Squat/)).toBeVisible({
+  // The runner header reads "Exercise N of M"; the card names the exercise.
+  await expect(page.getByRole('heading', { name: 'E2E Offline Squat' })).toBeVisible({
     timeout: 20_000,
   });
+  await expect(page.getByText(/Exercise 1 of 1/)).toBeVisible();
 
   const serverSets = async () => {
     const res = await page.request.get('/api/sessions');
