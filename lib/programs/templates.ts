@@ -1,21 +1,55 @@
 // Built-in program templates for established routines (issue #37).
 //
-// A template is just a curated `GeneratedProgram`: the exact same structured
-// shape the AI program generator produces and the existing `/api/programs/build`
-// route persists. This means templates materialize into a real `Program`
-// through the same validated path, and the AI coach treats a template-derived
-// program like any other user-authored program (it advises within it, it does
-// not silently restructure it).
+// A template is a curated `GeneratedProgram`: the exact same structured shape
+// the AI program generator produces and the `/api/programs/from-template` route
+// persists. This means templates materialize into a real `Program` through the
+// same validated path, and the AI coach treats a template-derived program like
+// any other user-authored program (it advises within it, it does not silently
+// restructure it).
+//
+// The structure lives here; every text (names, description, phase, workout
+// names, exercise notes) lives in messages/<locale>/program-templates.ts under
+// the template's `key`. localizeProgramTemplate fills the texts in, so the
+// picker shows a template, and saves the program, in the user's language.
 //
 // Loading schemes (5/3/1 percentages, GZCLP stages, nSuns waves) are expressed
 // here as set/rep/RIR targets plus explanatory notes, since GymCoach tracks
 // sets/reps/RIR rather than a built-in percentage engine. The notes carry the
 // "as written" intent so the user can run the program faithfully.
 
-import { generatedProgramSchema, type GeneratedProgram } from '@/lib/schemas/program-generation';
+import type englishMessages from '@/messages/en';
+import type { MessageShape } from '@/i18n/message-types';
+import type {
+  GeneratedExercise,
+  GeneratedProgram,
+  GeneratedWorkout,
+} from '@/lib/schemas/program-generation';
 
-export interface ProgramTemplate {
+// The template texts of one locale (every catalog has the English shape).
+export type ProgramTemplateMessages = MessageShape<(typeof englishMessages)['programTemplates']>;
+
+interface TemplateExercise extends Omit<GeneratedExercise, 'notes'> {
+  // Key of the exercise note under the template's `notes` messages.
+  note?: string;
+}
+
+interface TemplateWorkout extends Omit<GeneratedWorkout, 'name' | 'exercises'> {
+  // Key of the workout name under the template's `workouts` messages.
+  key: string;
+  exercises: TemplateExercise[];
+}
+
+export interface ProgramTemplateDefinition {
   // Stable slug used in URLs and the picker (e.g. "ppl-6day").
+  slug: string;
+  // Key of the template's texts under programTemplates in messages/.
+  key: keyof ProgramTemplateMessages;
+  // The program's structure, without its texts.
+  program: { workouts: TemplateWorkout[] };
+}
+
+// A template in the user's language: what the picker shows and posts.
+export interface ProgramTemplate {
   slug: string;
   // Short display name.
   name: string;
@@ -23,27 +57,20 @@ export interface ProgramTemplate {
   summary: string;
   // Attribution / how to run it as written.
   attribution: string;
-  // The structured program, ready to POST to /api/programs/build.
+  // The structured program, ready to POST to /api/programs/from-template.
   program: GeneratedProgram;
 }
 
 // 5/3/1 - basic 4-day (Wendler). Main lift per day at a working top set, plus
 // Boring But Big style accessories. RIR/rep targets approximate the as-written
 // intent; notes carry the percentage scheme.
-const FIVE_THREE_ONE: ProgramTemplate = {
+const FIVE_THREE_ONE: ProgramTemplateDefinition = {
   slug: '531-bbb-4day',
-  name: '5/3/1 (Boring But Big, 4-day)',
-  summary: 'Wendler 5/3/1 main lifts with 5x10 BBB supplemental work, 4 days.',
-  attribution:
-    'Jim Wendler 5/3/1. Run the main lift off your training max (90% of 1RM): wave 5s/3s/1s week to week, last set AMRAP. Supplemental is 5x10 at ~50-60% TM.',
+  key: 'fiveThreeOneBbb',
   program: {
-    name: '5/3/1 Boring But Big',
-    description:
-      'Wendler 5/3/1 with Boring But Big supplemental volume. Set your training max to 90% of your 1RM and progress the TM, not the day-to-day load.',
-    phase: 'Strength',
     workouts: [
       {
-        name: 'Day 1 - Overhead Press',
+        key: 'day1',
         dayOfWeek: 1,
         exercises: [
           {
@@ -55,7 +82,7 @@ const FIVE_THREE_ONE: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 180,
-            notes: 'Main lift. 5/3/1 wave off training max; last set AMRAP.',
+            note: 'mainLift',
           },
           {
             name: 'Overhead Press',
@@ -66,7 +93,7 @@ const FIVE_THREE_ONE: ProgramTemplate = {
             targetRepsMax: 10,
             targetRIR: 3,
             restSec: 90,
-            notes: 'Boring But Big supplemental: 5x10 at ~50-60% TM.',
+            note: 'supplemental',
           },
           {
             name: 'Chin-up',
@@ -77,12 +104,12 @@ const FIVE_THREE_ONE: ProgramTemplate = {
             targetRepsMax: 12,
             targetRIR: 2,
             restSec: 90,
-            notes: 'Pulling accessory to balance the pressing volume.',
+            note: 'pullingAccessory',
           },
         ],
       },
       {
-        name: 'Day 2 - Deadlift',
+        key: 'day2',
         dayOfWeek: 3,
         exercises: [
           {
@@ -94,7 +121,7 @@ const FIVE_THREE_ONE: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 240,
-            notes: 'Main lift. 5/3/1 wave off training max; last set AMRAP.',
+            note: 'mainLift',
           },
           {
             name: 'Deadlift',
@@ -105,7 +132,7 @@ const FIVE_THREE_ONE: ProgramTemplate = {
             targetRepsMax: 10,
             targetRIR: 3,
             restSec: 120,
-            notes: 'Boring But Big supplemental: 5x10 at ~50-60% TM.',
+            note: 'supplemental',
           },
           {
             name: 'Hanging Leg Raise',
@@ -120,7 +147,7 @@ const FIVE_THREE_ONE: ProgramTemplate = {
         ],
       },
       {
-        name: 'Day 3 - Bench Press',
+        key: 'day3',
         dayOfWeek: 5,
         exercises: [
           {
@@ -132,7 +159,7 @@ const FIVE_THREE_ONE: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 180,
-            notes: 'Main lift. 5/3/1 wave off training max; last set AMRAP.',
+            note: 'mainLift',
           },
           {
             name: 'Bench Press',
@@ -143,7 +170,7 @@ const FIVE_THREE_ONE: ProgramTemplate = {
             targetRepsMax: 10,
             targetRIR: 3,
             restSec: 90,
-            notes: 'Boring But Big supplemental: 5x10 at ~50-60% TM.',
+            note: 'supplemental',
           },
           {
             name: 'Barbell Row',
@@ -158,7 +185,7 @@ const FIVE_THREE_ONE: ProgramTemplate = {
         ],
       },
       {
-        name: 'Day 4 - Squat',
+        key: 'day4',
         dayOfWeek: 6,
         exercises: [
           {
@@ -170,7 +197,7 @@ const FIVE_THREE_ONE: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 240,
-            notes: 'Main lift. 5/3/1 wave off training max; last set AMRAP.',
+            note: 'mainLift',
           },
           {
             name: 'Back Squat',
@@ -181,7 +208,7 @@ const FIVE_THREE_ONE: ProgramTemplate = {
             targetRepsMax: 10,
             targetRIR: 3,
             restSec: 120,
-            notes: 'Boring But Big supplemental: 5x10 at ~50-60% TM.',
+            note: 'supplemental',
           },
           {
             name: 'Leg Curl',
@@ -201,20 +228,13 @@ const FIVE_THREE_ONE: ProgramTemplate = {
 
 // GZCLP - Cody Lemon's linear-progression variant of GZCL. T1 main lift (5x3+),
 // T2 secondary (3x10), T3 accessory (3x15+). 3 day rotation across 4 lifts.
-const GZCLP: ProgramTemplate = {
+const GZCLP: ProgramTemplateDefinition = {
   slug: 'gzclp-3day',
-  name: 'GZCLP (linear progression)',
-  summary: 'GZCL-based linear progression: T1 5x3, T2 3x10, T3 3x15+, 3 days.',
-  attribution:
-    'Cody Lemon GZCLP. T1: 5x3+ heavy, add weight each session, drop to 6x2 then 10x1 on a stall. T2: 3x10 (then 3x8, 3x6). T3: 3x15+ AMRAP last set, add weight when last set hits 25.',
+  key: 'gzclp',
   program: {
-    name: 'GZCLP',
-    description:
-      'GZCL-based linear progression with T1 (main strength), T2 (secondary volume) and T3 (accessory) tiers. Add weight each session until you stall, then drop to the next rep scheme.',
-    phase: 'Strength',
     workouts: [
       {
-        name: 'Day A - Squat / Bench',
+        key: 'dayA',
         dayOfWeek: 1,
         exercises: [
           {
@@ -226,7 +246,7 @@ const GZCLP: ProgramTemplate = {
             targetRepsMax: 3,
             targetRIR: 1,
             restSec: 180,
-            notes: 'T1: 5x3+, last set AMRAP. Add weight each session.',
+            note: 't1',
           },
           {
             name: 'Bench Press',
@@ -237,7 +257,7 @@ const GZCLP: ProgramTemplate = {
             targetRepsMax: 10,
             targetRIR: 2,
             restSec: 120,
-            notes: 'T2: 3x10, then 3x8 then 3x6 on stalls.',
+            note: 't2',
           },
           {
             name: 'Lat Pulldown',
@@ -248,12 +268,12 @@ const GZCLP: ProgramTemplate = {
             targetRepsMax: 25,
             targetRIR: 2,
             restSec: 90,
-            notes: 'T3: 3x15+, last set AMRAP. Add weight when last set hits 25.',
+            note: 't3Progression',
           },
         ],
       },
       {
-        name: 'Day B - Overhead Press / Deadlift',
+        key: 'dayB',
         dayOfWeek: 3,
         exercises: [
           {
@@ -265,7 +285,7 @@ const GZCLP: ProgramTemplate = {
             targetRepsMax: 3,
             targetRIR: 1,
             restSec: 180,
-            notes: 'T1: 5x3+, last set AMRAP. Add weight each session.',
+            note: 't1',
           },
           {
             name: 'Deadlift',
@@ -276,7 +296,7 @@ const GZCLP: ProgramTemplate = {
             targetRepsMax: 10,
             targetRIR: 2,
             restSec: 150,
-            notes: 'T2: 3x10, then 3x8 then 3x6 on stalls.',
+            note: 't2',
           },
           {
             name: 'Dumbbell Row',
@@ -287,12 +307,12 @@ const GZCLP: ProgramTemplate = {
             targetRepsMax: 25,
             targetRIR: 2,
             restSec: 90,
-            notes: 'T3: 3x15+, last set AMRAP.',
+            note: 't3',
           },
         ],
       },
       {
-        name: 'Day C - Bench / Squat',
+        key: 'dayC',
         dayOfWeek: 5,
         exercises: [
           {
@@ -304,7 +324,7 @@ const GZCLP: ProgramTemplate = {
             targetRepsMax: 3,
             targetRIR: 1,
             restSec: 180,
-            notes: 'T1: 5x3+, last set AMRAP. Add weight each session.',
+            note: 't1',
           },
           {
             name: 'Back Squat',
@@ -315,7 +335,7 @@ const GZCLP: ProgramTemplate = {
             targetRepsMax: 10,
             targetRIR: 2,
             restSec: 120,
-            notes: 'T2: 3x10, then 3x8 then 3x6 on stalls.',
+            note: 't2',
           },
           {
             name: 'Cable Curl',
@@ -326,7 +346,7 @@ const GZCLP: ProgramTemplate = {
             targetRepsMax: 25,
             targetRIR: 2,
             restSec: 60,
-            notes: 'T3: 3x15+, last set AMRAP.',
+            note: 't3',
           },
         ],
       },
@@ -335,20 +355,13 @@ const GZCLP: ProgramTemplate = {
 };
 
 // Push / Pull / Legs - a 6-day hypertrophy split.
-const PPL: ProgramTemplate = {
+const PPL: ProgramTemplateDefinition = {
   slug: 'ppl-6day',
-  name: 'Push / Pull / Legs (6-day)',
-  summary: 'Classic 6-day PPL hypertrophy split, 8-12 rep work at 1-2 RIR.',
-  attribution:
-    'Standard Push/Pull/Legs run twice per week. Hypertrophy rep ranges (8-15), 1-2 RIR, progress load when you hit the top of the range across all sets.',
+  key: 'ppl',
   program: {
-    name: 'Push Pull Legs',
-    description:
-      'A 6-day Push/Pull/Legs hypertrophy split. Train each session twice per week; progress load when the top of the rep range is reached on all sets.',
-    phase: 'Hypertrophy',
     workouts: [
       {
-        name: 'Push A',
+        key: 'pushA',
         dayOfWeek: 1,
         exercises: [
           {
@@ -404,7 +417,7 @@ const PPL: ProgramTemplate = {
         ],
       },
       {
-        name: 'Pull A',
+        key: 'pullA',
         dayOfWeek: 2,
         exercises: [
           {
@@ -460,7 +473,7 @@ const PPL: ProgramTemplate = {
         ],
       },
       {
-        name: 'Legs A',
+        key: 'legsA',
         dayOfWeek: 3,
         exercises: [
           {
@@ -516,7 +529,7 @@ const PPL: ProgramTemplate = {
         ],
       },
       {
-        name: 'Push B',
+        key: 'pushB',
         dayOfWeek: 4,
         exercises: [
           {
@@ -572,7 +585,7 @@ const PPL: ProgramTemplate = {
         ],
       },
       {
-        name: 'Pull B',
+        key: 'pullB',
         dayOfWeek: 5,
         exercises: [
           {
@@ -628,7 +641,7 @@ const PPL: ProgramTemplate = {
         ],
       },
       {
-        name: 'Legs B',
+        key: 'legsB',
         dayOfWeek: 6,
         exercises: [
           {
@@ -688,20 +701,13 @@ const PPL: ProgramTemplate = {
 };
 
 // Upper / Lower - a 4-day split.
-const UPPER_LOWER: ProgramTemplate = {
+const UPPER_LOWER: ProgramTemplateDefinition = {
   slug: 'upper-lower-4day',
-  name: 'Upper / Lower (4-day)',
-  summary: '4-day Upper/Lower split balancing strength and hypertrophy work.',
-  attribution:
-    'Standard 4-day Upper/Lower. Heavier compound work (5-8 reps) early in each session, hypertrophy accessories (8-15 reps) after, 1-2 RIR.',
+  key: 'upperLower',
   program: {
-    name: 'Upper Lower',
-    description:
-      'A 4-day Upper/Lower split. Lead with a heavier compound, then accumulate hypertrophy volume on accessories. Progress load at the top of each rep range.',
-    phase: 'Hypertrophy',
     workouts: [
       {
-        name: 'Upper A',
+        key: 'upperA',
         dayOfWeek: 1,
         exercises: [
           {
@@ -767,7 +773,7 @@ const UPPER_LOWER: ProgramTemplate = {
         ],
       },
       {
-        name: 'Lower A',
+        key: 'lowerA',
         dayOfWeek: 2,
         exercises: [
           {
@@ -823,7 +829,7 @@ const UPPER_LOWER: ProgramTemplate = {
         ],
       },
       {
-        name: 'Upper B',
+        key: 'upperB',
         dayOfWeek: 4,
         exercises: [
           {
@@ -889,7 +895,7 @@ const UPPER_LOWER: ProgramTemplate = {
         ],
       },
       {
-        name: 'Lower B',
+        key: 'lowerB',
         dayOfWeek: 5,
         exercises: [
           {
@@ -950,20 +956,13 @@ const UPPER_LOWER: ProgramTemplate = {
 
 // nSuns 4-day LP (531 variant). T1 main lift uses the nSuns 9-set wave; we
 // express it as a single working block with notes carrying the wave intent.
-const NSUNS: ProgramTemplate = {
+const NSUNS: ProgramTemplateDefinition = {
   slug: 'nsuns-4day',
-  name: 'nSuns 531 LP (4-day)',
-  summary: 'nSuns 531 linear progression, 4 days, volume-heavy main-lift waves.',
-  attribution:
-    'nSuns 531 LP. The main lift runs a 9-set wave (e.g. 8/6/4/4/4/5/6/7/8+ reps at rising then falling %TM); the AMRAP on the key set drives the weekly TM increase. Express the wave by logging the prescribed reps each set.',
+  key: 'nsuns',
   program: {
-    name: 'nSuns 531 LP',
-    description:
-      'nSuns 531 linear progression. Each main lift runs a 9-set intensity wave with an AMRAP set that decides the next weeks training-max bump. Run the prescribed reps per set as written.',
-    phase: 'Strength',
     workouts: [
       {
-        name: 'Day 1 - Bench / OHP',
+        key: 'day1',
         dayOfWeek: 1,
         exercises: [
           {
@@ -975,7 +974,7 @@ const NSUNS: ProgramTemplate = {
             targetRepsMax: 8,
             targetRIR: 1,
             restSec: 150,
-            notes: 'nSuns T1 wave: 8/6/4/4/4/5/6/7/8+ reps; key set is AMRAP.',
+            note: 't1Wave',
           },
           {
             name: 'Overhead Press',
@@ -986,7 +985,7 @@ const NSUNS: ProgramTemplate = {
             targetRepsMax: 8,
             targetRIR: 2,
             restSec: 120,
-            notes: 'nSuns T2 wave: 6/5/3/5/7/4/6/8 reps.',
+            note: 't2UpperWave',
           },
           {
             name: 'Chin-up',
@@ -1001,7 +1000,7 @@ const NSUNS: ProgramTemplate = {
         ],
       },
       {
-        name: 'Day 2 - Squat / Sumo Deadlift',
+        key: 'day2',
         dayOfWeek: 2,
         exercises: [
           {
@@ -1013,7 +1012,7 @@ const NSUNS: ProgramTemplate = {
             targetRepsMax: 8,
             targetRIR: 1,
             restSec: 180,
-            notes: 'nSuns T1 wave: 8/6/4/4/4/5/6/7/8+ reps; key set is AMRAP.',
+            note: 't1Wave',
           },
           {
             name: 'Deadlift',
@@ -1024,7 +1023,7 @@ const NSUNS: ProgramTemplate = {
             targetRepsMax: 8,
             targetRIR: 2,
             restSec: 150,
-            notes: 'nSuns T2 wave: 5/5/3/5/7/4/6/8 reps.',
+            note: 't2LowerWave',
           },
           {
             name: 'Leg Curl',
@@ -1039,7 +1038,7 @@ const NSUNS: ProgramTemplate = {
         ],
       },
       {
-        name: 'Day 3 - OHP / Incline Bench',
+        key: 'day3',
         dayOfWeek: 4,
         exercises: [
           {
@@ -1051,7 +1050,7 @@ const NSUNS: ProgramTemplate = {
             targetRepsMax: 8,
             targetRIR: 1,
             restSec: 150,
-            notes: 'nSuns T1 wave: 8/6/4/4/4/5/6/7/8+ reps; key set is AMRAP.',
+            note: 't1Wave',
           },
           {
             name: 'Incline Bench Press',
@@ -1062,7 +1061,7 @@ const NSUNS: ProgramTemplate = {
             targetRepsMax: 8,
             targetRIR: 2,
             restSec: 120,
-            notes: 'nSuns T2 wave: 6/5/3/5/7/4/6/8 reps.',
+            note: 't2UpperWave',
           },
           {
             name: 'Lateral Raise',
@@ -1077,7 +1076,7 @@ const NSUNS: ProgramTemplate = {
         ],
       },
       {
-        name: 'Day 4 - Deadlift / Front Squat',
+        key: 'day4',
         dayOfWeek: 5,
         exercises: [
           {
@@ -1089,7 +1088,7 @@ const NSUNS: ProgramTemplate = {
             targetRepsMax: 8,
             targetRIR: 1,
             restSec: 240,
-            notes: 'nSuns T1 wave: 5/3/1/3/3/3/5/7/4+ reps; key set is AMRAP.',
+            note: 't1DeadliftWave',
           },
           {
             name: 'Front Squat',
@@ -1100,7 +1099,7 @@ const NSUNS: ProgramTemplate = {
             targetRepsMax: 8,
             targetRIR: 2,
             restSec: 150,
-            notes: 'nSuns T2 wave: 5/5/3/5/7/4/6/8 reps.',
+            note: 't2LowerWave',
           },
           {
             name: 'Hanging Leg Raise',
@@ -1121,20 +1120,13 @@ const NSUNS: ProgramTemplate = {
 // Starting Strength - Mark Rippetoe's novice barbell program. Two alternating
 // full-body days (A/B), 3x5 on the main lifts, deadlift 1x5, add weight every
 // session. Power clean is run as a back/thickness pull here.
-const STARTING_STRENGTH: ProgramTemplate = {
+const STARTING_STRENGTH: ProgramTemplateDefinition = {
   slug: 'starting-strength-3day',
-  name: 'Starting Strength (3x5 A/B)',
-  summary: 'Rippetoe novice linear progression: two full-body days, 3x5, add weight every session.',
-  attribution:
-    'Mark Rippetoe Starting Strength. Alternate workout A and B across 3 sessions per week. Squat every session 3x5; add 2.5-5 kg each time you complete all reps. Deadlift is 1x5. Reset 10% on a stall.',
+  key: 'startingStrength',
   program: {
-    name: 'Starting Strength',
-    description:
-      'Rippetoe novice barbell linear progression. Two alternating full-body workouts, three sessions per week. Squat 3x5 every session and add a small jump whenever all prescribed reps are completed.',
-    phase: 'Strength',
     workouts: [
       {
-        name: 'Workout A - Squat / Bench / Deadlift',
+        key: 'workoutA',
         dayOfWeek: 1,
         exercises: [
           {
@@ -1146,7 +1138,7 @@ const STARTING_STRENGTH: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 240,
-            notes: '3x5. Add 2.5-5 kg every session you complete all reps.',
+            note: 'squat',
           },
           {
             name: 'Bench Press',
@@ -1157,7 +1149,7 @@ const STARTING_STRENGTH: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 180,
-            notes: '3x5. Add weight every session you complete all reps.',
+            note: 'press',
           },
           {
             name: 'Deadlift',
@@ -1168,12 +1160,12 @@ const STARTING_STRENGTH: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 240,
-            notes: '1x5 working set. Add weight every session.',
+            note: 'deadlift',
           },
         ],
       },
       {
-        name: 'Workout B - Squat / Press / Power Clean',
+        key: 'workoutB',
         dayOfWeek: 3,
         exercises: [
           {
@@ -1185,7 +1177,7 @@ const STARTING_STRENGTH: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 240,
-            notes: '3x5. Add 2.5-5 kg every session you complete all reps.',
+            note: 'squat',
           },
           {
             name: 'Overhead Press',
@@ -1196,7 +1188,7 @@ const STARTING_STRENGTH: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 180,
-            notes: '3x5. Add weight every session you complete all reps.',
+            note: 'press',
           },
           {
             name: 'Power Clean',
@@ -1207,7 +1199,7 @@ const STARTING_STRENGTH: ProgramTemplate = {
             targetRepsMax: 3,
             targetRIR: 2,
             restSec: 180,
-            notes: '5x3 explosive pulls. Beginners may substitute barbell rows.',
+            note: 'powerClean',
           },
         ],
       },
@@ -1217,20 +1209,13 @@ const STARTING_STRENGTH: ProgramTemplate = {
 
 // StrongLifts 5x5 - two alternating workouts (A/B), 5x5 on the main lifts,
 // deadlift 1x5, add weight every session. A simpler high-volume novice LP.
-const STRONGLIFTS: ProgramTemplate = {
+const STRONGLIFTS: ProgramTemplateDefinition = {
   slug: 'stronglifts-5x5-3day',
-  name: 'StrongLifts 5x5 (A/B)',
-  summary: 'Two alternating full-body workouts, 5x5 main lifts, add weight every session.',
-  attribution:
-    'StrongLifts 5x5 by Mehdi. Alternate workout A and B across 3 sessions per week. 5x5 on squat, bench, press and row; deadlift 1x5. Add 2.5 kg each session; deload 10% after three failed attempts.',
+  key: 'stronglifts',
   program: {
-    name: 'StrongLifts 5x5',
-    description:
-      'Two alternating full-body workouts run three times per week. 5x5 on the main lifts (deadlift 1x5). Add a small jump every session and deload 10% after stalling three times.',
-    phase: 'Strength',
     workouts: [
       {
-        name: 'Workout A - Squat / Bench / Row',
+        key: 'workoutA',
         dayOfWeek: 1,
         exercises: [
           {
@@ -1242,7 +1227,7 @@ const STRONGLIFTS: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 240,
-            notes: '5x5. Add 2.5 kg every session you complete all reps.',
+            note: 'squat',
           },
           {
             name: 'Bench Press',
@@ -1253,7 +1238,7 @@ const STRONGLIFTS: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 180,
-            notes: '5x5. Add weight every session you complete all reps.',
+            note: 'mainLift',
           },
           {
             name: 'Barbell Row',
@@ -1264,12 +1249,12 @@ const STRONGLIFTS: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 180,
-            notes: '5x5. Add weight every session you complete all reps.',
+            note: 'mainLift',
           },
         ],
       },
       {
-        name: 'Workout B - Squat / Press / Deadlift',
+        key: 'workoutB',
         dayOfWeek: 3,
         exercises: [
           {
@@ -1281,7 +1266,7 @@ const STRONGLIFTS: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 240,
-            notes: '5x5. Add 2.5 kg every session you complete all reps.',
+            note: 'squat',
           },
           {
             name: 'Overhead Press',
@@ -1292,7 +1277,7 @@ const STRONGLIFTS: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 180,
-            notes: '5x5. Add weight every session you complete all reps.',
+            note: 'mainLift',
           },
           {
             name: 'Deadlift',
@@ -1303,7 +1288,7 @@ const STRONGLIFTS: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 240,
-            notes: '1x5 working set. Add weight every session.',
+            note: 'deadlift',
           },
         ],
       },
@@ -1313,20 +1298,13 @@ const STRONGLIFTS: ProgramTemplate = {
 
 // Madcow 5x5 - intermediate weekly ramping 5x5. Monday heavy ramp to a top 5,
 // Wednesday light, Friday ramp to a new top triple/PR. Weekly progression.
-const MADCOW: ProgramTemplate = {
+const MADCOW: ProgramTemplateDefinition = {
   slug: 'madcow-5x5-3day',
-  name: 'Madcow 5x5 (intermediate)',
-  summary: 'Weekly ramping 5x5: heavy Monday top set, light Wednesday, Friday PR triple.',
-  attribution:
-    'Madcow 5x5 intermediate program. Monday ramps in 5 sets to a top set of 5; Wednesday is lighter recovery volume; Friday ramps to a heavy top set then a back-off. Progress the load week to week, not session to session.',
+  key: 'madcow',
   program: {
-    name: 'Madcow 5x5',
-    description:
-      'Intermediate weekly-progression 5x5. Ramp across sets to a heavy top set on Monday, take a lighter Wednesday, and hit a new top set on Friday. Add weight week over week rather than every session.',
-    phase: 'Strength',
     workouts: [
       {
-        name: 'Monday - Heavy Ramp',
+        key: 'monday',
         dayOfWeek: 1,
         exercises: [
           {
@@ -1338,7 +1316,7 @@ const MADCOW: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 240,
-            notes: 'Ramp 5 sets to a top set of 5. Top set sits near 1-2 RIR.',
+            note: 'squatRamp',
           },
           {
             name: 'Bench Press',
@@ -1349,7 +1327,7 @@ const MADCOW: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 180,
-            notes: 'Ramp 5 sets to a top set of 5.',
+            note: 'ramp',
           },
           {
             name: 'Barbell Row',
@@ -1360,12 +1338,12 @@ const MADCOW: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 180,
-            notes: 'Ramp 5 sets to a top set of 5.',
+            note: 'ramp',
           },
         ],
       },
       {
-        name: 'Wednesday - Light',
+        key: 'wednesday',
         dayOfWeek: 3,
         exercises: [
           {
@@ -1377,7 +1355,7 @@ const MADCOW: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 3,
             restSec: 180,
-            notes: 'Lighter recovery volume; ramp to Mondays 3rd set load.',
+            note: 'squatLight',
           },
           {
             name: 'Overhead Press',
@@ -1388,7 +1366,7 @@ const MADCOW: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 3,
             restSec: 150,
-            notes: 'Lighter recovery volume.',
+            note: 'light',
           },
           {
             name: 'Deadlift',
@@ -1399,12 +1377,12 @@ const MADCOW: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 2,
             restSec: 180,
-            notes: 'Lighter ramp; save the heavy pull for the weekly progression.',
+            note: 'deadliftLight',
           },
         ],
       },
       {
-        name: 'Friday - Top Set / PR',
+        key: 'friday',
         dayOfWeek: 5,
         exercises: [
           {
@@ -1416,7 +1394,7 @@ const MADCOW: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 0,
             restSec: 240,
-            notes: 'Ramp to a heavy top set of 3 (PR set), then one back-off set of 8.',
+            note: 'squatTopSet',
           },
           {
             name: 'Bench Press',
@@ -1427,7 +1405,7 @@ const MADCOW: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 0,
             restSec: 180,
-            notes: 'Ramp to a heavy top set of 3 (PR set), then a back-off set.',
+            note: 'benchTopSet',
           },
           {
             name: 'Barbell Row',
@@ -1438,7 +1416,7 @@ const MADCOW: ProgramTemplate = {
             targetRepsMax: 5,
             targetRIR: 1,
             restSec: 180,
-            notes: 'Ramp to a heavy top set, then a back-off set.',
+            note: 'rowTopSet',
           },
         ],
       },
@@ -1448,20 +1426,13 @@ const MADCOW: ProgramTemplate = {
 
 // PHUL - Power Hypertrophy Upper Lower. 4 days: two power days (lower reps,
 // heavier) and two hypertrophy days (higher reps).
-const PHUL: ProgramTemplate = {
+const PHUL: ProgramTemplateDefinition = {
   slug: 'phul-4day',
-  name: 'PHUL (Power Hypertrophy Upper Lower)',
-  summary: '4-day upper/lower mixing two heavy power days with two higher-rep hypertrophy days.',
-  attribution:
-    'PHUL (Power Hypertrophy Upper Lower). Two power days (3-5 reps on main lifts) and two hypertrophy days (8-15 reps). Progress load on the power days; chase volume and the rep range on the hypertrophy days.',
+  key: 'phul',
   program: {
-    name: 'PHUL',
-    description:
-      'Power Hypertrophy Upper Lower. Two heavier power days build strength on the main lifts (3-5 reps) and two hypertrophy days accumulate volume (8-15 reps). Four sessions per week.',
-    phase: 'Hypertrophy',
     workouts: [
       {
-        name: 'Upper Power',
+        key: 'upperPower',
         dayOfWeek: 1,
         exercises: [
           {
@@ -1527,7 +1498,7 @@ const PHUL: ProgramTemplate = {
         ],
       },
       {
-        name: 'Lower Power',
+        key: 'lowerPower',
         dayOfWeek: 2,
         exercises: [
           {
@@ -1583,7 +1554,7 @@ const PHUL: ProgramTemplate = {
         ],
       },
       {
-        name: 'Upper Hypertrophy',
+        key: 'upperHypertrophy',
         dayOfWeek: 4,
         exercises: [
           {
@@ -1649,7 +1620,7 @@ const PHUL: ProgramTemplate = {
         ],
       },
       {
-        name: 'Lower Hypertrophy',
+        key: 'lowerHypertrophy',
         dayOfWeek: 5,
         exercises: [
           {
@@ -1710,20 +1681,13 @@ const PHUL: ProgramTemplate = {
 
 // PHAT - Power Hypertrophy Adaptive Training (Layne Norton). 5 days: two power
 // days (upper/lower) and three hypertrophy days (back/shoulders, lower, chest/arms).
-const PHAT: ProgramTemplate = {
+const PHAT: ProgramTemplateDefinition = {
   slug: 'phat-5day',
-  name: 'PHAT (Power Hypertrophy Adaptive Training)',
-  summary: 'Layne Norton 5-day split: two power days plus three high-volume hypertrophy days.',
-  attribution:
-    'PHAT by Layne Norton. Two power days train the main lifts in the 3-5 rep range; three hypertrophy days train the same patterns lighter for 8-20 reps. Five sessions per week, high overall volume.',
+  key: 'phat',
   program: {
-    name: 'PHAT',
-    description:
-      'Power Hypertrophy Adaptive Training (Layne Norton). Two power days (3-5 reps) drive strength and three hypertrophy days (8-20 reps) drive volume across upper and lower body. Five sessions per week.',
-    phase: 'Hypertrophy',
     workouts: [
       {
-        name: 'Upper Power',
+        key: 'upperPower',
         dayOfWeek: 1,
         exercises: [
           {
@@ -1789,7 +1753,7 @@ const PHAT: ProgramTemplate = {
         ],
       },
       {
-        name: 'Lower Power',
+        key: 'lowerPower',
         dayOfWeek: 2,
         exercises: [
           {
@@ -1845,7 +1809,7 @@ const PHAT: ProgramTemplate = {
         ],
       },
       {
-        name: 'Back / Shoulders Hypertrophy',
+        key: 'backShouldersHypertrophy',
         dayOfWeek: 4,
         exercises: [
           {
@@ -1901,7 +1865,7 @@ const PHAT: ProgramTemplate = {
         ],
       },
       {
-        name: 'Lower Hypertrophy',
+        key: 'lowerHypertrophy',
         dayOfWeek: 5,
         exercises: [
           {
@@ -1957,7 +1921,7 @@ const PHAT: ProgramTemplate = {
         ],
       },
       {
-        name: 'Chest / Arms Hypertrophy',
+        key: 'chestArmsHypertrophy',
         dayOfWeek: 6,
         exercises: [
           {
@@ -2028,20 +1992,13 @@ const PHAT: ProgramTemplate = {
 
 // Full Body 3x/week - a beginner-friendly full-body template, three sessions
 // with rotating emphasis, moderate volume and rep ranges.
-const FULL_BODY_3X: ProgramTemplate = {
+const FULL_BODY_3X: ProgramTemplateDefinition = {
   slug: 'full-body-3day',
-  name: 'Full Body 3x/week (beginner)',
-  summary: 'Beginner-friendly full-body program, three sessions per week, moderate volume.',
-  attribution:
-    'Generic beginner full-body, three non-consecutive days per week. Each session hits the whole body with one main compound per pattern plus an accessory. Add weight when you reach the top of the rep range on all sets.',
+  key: 'fullBody',
   program: {
-    name: 'Full Body 3x',
-    description:
-      'A beginner-friendly full-body program run three non-consecutive days per week. Each day covers a squat, a hinge/pull, a press and an accessory, in the 6-15 rep range. Progress load at the top of each range.',
-    phase: 'General',
     workouts: [
       {
-        name: 'Full Body A',
+        key: 'fullBodyA',
         dayOfWeek: 1,
         exercises: [
           {
@@ -2087,7 +2044,7 @@ const FULL_BODY_3X: ProgramTemplate = {
         ],
       },
       {
-        name: 'Full Body B',
+        key: 'fullBodyB',
         dayOfWeek: 3,
         exercises: [
           {
@@ -2133,7 +2090,7 @@ const FULL_BODY_3X: ProgramTemplate = {
         ],
       },
       {
-        name: 'Full Body C',
+        key: 'fullBodyC',
         dayOfWeek: 5,
         exercises: [
           {
@@ -2182,10 +2139,11 @@ const FULL_BODY_3X: ProgramTemplate = {
   },
 };
 
-// The public catalog. Validated at module load (see programTemplates) so a
-// malformed template fails fast in tests and the build, never at runtime for a
-// user.
-const RAW_TEMPLATES: ProgramTemplate[] = [
+// The public catalog. Catalog slugs are resolved at module load (see
+// programTemplates) and templates.test.ts validates every template, in every
+// locale, against the build schema, so a malformed template fails fast in
+// tests, never at runtime for a user.
+const RAW_TEMPLATES: ProgramTemplateDefinition[] = [
   FIVE_THREE_ONE,
   GZCLP,
   PPL,
@@ -2237,7 +2195,7 @@ export const TEMPLATE_CATALOG_SLUGS: Readonly<Record<string, string>> = {
   'Triceps Pushdown': 'triceps-pulley-barra',
 };
 
-function withCatalogSlugs(template: ProgramTemplate): ProgramTemplate {
+function withCatalogSlugs(template: ProgramTemplateDefinition): ProgramTemplateDefinition {
   return {
     ...template,
     program: {
@@ -2258,23 +2216,59 @@ function withCatalogSlugs(template: ProgramTemplate): ProgramTemplate {
   };
 }
 
-// Validate every template's program against the same schema the build route
-// uses, so a typo here cannot produce a program the API would reject.
-const TEMPLATES = RAW_TEMPLATES.map(withCatalogSlugs);
-for (const t of TEMPLATES) {
-  const result = generatedProgramSchema.safeParse(t.program);
-  if (!result.success) {
-    throw new Error(
-      `Invalid built-in template "${t.slug}": ${result.error.issues
-        .map((i) => `${i.path.join('.')}: ${i.message}`)
-        .join('; ')}`,
-    );
-  }
-}
-
-export const programTemplates: ProgramTemplate[] = TEMPLATES;
+export const programTemplates: ProgramTemplateDefinition[] = RAW_TEMPLATES.map(withCatalogSlugs);
 
 // Look up a template by slug.
-export function getTemplateBySlug(slug: string): ProgramTemplate | undefined {
+export function getTemplateBySlug(slug: string): ProgramTemplateDefinition | undefined {
   return programTemplates.find((t) => t.slug === slug);
+}
+
+interface TemplateTexts {
+  name: string;
+  summary: string;
+  attribution: string;
+  programName: string;
+  description: string;
+  phase: string;
+  workouts: Readonly<Record<string, string>>;
+  notes?: Readonly<Record<string, string>>;
+}
+
+// The template with its texts in one locale (that locale's programTemplates
+// messages), ready for the picker and for /api/programs/from-template.
+export function localizeProgramTemplate(
+  template: ProgramTemplateDefinition,
+  messages: ProgramTemplateMessages,
+): ProgramTemplate {
+  const texts: TemplateTexts = messages[template.key];
+  return {
+    slug: template.slug,
+    name: texts.name,
+    summary: texts.summary,
+    attribution: texts.attribution,
+    program: {
+      name: texts.programName,
+      description: texts.description,
+      phase: texts.phase,
+      workouts: template.program.workouts.map(({ key, exercises, ...workout }) => ({
+        ...workout,
+        name: templateText(texts.workouts, key, template),
+        exercises: exercises.map(({ note, ...exercise }) =>
+          note ? { ...exercise, notes: templateText(texts.notes, note, template) } : exercise,
+        ),
+      })),
+    },
+  };
+}
+
+function templateText(
+  texts: Readonly<Record<string, string>> | undefined,
+  key: string,
+  template: ProgramTemplateDefinition,
+): string {
+  const text = texts?.[key];
+  if (text === undefined) {
+    throw new Error(`Built-in template "${template.slug}" has no text for "${key}".`);
+  }
+  return text;
 }

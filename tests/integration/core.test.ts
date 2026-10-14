@@ -7,7 +7,12 @@ import { buildProgramFromGenerated } from '@/lib/program-generation';
 import type { GeneratedProgram } from '@/lib/schemas/program-generation';
 import { buildCoachPayload } from '@/lib/coach';
 import { isoWeekStart } from '@/lib/stats';
-import { programTemplates, getTemplateBySlug } from '@/lib/programs/templates';
+import {
+  programTemplates,
+  getTemplateBySlug,
+  localizeProgramTemplate,
+} from '@/lib/programs/templates';
+import brazilianPortugueseMessages from '@/messages/pt-BR';
 
 async function makeUser(email: string) {
   return db.user.create({ data: { email, passwordHash: 'x' } });
@@ -138,7 +143,11 @@ describe('built-in program templates materialize into a Program', () => {
   it('persists every template as a runnable program for the user', async () => {
     const user = await makeUser('templates@test.dev');
 
-    for (const template of programTemplates) {
+    for (const definition of programTemplates) {
+      const template = localizeProgramTemplate(
+        definition,
+        brazilianPortugueseMessages.programTemplates,
+      );
       const programId = await buildProgramFromGenerated(user.id, template.program);
       const program = await db.program.findUnique({
         where: { id: programId },
@@ -161,10 +170,14 @@ describe('built-in program templates materialize into a Program', () => {
 
   it('can run a session from a template-instantiated program', async () => {
     const user = await makeUser('template-session@test.dev');
-    const template = getTemplateBySlug('upper-lower-4day');
-    expect(template).toBeDefined();
+    const definition = getTemplateBySlug('upper-lower-4day');
+    expect(definition).toBeDefined();
+    const template = localizeProgramTemplate(
+      definition!,
+      brazilianPortugueseMessages.programTemplates,
+    );
 
-    const programId = await buildProgramFromGenerated(user.id, template!.program);
+    const programId = await buildProgramFromGenerated(user.id, template.program);
     const program = await db.program.findUnique({
       where: { id: programId },
       include: { workouts: { include: { exercises: true } } },
