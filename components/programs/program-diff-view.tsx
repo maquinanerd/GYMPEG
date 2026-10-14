@@ -88,7 +88,7 @@ export function ProgramDiffView({ diff }: { diff: ProgramDiff }) {
       ))}
       {diff.workoutsAdded.map((workout) => (
         <li key={`added-${workout.name}`}>
-          <span className="font-medium text-emerald-600 dark:text-emerald-400">
+          <span className="font-medium text-brand">
             {t('diff.workoutAdded', { name: trainingName(workout.name) })}
           </span>
           {workout.exercises.length > 0 && (
@@ -119,7 +119,7 @@ export function ProgramDiffView({ diff }: { diff: ProgramDiff }) {
               <li key={change.field}>{fieldLine(change)}</li>
             ))}
             {workout.exercisesAdded.map((name) => (
-              <li key={`added-${name}`} className="text-emerald-600 dark:text-emerald-400">
+              <li key={`added-${name}`} className="text-brand">
                 {t('diff.exerciseAdded', { name: exerciseName(name) })}
               </li>
             ))}

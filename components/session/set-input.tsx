@@ -311,7 +311,7 @@ export function SetInput({
     <Card>
       <CardContent className="flex flex-col gap-4 pt-6">
         {recommendation && !isCardio && (
-          <div className="rounded-md border border-primary/30 bg-primary/5 p-3">
+          <div className="rounded-sm bg-suggestion p-3 text-suggestion-foreground">
             <p className="text-xs font-medium uppercase text-muted-foreground">
               {autoT('nextSet')}
             </p>

@@ -113,7 +113,7 @@ export function McpSection({ initialTokens }: Props) {
         </label>
 
         {connectorUrl && (
-          <div className="rounded-md border border-emerald-500/40 bg-emerald-500/5 p-3">
+          <div className="rounded-md border border-brand/40 bg-accent p-3">
             <p className="text-sm font-medium">{t('readyTitle')}</p>
             <p className="mt-1 text-xs text-muted-foreground">{t('readyDescription')}</p>
             <div className="mt-3 flex gap-2">

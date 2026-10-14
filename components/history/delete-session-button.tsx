@@ -60,7 +60,7 @@ export function DeleteSessionButton({ sessionId, workoutName, startedAt }: Props
         <Button
           variant="ghost"
           size="sm"
-          className="text-rose-600 hover:bg-rose-500/10 hover:text-rose-600"
+          className="text-destructive hover:bg-destructive/10 hover:text-destructive"
         >
           <TrashIcon className="size-4" />
           <span className="ml-1">{t('button')}</span>
@@ -78,7 +78,7 @@ export function DeleteSessionButton({ sessionId, workoutName, startedAt }: Props
           <AlertDialogAction
             onClick={handleDelete}
             disabled={pending}
-            className="bg-rose-600 text-white hover:bg-rose-700"
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
             {pending ? (
               <>

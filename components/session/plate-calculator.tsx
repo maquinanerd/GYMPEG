@@ -118,7 +118,7 @@ export function PlateCalculator({
             </p>
 
             {!result.exact && result.remainder > 0 && (
-              <p className="text-sm text-amber-600 dark:text-amber-500">
+              <p className="text-sm text-foreground">
                 {t('remainder', { remainder: `${result.remainder} ${label}` })}
               </p>
             )}

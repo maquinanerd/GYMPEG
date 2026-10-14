@@ -38,7 +38,7 @@ export function ConsistencyCard({ weeks, currentStreak, weeklyFrequency }: Props
       <CardContent className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
           <FireIcon
-            className={`size-5 ${currentStreak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`}
+            className={`size-5 ${currentStreak > 0 ? 'text-brand' : 'text-muted-foreground'}`}
           />
           <span className="text-2xl font-bold tabular-nums">{currentStreak}</span>
           <span className="text-sm text-muted-foreground">

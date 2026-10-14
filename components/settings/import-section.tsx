@@ -488,14 +488,14 @@ export function ImportSection() {
                     {a.maxHr != null ? ` · max HR ${a.maxHr} bpm` : ''} logged as{' '}
                     {exerciseName(a.exerciseName ?? '')}
                     {a.duplicateSessions && a.duplicateSessions.length > 0 ? (
-                      <span className="text-amber-700 dark:text-amber-400">
+                      <span className="text-foreground">
                         {' '}
                         ({t('possibleDuplicate')})
                       </span>
                     ) : null}
                   </li>
                 ) : (
-                  <li key={a.index} className="text-amber-700 dark:text-amber-400">
+                  <li key={a.index} className="text-foreground">
                     {t('fileSkipped', { index: a.index + 1, error: a.error ?? '' })}
                   </li>
                 ),
@@ -543,7 +543,7 @@ export function ImportSection() {
                 {t('loggedAs', { name: exerciseName(tcxPreview.exerciseName) })}
               </li>
               {tcxPreview.duplicateSessions.length > 0 && (
-                <li className="text-amber-700 dark:text-amber-400">{t('duplicateWarning')}</li>
+                <li className="text-foreground">{t('duplicateWarning')}</li>
               )}
             </ul>
             <div className="mt-3 flex gap-2">
@@ -581,7 +581,7 @@ export function ImportSection() {
                 <li>{t('cardioSkipped', { count: preview.cardioSkipped })}</li>
               )}
               {preview.existingSessionDates.length > 0 && (
-                <li className="text-amber-700 dark:text-amber-400">
+                <li className="text-foreground">
                   {t('existingDates', { dates: preview.existingSessionDates.join(', ') })}
                 </li>
               )}
@@ -629,7 +629,7 @@ export function ImportSection() {
 
             {preview.errorCount > 0 && (
               <div className="mt-2">
-                <p className="font-medium text-rose-600">
+                <p className="font-medium text-destructive">
                   {t('unreadable', { count: preview.errorCount })}
                 </p>
                 <ul className="mt-1 max-h-40 list-disc overflow-y-auto pl-5 text-xs text-muted-foreground">

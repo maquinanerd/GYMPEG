@@ -147,7 +147,7 @@ export function ProfileSection({ initial }: Props) {
               placeholder="e.g. 75"
             />
             {!rangeOk(bodyweight, 20, 300) && (
-              <p className="text-xs text-rose-600">{t('bodyweightRange')}</p>
+              <p className="text-xs text-destructive">{t('bodyweightRange')}</p>
             )}
           </div>
 
@@ -165,7 +165,7 @@ export function ProfileSection({ initial }: Props) {
               placeholder="e.g. 178"
             />
             {!rangeOk(heightCm, 100, 250) && (
-              <p className="text-xs text-rose-600">{t('heightRange')}</p>
+              <p className="text-xs text-destructive">{t('heightRange')}</p>
             )}
           </div>
         </div>
@@ -201,7 +201,7 @@ export function ProfileSection({ initial }: Props) {
               placeholder="e.g. 3"
             />
             {!rangeOk(weeklyFrequency, 1, 14) && (
-              <p className="text-xs text-rose-600">{t('weeklyFrequencyRange')}</p>
+              <p className="text-xs text-destructive">{t('weeklyFrequencyRange')}</p>
             )}
           </div>
         </div>

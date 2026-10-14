@@ -125,7 +125,7 @@ export function CoachAdjustments({
             <li
               key={i}
               className={`rounded-md border p-3 transition-colors ${
-                row.selected ? 'border-primary/40 bg-primary/5' : 'border-border'
+                row.selected ? 'border-brand bg-accent' : 'border-border'
               }`}
             >
               <div className="flex items-start justify-between gap-3">
@@ -192,8 +192,8 @@ export function CoachAdjustments({
         </ul>
 
         <div className="flex flex-col gap-2 border-t border-border/40 pt-3">
-          {error && <p className="text-sm text-rose-600">{error}</p>}
-          {feedback && <p className="text-sm text-emerald-600">{feedback}</p>}
+          {error && <p className="text-sm text-destructive">{error}</p>}
+          {feedback && <p className="text-sm text-brand">{feedback}</p>}
           <Button
             type="button"
             onClick={applyAll}

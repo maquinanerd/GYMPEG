@@ -524,7 +524,7 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
           <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
           <Link
             href="/progress/report"
-            className="ml-auto text-sm font-medium text-primary underline-offset-4 hover:underline"
+            className="ml-auto text-sm font-medium text-brand underline-offset-4 hover:underline"
           >
             {t('report.link')}
           </Link>

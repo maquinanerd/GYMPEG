@@ -124,9 +124,9 @@ export function BackupSection() {
         />
 
         {confirmingFile && (
-          <div className="rounded-md border border-amber-500/40 bg-amber-500/5 p-3 text-sm">
+          <div className="rounded-md border border-warning/50 bg-warning/10 p-3 text-sm">
             <div className="flex items-start gap-2">
-              <WarningIcon className="size-5 shrink-0 text-amber-600" />
+              <WarningIcon className="size-5 shrink-0 text-foreground" />
               <div className="flex-1">
                 <p className="font-medium">{t('confirmTitle')}</p>
                 <p className="mt-1 text-xs text-muted-foreground">

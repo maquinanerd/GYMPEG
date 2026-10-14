@@ -51,7 +51,7 @@ export function ConditioningCard({ weeks }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
-          <HeartbeatIcon className="size-4 text-primary" />
+          <HeartbeatIcon className="size-4 text-brand" />
           <h2 className="text-base font-semibold">{t('title')}</h2>
         </div>
         <p className="text-xs text-muted-foreground">

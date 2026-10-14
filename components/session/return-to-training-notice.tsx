@@ -34,7 +34,7 @@ export function ReturnToTrainingNotice({ recommendation, unit, usesBodyweight }:
   return (
     <section
       data-testid="return-to-training-notice"
-      className="rounded-md border border-amber-300/70 bg-amber-50 px-3 py-3 text-amber-950 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-100"
+      className="rounded-md border border-warning/50 bg-warning/10 px-3 py-3 text-foreground"
     >
       <div className="flex items-start gap-2.5">
         <ArrowCounterClockwiseIcon className="mt-0.5 size-4 shrink-0" aria-hidden />

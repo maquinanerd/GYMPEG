@@ -124,10 +124,10 @@ function RowDone({ set, prs, onDelete }: { set: PendingSet; prs: PRType[]; onDel
 }
 
 function SyncIcon({ status }: { status: PendingSet['status'] }) {
-  if (status === 'synced') return <CheckIcon className="size-4 flex-shrink-0 text-primary" />;
+  if (status === 'synced') return <CheckIcon className="size-4 flex-shrink-0 text-brand" />;
   if (status === 'syncing')
     return <CircleNotchIcon className="size-4 flex-shrink-0 animate-spin text-muted-foreground" />;
-  if (status === 'failed') return <CloudSlashIcon className="size-4 flex-shrink-0 text-amber-500" />;
+  if (status === 'failed') return <CloudSlashIcon className="size-4 flex-shrink-0 text-destructive" />;
   // 'pending'
   return <CloudSlashIcon className="size-4 flex-shrink-0 text-muted-foreground" />;
 }
@@ -138,11 +138,11 @@ function RowUpcoming({ setNumber, isCurrent }: { setNumber: number; isCurrent: b
   return (
     <div
       className={`flex items-center gap-2 border-b border-border px-3 py-2 last:border-b-0 ${
-        isCurrent ? 'bg-primary/5' : ''
+        isCurrent ? 'bg-accent' : ''
       }`}
     >
       {isCurrent ? (
-        <RadioButtonIcon className="size-4 flex-shrink-0 text-primary" />
+        <RadioButtonIcon className="size-4 flex-shrink-0 text-brand" />
       ) : (
         <CircleIcon className="size-4 flex-shrink-0 text-muted-foreground" />
       )}

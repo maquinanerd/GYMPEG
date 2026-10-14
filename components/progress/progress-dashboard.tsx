@@ -429,7 +429,7 @@ export function ProgressDashboard({
             <ul className="flex flex-wrap gap-2">
               {stalledLifts.map((r) => (
                 <li key={r.exerciseId}>
-                  <Badge variant="secondary" className="text-amber-700 dark:text-amber-400">
+                  <Badge variant="secondary" className="text-foreground">
                     {exerciseName(r.exerciseName)}
                   </Badge>
                 </li>
@@ -530,7 +530,7 @@ export function ProgressDashboard({
                           {r.stalled && (
                             <Badge
                               variant="secondary"
-                              className="text-[10px] font-medium uppercase tracking-wide text-amber-700 dark:text-amber-400"
+                              className="text-[10px] font-medium uppercase tracking-wide text-foreground"
                               title={t('noProgress', { count: STALL_LOOKBACK_SESSIONS })}
                             >
                               {t('stalledBadge')}
@@ -575,7 +575,7 @@ function formatDelta(n: number) {
 }
 
 function deltaClass(n: number) {
-  if (n > 0) return 'text-emerald-600';
-  if (n < 0) return 'text-rose-600';
+  if (n > 0) return 'text-brand';
+  if (n < 0) return 'text-destructive';
   return 'text-muted-foreground';
 }

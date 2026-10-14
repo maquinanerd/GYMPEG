@@ -132,7 +132,7 @@ export function ExerciseMediaDialog({
 
         {media ? (
           <div className="space-y-4">
-            <div className="relative aspect-[3/2] overflow-hidden rounded-md border bg-black">
+            <div className="relative aspect-[3/2] overflow-hidden rounded-md border bg-pill">
               {media.frames.map((source, index) => (
                 <Image
                   key={source}

@@ -63,7 +63,7 @@ export function AiConsentCard({
             <span className={saving ? 'ml-2' : undefined}>{t('accept')}</span>
           </Button>
         </div>
-        {error && <p className="text-sm text-rose-600">{error}</p>}
+        {error && <p className="text-sm text-destructive">{error}</p>}
       </CardContent>
     </Card>
   );

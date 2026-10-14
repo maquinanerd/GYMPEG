@@ -259,7 +259,7 @@ export function WorkoutPlanner({
               ))}
             </ol>
           )}
-          {error && <p className="text-sm text-rose-600">{error}</p>}
+          {error && <p className="text-sm text-destructive">{error}</p>}
         </CardContent>
       </Card>
 
@@ -278,7 +278,7 @@ export function WorkoutPlanner({
             )}
 
             {validation.warnings.length > 0 && (
-              <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-3">
+              <div className="rounded-md border border-warning/50 bg-warning/10 p-3">
                 <h3 className="mb-1 flex items-center gap-2 text-sm font-medium">
                   <WarningIcon className="size-4" />
                   {t('preview.warnings')}
@@ -308,7 +308,7 @@ export function WorkoutPlanner({
             )}
 
             {validation.errors.length > 0 && (
-              <p className="text-sm text-rose-600">
+              <p className="text-sm text-destructive">
                 {t('preview.invalid', { reason: validation.errors[0]!.message })}
               </p>
             )}
@@ -368,7 +368,7 @@ export function WorkoutPlanner({
                           onClick={() => setPlan(withoutExercise(plan, wi, ei))}
                           aria-label={t('preview.removeExercise')}
                         >
-                          <TrashIcon className="size-4 text-rose-600" />
+                          <TrashIcon className="size-4 text-destructive" />
                         </Button>
                       </li>
                     );

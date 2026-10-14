@@ -162,7 +162,7 @@ export function ExerciseGoalCard({
                 })}
               </span>
               {achieved && (
-                <Badge className="bg-emerald-600 text-white hover:bg-emerald-600">
+                <Badge className="bg-primary text-primary-foreground hover:bg-primary">
                   {t('achieved')}
                 </Badge>
               )}

@@ -77,10 +77,10 @@ export function DeloadBanner({ reasons, deloadUntil }: Props) {
       month: 'short',
     });
     return (
-      <Card className="border-emerald-500/50 bg-emerald-500/5">
+      <Card className="border-brand/40 bg-accent">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2">
-            <BatteryChargingIcon className="size-4 text-emerald-600" />
+            <BatteryChargingIcon className="size-4 text-brand" />
             <h2 className="text-base font-semibold">{t('activeTitle')}</h2>
           </div>
         </CardHeader>
@@ -97,10 +97,10 @@ export function DeloadBanner({ reasons, deloadUntil }: Props) {
   }
 
   return (
-    <Card className="border-amber-500/50 bg-amber-500/5">
+    <Card className="border-warning/50 bg-warning/10">
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
-          <BatteryLowIcon className="size-4 text-amber-600" />
+          <BatteryLowIcon className="size-4 text-foreground" />
           <h2 className="text-base font-semibold">{t('dueTitle')}</h2>
         </div>
       </CardHeader>

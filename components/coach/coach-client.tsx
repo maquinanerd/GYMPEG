@@ -85,11 +85,11 @@ export function CoachClient({
   return (
     <div className="flex flex-col gap-6">
       {!hasApiKey && (
-        <Card className="border-amber-500/40 bg-amber-500/5">
+        <Card className="border-warning/50 bg-warning/10">
           <CardContent className="flex items-start gap-3 py-4 text-sm">
-            <WarningIcon className="size-5 shrink-0 text-amber-600" />
+            <WarningIcon className="size-5 shrink-0 text-foreground" />
             <div>
-              <p className="font-medium text-amber-900 dark:text-amber-100">
+              <p className="font-medium text-foreground">
                 {t('client.keyMissing', { provider: providerLabel })}
               </p>
               <p className="text-xs text-muted-foreground">
@@ -120,7 +120,7 @@ export function CoachClient({
             )}
           </Button>
           {error && (
-            <p className="text-sm text-rose-600">{error}</p>
+            <p className="text-sm text-destructive">{error}</p>
           )}
         </CardContent>
       </Card>
@@ -159,7 +159,7 @@ export function CoachClient({
                     onClick={() => setActiveId(h.id)}
                     className={`block w-full rounded-md border p-3 text-left text-sm transition-colors ${
                       isActive
-                        ? 'border-primary/40 bg-primary/5'
+                        ? 'border-brand/40 bg-accent'
                         : 'border-border hover:bg-accent/40'
                     }`}
                   >
@@ -226,7 +226,7 @@ function ActiveDebrief({
             <ReactMarkdown>{cleaned}</ReactMarkdown>
           </article>
           {parseErrors.length > 0 && (
-            <p className="mt-3 text-xs text-amber-600">
+            <p className="mt-3 text-xs text-foreground">
               Adjustments block ignored: {parseErrors[0]}
             </p>
           )}

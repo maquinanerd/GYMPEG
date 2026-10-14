@@ -67,7 +67,7 @@ export function WorkoutStartList({
           <li key={workout.id}>
             <Card
               data-suggested={workout.id === suggestedId || undefined}
-              className={workout.id === suggestedId ? 'border-primary/60 bg-primary/5' : undefined}
+              className={workout.id === suggestedId ? 'border-brand' : undefined}
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-2">

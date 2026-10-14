@@ -160,8 +160,8 @@ export function ChatClient({
   return (
     <div className="flex flex-col gap-4">
       {!hasApiKey && (
-        <div className="rounded-md border border-amber-500/40 bg-amber-500/5 p-3 text-sm">
-          <p className="font-medium text-amber-900 dark:text-amber-100">
+        <div className="rounded-md border border-warning/50 bg-warning/10 p-3 text-sm">
+          <p className="font-medium text-foreground">
             {providerLabel} key missing
           </p>
           <p className="text-xs text-muted-foreground">
@@ -171,8 +171,8 @@ export function ChatClient({
       )}
 
       {sessionId && (
-        <div className="flex items-center gap-2 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm">
-          <BarbellIcon className="size-4 shrink-0 text-primary" />
+        <div className="flex items-center gap-2 rounded-sm bg-pill p-3 text-sm">
+          <BarbellIcon className="size-4 shrink-0 text-brand" />
           <p className="text-xs text-muted-foreground">
             <span className="font-medium text-foreground">{t('liveSession')}</span>{' '}
             {t('liveSessionDescription')}
@@ -199,7 +199,7 @@ export function ChatClient({
             className={cn(
               'shrink-0 rounded-full border px-3 py-1.5 text-xs transition-colors',
               c.id === activeId
-                ? 'border-primary/40 bg-primary/10 text-foreground'
+                ? 'border-transparent bg-pill text-foreground'
                 : 'border-border text-muted-foreground hover:bg-accent/40',
             )}
           >

@@ -46,21 +46,21 @@ export function BarbellSideDiagram({
             compact ? 'min-h-12' : 'min-h-16'
           }`}
         >
-          <div className="absolute inset-x-2 top-1/2 h-2 -translate-y-1/2 rounded-full bg-zinc-500" />
+          <div className="absolute inset-x-2 top-1/2 h-2 -translate-y-1/2 rounded-full bg-muted-foreground" />
           <span aria-hidden />
           <div
             className={`relative z-10 flex items-center gap-0.5 ${compact ? 'h-12' : 'h-14'}`}
             aria-label={platesLabel}
           >
             <div
-              className={`mr-0.5 w-3 shrink-0 rounded-sm bg-zinc-400 ${compact ? 'h-8' : 'h-10'}`}
+              className={`mr-0.5 w-3 shrink-0 rounded-sm bg-muted-foreground/70 ${compact ? 'h-8' : 'h-10'}`}
               aria-hidden
             />
             {plates.map((plate) => (
               <div
                 key={plate.key}
                 data-testid="barbell-plate"
-                className={`flex shrink-0 items-center justify-center rounded-sm border border-zinc-300 bg-zinc-700 font-bold text-white ${
+                className={`flex shrink-0 items-center justify-center rounded-sm border border-border bg-foreground font-bold text-background ${
                   compact ? 'w-4 text-[0.55rem]' : 'w-5 text-[0.6rem]'
                 }`}
                 style={{
