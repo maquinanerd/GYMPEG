@@ -15,6 +15,9 @@ model User {
   id                String                                @id @default(cuid())
   email             String                                @unique
   passwordHash      String
+  // ADMIN may set a new password for another account (/admin). Granted by
+  // hand in the database (docs/10_COOLIFY_DEPLOYMENT.md), never by signup.
+  role              UserRole                              @default(USER)
   // Bodyweight in kg, used to compute the effective tonnage on bodyweight
   // exercises (Set.weight = added load, always >= 0; the input schemas clamp
   // it). Null = not filled in yet, so no bodyweight bonus is applied
@@ -149,6 +152,30 @@ model McpHistoricalEquipmentBackfillAudit {
   undoneAt          DateTime?
 
   @@index([userId, createdAt])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+// Who did what to which record (spec §43). Actor and entity are plain scalar
+// IDs on purpose: the trail must outlive the accounts it mentions, and once an
+// account is erased its id points at nothing. Never holds a password, a hash
+// or health data.
+model AuditLog {
+  id          String   @id @default(cuid())
+  // Null when the system acted on its own.
+  actorUserId String?
+  entity      String
+  entityId    String
+  action      String
+  oldValue    Json?
+  newValue    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([entity, entityId, createdAt])
+  @@index([actorUserId, createdAt])
 }
 
 enum Sex {
