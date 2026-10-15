@@ -66,7 +66,9 @@ function findParameterizedRoutes(dir: string): string[] {
     if (entry.isDirectory()) {
       out.push(...findParameterizedRoutes(full));
     } else if (entry.name === 'route.ts' && /\[[^\]]+\]/.test(relative(ROOT, full))) {
-      out.push(relative(ROOT, full));
+      // Forward slashes on every OS: the suites import routes as '@/app/api/...'
+      // and COVERED_ELSEWHERE is keyed the same way.
+      out.push(relative(ROOT, full).replace(/\\/g, '/'));
     }
   }
   return out;

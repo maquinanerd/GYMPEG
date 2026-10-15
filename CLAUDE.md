@@ -44,7 +44,7 @@ Postgres de teste: `docker compose -f docker-compose.test.yml up -d` e depois `D
 
 ## Upstream
 
-Hard fork (ADR-001). `upstream` = `https://github.com/gymcoach-app/gymcoach` serve só de referência: não fazer `git merge upstream/main`. Correções de segurança do upstream são avaliadas e trazidas à mão (cherry-pick ou reescrita). Não reintroduzir `.claude/`, os workflows de demo/publicação nem a mídia de `public/exercise-media/free-exercise-db` (não licenciada, ver ADR-005).
+Hard fork (ADR-001). `upstream` = `https://github.com/gymcoach-app/gymcoach` serve só de referência: não fazer `git merge upstream/main`. Correções de segurança do upstream são avaliadas e trazidas à mão (cherry-pick ou reescrita). Não reintroduzir `.claude/` nem os workflows de demo/publicação. A mídia de `public/exercise-media/free-exercise-db` voltou por decisão do dono do produto, mesmo com a origem não verificada (ADR-005, revisão de 2026-10-14): não remover sem pedido, e regenerar só por `scripts/sync-exercise-media.mjs`.
 
 ## Próximos passos
 

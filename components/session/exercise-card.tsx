@@ -26,6 +26,8 @@ import { formatCardioSet } from '@/lib/cardio';
 import type { SerializedLastPerformance } from './session-runner';
 import { useExerciseName } from '@/components/shared/use-exercise-name';
 import type { GymLoadConstraints } from '@/lib/gym-loads';
+import { getExerciseMedia } from '@/lib/exercise-media';
+import { ExerciseMediaDialog } from '@/components/exercises/exercise-media-dialog';
 import { cn } from '@/lib/utils';
 
 // Non-breaking hyphen (U+2011): a rep range never splits across lines.
@@ -61,6 +63,8 @@ interface Props {
 // last session, the computed load suggestion with its reason, and the tags
 // (superset, deload, readiness, availability) when they apply. The "…"
 // button opens the exercise sheet (replace, add, remove, technique, plates).
+// When the exercise has technique frames, the start frame sits next to the
+// name and opens the start/finish animation.
 export function ExerciseCard({
   programExercise,
   lastPerformance,
@@ -81,6 +85,7 @@ export function ExerciseCard({
   const [notesOpen, setNotesOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const exo = programExercise.exercise;
+  const hasMedia = getExerciseMedia(exo.name) != null;
   // Cardio exercises (issue #133) are duration/distance based: the weight x
   // reps targets, load suggestion and last-performance load make no sense for
   // them, so those blocks are hidden.
@@ -166,6 +171,14 @@ export function ExerciseCard({
   return (
     <section className="flex min-w-0 flex-col gap-3.5 rounded-lg border border-border bg-card px-4 pb-4 pt-5">
       <div className="flex min-w-0 items-start gap-3">
+        {hasMedia && (
+          <ExerciseMediaDialog
+            exerciseName={exo.name}
+            displayName={exerciseName(exo.name)}
+            equipmentType={exo.equipmentType}
+            compact
+          />
+        )}
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           <div
             data-testid="exercise-title-scroll"

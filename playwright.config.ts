@@ -36,9 +36,17 @@ export default defineConfig({
     },
   },
   webServer: {
-    // LLM_PROVIDER=demo serves canned coach responses, so the AI flows (chat,
-    // in-session chat) are E2E-testable without any API key (issue #111).
-    command: `DATABASE_URL='${TEST_DB}' JWT_SECRET='e2e-test-secret-at-least-32-characters' LLM_PROVIDER='demo' SIGNUP_MODE='open' next start -p ${PORT}`,
+    // Variables go through `env`, not a `VAR=value` prefix on the command,
+    // which cmd.exe (the local CI on Windows) cannot run.
+    command: `next start -p ${PORT}`,
+    env: {
+      DATABASE_URL: TEST_DB,
+      JWT_SECRET: 'e2e-test-secret-at-least-32-characters',
+      // demo serves canned coach responses, so the AI flows (chat, in-session
+      // chat) are E2E-testable without any API key (issue #111).
+      LLM_PROVIDER: 'demo',
+      SIGNUP_MODE: 'open',
+    },
     url: `http://localhost:${PORT}/login`,
     timeout: 120_000,
     reuseExistingServer: !process.env.CI,
