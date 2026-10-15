@@ -19,7 +19,7 @@ export function ListRow({
   className,
   contentClassName,
   ...props
-}: Omit<React.LiHTMLAttributes<HTMLLIElement>, 'title'> & {
+}: Omit<React.LiHTMLAttributes<HTMLLIElement>, 'title' | 'value'> & {
   leading?: React.ReactNode;
   title: React.ReactNode;
   meta?: React.ReactNode;
@@ -67,21 +67,5 @@ export function ListRow({
         <div className={inner}>{content}</div>
       )}
     </li>
-  );
-}
-
-/** @deprecated v1: icons in colored circles are gone. Renders the bare icon. */
-export function IconCircle({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  tone?: string;
-  className?: string;
-}) {
-  return (
-    <span aria-hidden className={cn('flex shrink-0 items-center [&_svg]:size-5', className)}>
-      {children}
-    </span>
   );
 }

@@ -38,7 +38,7 @@ export function Section({
         >
           {title}
         </h2>
-        {aside && <span className="text-caption text-muted-foreground">{aside}</span>}
+        {aside && <span className="text-small text-muted-foreground">{aside}</span>}
         {action}
       </div>
       {children}

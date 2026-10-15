@@ -87,7 +87,6 @@ import {
   SkipBackIcon as PhSkipBack,
   SkipForwardIcon as PhSkipForward,
   SlidersHorizontalIcon as PhSlidersHorizontal,
-  SparkleIcon as PhSparkle,
   SpeakerHighIcon as PhSpeakerHigh,
   StackIcon as PhStack,
   SunIcon as PhSun,
@@ -217,7 +216,6 @@ export const SignOutIcon = icon(PhSignOut);
 export const SkipBackIcon = icon(PhSkipBack);
 export const SkipForwardIcon = icon(PhSkipForward);
 export const SlidersHorizontalIcon = icon(PhSlidersHorizontal);
-export const SparkleIcon = icon(PhSparkle);
 export const SpeakerHighIcon = icon(PhSpeakerHigh);
 export const StackIcon = icon(PhStack);
 export const SunIcon = icon(PhSun);
