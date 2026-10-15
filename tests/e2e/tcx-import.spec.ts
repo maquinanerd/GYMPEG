@@ -38,7 +38,7 @@ test('a lifter can import a TCX activity as a cardio session', async ({ page }) 
   });
   expect(registerRes.ok()).toBeTruthy();
 
-  await page.goto('/settings');
+  await page.goto('/settings/import');
   await expect(page.getByText('Import from Strong')).toBeVisible();
 
   // Switch the source to TCX: the copy flips to the cardio activity import.

@@ -63,9 +63,22 @@ describe('PrivacySection', () => {
 
   it('does not call the server when the typed e-mail is not the account’s', async () => {
     const fetchMock = stubDelete(200);
+    const user = userEvent.setup();
+    render(<PrivacySection email="lifter@test.dev" />);
+    await user.click(screen.getByRole('button', { name: 'Delete my account' }));
+    await user.type(screen.getByLabelText('Current password'), 'secret-pass');
+    await user.type(
+      screen.getByLabelText('Type your e-mail (lifter@test.dev) to confirm'),
+      'other@test.dev',
+    );
 
-    await openAndFill('secret-pass', 'other@test.dev');
+    // The delete button stays off until the e-mail is the account's…
+    const confirm = screen.getByRole('button', { name: 'Delete everything' });
+    expect(confirm).toBeDisabled();
+    await user.click(confirm);
 
+    // …and leaving the field says why.
+    await user.tab();
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'The e-mail does not match your account.',
     );

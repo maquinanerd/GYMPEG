@@ -28,7 +28,7 @@ test('a lifter can preview and confirm a Hevy CSV import', async ({ page }) => {
   });
   expect(registerRes.ok()).toBeTruthy();
 
-  await page.goto('/settings');
+  await page.goto('/settings/import');
   await expect(page.getByText('Import from Strong')).toBeVisible();
 
   // Switch the source app to Hevy: the unit toggle (Strong-only) disappears.

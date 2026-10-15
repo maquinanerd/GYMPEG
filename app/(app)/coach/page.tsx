@@ -35,35 +35,35 @@ export default async function CoachPage(props: { searchParams: Promise<SearchPar
   const tab = searchParams.tab === 'analyses' && !searchParams.sessionId ? 'analyses' : 'chat';
 
   return (
-    <main className="flex-1">
-      <ScreenHeader
-        title={t('title')}
-        subtitle={tab === 'chat' ? t('chatDescription') : t('description')}
-      />
-      <TabLinks
-        label={t('tabs.label')}
-        items={[
-          { href: '/coach', label: t('tabs.conversation'), active: tab === 'chat' },
-          {
-            href: '/coach?tab=analyses',
-            label: t('tabs.analyses'),
-            active: tab === 'analyses',
-          },
-        ]}
-      />
-      <div className="mx-auto flex max-w-2xl flex-col gap-6 px-5 py-5">
-
-        {tab === 'chat' ? (
-          <CoachConversation
-            userId={auth.userId}
-            requestedSessionId={searchParams.sessionId ?? null}
-            fallbackTitle={t('conversation')}
-            provider={provider}
-          />
-        ) : (
-          <CoachAnalyses userId={auth.userId} provider={provider} />
-        )}
+    <main className="flex flex-1 flex-col">
+      <div className="mx-auto w-full max-w-2xl">
+        <ScreenHeader title={t('title')} subtitle={t('subtitle')} />
+        <TabLinks
+          label={t('tabs.label')}
+          items={[
+            { href: '/coach', label: t('tabs.conversation'), active: tab === 'chat' },
+            {
+              href: '/coach?tab=analyses',
+              label: t('tabs.analyses'),
+              active: tab === 'analyses',
+            },
+          ]}
+        />
       </div>
+
+      {tab === 'chat' ? (
+        // The thread and its composer docked above the tab bar.
+        <CoachConversation
+          userId={auth.userId}
+          requestedSessionId={searchParams.sessionId ?? null}
+          fallbackTitle={t('conversation')}
+          provider={provider}
+        />
+      ) : (
+        <div className="mx-auto flex w-full max-w-2xl flex-col gap-[26px] px-5 pb-7 pt-[18px]">
+          <CoachAnalyses userId={auth.userId} provider={provider} />
+        </div>
+      )}
     </main>
   );
 }

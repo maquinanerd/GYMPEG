@@ -2,10 +2,8 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { CircleNotchIcon, SparkleIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { AiConsentCard } from '@/components/ai/ai-consent-card';
 
 // AI consent in Settings (LGPD): see whether it is given, withdraw it, or give
@@ -37,36 +35,26 @@ export function AiConsentSection({
 
   if (!consented) {
     return (
-      <div className="flex flex-col gap-2">
-        <p className="text-sm text-muted-foreground">{t('settingsMissing')}</p>
+      <div className="flex flex-col gap-3">
+        <p className="text-caption text-muted-foreground">{t('settingsMissing')}</p>
         <AiConsentCard version={consentVersion} onAccepted={() => setConsented(true)} />
       </div>
     );
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <SparkleIcon className="size-5" />
-          <h2 className="text-base font-semibold">{t('settingsTitle')}</h2>
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-3 text-sm">
-        <p>{t('settingsGranted')}</p>
-        <div>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={withdraw}
-            disabled={withdrawing}
-            className="min-h-tap"
-          >
-            {withdrawing && <CircleNotchIcon className="size-4 animate-spin" />}
-            <span className={withdrawing ? 'ml-2' : undefined}>{t('settingsWithdraw')}</span>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-4">
+      <p className="text-body">{t('settingsGranted')}</p>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={withdraw}
+        loading={withdrawing}
+        disabled={withdrawing}
+        className="w-full sm:w-auto sm:self-start"
+      >
+        {t('settingsWithdraw')}
+      </Button>
+    </div>
   );
 }

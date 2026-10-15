@@ -25,7 +25,7 @@ test('a lifter can import multiple FIT activities at once', async ({ page }) => 
   });
   expect(registerRes.ok()).toBeTruthy();
 
-  await page.goto('/settings');
+  await page.goto('/settings/import');
   await expect(page.getByText('Import from Strong')).toBeVisible();
 
   // Switch the source to FIT: the copy flips to the cardio activity import.

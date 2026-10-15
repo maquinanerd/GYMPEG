@@ -2,10 +2,44 @@ import { settings as english } from '../en/settings';
 import type { MessageShape } from '@/i18n/message-types';
 
 export const settings = {
-  title: 'Настройки',
-  account: 'Аккаунт',
-  appearance: 'Оформление',
-  session: 'Тренировка',
+  title: 'Профиль',
+  overview: {
+    frequency: '{count} раз в неделю',
+    groups: {
+      training: 'Тренировки',
+      app: 'Приложение',
+      account: 'Аккаунт',
+      data: 'Данные и конфиденциальность',
+    },
+    rows: {
+      profile: 'Профиль и цель',
+      gyms: 'Залы и оборудование',
+      workout: 'Во время тренировки',
+      unit: 'Единицы',
+      theme: 'Тема',
+      language: 'Язык',
+      security: 'Безопасность и сеансы',
+      integrations: 'Интеграции',
+      import: 'Импорт тренировок',
+      export: 'Экспорт моих данных',
+      ai: 'Согласие на ИИ',
+      deleteAccount: 'Удалить аккаунт',
+    },
+    values: {
+      gyms: '{count, plural, =0 {Пока нет} one {# зал} few {# зала} many {# залов} other {# зала}}',
+      devices:
+        '{count, plural, one {# устройство} few {# устройства} many {# устройств} other {# устройства}}',
+      integrations:
+        '{count, plural, =0 {Нет} one {# подключение} few {# подключения} many {# подключений} other {# подключения}}',
+      import: 'Strong, Hevy, FIT, GPX',
+      export: 'ZIP, JSON и CSV',
+      aiOn: 'Дано',
+      aiOff: 'Не дано',
+      workout: 'Отдых, звук и блины',
+    },
+    signOut: 'Выйти из аккаунта',
+    version: 'GYM Peg · версия {version}',
+  },
   deviceOnly: 'Эти настройки сохраняются только на этом устройстве.',
   vibration: 'Вибрация',
   vibrationDescription: 'При записи подхода и завершении таймера.',

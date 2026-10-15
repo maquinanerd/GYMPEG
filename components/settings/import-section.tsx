@@ -2,11 +2,11 @@
 
 import { useRef, useState } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
-import { FileArrowUpIcon, CircleNotchIcon } from '@/components/ui/icon';
+import { CircleNotchIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { SettingsHeading } from './settings-ui';
 import { formatCardioSet } from '@/lib/cardio';
 import { FIT_MAX_BATCH } from '@/lib/schemas/import';
 import {
@@ -397,25 +397,24 @@ export function ImportSection() {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <h2 className="text-base font-semibold">
-          {isCardioActivity
-            ? t('cardioTitle', { kind: meta.fileKind })
-            : t('appTitle', { app: meta.label })}
-        </h2>
-        <p className="text-xs text-muted-foreground">
-          {isCardioActivity
+    <section className="flex flex-col gap-4">
+      <SettingsHeading
+        description={
+          isCardioActivity
             ? t('cardioDescription', { hint: meta.exportHint })
-            : t('appDescription', { app: meta.label, hint: meta.exportHint })}
-        </p>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-3">
-        <div className="flex items-end gap-2">
-          <div className="space-y-1">
+            : t('appDescription', { app: meta.label, hint: meta.exportHint })
+        }
+      >
+        {isCardioActivity
+          ? t('cardioTitle', { kind: meta.fileKind })
+          : t('appTitle', { app: meta.label })}
+      </SettingsHeading>
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="import-format">{t('source')}</Label>
             <Select value={format} onValueChange={(v) => switchFormat(v as ImportFormat)}>
-              <SelectTrigger id="import-format" className="h-9 w-28">
+              <SelectTrigger id="import-format" className="h-12 w-40">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -429,10 +428,10 @@ export function ImportSection() {
             </Select>
           </div>
           {meta.hasUnitToggle && (
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1.5">
               <Label htmlFor="strong-unit">{t('strongUnit')}</Label>
               <Select value={unit} onValueChange={(v) => setUnit(v as 'KG' | 'LB')}>
-                <SelectTrigger id="strong-unit" className="h-9 w-28">
+                <SelectTrigger id="strong-unit" className="h-12 w-28">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -442,15 +441,18 @@ export function ImportSection() {
               </Select>
             </div>
           )}
-          <Button variant="outline" onClick={pickFile} disabled={busy} className="min-h-tap">
-            {busy ? <CircleNotchIcon className="size-4 animate-spin" /> : <FileArrowUpIcon className="size-4" />}
-            <span className="ml-2">
-              {isFit
-                ? t('chooseFitFiles')
-                : isCardioActivity
-                  ? t('chooseFile', { kind: meta.fileKind })
-                  : t('chooseFile', { kind: `${meta.label} ${meta.fileKind}` })}
-            </span>
+          <Button
+            variant="ink"
+            onClick={pickFile}
+            loading={busy}
+            disabled={busy}
+            className="h-12 w-full sm:w-auto"
+          >
+            {isFit
+              ? t('chooseFitFiles')
+              : isCardioActivity
+                ? t('chooseFile', { kind: meta.fileKind })
+                : t('chooseFile', { kind: `${meta.label} ${meta.fileKind}` })}
           </Button>
         </div>
         <input
@@ -464,7 +466,7 @@ export function ImportSection() {
         />
 
         {fitBatch && (
-          <div className="rounded-md border p-3 text-sm" data-testid="import-preview">
+          <div className="border-y border-border py-3 text-caption" data-testid="import-preview">
             <p className="font-medium">
               {t('activitiesSummary', {
                 count: fitBatch.importable,
@@ -506,7 +508,7 @@ export function ImportSection() {
                 size="sm"
                 onClick={confirmFitBatch}
                 disabled={busy || fitBatch.importable === 0}
-                className="min-h-tap"
+                className="h-11"
               >
                 {busy ? <CircleNotchIcon className="size-4 animate-spin" /> : null}
                 <span className={busy ? 'ml-2' : ''}>
@@ -521,7 +523,7 @@ export function ImportSection() {
         )}
 
         {tcxPreview && (
-          <div className="rounded-md border p-3 text-sm" data-testid="import-preview">
+          <div className="border-y border-border py-3 text-caption" data-testid="import-preview">
             <p className="font-medium">{t('previewOf', { file: fileName ?? '' })}</p>
             <ul className="mt-2 list-disc space-y-1 pl-5">
               <li>
@@ -547,7 +549,7 @@ export function ImportSection() {
               )}
             </ul>
             <div className="mt-3 flex gap-2">
-              <Button size="sm" onClick={confirmImport} disabled={busy} className="min-h-tap">
+              <Button size="sm" onClick={confirmImport} disabled={busy} className="h-11">
                 {busy ? <CircleNotchIcon className="size-4 animate-spin" /> : null}
                 <span className={busy ? 'ml-2' : ''}>{t('confirm')}</span>
               </Button>
@@ -559,7 +561,7 @@ export function ImportSection() {
         )}
 
         {preview && (
-          <div className="rounded-md border p-3 text-sm" data-testid="import-preview">
+          <div className="border-y border-border py-3 text-caption" data-testid="import-preview">
             <p className="font-medium">{t('previewOf', { file: fileName ?? '' })}</p>
             <ul className="mt-2 list-disc space-y-1 pl-5">
               <li>{t('strengthSummary', { sessions: preview.sessions, sets: preview.sets })}</li>
@@ -602,7 +604,7 @@ export function ImportSection() {
                     >
                       <span className="min-w-0 flex-1 truncate">{name}</span>
                       <select
-                        className="h-9 rounded-md border border-input bg-background px-2 text-sm"
+                        className="h-11 rounded-sm border border-input bg-card px-2 text-caption focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         value={mapping[name] ?? ''}
                         disabled={busy}
                         aria-label={t('mappingFor', { name })}
@@ -629,7 +631,7 @@ export function ImportSection() {
 
             {preview.errorCount > 0 && (
               <div className="mt-2">
-                <p className="font-medium text-destructive">
+                <p className="font-medium text-destructive-text">
                   {t('unreadable', { count: preview.errorCount })}
                 </p>
                 <ul className="mt-1 max-h-40 list-disc overflow-y-auto pl-5 text-xs text-muted-foreground">
@@ -652,7 +654,7 @@ export function ImportSection() {
                 size="sm"
                 onClick={confirmImport}
                 disabled={busy || preview.sets === 0}
-                className="min-h-tap"
+                className="h-11"
               >
                 {busy ? <CircleNotchIcon className="size-4 animate-spin" /> : null}
                 <span className={busy ? 'ml-2' : ''}>{t('confirm')}</span>
@@ -663,7 +665,7 @@ export function ImportSection() {
             </div>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

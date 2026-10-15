@@ -2,12 +2,11 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { KeyIcon, CircleNotchIcon, SignOutIcon, ShieldCheckIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { SettingsHeading } from './settings-ui';
 
 interface Props {
   otherSessions: number;
@@ -80,17 +79,10 @@ export function SecuritySection({ otherSessions: initialOtherSessions }: Props) 
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <h2 className="flex items-center gap-2 text-base font-semibold">
-          <ShieldCheckIcon className="size-4" aria-hidden="true" />
-          {t('title')}
-        </h2>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <form onSubmit={changePassword} className="space-y-3" noValidate>
-          <h3 className="text-sm font-medium">{t('passwordTitle')}</h3>
-          <div className="space-y-2">
+    <>
+        <form onSubmit={changePassword} className="flex flex-col gap-4" noValidate>
+          <SettingsHeading>{t('passwordTitle')}</SettingsHeading>
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="current-password">{t('currentPassword')}</Label>
             <Input
               id="current-password"
@@ -101,7 +93,7 @@ export function SecuritySection({ otherSessions: initialOtherSessions }: Props) 
               required
             />
           </div>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="new-password">{t('newPassword')}</Label>
             <Input
               id="new-password"
@@ -112,7 +104,7 @@ export function SecuritySection({ otherSessions: initialOtherSessions }: Props) 
               required
             />
           </div>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-1.5">
             <Label htmlFor="confirm-password">{t('confirmPassword')}</Label>
             <Input
               id="confirm-password"
@@ -124,45 +116,35 @@ export function SecuritySection({ otherSessions: initialOtherSessions }: Props) 
             />
           </div>
           {formError && (
-            <p role="alert" className="text-sm text-destructive">
+            <p role="alert" className="text-caption text-destructive-text">
               {formError}
             </p>
           )}
           <Button
             type="submit"
+            loading={saving}
             disabled={saving || !currentPassword || !newPassword || !confirmPassword}
-            className="min-h-tap w-full sm:w-auto"
+            className="w-full sm:w-auto sm:self-start"
           >
-            {saving ? (
-              <CircleNotchIcon className="size-4 animate-spin" aria-hidden="true" />
-            ) : (
-              <KeyIcon className="size-4" aria-hidden="true" />
-            )}
-            <span className="ml-2">{saving ? t('saving') : t('submit')}</span>
+            {saving ? t('saving') : t('submit')}
           </Button>
         </form>
 
-        <div className="space-y-3 border-t pt-4">
-          <h3 className="text-sm font-medium">{t('devicesTitle')}</h3>
-          <p className="text-sm text-muted-foreground">
-            {t('otherDevices', { count: otherSessions })}
-          </p>
+        <section className="flex flex-col gap-3 border-t border-border pt-6">
+          <SettingsHeading description={t('otherDevices', { count: otherSessions })}>
+            {t('devicesTitle')}
+          </SettingsHeading>
           <Button
             type="button"
             variant="outline"
             onClick={signOutOthers}
+            loading={signingOut}
             disabled={signingOut || otherSessions === 0}
-            className="min-h-tap w-full sm:w-auto"
+            className="w-full sm:w-auto sm:self-start"
           >
-            {signingOut ? (
-              <CircleNotchIcon className="size-4 animate-spin" aria-hidden="true" />
-            ) : (
-              <SignOutIcon className="size-4" aria-hidden="true" />
-            )}
-            <span className="ml-2">{t('signOutOthers')}</span>
+            {t('signOutOthers')}
           </Button>
-        </div>
-      </CardContent>
-    </Card>
+        </section>
+    </>
   );
 }

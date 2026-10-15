@@ -15,17 +15,19 @@ import {
 import { cn } from '@/lib/utils';
 
 // Message key under common.language for each locale's translated name.
-const localeMessageKeys = {
+export const localeMessageKeys = {
   'pt-BR': 'portuguese',
   en: 'english',
   fr: 'french',
   ru: 'russian',
 } as const satisfies Record<Locale, string>;
 
-export function LanguageSelector({ showLabel = false }: { showLabel?: boolean }) {
-  const locale = useLocale();
+// Switches the interface language: saves the choice, drops the cached pages
+// rendered in the old language and reloads.
+export function useLocaleSwitch() {
+  const locale = useLocale() as Locale;
   const t = useTranslations('common.language');
-  // Explicit pending state: the trigger stays disabled for the whole request.
+  // Explicit pending state: callers stay disabled for the whole request.
   // A transition around a fire-and-forget promise would end in the same tick.
   const [isPending, setIsPending] = useState(false);
 
@@ -60,6 +62,13 @@ export function LanguageSelector({ showLabel = false }: { showLabel?: boolean })
     }
   }
 
+  return { locale, isPending, changeLocale };
+}
+
+export function LanguageSelector({ showLabel = false }: { showLabel?: boolean }) {
+  const t = useTranslations('common.language');
+  const { locale, isPending, changeLocale } = useLocaleSwitch();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -68,8 +77,10 @@ export function LanguageSelector({ showLabel = false }: { showLabel?: boolean })
           size={showLabel ? 'sm' : 'icon'}
           disabled={isPending}
           aria-label={t('change')}
+          // 44px touch target: the sm size alone is 40px.
+          className={cn(showLabel && 'h-11 gap-1.5 px-3')}
         >
-          <TranslateIcon className={cn('size-4', showLabel && 'mr-2')} />
+          <TranslateIcon className="size-4" />
           {showLabel && localeLabels[locale]}
         </Button>
       </DropdownMenuTrigger>

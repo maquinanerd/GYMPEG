@@ -29,7 +29,7 @@ test('a lifter can preview and confirm a GymCoach CSV import', async ({ page }) 
   });
   expect(registerRes.ok()).toBeTruthy();
 
-  await page.goto('/settings');
+  await page.goto('/settings/import');
   await expect(page.getByText('Import from Strong')).toBeVisible();
 
   // Switch the source to GYM Peg CSV: the unit toggle (Strong-only) disappears.

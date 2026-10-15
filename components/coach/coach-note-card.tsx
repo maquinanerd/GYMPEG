@@ -3,11 +3,10 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { ChatCenteredDotsIcon } from '@/components/ui/icon';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { COACH_NOTE_MAX_LEN } from '@/lib/schemas/profile';
+import { cn } from '@/lib/utils';
 
 interface Props {
   initialNote: string | null;
@@ -69,52 +68,56 @@ export function CoachNoteCard({ initialNote }: Props) {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <ChatCenteredDotsIcon className="size-4 text-brand" />
-          <h2 className="text-base font-semibold">{t('title')}</h2>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          {t('description')}
-        </p>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-3">
-        <Textarea
-          aria-label={t('title')}
-          placeholder={t('placeholder')}
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          rows={3}
-          maxLength={COACH_NOTE_MAX_LEN}
-        />
-        <div className="flex items-center justify-between gap-2">
-          <span
-            className={`text-xs tabular-nums ${
-              overLimit ? 'text-destructive' : 'text-muted-foreground'
-            }`}
+    <section className="flex flex-col gap-2">
+      <label htmlFor="coach-note" className="text-subtitle">
+        {t('title')}
+      </label>
+      <p id="coach-note-description" className="-mt-1 text-[0.8125rem] font-medium text-muted-foreground">
+        {t('description')}
+      </p>
+      <Textarea
+        id="coach-note"
+        aria-describedby="coach-note-description"
+        placeholder={t('placeholder')}
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        rows={2}
+        maxLength={COACH_NOTE_MAX_LEN}
+        className="resize-none"
+      />
+      <div className="flex items-center justify-between gap-2">
+        <span
+          className={cn(
+            'font-num text-small tabular-nums stretch-112',
+            overLimit ? 'text-destructive-text' : 'text-muted-foreground',
+          )}
+        >
+          {note.length}/{COACH_NOTE_MAX_LEN}
+        </span>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-11"
+            onClick={handleClear}
+            disabled={busy || (saved.trim().length === 0 && trimmed.length === 0)}
           >
-            {note.length}/{COACH_NOTE_MAX_LEN}
-          </span>
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClear}
-              disabled={busy || (saved.trim().length === 0 && trimmed.length === 0)}
-            >
-              {t('clear')}
-            </Button>
-            <Button
-              type="button"
-              onClick={handleSave}
-              disabled={busy || overLimit || !dirty}
-            >
-              {t('save')}
-            </Button>
-          </div>
+            {t('clear')}
+          </Button>
+          <Button
+            type="button"
+            variant="ink"
+            size="sm"
+            className="h-11"
+            onClick={handleSave}
+            loading={busy}
+            disabled={busy || overLimit || !dirty}
+          >
+            {t('save')}
+          </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

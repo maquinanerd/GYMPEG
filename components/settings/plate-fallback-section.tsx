@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -11,6 +10,7 @@ import {
   savePreferences,
   type UserPreferences,
 } from '@/lib/preferences';
+import { SettingsHeading } from './settings-ui';
 
 // Editor for the plate-calculator fallback inventory (issue #285). When a
 // saved gym is active the calculator uses that gym's bars and plates; these
@@ -38,12 +38,11 @@ export function PlateFallbackSection() {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <h2 className="text-base font-semibold">{t('plateCalculator')}</h2>
-        <p className="text-xs text-muted-foreground">{t('plateCalculatorDescription')}</p>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4">
+      <SettingsHeading description={t('plateCalculatorDescription')}>
+        {t('plateCalculator')}
+      </SettingsHeading>
+      <div className="flex flex-col gap-5">
         <BarPlatesRow
           unitLabel="kg"
           barWeight={prefs.barWeightKg}
@@ -60,8 +59,8 @@ export function PlateFallbackSection() {
           onPlatesChange={(v) => update('platesLb', v)}
           disabled={!hydrated}
         />
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }
 
@@ -103,14 +102,13 @@ function BarPlatesRow({
   }
 
   return (
-    <div className="rounded-md border border-border/40 p-3">
-      <p className="mb-2 text-sm font-medium">{t('equipment', { unit: unitLabel })}</p>
-      <div className="flex flex-col gap-3">
-        <div className="space-y-1">
-          <Label
-            htmlFor={`bar-${unitLabel}`}
-            className="text-xs uppercase tracking-wide text-muted-foreground"
-          >
+    <div className="flex flex-col gap-3 border-t border-border pt-4">
+      <p className="text-caption font-semibold text-muted-foreground">
+        {t('equipment', { unit: unitLabel })}
+      </p>
+      <div className="grid grid-cols-[minmax(0,7rem)_minmax(0,1fr)] gap-3">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor={`bar-${unitLabel}`} className="text-small text-muted-foreground">
             {t('barWeight', { unit: unitLabel })}
           </Label>
           <Input
@@ -121,13 +119,11 @@ function BarPlatesRow({
             value={barWeight}
             disabled={disabled}
             onChange={(e) => onBarChange(parseFloat(e.target.value) || 0)}
+            className="font-num tabular-nums stretch-112"
           />
         </div>
-        <div className="space-y-1">
-          <Label
-            htmlFor={`plates-${unitLabel}`}
-            className="text-xs uppercase tracking-wide text-muted-foreground"
-          >
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor={`plates-${unitLabel}`} className="text-small text-muted-foreground">
             {t('platesPerSide', { unit: unitLabel })}
           </Label>
           <Input
