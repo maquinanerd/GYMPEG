@@ -4,7 +4,8 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { EmptyState } from '@/components/ui/empty-state';
+import { ScreenHeader } from '@/components/nav/screen-header';
 import { ReadinessCheckin } from '@/components/session/readiness-checkin';
 import { WorkoutStartList } from '@/components/session/workout-start-list';
 import { getTrainingDisplayName } from '@/i18n/training-names';
@@ -46,51 +47,42 @@ export default async function NewSessionPage() {
   ]);
   const suggestion = activeProgram ? await suggestNextWorkout(session.userId, activeProgram) : null;
 
+  // Picking a workout to start ("Trocar treino" on the home): the program's
+  // workouts as rows in program order; the suggested one stands out by its
+  // tag and ink button, not by moving to the top.
   return (
-    <main className="flex-1 px-4 py-6">
-      <div className="mx-auto flex max-w-2xl flex-col gap-4">
-        <Button asChild variant="ghost" size="sm" className="self-start">
+    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col pb-7">
+      <div className="px-5 pt-2">
+        <Button asChild variant="ghost" size="sm" className="-ml-3 h-11">
           <Link href="/">
-            <CaretLeftIcon className="size-4" />
-            <span className="ml-1">{common('actions.back')}</span>
+            <CaretLeftIcon weight="bold" />
+            {common('actions.back')}
           </Link>
         </Button>
+      </div>
+      <ScreenHeader
+        className="pt-1"
+        title={t('startTitle')}
+        subtitle={
+          activeProgram
+            ? t('activeProgram', { name: getTrainingDisplayName(activeProgram.name, locale) })
+            : undefined
+        }
+      />
 
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t('startTitle')}</h1>
-          {activeProgram ? (
-            <p className="text-sm text-muted-foreground">
-              {t('activeProgram', {
-                name: getTrainingDisplayName(activeProgram.name, locale),
-              })}
-            </p>
-          ) : null}
-        </div>
-
+      <div className="flex flex-col gap-5 px-5 pt-3">
         {!activeProgram ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('noActiveProgram')}</CardTitle>
-              <CardDescription>{t('noActiveProgramDescription')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild>
-                <Link href="/programs">{t('viewPrograms')}</Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <EmptyState
+            title={t('noActiveProgram')}
+            description={t('noActiveProgramDescription')}
+            action={{ label: t('viewPrograms'), href: '/programs' }}
+          />
         ) : activeProgram.workouts.length === 0 ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('noSession')}</CardTitle>
-              <CardDescription>{t('noSessionDescription')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild>
-                <Link href={`/programs/${activeProgram.id}`}>{t('configureProgram')}</Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <EmptyState
+            title={t('noSession')}
+            description={t('noSessionDescription')}
+            action={{ label: t('configureProgram'), href: `/programs/${activeProgram.id}` }}
+          />
         ) : (
           <>
             <ReadinessCheckin />

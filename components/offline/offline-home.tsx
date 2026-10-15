@@ -3,10 +3,12 @@
 import { useEffect, useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { CloudSlashIcon, PlayIcon, ArrowClockwiseIcon } from '@/components/ui/icon';
+import { ArrowClockwiseIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { LimeBlock } from '@/components/ui/lime-block';
+import { OfflineNotice } from '@/components/ui/screen-state';
+import { Section } from '@/components/ui/section';
 import { useTrainingName } from '@/components/shared/use-training-name';
 import { getDB } from '@/lib/indexeddb';
 import { getOutboxOwner } from '@/lib/outbox-owner';
@@ -15,13 +17,16 @@ import { countUnsyncedItems } from '@/lib/sync';
 import { offlineAwareHref } from '@/lib/offline-navigation';
 
 // Home of the offline page: resume the workout in progress on this device or
-// start one of the stored program's workouts, all without a network.
+// start one of the stored program's workouts, all without a network. Same
+// language as the online home: the workout in progress is the lime block,
+// the program's workouts are rows on the page.
 export function OfflineHome() {
   const t = useTranslations('session.offline');
   const session = useTranslations('session');
   const trainingName = useTrainingName();
   const [online, setOnline] = useState(false);
   const [starting, startTransition] = useTransition();
+  const [startingId, setStartingId] = useState<string | null>(null);
 
   useEffect(() => {
     setOnline(navigator.onLine);
@@ -61,6 +66,7 @@ export function OfflineHome() {
   }
 
   function start(workoutId: string) {
+    setStartingId(workoutId);
     startTransition(async () => {
       try {
         const started = await startSession({ workoutId, gymId: null });
@@ -71,87 +77,115 @@ export function OfflineHome() {
     });
   }
 
-  return (
-    <main className="flex-1 px-4 py-6">
-      <div className="mx-auto flex max-w-2xl flex-col gap-4">
-        <div className="flex items-start gap-3">
-          <CloudSlashIcon className="mt-1 size-5 shrink-0 text-muted-foreground" />
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
-            <p className="text-sm text-muted-foreground">{t('description')}</p>
-            {data.pending > 0 && (
-              <p className="mt-1 text-sm text-muted-foreground">
-                {t('pending', { count: data.pending })}
-              </p>
-            )}
-          </div>
-        </div>
+  const [current, ...otherOpen] = data.open;
 
+  return (
+    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col pb-7">
+      <div className="flex flex-col items-start gap-3 px-5 pb-5 pt-2">
+        <h1 className="text-title">{t('title')}</h1>
+        <OfflineNotice className="self-stretch" />
+        {data.pending > 0 && (
+          <p className="text-caption text-muted-foreground">
+            {t('pending', { count: data.pending })}
+          </p>
+        )}
         <Button
+          type="button"
           variant="outline"
-          className="self-start"
+          size="sm"
+          className="h-11"
           onClick={() => window.location.assign('/')}
         >
-          <ArrowClockwiseIcon className="size-4" />
-          <span className="ml-2">{online ? t('reconnect') : t('retry')}</span>
+          <ArrowClockwiseIcon weight="bold" />
+          {online ? t('reconnect') : t('retry')}
         </Button>
-
-        {!data.ownerId ? (
-          <p className="text-sm text-muted-foreground">{t('signedOut')}</p>
-        ) : (
-          <>
-            {data.open.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t('resumeTitle')}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-2">
-                  {data.open.map((item) => (
-                    <Button
-                      key={item.id}
-                      onClick={() => open(item.id)}
-                      className="min-h-tap justify-between"
-                    >
-                      <span>{workoutName(item.workoutId) ?? t('resumeTitle')}</span>
-                      <span>{t('resume')}</span>
-                    </Button>
-                  ))}
-                </CardContent>
-              </Card>
-            )}
-
-            {data.pack && data.pack.workouts.length > 0 ? (
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t('startTitle')}</CardTitle>
-                  {data.pack.program && (
-                    <CardDescription>{trainingName(data.pack.program.name)}</CardDescription>
-                  )}
-                </CardHeader>
-                <CardContent className="flex flex-col gap-2">
-                  {data.pack.workouts.map(({ workout }) => (
-                    <Button
-                      key={workout.id}
-                      variant="secondary"
-                      disabled={starting}
-                      onClick={() => start(workout.id)}
-                      className="min-h-tap justify-between"
-                    >
-                      <span>{trainingName(workout.name)}</span>
-                      <span className="flex items-center gap-1">
-                        <PlayIcon className="size-4" />
-                        {t('start')}
-                      </span>
-                    </Button>
-                  ))}
-                </CardContent>
-              </Card>
-            ) : (
-              <p className="text-sm text-muted-foreground">{t('noPack')}</p>
-            )}
-          </>
-        )}
       </div>
+
+      {!data.ownerId ? (
+        <p className="px-5 text-body text-muted-foreground">{t('signedOut')}</p>
+      ) : (
+        <>
+          {current && (
+            <LimeBlock aria-labelledby="offline-resume-title" data-testid="offline-resume">
+              <p className="text-caption font-semibold text-brand-strong">{t('resumeTitle')}</p>
+              <h2 id="offline-resume-title" className="text-display [overflow-wrap:anywhere]">
+                {workoutName(current.workoutId) ?? t('resumeTitle')}
+              </h2>
+              <Button type="button" variant="ink" className="w-full" onClick={() => open(current.id)}>
+                {t('resume')}
+              </Button>
+              {/* Rare: more than one unfinished workout on this device. */}
+              {otherOpen.length > 0 && (
+                <ul className="flex flex-col">
+                  {otherOpen.map((item) => {
+                    const nameId = `offline-open-${item.id}`;
+                    return (
+                      <li
+                        key={item.id}
+                        className="flex items-center justify-between gap-3 border-t border-ink/[0.14] py-1"
+                      >
+                        <span id={nameId} className="min-w-0 text-body">
+                          {workoutName(item.workoutId) ?? t('resumeTitle')}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-11 hover:bg-ink/[0.08]"
+                          aria-describedby={nameId}
+                          onClick={() => open(item.id)}
+                        >
+                          {t('resume')}
+                        </Button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </LimeBlock>
+          )}
+
+          <div className={current ? 'px-5 pt-7' : 'px-5'}>
+            {data.pack && data.pack.workouts.length > 0 ? (
+              <Section title={t('startTitle')} className="gap-1.5">
+                {data.pack.program && (
+                  <p className="text-[0.8125rem] font-medium text-muted-foreground">
+                    {trainingName(data.pack.program.name)}
+                  </p>
+                )}
+                <ul className="mt-1.5 flex flex-col">
+                  {data.pack.workouts.map(({ workout }) => {
+                    const nameId = `offline-workout-${workout.id}`;
+                    return (
+                      <li
+                        key={workout.id}
+                        className="flex min-h-[3.25rem] items-center justify-between gap-3 border-t border-border py-2"
+                      >
+                        <span id={nameId} className="min-w-0 text-body font-semibold">
+                          {trainingName(workout.name)}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="h-11 shrink-0 px-4 text-body"
+                          disabled={starting}
+                          loading={starting && startingId === workout.id}
+                          aria-describedby={nameId}
+                          onClick={() => start(workout.id)}
+                        >
+                          {t('start')}
+                        </Button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </Section>
+            ) : (
+              <p className="text-body text-muted-foreground [text-wrap:pretty]">{t('noPack')}</p>
+            )}
+          </div>
+        </>
+      )}
     </main>
   );
 }
