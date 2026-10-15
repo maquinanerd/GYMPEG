@@ -14,6 +14,9 @@ const withPWA = require('@ducanh2912/next-pwa').default({
   // The start URL is the signed-in dashboard: not cached either.
   cacheStartUrl: false,
   fallbacks: { document: '/~offline' },
+  // Exercise technique frames (~28 MB) are never precached at install: each
+  // frame is cached at runtime the first time it is shown (below).
+  publicExcludes: ['!noprecache/**/*', '!exercise-media/**/*'],
   workboxOptions: {
     skipWaiting: true,
     clientsClaim: true,
@@ -39,6 +42,16 @@ const withPWA = require('@ducanh2912/next-pwa').default({
           cacheName: 'pages-never-stored',
           networkTimeoutSeconds: 10,
           cacheableResponse: { headers: { 'x-gympeg-cache-page': 'never-set' } },
+        },
+      },
+      {
+        // Technique frames seen once stay available offline (the running
+        // workout shows them), within a bounded cache.
+        urlPattern: ({ url }) => url.pathname.startsWith('/exercise-media/'),
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'exercise-media',
+          expiration: { maxEntries: 120, maxAgeSeconds: 30 * 24 * 60 * 60 },
         },
       },
       {

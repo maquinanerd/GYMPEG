@@ -110,6 +110,11 @@ describe('MAX_PROGRESS_PHOTO_BYTES', () => {
 
 // Storage containment and file permissions (issue #282). These touch a scratch
 // uploads dir; nothing outside it is created or read.
+//
+// Windows has no POSIX permission bits (stat reports 0o666 for any writable
+// file), so the mode checks run where the app runs: Linux (the Docker image).
+const POSIX_MODES = process.platform !== 'win32';
+
 describe('photo file storage', () => {
   let scratch = '';
   const prevUploadsDir = process.env.UPLOADS_DIR;
@@ -125,7 +130,7 @@ describe('photo file storage', () => {
     if (scratch) await rm(scratch, { recursive: true, force: true });
   });
 
-  it('writes the file 0o600 and its per-user dir 0o700', async () => {
+  it.runIf(POSIX_MODES)('writes the file 0o600 and its per-user dir 0o700', async () => {
     const rel = photoRelativePath('user-1', 'photo-1', 'image/jpeg');
     await writePhotoFile(rel, Uint8Array.from([0xff, 0xd8, 0xff]));
 
@@ -134,7 +139,7 @@ describe('photo file storage', () => {
     expect((await stat(path.dirname(abs))).mode & 0o777).toBe(0o700);
   });
 
-  it('tightens a per-user dir left behind with looser permissions', async () => {
+  it.runIf(POSIX_MODES)('tightens a per-user dir left behind with looser permissions', async () => {
     const dir = path.join(progressPhotoStorageDir(), 'user-legacy');
     await mkdir(dir, { recursive: true, mode: 0o755 });
 
@@ -156,7 +161,9 @@ describe('photo file storage', () => {
     const outside = path.join(scratch, 'outside');
     await mkdir(outside, { recursive: true });
     await mkdir(progressPhotoStorageDir(), { recursive: true });
-    await symlink(outside, path.join(progressPhotoStorageDir(), 'linked-user'));
+    // 'junction' only matters on Windows, where a directory junction needs no
+    // admin rights (a symlink does); POSIX ignores the type.
+    await symlink(outside, path.join(progressPhotoStorageDir(), 'linked-user'), 'junction');
 
     // Textually inside the uploads dir, really not: only the realpath check
     // catches this one.

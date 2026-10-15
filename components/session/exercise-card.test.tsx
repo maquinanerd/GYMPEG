@@ -6,6 +6,12 @@ import { ExerciseCard } from './exercise-card';
 import type { SerializedLastPerformance } from './session-runner';
 import { exerciseFixture } from '@/tests/fixtures/exercise';
 
+// The media branch runs on a fixture, not the real frame catalog.
+vi.mock(
+  '@/lib/exercise-media',
+  async () => (await import('@/tests/fixtures/exercise-media-mock')).exerciseMediaMock,
+);
+
 const exo: Exercise = exerciseFixture({
   id: 'e1',
   userId: 'u',
@@ -93,6 +99,36 @@ describe('ExerciseCard mobile title layout', () => {
     renderCard(null);
     expect(screen.getByTestId('exercise-media-fallback')).toHaveClass('aspect-[3/2]', 'bg-muted');
     expect(screen.getByRole('group', { name: /quads/i })).toBeInTheDocument();
+  });
+});
+
+describe('ExerciseCard technique media', () => {
+  it('shows the start frame above the title and opens the technique viewer', () => {
+    const bench = { ...pe, exercise: { ...exo, name: 'Barbell bench press' } };
+    render(
+      <ExerciseCard
+        programExercise={bench}
+        lastPerformance={lastPerf}
+        readiness={null}
+        deloadActive={false}
+        unit="KG"
+      />,
+    );
+
+    const frames = screen
+      .getAllByRole('img')
+      .filter((img) => img.getAttribute('src')?.includes('Barbell_Bench_Press'));
+    expect(frames[0]).toHaveAttribute(
+      'src',
+      '/exercise-media/test-fixture/Barbell_Bench_Press/0.jpg',
+    );
+    fireEvent.click(screen.getAllByRole('button', { name: 'Enlarge the technique' })[0]!);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  it('shows no picture and no enlarge button when the exercise has no frames', () => {
+    renderCard(null);
+    expect(screen.queryByRole('button', { name: 'Enlarge the technique' })).not.toBeInTheDocument();
   });
 });
 

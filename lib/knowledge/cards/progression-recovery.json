@@ -1,0 +1,1086 @@
+[
+  {
+    "id": "pr-progressive-overload-load-vs-reps",
+    "topic": "progression",
+    "title": "Sobrecarga progressiva: subir carga, repetições ou ambos (progressão dupla)",
+    "keywords": [
+      "sobrecarga progressiva",
+      "progressive overload",
+      "progressão dupla",
+      "double progression",
+      "aumentar carga",
+      "subir peso",
+      "aumentar repetições",
+      "rep progression",
+      "load progression",
+      "quando aumentar o peso",
+      "como progredir",
+      "progressão de carga",
+      "evoluir no treino"
+    ],
+    "summary": "Para continuar evoluindo, o treino precisa ficar progressivamente mais exigente, mas isso não exige subir a carga toda semana. Em um ensaio de 8 semanas com 43 praticantes treinados, aumentar repetições com carga fixa e aumentar carga com repetições fixas produziram hipertrofia de pernas semelhante (leve vantagem das repetições no reto femoral); a força no agachamento pendeu levemente para a progressão de carga (cerca de 2 kg, diferença de relevância prática incerta). O posicionamento do ACSM (2009) recomenda aumentar a carga em 2-10% quando a pessoa consegue fazer 1-2 repetições acima da meta, lógica que corresponde à progressão dupla: primeiro subir repetições dentro de uma faixa, depois subir a carga e voltar ao início da faixa. A recomendação do ACSM se apoia em consenso e estudos antigos; comparações diretas entre métodos de progressão ainda são poucas e curtas.",
+    "practice": [
+      "Use uma faixa de repetições (ex.: 8-12): quando completar o topo da faixa em todas as séries com boa técnica, aumente a carga.",
+      "Faça incrementos pequenos, em torno de 2-10% (em exercícios pequenos, a menor anilha ou placa disponível).",
+      "Se não houver carga intermediária, progrida primeiro em repetições; isso também é sobrecarga progressiva.",
+      "Se a prioridade é força máxima, inclua progressão de carga nos exercícios principais."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Plotkin D, Coleman M, Van Every D, et al. Progressive overload without progressing load? The effects of load or repetition progression on muscular adaptations. PeerJ. 2022;10:e14142.",
+        "year": 2022,
+        "doi": "10.7717/peerj.14142"
+      },
+      {
+        "citation": "American College of Sports Medicine. American College of Sports Medicine position stand. Progression models in resistance training for healthy adults. Med Sci Sports Exerc. 2009;41(3):687-708.",
+        "year": 2009,
+        "doi": "10.1249/MSS.0b013e3181915670"
+      }
+    ]
+  },
+  {
+    "id": "pr-periodized-vs-non-periodized",
+    "topic": "periodization",
+    "title": "Periodizar o treino vale a pena?",
+    "keywords": [
+      "periodização",
+      "periodization",
+      "treino periodizado",
+      "periodized training",
+      "não periodizado",
+      "non-periodized",
+      "mesociclo",
+      "macrociclo",
+      "planejamento de treino",
+      "variar o treino",
+      "ciclo de treino",
+      "programação"
+    ],
+    "summary": "Periodizar é organizar variações planejadas de volume e intensidade ao longo do tempo. Uma meta-análise de 2022 (35 estudos, volume equalizado entre grupos) encontrou vantagem pequena da periodização para força máxima (1RM; tamanho de efeito ~0,31), mas nenhuma diferença na hipertrofia em relação ao treino não periodizado. Uma meta-análise anterior (18 estudos) também favoreceu a periodização para 1RM (efeito ~0,43), com ganhos maiores em programas ondulatórios, mais longos e com maior frequência semanal. Em resumo: para força, variar a intensidade de forma planejada parece ajudar um pouco; para tamanho muscular, o modelo importa pouco e o que pesa é volume, esforço e progressão. Limitações: estudos curtos, amostras pequenas e grupos 'não periodizados' nem sempre bem definidos.",
+    "practice": [
+      "Se o objetivo é força máxima, alterne de forma planejada dias ou fases com cargas mais pesadas e mais leves.",
+      "Se o objetivo é hipertrofia, priorize volume, esforço e progressão; o modelo de periodização é secundário.",
+      "Revise o progresso ao fim de cada ciclo e ajuste o plano com base no histórico.",
+      "Prefira um plano simples que você consiga seguir a um plano sofisticado que será abandonado."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Moesgaard L, Beck MM, Christiansen L, et al. Effects of periodization on strength and muscle hypertrophy in volume-equated resistance training programs: a systematic review and meta-analysis. Sports Med. 2022;52(7):1647-1666.",
+        "year": 2022,
+        "doi": "10.1007/s40279-021-01636-1"
+      },
+      {
+        "citation": "Williams TD, Tolusso DV, Fedewa MV, et al. Comparison of periodized and non-periodized resistance training on maximal strength: a meta-analysis. Sports Med. 2017;47(10):2083-2100.",
+        "year": 2017,
+        "doi": "10.1007/s40279-017-0734-y"
+      }
+    ]
+  },
+  {
+    "id": "pr-linear-undulating-block-models",
+    "topic": "periodization",
+    "title": "Periodização linear, ondulatória ou em blocos: qual escolher?",
+    "keywords": [
+      "periodização linear",
+      "linear periodization",
+      "periodização ondulatória",
+      "undulating periodization",
+      "dup",
+      "daily undulating",
+      "periodização em blocos",
+      "block periodization",
+      "treino ondulatório",
+      "qual periodização",
+      "linear vs ondulatória",
+      "modelo de periodização"
+    ],
+    "summary": "Comparações diretas mostram diferenças pequenas entre modelos. Para hipertrofia, a periodização linear e a ondulatória diária (DUP) produziram crescimento muscular praticamente igual (meta-análise de 13 estudos; outra meta-análise de 2022 também sem diferença). Para força, os resultados divergem: uma meta-análise de 17 estudos não achou diferença entre linear e ondulatória, enquanto a de 2022 achou leve vantagem da ondulatória para 1RM, restrita a pessoas treinadas (em iniciantes, empate). Sobre periodização em blocos a evidência é escassa: não há meta-análise específica, e um estudo de 10 semanas com atletas de atletismo não encontrou diferença estatística entre blocos e DUP, embora o grupo em blocos tenha obtido ganhos semelhantes com menos volume. O modelo importa menos que treinar de forma consistente e progressiva.",
+    "practice": [
+      "Iniciantes: qualquer modelo funciona; uma progressão linear simples costuma bastar.",
+      "Treinados focados em força podem variar as cargas ao longo da semana (ex.: um dia mais pesado e outro mais leve).",
+      "Escolha o modelo que cabe na sua rotina; a adesão pesa mais que o rótulo do programa.",
+      "Não troque de modelo a cada semana: dê tempo ao ciclo para avaliar o resultado."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Moesgaard L, Beck MM, Christiansen L, et al. Effects of periodization on strength and muscle hypertrophy in volume-equated resistance training programs: a systematic review and meta-analysis. Sports Med. 2022;52(7):1647-1666.",
+        "year": 2022,
+        "doi": "10.1007/s40279-021-01636-1"
+      },
+      {
+        "citation": "Harries SK, Lubans DR, Callister R. Systematic review and meta-analysis of linear and undulating periodized resistance training programs on muscular strength. J Strength Cond Res. 2015;29(4):1113-1125.",
+        "year": 2015,
+        "doi": "10.1519/JSC.0000000000000712"
+      },
+      {
+        "citation": "Grgic J, Mikulic P, Podnar H, et al. Effects of linear and daily undulating periodized resistance training programs on measures of muscle hypertrophy: a systematic review and meta-analysis. PeerJ. 2017;5:e3695.",
+        "year": 2017,
+        "doi": "10.7717/peerj.3695"
+      },
+      {
+        "citation": "Painter KB, Haff GG, Ramsey MW, et al. Strength gains: block versus daily undulating periodization weight training among track and field athletes. Int J Sports Physiol Perform. 2012;7(2):161-169.",
+        "year": 2012,
+        "doi": "10.1123/ijspp.7.2.161"
+      }
+    ]
+  },
+  {
+    "id": "pr-rir-rpe-scale",
+    "topic": "autoregulation",
+    "title": "Escala RIR/RPE: o que é e como usar",
+    "keywords": [
+      "rir",
+      "repetições em reserva",
+      "reps in reserve",
+      "rpe",
+      "percepção de esforço",
+      "rating of perceived exertion",
+      "escala de esforço",
+      "quantas reps sobraram",
+      "rpe 8",
+      "rir 2",
+      "autorregulação",
+      "autoregulation",
+      "intensidade de esforço"
+    ],
+    "summary": "A escala de RPE baseada em repetições em reserva (RIR) liga a nota de esforço ao número de repetições que ainda caberiam antes da falha: RPE 10 = 0 RIR, RPE 9 = 1 RIR, RPE 8 = 2 RIR, e assim por diante. No agachamento, as notas de RPE tiveram forte relação inversa com a velocidade da barra em praticantes experientes e novatos (r entre -0,77 e -0,88), o que apoia a escala como forma prática de regular a carga do dia. Uma revisão aplicada descreve usos como prescrever séries por RIR-alvo, ajustar a carga entre séries e acompanhar a fadiga ao longo do ciclo. A escala depende da percepção individual, que é imperfeita (ver card sobre precisão do RIR), e foi estudada principalmente em exercícios multiarticulares com barra.",
+    "practice": [
+      "Anote o RIR estimado ao fim de cada série; com o tempo, isso vira um bom diário de esforço.",
+      "Escolha a carga para cair dentro da faixa de repetições com o RIR-alvo do dia.",
+      "Se a meta era RIR 2 e a série terminou em RIR 0, reduza a carga na próxima; se terminou em RIR 4, aumente.",
+      "Use o RIR junto com a faixa de repetições, não no lugar dela."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Zourdos MC, Klemp A, Dolan C, et al. Novel resistance training-specific rating of perceived exertion scale measuring repetitions in reserve. J Strength Cond Res. 2016;30(1):267-275.",
+        "year": 2016,
+        "doi": "10.1519/JSC.0000000000001049"
+      },
+      {
+        "citation": "Helms ER, Cronin J, Storey A, et al. Application of the repetitions in reserve-based rating of perceived exertion scale for resistance training. Strength Cond J. 2016;38(4):42-49.",
+        "year": 2016,
+        "doi": "10.1519/SSC.0000000000000218"
+      }
+    ]
+  },
+  {
+    "id": "pr-rir-estimation-accuracy",
+    "topic": "autoregulation",
+    "title": "Dá para confiar na estimativa de RIR?",
+    "keywords": [
+      "precisão do rir",
+      "rir accuracy",
+      "estimar repetições",
+      "quantas reps faltam",
+      "prever falha",
+      "predicting failure",
+      "errar o rir",
+      "rpe impreciso",
+      "autopercepção",
+      "falha muscular",
+      "perto da falha",
+      "proximity to failure"
+    ],
+    "summary": "Uma meta-análise exploratória (12 estudos, 414 participantes) mostrou que as pessoas tendem a subestimar quantas repetições ainda conseguem fazer, em média por cerca de 1 repetição, mas com enorme variação entre estudos. A precisão melhorou quando a estimativa era feita perto da falha, em séries com até 12 repetições e em séries mais tardias; o nível de treino teve pouca influência. Em agachamento a 70% de 1RM (cerca de 16 repetições), o erro médio foi de ~5 repetições ao indicar 5 RIR e de ~2 ao indicar 1 RIR. Já no supino a 75% de 1RM, praticantes treinados de ambos os sexos acertaram 1 e 3 RIR com erro absoluto médio abaixo de 1 repetição. O RIR é útil, mas é mais confiável em séries curtas e próximas da falha.",
+    "practice": [
+      "Confie mais no RIR em séries de até ~12 repetições e quando estiver a poucas repetições da falha.",
+      "De vez em quando, leve uma série à falha com segurança (ex.: em máquinas) para calibrar a percepção.",
+      "Em séries longas (15 ou mais repetições), espere errar mais e tender a achar que está mais perto da falha do que está.",
+      "Use o histórico de cargas e repetições para checar se o RIR anotado faz sentido."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Halperin I, Malleron T, Har-Nir I, et al. Accuracy in predicting repetitions to task failure in resistance exercise: a scoping review and exploratory meta-analysis. Sports Med. 2022;52(2):377-390.",
+        "year": 2022,
+        "doi": "10.1007/s40279-021-01559-x"
+      },
+      {
+        "citation": "Zourdos MC, Goldsmith JA, Helms ER, et al. Proximity to failure and total repetitions performed in a set influences accuracy of intraset repetitions in reserve-based rating of perceived exertion. J Strength Cond Res. 2021;35(Suppl 1):S158-S165.",
+        "year": 2021,
+        "doi": "10.1519/JSC.0000000000002995"
+      },
+      {
+        "citation": "Refalo MC, Remmert JF, Pelland JC, et al. Accuracy of intraset repetitions-in-reserve predictions during the bench press exercise in resistance-trained male and female subjects. J Strength Cond Res. 2024;38(3):e78-e85.",
+        "year": 2024,
+        "doi": "10.1519/JSC.0000000000004653"
+      }
+    ]
+  },
+  {
+    "id": "pr-autoregulation-vs-percentage",
+    "topic": "autoregulation",
+    "title": "Autorregulação (RPE/RIR) vs. percentual fixo de 1RM",
+    "keywords": [
+      "autorregulação",
+      "autoregulation",
+      "rpe vs porcentagem",
+      "percentage based training",
+      "% de 1rm",
+      "carga fixa",
+      "treino por rpe",
+      "ajustar carga do dia",
+      "dia ruim",
+      "prontidão",
+      "readiness",
+      "treino flexível"
+    ],
+    "summary": "Autorregular é ajustar carga ou volume conforme o desempenho do dia (por RPE/RIR ou velocidade da barra) em vez de seguir percentuais fixos de 1RM. Uma meta-análise de 2022 com praticantes treinados (seis estudos sobre carga) não encontrou diferença significativa de força entre carga autorregulada e carga por percentual (diferença média ~2 kg a favor da autorregulação, sem significância). Em um estudo de 8 semanas com homens treinados, a carga por RPE e a carga por %1RM aumentaram força e espessura muscular de forma semelhante, com tendência de pequena vantagem de força para o RPE. A autorregulação parece ao menos tão eficaz quanto percentuais fixos e dispensa testar o 1RM com frequência, mas os estudos são poucos, curtos e quase só com homens jovens treinados.",
+    "practice": [
+      "Use a carga planejada como ponto de partida e ajuste pelo RIR da primeira série de trabalho.",
+      "Em dias ruins (sono, estresse), aceite cargas menores mantendo o esforço-alvo; em dias bons, aproveite.",
+      "Iniciantes podem começar com cargas e faixas fixas e introduzir o RIR à medida que dominam a técnica.",
+      "Registre carga, repetições e RIR para acompanhar tendências de forma objetiva."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Hickmott LM, Chilibeck PD, Shaw KA, et al. The effect of load and volume autoregulation on muscular strength and hypertrophy: a systematic review and meta-analysis. Sports Med Open. 2022;8(1):9.",
+        "year": 2022,
+        "doi": "10.1186/s40798-021-00404-9"
+      },
+      {
+        "citation": "Helms ER, Byrnes RK, Cooke DM, et al. RPE vs. percentage 1RM loading in periodized programs matched for sets and repetitions. Front Physiol. 2018;9:247.",
+        "year": 2018,
+        "doi": "10.3389/fphys.2018.00247"
+      }
+    ]
+  },
+  {
+    "id": "pr-velocity-based-training",
+    "topic": "autoregulation",
+    "title": "Treino baseado em velocidade (VBT)",
+    "keywords": [
+      "vbt",
+      "velocity based training",
+      "treino por velocidade",
+      "velocidade da barra",
+      "bar speed",
+      "encoder",
+      "perda de velocidade",
+      "velocity loss",
+      "perfil carga-velocidade",
+      "load velocity profile",
+      "acelerômetro",
+      "sensor de velocidade"
+    ],
+    "summary": "No VBT, a velocidade da barra medida por um dispositivo orienta a escolha da carga (perfil carga-velocidade) e o momento de encerrar a série (limiar de perda de velocidade). Meta-análises que compararam VBT com treino por %1RM mostram resultados parecidos: uma (6 estudos, 124 participantes) não encontrou diferença no 1RM de agachamento, salto ou sprint; outra (7 estudos, 139 participantes) achou pequena vantagem do VBT para força máxima (efeito ~0,26), mais clara em atletas. Sobre o limiar de perda de velocidade, perdas até ~25% favoreceram a força, enquanto perdas acima de 20-25% favoreceram a hipertrofia, por acumularem mais volume. A base é de poucos estudos pequenos e o método exige equipamento confiável.",
+    "practice": [
+      "VBT é opcional: útil para atletas e para quem tem um medidor de velocidade confiável.",
+      "Para força e potência, encerre as séries com perdas de velocidade menores (até ~20-25%).",
+      "Para hipertrofia, perdas de velocidade maiores (mais perto da falha) acumulam mais volume.",
+      "Sem dispositivo, o RIR é uma alternativa prática para regular o esforço."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Weakley J, Mann B, Banyard H, et al. Velocity-based training: from theory to application. Strength Cond J. 2021;43(2):31-49.",
+        "year": 2021,
+        "doi": "10.1519/SSC.0000000000000560"
+      },
+      {
+        "citation": "Liao KF, Wang XX, Han MY, et al. Effects of velocity based training vs. traditional 1RM percentage-based training on improving strength, jump, linear sprint and change of direction speed performance: a systematic review with meta-analysis. PLoS One. 2021;16(11):e0259790.",
+        "year": 2021,
+        "doi": "10.1371/journal.pone.0259790"
+      },
+      {
+        "citation": "Zhang M, Tan Q, Sun J, et al. Comparison of velocity and percentage-based training on maximal strength: meta-analysis. Int J Sports Med. 2022;43(12):981-995.",
+        "year": 2022,
+        "doi": "10.1055/a-1790-8546"
+      },
+      {
+        "citation": "Hickmott LM, Chilibeck PD, Shaw KA, et al. The effect of load and volume autoregulation on muscular strength and hypertrophy: a systematic review and meta-analysis. Sports Med Open. 2022;8(1):9.",
+        "year": 2022,
+        "doi": "10.1186/s40798-021-00404-9"
+      }
+    ]
+  },
+  {
+    "id": "pr-estimated-1rm-equations",
+    "topic": "intensity",
+    "title": "1RM estimado: Epley, Brzycki e a precisão em séries longas",
+    "keywords": [
+      "1rm estimado",
+      "e1rm",
+      "estimated 1rm",
+      "calculadora de 1rm",
+      "fórmula de epley",
+      "epley",
+      "brzycki",
+      "carga máxima",
+      "repetição máxima",
+      "1rm calculator",
+      "prever 1rm",
+      "quanto eu levanto",
+      "porcentagem do 1rm"
+    ],
+    "summary": "Fórmulas como Epley e Brzycki estimam o 1RM a partir da carga e do número de repetições de uma série levada à falha ou perto dela; a de Brzycki equivale a carga × 36/(37 − repetições). Elas funcionam razoavelmente com poucas repetições, mas o erro cresce conforme as repetições aumentam. Em 70 adultos, séries de 5RM previram o 1RM com mais precisão que 10RM ou 20RM no supino e no leg press, e os autores recomendaram não usar mais de 10 repetições em equações lineares. Uma meta-regressão com 269 estudos mostrou que o número de repetições possível em cada %1RM varia bastante entre pessoas e entre exercícios (no leg press cabem mais repetições que no supino na mesma porcentagem), o que limita qualquer fórmula única. O e1RM serve melhor como tendência de progresso do que como valor exato.",
+    "practice": [
+      "Para estimar o 1RM, prefira séries de 3-6 repetições perto da falha; acima de 10 repetições a estimativa piora.",
+      "Compare o e1RM sempre no mesmo exercício e com a mesma fórmula; o valor serve para ver tendência.",
+      "Não use o e1RM de um exercício para prescrever carga em outro.",
+      "Ao escolher carga por %1RM, ajuste pelo RIR, porque as repetições possíveis em cada porcentagem variam entre pessoas."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Brzycki M. Strength testing—predicting a one-rep max from reps-to-fatigue. J Phys Educ Recreat Dance. 1993;64(1):88-90.",
+        "year": 1993,
+        "doi": "10.1080/07303084.1993.10606684"
+      },
+      {
+        "citation": "Reynolds JM, Gordon TJ, Robergs RA. Prediction of one repetition maximum strength from multiple repetition maximum testing and anthropometry. J Strength Cond Res. 2006;20(3):584-592.",
+        "year": 2006,
+        "doi": "10.1519/R-15304.1"
+      },
+      {
+        "citation": "Nuzzo JL, Pinto MD, Nosaka K, et al. Maximal number of repetitions at percentages of the one repetition maximum: a meta-regression and moderator analysis of sex, age, training status, and exercise. Sports Med. 2024;54(2):303-321.",
+        "year": 2024,
+        "doi": "10.1007/s40279-023-01937-7"
+      }
+    ]
+  },
+  {
+    "id": "pr-1rm-testing-safety",
+    "topic": "intensity",
+    "title": "Testar 1RM é seguro?",
+    "keywords": [
+      "teste de 1rm",
+      "1rm test",
+      "testar carga máxima",
+      "max test",
+      "recorde pessoal",
+      "bater pr",
+      "segurança",
+      "safety",
+      "lesão no teste",
+      "testar força",
+      "one rep max",
+      "carga máxima"
+    ],
+    "summary": "Em pessoas saudáveis, o teste de 1RM bem conduzido é confiável: uma revisão de 32 estudos encontrou coeficiente de correlação intraclasse mediano de 0,97 e variação típica de ~4% entre testes. Relatos de lesão são raros: em 96 crianças de 6 a 12 anos testadas em máquinas com supervisão, nenhuma se lesionou. Porém, ausência de relatos não prova risco zero. Há um caso publicado de fratura vertebral durante teste de 1RM no leg press em uma sobrevivente de câncer de mama de 69 anos com osteoporose não diagnosticada, e esforços máximos elevam bastante a pressão arterial, o que importa para idosos e cardiopatas. Nesses grupos, estimar o 1RM com séries submáximas, sem chegar à falha, é uma alternativa mais prudente, embora menos precisa. Faltam dados sobre a taxa real de lesões.",
+    "practice": [
+      "Teste o 1RM só com técnica estável, aquecimento progressivo e ajudante ou travas de segurança.",
+      "Idosos, cardiopatas, pessoas com osteoporose ou em tratamento de saúde: prefira estimar o 1RM com séries submáximas e busque orientação profissional.",
+      "Na maior parte do tempo, acompanhe o 1RM estimado pelo histórico em vez de testar o máximo com frequência.",
+      "Interrompa a tentativa diante de dor aguda, tontura ou perda de técnica."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Grgic J, Lazinica B, Schoenfeld BJ, et al. Test-retest reliability of the one-repetition maximum (1RM) strength assessment: a systematic review. Sports Med Open. 2020;6(1):31.",
+        "year": 2020,
+        "doi": "10.1186/s40798-020-00260-z"
+      },
+      {
+        "citation": "Faigenbaum AD, Milliken LA, Westcott WL. Maximal strength testing in healthy children. J Strength Cond Res. 2003;17(1):162-166.",
+        "year": 2003,
+        "doi": "10.1519/00124278-200302000-00025"
+      },
+      {
+        "citation": "Rosenberger F, Schneider J, Schlueter K, et al. Vertebral fracture during one repetition maximum testing in a breast cancer survivor: a case report. Medicine (Baltimore). 2021;100(20):e25705.",
+        "year": 2021,
+        "doi": "10.1097/MD.0000000000025705"
+      },
+      {
+        "citation": "Niewiadomski W, Laskowska D, Gąsiorowska A, et al. Determination and prediction of one repetition maximum (1RM): safety considerations. J Hum Kinet. 2008;19:109-120.",
+        "year": 2008,
+        "doi": "10.2478/v10078-008-0008-8"
+      }
+    ]
+  },
+  {
+    "id": "pr-plateau-what-to-change",
+    "topic": "progression",
+    "title": "Estagnei: o que mudar quando o progresso para",
+    "keywords": [
+      "platô",
+      "plateau",
+      "estagnei",
+      "estagnação",
+      "não evoluo",
+      "parei de evoluir",
+      "stall",
+      "stalled",
+      "travado",
+      "carga não sobe",
+      "sem progresso",
+      "sair do platô",
+      "não cresço mais"
+    ],
+    "summary": "Não há ensaios que testem diretamente o que fazer em um platô, então as recomendações vêm de evidência indireta. Uma meta-regressão de 67 estudos indica que mais séries semanais aumentam força e hipertrofia, mas com retornos decrescentes, mais acentuados para a força; já a frequência semanal parece favorecer a força, com pouco efeito identificável na hipertrofia. Variar exercícios de forma sistemática pode favorecer hipertrofia regional e força, enquanto trocas aleatórias e excessivas podem atrapalhar. Para força em pessoas treinadas, variar as cargas (periodização ondulatória) deu leve vantagem. A progressão naturalmente desacelera com a experiência: em powerlifters, os mais fortes evoluíram em ritmo menor. Antes de mudar o programa, vale checar sono, estresse, alimentação e a consistência de técnica e esforço.",
+    "practice": [
+      "Confirme o platô olhando várias semanas de histórico com esforço semelhante, não uma sessão ruim.",
+      "Cheque recuperação (sono, estresse, alimentação) antes de aumentar o treino.",
+      "Mude uma variável por vez: algumas séries semanais a mais para o grupo travado, ou uma sessão extra se o alvo for força.",
+      "Troque exercícios de forma planejada, buscando um estímulo diferente, e não aleatoriamente a cada sessão.",
+      "Se houver sinais de fadiga acumulada, uma semana de deload pode ajudar a retomar a progressão."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Pelland JC, Remmert JF, Robinson ZP, et al. The resistance training dose response: meta-regressions exploring the effects of weekly volume and frequency on muscle hypertrophy and strength gains. Sports Med. 2026;56(2):481-505.",
+        "year": 2026,
+        "doi": "10.1007/s40279-025-02344-w"
+      },
+      {
+        "citation": "Kassiano W, Nunes JP, Costa B, et al. Does varying resistance exercises promote superior muscle hypertrophy and strength gains? A systematic review. J Strength Cond Res. 2022;36(6):1753-1762.",
+        "year": 2022,
+        "doi": "10.1519/JSC.0000000000004258"
+      },
+      {
+        "citation": "Moesgaard L, Beck MM, Christiansen L, et al. Effects of periodization on strength and muscle hypertrophy in volume-equated resistance training programs: a systematic review and meta-analysis. Sports Med. 2022;52(7):1647-1666.",
+        "year": 2022,
+        "doi": "10.1007/s40279-021-01636-1"
+      },
+      {
+        "citation": "Latella C, Teo WP, Spathis J, et al. Long-term strength adaptation: a 15-year analysis of powerlifting athletes. J Strength Cond Res. 2020;34(9):2412-2418.",
+        "year": 2020,
+        "doi": "10.1519/JSC.0000000000003657"
+      }
+    ]
+  },
+  {
+    "id": "pr-deload-weeks",
+    "topic": "deload",
+    "title": "Semana de deload: quando e como fazer",
+    "keywords": [
+      "deload",
+      "semana de descarga",
+      "descarga",
+      "semana leve",
+      "deload week",
+      "diminuir o treino",
+      "reduzir volume",
+      "fadiga acumulada",
+      "semana de recuperação",
+      "quando fazer deload",
+      "como fazer deload",
+      "recovery week"
+    ],
+    "summary": "Deload é um período curto de redução do estresse de treino para dissipar fadiga e preparar o bloco seguinte. A evidência vem sobretudo de consenso e prática: em um consenso Delphi com treinadores de força e fisiculturismo, houve concordância de que o volume deve cair (menos séries, repetições ou exercícios), que o esforço pode ser reduzido (séries mais longe da falha) e que a carga pode cair ou se manter. Em um levantamento com 246 atletas, o deload típico durou cerca de 6 dias, a cada ~5-6 semanas, reduzindo volume e esforço e mantendo a frequência. Um ensaio controlado com 1 semana sem treino no meio de um programa de 9 semanas não alterou a hipertrofia, mas resultou em ganhos de força um pouco menores. Deload não é obrigatório para crescer; seu papel é gerenciar a fadiga.",
+    "practice": [
+      "Faça deload quando houver sinais de fadiga acumulada (queda de desempenho, dores articulares, desânimo) ou de forma planejada a cada 4-8 semanas.",
+      "Reduza o volume (menos séries por exercício) e termine as séries mais longe da falha, mantendo os mesmos exercícios.",
+      "Mantenha a frequência de treinos; parar totalmente não é necessário e pode custar um pouco de força.",
+      "Depois do deload, retome com um novo bloco ou aumente a dificuldade de forma progressiva."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Bell L, Strafford BW, Coleman M, et al. Integrating deloading into strength and physique sports training programmes: an international Delphi consensus approach. Sports Med Open. 2023;9(1):87.",
+        "year": 2023,
+        "doi": "10.1186/s40798-023-00633-0"
+      },
+      {
+        "citation": "Rogerson D, Nolan D, Korakakis PA, et al. Deloading practices in strength and physique sports: a cross-sectional survey. Sports Med Open. 2024;10(1):26.",
+        "year": 2024,
+        "doi": "10.1186/s40798-024-00691-y"
+      },
+      {
+        "citation": "Coleman M, Burke R, Augustin F, et al. Gaining more from doing less? The effects of a one-week deload period during supervised resistance training on muscular adaptations. PeerJ. 2024;12:e16777.",
+        "year": 2024,
+        "doi": "10.7717/peerj.16777"
+      }
+    ]
+  },
+  {
+    "id": "pr-overreaching-vs-overtraining",
+    "topic": "recovery",
+    "title": "Overreaching x síndrome do overtraining",
+    "keywords": [
+      "overtraining",
+      "overreaching",
+      "sobretreino",
+      "excesso de treino",
+      "treinei demais",
+      "fadiga crônica",
+      "cansaço constante",
+      "queda de rendimento",
+      "síndrome do overtraining",
+      "overtraining syndrome",
+      "burnout",
+      "recuperação insuficiente"
+    ],
+    "summary": "O consenso das sociedades europeia e americana de medicina do esporte (2013) descreve um contínuo: overreaching funcional (queda de desempenho que se recupera em dias e pode resultar em melhora), overreaching não funcional (queda que dura semanas a meses) e síndrome do overtraining (queda prolongada, de meses, acompanhada de outros sintomas e diagnosticada após excluir outras causas). Em musculação, revisões encontraram que blocos curtos de volume ou intensidade elevados geram overreaching funcional e, às vezes, não funcional, mas há pouca evidência de overtraining verdadeiro. Nenhum marcador sanguíneo ou hormonal se mostrou confiável; o melhor indicador é a queda sustentada de desempenho. Treinos muito intensos e monótonos parecem aumentar o risco. Os estudos usam métodos heterogêneos, o que limita as conclusões.",
+    "practice": [
+      "Acompanhe cargas e repetições ao longo das semanas: queda sustentada de desempenho é o principal sinal de alerta.",
+      "Se o rendimento cair por 1-2 semanas apesar de dormir e comer bem, reduza volume e intensidade.",
+      "Queda de desempenho que persiste por semanas, com cansaço, alteração de humor ou do sono, merece avaliação médica para excluir outras causas.",
+      "Evite longos períodos de treino muito intenso e monótono, sem variação."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Meeusen R, Duclos M, Foster C, et al. Prevention, diagnosis, and treatment of the overtraining syndrome: joint consensus statement of the European College of Sport Science and the American College of Sports Medicine. Med Sci Sports Exerc. 2013;45(1):186-205.",
+        "year": 2013,
+        "doi": "10.1249/MSS.0b013e318279a10a"
+      },
+      {
+        "citation": "Grandou C, Wallace L, Impellizzeri FM, et al. Overtraining in resistance exercise: an exploratory systematic review and methodological appraisal of the literature. Sports Med. 2020;50(4):815-828.",
+        "year": 2020,
+        "doi": "10.1007/s40279-019-01242-2"
+      },
+      {
+        "citation": "Bell L, Ruddock A, Maden-Wilkinson T, et al. Overreaching and overtraining in strength sports and resistance training: a scoping review. J Sports Sci. 2020;38(16):1897-1912.",
+        "year": 2020,
+        "doi": "10.1080/02640414.2020.1763077"
+      }
+    ]
+  },
+  {
+    "id": "pr-detraining-and-breaks",
+    "topic": "recovery",
+    "title": "Parar de treinar: quanto se perde e em quanto tempo",
+    "keywords": [
+      "destreino",
+      "detraining",
+      "parar de treinar",
+      "férias",
+      "vacation",
+      "pausa no treino",
+      "training break",
+      "perder massa muscular",
+      "perder força",
+      "quanto tempo sem treinar",
+      "fiquei parado",
+      "lose gains",
+      "viagem"
+    ],
+    "summary": "Interromper o treino reduz força e potência, e o efeito cresce com a duração da pausa (meta-análise de 103 estudos), sendo maior em pessoas acima de 65 anos e em quem é pouco ativo. Pausas curtas causam pouca perda: homens treinados mantiveram a força de pernas após 2 semanas sem treinar, e uma semana sem treino no meio de um programa não afetou a hipertrofia, embora a força tenha aumentado um pouco menos que no grupo que treinou direto. Para pausas longas, uma revisão encontrou força ainda acima do grupo controle após 16-24 semanas de destreino, mas a evidência é fraca (apenas 2 estudos na meta-análise) e faltam dados sobre perda de massa muscular. Em resumo: 1-2 semanas de férias não apagam o progresso; meses parados geram perdas reais.",
+    "practice": [
+      "Férias de 1-2 semanas não exigem treino; sessões curtas são opcionais, para manter a rotina.",
+      "Se possível, evite pausas longas: quanto maior a pausa, maior a perda.",
+      "Ao voltar, comece com cargas e volume menores e progrida rapidamente conforme o desempenho volta.",
+      "Pessoas idosas perdem mais com a interrupção; para elas, manter alguma regularidade é ainda mais importante."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Bosquet L, Berryman N, Dupuy O, et al. Effect of training cessation on muscular performance: a meta-analysis. Scand J Med Sci Sports. 2013;23(3):e140-e149.",
+        "year": 2013,
+        "doi": "10.1111/sms.12047"
+      },
+      {
+        "citation": "Hwang PS, Andre TL, McKinley-Barnard SK, et al. Resistance training-induced elevations in muscular strength in trained men are maintained after 2 weeks of detraining and not differentially affected by whey protein supplementation. J Strength Cond Res. 2017;31(4):869-881.",
+        "year": 2017,
+        "doi": "10.1519/JSC.0000000000001807"
+      },
+      {
+        "citation": "Coleman M, Burke R, Augustin F, et al. Gaining more from doing less? The effects of a one-week deload period during supervised resistance training on muscular adaptations. PeerJ. 2024;12:e16777.",
+        "year": 2024,
+        "doi": "10.7717/peerj.16777"
+      },
+      {
+        "citation": "Encarnação IGA, Viana RB, Soares SRS, et al. Effects of detraining on muscle strength and hypertrophy induced by resistance training: a systematic review. Muscles. 2022;1(1):1-15.",
+        "year": 2022,
+        "doi": "10.3390/muscles1010001"
+      }
+    ]
+  },
+  {
+    "id": "pr-muscle-memory-retraining",
+    "topic": "recovery",
+    "title": "Memória muscular: recuperar o que foi perdido",
+    "keywords": [
+      "memória muscular",
+      "muscle memory",
+      "voltar a treinar",
+      "retreino",
+      "retraining",
+      "recuperar massa muscular",
+      "regain muscle",
+      "mionúcleos",
+      "myonuclei",
+      "epigenética",
+      "voltar depois de parado",
+      "recomeçar"
+    ],
+    "summary": "Quem já treinou tende a recuperar massa e força com rapidez. Em homens que alternaram 6 semanas de treino com 3 semanas de pausa ao longo de 24 semanas, a hipertrofia e a força finais foram semelhantes às de quem treinou sem parar, porque os ganhos voltavam rápido após cada pausa. O mecanismo ainda é debatido. A ideia de que os mionúcleos adquiridos ficam permanentes não se confirmou em humanos: uma meta-análise de 2022 indicou que eles são perdidos na atrofia e no envelhecimento. Um estudo encontrou marcas epigenéticas (metilação do DNA) que persistiram após a pausa, sugerindo uma memória epigenética. Outro estudo não viu resposta melhor na perna previamente treinada após 20 semanas de pausa, embora a força ainda estivesse acima do nível inicial, o que aponta para adaptações neurais duradouras.",
+    "practice": [
+      "Ao retomar, comece com volume e cargas moderados nas primeiras sessões e progrida conforme a resposta.",
+      "Espere recuperar o nível anterior mais rápido do que levou para construí-lo, sem forçar as cargas antigas no primeiro dia.",
+      "Use o histórico do app como referência de onde você estava, não como meta imediata."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Ogasawara R, Yasuda T, Ishii N, et al. Comparison of muscle hypertrophy following 6-month of continuous and periodic strength training. Eur J Appl Physiol. 2013;113(4):975-985.",
+        "year": 2013,
+        "doi": "10.1007/s00421-012-2511-9"
+      },
+      {
+        "citation": "Rahmati M, McCarthy JJ, Malakoutinia F. Myonuclear permanence in skeletal muscle memory: a systematic review and meta-analysis of human and animal studies. J Cachexia Sarcopenia Muscle. 2022;13(5):2276-2297.",
+        "year": 2022,
+        "doi": "10.1002/jcsm.13043"
+      },
+      {
+        "citation": "Seaborne RA, Strauss J, Cocks M, et al. Human skeletal muscle possesses an epigenetic memory of hypertrophy. Sci Rep. 2018;8(1):1898.",
+        "year": 2018,
+        "doi": "10.1038/s41598-018-20287-3"
+      },
+      {
+        "citation": "Psilander N, Eftestøl E, Cumming KT, et al. Effects of training, detraining, and retraining on strength, hypertrophy, and myonuclear number in human skeletal muscle. J Appl Physiol. 2019;126(6):1636-1645.",
+        "year": 2019,
+        "doi": "10.1152/japplphysiol.00917.2018"
+      }
+    ]
+  },
+  {
+    "id": "pr-sleep-strength-muscle",
+    "topic": "recovery",
+    "title": "Sono, força e massa muscular",
+    "keywords": [
+      "sono",
+      "sleep",
+      "dormir pouco",
+      "privação de sono",
+      "sleep deprivation",
+      "noite mal dormida",
+      "insônia",
+      "dormi mal",
+      "quantas horas dormir",
+      "sleep and muscle",
+      "sono e hipertrofia",
+      "recuperação"
+    ],
+    "summary": "Dormir pouco prejudica o desempenho: uma meta-análise de 69 publicações encontrou queda média de ~7,6% no desempenho físico após perda de sono (6 h ou menos), com efeito mais consistente quando o exercício é feito à tarde ou à noite e quando se acorda mais cedo que o habitual. Em musculação, uma noite inteira sem dormir afetou pouco a força, mas noites seguidas de sono reduzido diminuíram a força em exercícios multiarticulares. Uma noite sem sono reduziu a síntese de proteína muscular em 18%, com mais cortisol e menos testosterona no dia seguinte. Em dieta com déficit calórico, dormir 5,5 h em vez de 8,5 h por 14 dias aumentou em ~60% a perda de massa magra e reduziu a perda de gordura. Os estudos são curtos e pequenos; faltam ensaios longos sobre sono e hipertrofia.",
+    "practice": [
+      "Trate o sono como parte do treino: evite noites de 6 h ou menos antes de sessões pesadas.",
+      "Após uma noite ruim, mantenha o treino, mas aceite cargas menores ou mais RIR, sobretudo nos exercícios compostos.",
+      "Se você sabe que vai dormir pouco, treinar pela manhã tende a ser menos afetado.",
+      "Durante dieta para perder gordura, dormir bem ajuda a preservar massa magra."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Craven J, McCartney D, Desbrow B, et al. Effects of acute sleep loss on physical performance: a systematic and meta-analytical review. Sports Med. 2022;52(11):2669-2690.",
+        "year": 2022,
+        "doi": "10.1007/s40279-022-01706-y"
+      },
+      {
+        "citation": "Knowles OE, Drinkwater EJ, Urwin CS, et al. Inadequate sleep and muscle strength: implications for resistance training. J Sci Med Sport. 2018;21(9):959-968.",
+        "year": 2018,
+        "doi": "10.1016/j.jsams.2018.01.012"
+      },
+      {
+        "citation": "Lamon S, Morabito A, Arentson-Lantz E, et al. The effect of acute sleep deprivation on skeletal muscle protein synthesis and the hormonal environment. Physiol Rep. 2021;9(1):e14660.",
+        "year": 2021,
+        "doi": "10.14814/phy2.14660"
+      },
+      {
+        "citation": "Nedeltcheva AV, Kilkus JM, Imperial J, et al. Insufficient sleep undermines dietary efforts to reduce adiposity. Ann Intern Med. 2010;153(7):435-441.",
+        "year": 2010,
+        "doi": "10.7326/0003-4819-153-7-201010050-00006"
+      }
+    ]
+  },
+  {
+    "id": "pr-doms-not-growth-indicator",
+    "topic": "myths",
+    "title": "Dor muscular tardia (DOMS) indica crescimento?",
+    "keywords": [
+      "dor muscular",
+      "dor tardia",
+      "doms",
+      "delayed onset muscle soreness",
+      "muscle soreness",
+      "não fiquei dolorido",
+      "sem dor não cresce",
+      "dor depois do treino",
+      "treino sem dor",
+      "dolorido",
+      "no pain no gain",
+      "dor no dia seguinte"
+    ],
+    "summary": "Não. A dor muscular tardia, que aparece entre 1 e 3 dias após o treino, é um indicador ruim tanto de dano muscular quanto de hipertrofia. Em 110 homens que fizeram quantidades diferentes de contrações excêntricas, a dor à palpação não se correlacionou com perda de força, inchaço ou marcadores sanguíneos de dano, e as demais medidas de dor tiveram correlações fracas. Em um estudo com biópsias, o dano muscular foi máximo na primeira semana de treino e diminuiu ao longo de 10 semanas; a síntese de proteína muscular só passou a se relacionar com a hipertrofia depois que o dano se atenuou. A dor também diminui à medida que o músculo se adapta a um exercício (efeito da carga repetida), sem que o crescimento pare. Ausência de dor não significa treino ruim, e dor intensa não deve ser objetivo.",
+    "practice": [
+      "Avalie o treino pela evolução de cargas, repetições e medidas, não pela dor.",
+      "Dor forte e frequente sugere aumento brusco de volume ou exercícios novos; progrida de forma mais gradual.",
+      "Dá para treinar com dor leve; se a dor limitar o movimento, treine outro grupo muscular ou faça uma sessão mais leve.",
+      "Ao introduzir um exercício novo, comece com menos séries para reduzir a dor nos primeiros dias."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Nosaka K, Newton M, Sacco P. Delayed-onset muscle soreness does not reflect the magnitude of eccentric exercise-induced muscle damage. Scand J Med Sci Sports. 2002;12(6):337-346.",
+        "year": 2002,
+        "doi": "10.1034/j.1600-0838.2002.10178.x"
+      },
+      {
+        "citation": "Damas F, Phillips SM, Libardi CA, et al. Resistance training-induced changes in integrated myofibrillar protein synthesis are related to hypertrophy only after attenuation of muscle damage. J Physiol. 2016;594(18):5209-5222.",
+        "year": 2016,
+        "doi": "10.1113/JP272472"
+      },
+      {
+        "citation": "Schoenfeld BJ, Contreras B. Is postexercise muscle soreness a valid indicator of muscular adaptations? Strength Cond J. 2013;35(5):16-21.",
+        "year": 2013,
+        "doi": "10.1519/SSC.0b013e3182a61820"
+      }
+    ]
+  },
+  {
+    "id": "pr-recovery-time-same-muscle",
+    "topic": "recovery",
+    "title": "Quanto tempo esperar para treinar o mesmo músculo de novo",
+    "keywords": [
+      "recuperação muscular",
+      "muscle recovery",
+      "descanso entre treinos",
+      "quantas horas de descanso",
+      "48 horas",
+      "72 horas",
+      "treinar o mesmo músculo",
+      "frequência de treino",
+      "recovery time",
+      "dias de descanso",
+      "split",
+      "treinar dois dias seguidos"
+    ],
+    "summary": "O tempo de recuperação depende muito de quão perto da falha e de quanto volume foi feito. Em homens treinados, 3 séries de 10 repetições até a falha atrasaram a recuperação neuromuscular, enquanto protocolos que deixaram cerca de 5 repetições em reserva, mesmo com o mesmo volume total, recuperaram bem mais rápido entre 24 e 48 h. Após 4 séries até a falha a 80% de 1RM, a velocidade no agachamento ficou reduzida por até 72 h, e agachamento, supino e levantamento terra tiveram cursos de recuperação semelhantes. Para hipertrofia, treinar cada grupo muscular pelo menos 2 vezes por semana superou 1 vez com volume igual; frequências maiores parecem favorecer a força, com pouco efeito adicional na hipertrofia. Na prática, 48-72 h entre sessões pesadas do mesmo músculo é comum, mas varia com o esforço.",
+    "practice": [
+      "Treine cada grupo muscular cerca de 2 vezes por semana, distribuindo o volume semanal.",
+      "Depois de sessões muito pesadas ou até a falha, espere 48-72 h antes de treinar o mesmo grupo de forma intensa.",
+      "Se o desempenho cair muito em relação à sessão anterior, a recuperação ainda não aconteceu: reduza o volume ou afaste a sessão.",
+      "Deixar 1-3 repetições em reserva acelera a recuperação e permite treinar com mais frequência."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Morán-Navarro R, Pérez CE, Mora-Rodríguez R, et al. Time course of recovery following resistance training leading or not to failure. Eur J Appl Physiol. 2017;117(12):2387-2399.",
+        "year": 2017,
+        "doi": "10.1007/s00421-017-3725-7"
+      },
+      {
+        "citation": "Belcher DJ, Sousa CA, Carzoli JP, et al. Time course of recovery is similar for the back squat, bench press, and deadlift in well-trained males. Appl Physiol Nutr Metab. 2019;44(10):1033-1042.",
+        "year": 2019,
+        "doi": "10.1139/apnm-2019-0004"
+      },
+      {
+        "citation": "Schoenfeld BJ, Ogborn D, Krieger JW. Effects of resistance training frequency on measures of muscle hypertrophy: a systematic review and meta-analysis. Sports Med. 2016;46(11):1689-1697.",
+        "year": 2016,
+        "doi": "10.1007/s40279-016-0543-8"
+      },
+      {
+        "citation": "Pelland JC, Remmert JF, Robinson ZP, et al. The resistance training dose response: meta-regressions exploring the effects of weekly volume and frequency on muscle hypertrophy and strength gains. Sports Med. 2026;56(2):481-505.",
+        "year": 2026,
+        "doi": "10.1007/s40279-025-02344-w"
+      }
+    ]
+  },
+  {
+    "id": "pr-cold-water-immersion",
+    "topic": "recovery",
+    "title": "Banho de gelo após a musculação atrapalha os ganhos?",
+    "keywords": [
+      "banho de gelo",
+      "ice bath",
+      "imersão em água fria",
+      "cold water immersion",
+      "crioterapia",
+      "cryotherapy",
+      "gelo depois do treino",
+      "água gelada",
+      "cold plunge",
+      "banheira de gelo",
+      "recuperação com frio"
+    ],
+    "summary": "Feito logo após a musculação, o banho de gelo parece reduzir os ganhos. Em 12 semanas, homens que fizeram 10 minutos de imersão em água fria após cada treino ganharam menos força e massa muscular que os que fizeram recuperação ativa, com menor ativação de células satélite e da sinalização anabólica. Uma meta-análise de 2024 (8 estudos) estimou hipertrofia um pouco menor com a imersão fria do que sem ela, a partir de estudos de qualidade regular a ruim. Outra meta-análise (10 estudos) encontrou ganhos de força atenuados (efeito ~-0,23), sobretudo quando o frio era aplicado só no membro treinado; com imersão de corpo inteiro, não houve diferença significativa na força. Um estudo de 7 semanas observou menor crescimento das fibras tipo II, mas força preservada. Quase todos os participantes eram homens.",
+    "practice": [
+      "Se o objetivo é hipertrofia, evite imersão em água fria logo após a musculação.",
+      "Reserve o frio para situações em que recuperar rápido importa mais que ganhar massa, como competições em dias seguidos.",
+      "Priorize sono, alimentação e controle de volume como estratégias principais de recuperação."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Roberts LA, Raastad T, Markworth JF, et al. Post-exercise cold water immersion attenuates acute anabolic signalling and long-term adaptations in muscle to strength training. J Physiol. 2015;593(18):4285-4301.",
+        "year": 2015,
+        "doi": "10.1113/JP270570"
+      },
+      {
+        "citation": "Piñero A, Burke R, Augustin F, et al. Throwing cold water on muscle growth: a systematic review with meta-analysis of the effects of postexercise cold water immersion on resistance training-induced hypertrophy. Eur J Sport Sci. 2024;24(2):177-189.",
+        "year": 2024,
+        "doi": "10.1002/ejsc.12074"
+      },
+      {
+        "citation": "Grgic J. Effects of post-exercise cold-water immersion on resistance training-induced gains in muscular strength: a meta-analysis. Eur J Sport Sci. 2023;23(3):372-380.",
+        "year": 2023,
+        "doi": "10.1080/17461391.2022.2033851"
+      },
+      {
+        "citation": "Fyfe JJ, Broatch JR, Trewin AJ, et al. Cold water immersion attenuates anabolic signaling and skeletal muscle fiber hypertrophy, but not strength gain, following whole-body resistance training. J Appl Physiol. 2019;127(5):1403-1418.",
+        "year": 2019,
+        "doi": "10.1152/japplphysiol.00127.2019"
+      }
+    ]
+  },
+  {
+    "id": "pr-massage-foam-rolling-active-recovery",
+    "topic": "recovery",
+    "title": "Massagem, rolo de liberação e recuperação ativa",
+    "keywords": [
+      "massagem",
+      "massage",
+      "foam roller",
+      "rolo de liberação",
+      "liberação miofascial",
+      "foam rolling",
+      "recuperação ativa",
+      "active recovery",
+      "pistola de massagem",
+      "meia de compressão",
+      "dor pós-treino",
+      "recuperar mais rápido"
+    ],
+    "summary": "Essas técnicas aliviam sintomas, mas não mostraram acelerar adaptações. Uma meta-análise de 99 estudos encontrou que recuperação ativa, massagem, roupas de compressão, imersão e crioterapia reduzem a dor muscular tardia em grau pequeno a grande, sendo a massagem a técnica mais eficaz para dor e sensação de fadiga. Outra meta-análise (29 estudos, 1.012 participantes) não encontrou melhora de força, salto, sprint ou resistência com massagem, apenas pequenos ganhos de flexibilidade e redução da dor tardia. O rolo de liberação usado após o exercício atenuou levemente a queda de força e sprint e reduziu a percepção de dor; antes do treino, aumentou um pouco a flexibilidade sem efeito relevante na força. Os efeitos são em geral pequenos e os estudos, heterogêneos.",
+    "practice": [
+      "Use massagem ou rolo se você gosta e se sente melhor; são recursos opcionais.",
+      "O rolo antes do treino pode entrar no aquecimento para ganhar mobilidade sem perder força.",
+      "Atividade leve, como caminhar ou pedalar devagar, é uma forma simples de recuperação ativa.",
+      "Não troque sono, alimentação e controle de volume por técnicas de recuperação."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Dupuy O, Douzi W, Theurot D, et al. An evidence-based approach for choosing post-exercise recovery techniques to reduce markers of muscle damage, soreness, fatigue, and inflammation: a systematic review with meta-analysis. Front Physiol. 2018;9:403.",
+        "year": 2018,
+        "doi": "10.3389/fphys.2018.00403"
+      },
+      {
+        "citation": "Davis HL, Alabed S, Chico TJA. Effect of sports massage on performance and recovery: a systematic review and meta-analysis. BMJ Open Sport Exerc Med. 2020;6(1):e000614.",
+        "year": 2020,
+        "doi": "10.1136/bmjsem-2019-000614"
+      },
+      {
+        "citation": "Wiewelhove T, Döweling A, Schneider C, et al. A meta-analysis of the effects of foam rolling on performance and recovery. Front Physiol. 2019;10:376.",
+        "year": 2019,
+        "doi": "10.3389/fphys.2019.00376"
+      }
+    ]
+  },
+  {
+    "id": "pr-psychological-stress-recovery",
+    "topic": "recovery",
+    "title": "Estresse psicológico e recuperação do treino",
+    "keywords": [
+      "estresse",
+      "stress",
+      "ansiedade",
+      "estresse mental",
+      "psychological stress",
+      "estresse no trabalho",
+      "semana estressante",
+      "cansaço mental",
+      "life stress",
+      "recuperação",
+      "cortisol",
+      "rendimento caiu"
+    ],
+    "summary": "O estresse do dia a dia parece prejudicar a recuperação e a adaptação ao treino. Em 135 universitários acompanhados por 12 semanas de musculação, os que relataram mais eventos estressantes tiveram ganhos menores de supino e agachamento que os menos estressados. Em outro estudo, estudantes com mais estresse recuperaram a força mais lentamente após um treino pesado de pernas, tanto na primeira hora quanto ao longo de 96 h, e relataram mais fadiga, menos energia e mais dor muscular. São estudos observacionais, com amostras jovens e pequenas e do mesmo grupo de pesquisa, então a relação é plausível, mas não comprova causa nem indica quanto ajustar o treino.",
+    "practice": [
+      "Em períodos de muito estresse, considere reduzir volume ou intensidade em vez de buscar recordes.",
+      "Use o desempenho e o RIR do dia como termômetro: se caírem, ajuste a sessão.",
+      "Mantenha a regularidade; treinos mais leves continuam valendo em fases difíceis.",
+      "Em semanas estressantes, dê mais tempo de recuperação entre sessões pesadas do mesmo grupo muscular."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Bartholomew JB, Stults-Kolehmainen MA, Elrod CC, et al. Strength gains after resistance training: the effect of stressful, negative life events. J Strength Cond Res. 2008;22(4):1215-1221.",
+        "year": 2008,
+        "doi": "10.1519/JSC.0b013e318173d0bf"
+      },
+      {
+        "citation": "Stults-Kolehmainen MA, Bartholomew JB. Psychological stress impairs short-term muscular recovery from resistance exercise. Med Sci Sports Exerc. 2012;44(11):2220-2227.",
+        "year": 2012,
+        "doi": "10.1249/MSS.0b013e31825f67a0"
+      },
+      {
+        "citation": "Stults-Kolehmainen MA, Bartholomew JB, Sinha R. Chronic psychological stress impairs recovery of muscular function and somatic sensations over a 96-hour period. J Strength Cond Res. 2014;28(7):2007-2017.",
+        "year": 2014,
+        "doi": "10.1519/JSC.0000000000000335"
+      }
+    ]
+  },
+  {
+    "id": "pr-warmup-general-specific",
+    "topic": "warmup",
+    "title": "Aquecimento geral e específico antes da musculação",
+    "keywords": [
+      "aquecimento",
+      "warm up",
+      "warm-up",
+      "série de aquecimento",
+      "warm-up sets",
+      "aquecer antes",
+      "esteira antes do treino",
+      "aquecimento específico",
+      "aquecimento geral",
+      "séries de aproximação",
+      "feeder sets",
+      "como aquecer"
+    ],
+    "summary": "Revisões gerais indicam que aquecer melhora o desempenho na maioria dos critérios avaliados (79% em uma meta-análise de 32 estudos) e raramente prejudica. Na musculação, a evidência é menor e mista. Antes de um teste de 1RM no leg press, somar 20 minutos de bicicleta leve ao aquecimento específico (8 repetições a ~50% e 3 a ~70% do 1RM estimado) aumentou o 1RM em ~8%. Já em séries até a falha a 80% de 1RM no supino, agachamento e rosca, nenhum tipo de aquecimento (específico, aeróbio ou combinado) mudou o total de repetições em comparação com não aquecer. O aquecimento parece mais relevante para esforços máximos e cargas muito pesadas do que para séries submáximas, e faltam estudos maiores.",
+    "practice": [
+      "Antes de cargas pesadas, faça 2-3 séries de aproximação no próprio exercício, subindo a carga e com poucas repetições.",
+      "Para testes de 1RM ou sessões muito pesadas, um aquecimento geral leve (como bicicleta) antes do específico pode ajudar.",
+      "Mantenha o aquecimento curto e sem fadiga: ele deve preparar, não cansar.",
+      "Em exercícios seguintes para o mesmo músculo, geralmente uma série leve de aproximação basta."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Fradkin AJ, Zazryn TR, Smoliga JM. Effects of warming-up on physical performance: a systematic review with meta-analysis. J Strength Cond Res. 2010;24(1):140-148.",
+        "year": 2010,
+        "doi": "10.1519/JSC.0b013e3181c643a0"
+      },
+      {
+        "citation": "Abad CC, Prado ML, Ugrinowitsch C, et al. Combination of general and specific warm-ups improves leg-press one repetition maximum compared with specific warm-up in trained individuals. J Strength Cond Res. 2011;25(8):2242-2245.",
+        "year": 2011,
+        "doi": "10.1519/JSC.0b013e3181e8611b"
+      },
+      {
+        "citation": "Ribeiro AS, Romanzini M, Schoenfeld BJ, et al. Effect of different warm-up procedures on the performance of resistance training exercises. Percept Mot Skills. 2014;119(1):133-145.",
+        "year": 2014,
+        "doi": "10.2466/25.29.PMS.119c17z7"
+      }
+    ]
+  },
+  {
+    "id": "pr-static-stretching-before-lifting",
+    "topic": "warmup",
+    "title": "Alongamento estático antes do treino de força",
+    "keywords": [
+      "alongamento",
+      "alongar antes do treino",
+      "static stretching",
+      "alongamento estático",
+      "stretching before lifting",
+      "alongar perde força",
+      "alongamento dinâmico",
+      "dynamic stretching",
+      "flexibilidade",
+      "mobilidade",
+      "aquecimento com alongamento"
+    ],
+    "summary": "O alongamento estático feito imediatamente antes de esforços de força causa uma pequena queda de desempenho. Uma meta-análise de 104 estudos estimou redução média de ~5% na força máxima, maior em testes isométricos e com alongamentos mais longos; durações de até 45 s por músculo tiveram o menor efeito. Uma revisão posterior encontrou perda de ~4,6% com 60 s ou mais por grupo muscular e de ~1% abaixo disso, e observou que, quando havia atividades dinâmicas depois do alongamento, o efeito negativo não ficava claro. O ganho de amplitude de movimento costuma durar menos de 30 minutos. Não houve efeito claro do alongamento estático sobre lesões em geral. A maior parte dos estudos mediu força isolada, não o desempenho em uma sessão completa de musculação.",
+    "practice": [
+      "Se quiser alongar antes do treino, use séries curtas (até ~30-45 s por músculo) e faça o aquecimento específico depois.",
+      "Prefira mobilidade e alongamento dinâmico no aquecimento.",
+      "Deixe alongamentos longos (60 s ou mais) para depois do treino ou para outro horário.",
+      "Se precisa de amplitude para um exercício (ex.: agachamento profundo), um alongamento breve antes é aceitável."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Simic L, Sarabon N, Markovic G. Does pre-exercise static stretching inhibit maximal muscular performance? A meta-analytical review. Scand J Med Sci Sports. 2013;23(2):131-148.",
+        "year": 2013,
+        "doi": "10.1111/j.1600-0838.2012.01444.x"
+      },
+      {
+        "citation": "Behm DG, Blazevich AJ, Kay AD, et al. Acute effects of muscle stretching on physical performance, range of motion, and injury incidence in healthy active individuals: a systematic review. Appl Physiol Nutr Metab. 2016;41(1):1-11.",
+        "year": 2016,
+        "doi": "10.1139/apnm-2015-0235"
+      }
+    ]
+  },
+  {
+    "id": "pr-beginner-vs-trained-gains",
+    "topic": "beginners",
+    "title": "Quanto esperar de ganhos: iniciante vs. treinado",
+    "keywords": [
+      "ganhos de iniciante",
+      "newbie gains",
+      "beginner gains",
+      "quanto vou ganhar",
+      "quanto tempo para ver resultado",
+      "quanto músculo por mês",
+      "iniciante",
+      "avançado",
+      "treinado",
+      "ganho de força",
+      "ganho de massa",
+      "ritmo de evolução",
+      "teto genético"
+    ],
+    "summary": "Iniciantes ganham força e massa bem mais rápido que pessoas treinadas, e o ritmo cai com os anos. Em 21 semanas do mesmo programa, homens sem experiência em treino de força ganharam ~21% de força máxima e ~5,6% de área muscular da coxa, contra ~4% de força e nenhum ganho mensurável de área em atletas de força. Em quase 1.900 atletas de powerlifting acompanhados por até 15 anos, os homens mais fortes progrediram cerca de metade do ritmo dos menos fortes. Uma meta-análise de 111 estudos com homens saudáveis estimou ganho médio de ~1,5 kg de massa muscular nas intervenções avaliadas. Outra meta-análise sugeriu que iniciantes respondem melhor a cargas moderadas (~60% de 1RM) e treinados, a cargas maiores (~80%). Há grande variação individual.",
+    "practice": [
+      "No início, espere progresso rápido nas cargas; aproveite para consolidar a técnica.",
+      "Com anos de treino, progresso mensal ou por ciclo já é um bom resultado.",
+      "Compare-se com você mesmo, usando o histórico do app, e não com outras pessoas.",
+      "Ganho de massa é lento: avalie fotos e medidas a cada algumas semanas, não todos os dias."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Ahtiainen JP, Pakarinen A, Alen M, et al. Muscle hypertrophy, hormonal adaptations and strength development during strength training in strength-trained and untrained men. Eur J Appl Physiol. 2003;89(6):555-563.",
+        "year": 2003,
+        "doi": "10.1007/s00421-003-0833-3"
+      },
+      {
+        "citation": "Latella C, Teo WP, Spathis J, et al. Long-term strength adaptation: a 15-year analysis of powerlifting athletes. J Strength Cond Res. 2020;34(9):2412-2418.",
+        "year": 2020,
+        "doi": "10.1519/JSC.0000000000003657"
+      },
+      {
+        "citation": "Benito PJ, Cupeiro R, Ramos-Campo DJ, et al. A systematic review with meta-analysis of the effect of resistance training on whole-body muscle growth in healthy adult males. Int J Environ Res Public Health. 2020;17(4):1285.",
+        "year": 2020,
+        "doi": "10.3390/ijerph17041285"
+      },
+      {
+        "citation": "Rhea MR, Alvar BA, Burkett LN, et al. A meta-analysis to determine the dose response for strength development. Med Sci Sports Exerc. 2003;35(3):456-464.",
+        "year": 2003,
+        "doi": "10.1249/01.MSS.0000053727.63505.D4"
+      }
+    ]
+  },
+  {
+    "id": "pr-individual-response-variability",
+    "topic": "progression",
+    "title": "Respondedores e 'não respondedores' ao treino",
+    "keywords": [
+      "não respondedor",
+      "non-responder",
+      "respondedor",
+      "genética",
+      "genetics",
+      "variabilidade individual",
+      "individual response",
+      "não cresço",
+      "hardgainer",
+      "treino não funciona pra mim",
+      "resposta ao treino",
+      "diferença entre pessoas"
+    ],
+    "summary": "As respostas ao mesmo treino variam muito entre pessoas. Em 585 adultos que treinaram um braço por 12 semanas, a mudança no tamanho do bíceps variou de -2% a +59% e o ganho de 1RM, de 0% a +250%. Em jovens treinados que fizeram um protocolo diferente em cada perna, a variação da hipertrofia entre pessoas foi cerca de 40 vezes maior que a diferença entre os protocolos na mesma pessoa, sugerindo que fatores individuais pesam mais que pequenos ajustes no programa. Ainda assim, não responder a nada é raro: em idosos treinados por 12-24 semanas, todos melhoraram em pelo menos um desfecho (massa magra, tamanho das fibras, força ou função), e a proporção de respostas positivas aumentou com mais tempo de treino.",
+    "practice": [
+      "Se você evolui devagar, isso não significa que não responde: dê tempo (meses) e mantenha a progressão.",
+      "Acompanhe vários desfechos (força, medidas, fotos, desempenho), porque a resposta pode aparecer mais em um do que em outro.",
+      "Ajuste volume e frequência com base no seu próprio histórico em vez de copiar o programa de outra pessoa.",
+      "Compare seu progresso com seu ponto de partida, não com o de outras pessoas."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Hubal MJ, Gordish-Dressman H, Thompson PD, et al. Variability in muscle size and strength gain after unilateral resistance training. Med Sci Sports Exerc. 2005;37(6):964-972.",
+        "year": 2005,
+        "url": "https://pubmed.ncbi.nlm.nih.gov/15947721/"
+      },
+      {
+        "citation": "Damas F, Angleri V, Phillips SM, et al. Myofibrillar protein synthesis and muscle hypertrophy individualized responses to systematically changing resistance training variables in trained young men. J Appl Physiol. 2019;127(3):806-815.",
+        "year": 2019,
+        "doi": "10.1152/japplphysiol.00350.2019"
+      },
+      {
+        "citation": "Churchward-Venne TA, Tieland M, Verdijk LB, et al. There are no nonresponders to resistance-type exercise training in older men and women. J Am Med Dir Assoc. 2015;16(5):400-411.",
+        "year": 2015,
+        "doi": "10.1016/j.jamda.2015.01.071"
+      }
+    ]
+  }
+]

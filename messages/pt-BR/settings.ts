@@ -213,6 +213,10 @@ export const settings = {
     signedOut:
       '{count, plural, =0 {Nenhum outro dispositivo estava conectado.} one {# dispositivo desconectado.} other {# dispositivos desconectados.}}',
   },
+  admin: {
+    title: 'Administração',
+    description: 'Contas e senhas',
+  },
   privacy: {
     title: 'Dados e privacidade',
     exportTitle: 'Baixar seus dados',

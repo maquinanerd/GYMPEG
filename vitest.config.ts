@@ -18,5 +18,10 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     globals: true,
+    // user-event waits on a timer after every keystroke, and Node's timers are
+    // much coarser on Windows: a form test that types a few passwords takes
+    // seconds there and fractions of one on Linux. The local CI runs on
+    // Windows, so it gets more room; Linux keeps Vitest's 5 s default.
+    testTimeout: process.platform === 'win32' ? 20_000 : 5_000,
   },
 });

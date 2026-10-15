@@ -1,0 +1,1050 @@
+[
+  {
+    "id": "ph-beginners-getting-started",
+    "topic": "beginners",
+    "title": "Como começar na musculação",
+    "keywords": [
+      "iniciante",
+      "começar na academia",
+      "primeiro treino",
+      "treino para iniciantes",
+      "quantas vezes por semana",
+      "corpo inteiro",
+      "full body",
+      "séries e repetições",
+      "sedentário",
+      "beginner",
+      "novice",
+      "how to start lifting",
+      "resistance training beginners",
+      "training frequency"
+    ],
+    "summary": "Para quem nunca treinou ou ficou anos parado, os posicionamentos do ACSM indicam trabalhar cada grande grupo muscular 2 a 3 dias por semana, com cargas que permitam cerca de 8 a 12 repetições. A declaração da AHA de 2023 detalha um ponto de partida: 8 a 10 exercícios, 1 a 3 séries cada, chegando perto da fadiga com técnica preservada, começando em torno de 40-60% de 1RM e progredindo aos poucos, com descanso entre as sessões. Um treino de corpo inteiro (full body) 2-3 vezes por semana é um jeito simples de cumprir essa frequência. O ACSM sugere subir a carga em 2-10% quando a pessoa já faz 1-2 repetições acima do alvo. São recomendações de consenso, com boa margem de segurança para adultos saudáveis. Quem tem doença cardiovascular, metabólica ou renal conhecida, ou sintomas sugestivos, deve passar por avaliação médica antes de treinar em intensidade alta.",
+    "practice": [
+      "Comece com 2-3 treinos de corpo inteiro por semana, com pelo menos um dia de descanso entre eles.",
+      "Use 8-10 exercícios, priorizando multiarticulares (agachamento, remada, supino, levantamento do quadril), com 1-3 séries de 8-12 repetições e técnica limpa.",
+      "Aumente a carga aos poucos (cerca de 2-10%) quando conseguir 1-2 repetições acima da faixa-alvo em todas as séries.",
+      "Procure um médico antes de treinar pesado se tiver doença cardíaca, metabólica ou renal, ou sintomas como dor no peito, falta de ar desproporcional ou tontura."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "American College of Sports Medicine. Progression models in resistance training for healthy adults. Medicine & Science in Sports & Exercise. 2009;41(3):687-708.",
+        "year": 2009,
+        "doi": "10.1249/MSS.0b013e3181915670"
+      },
+      {
+        "citation": "Garber CE, Blissmer B, Deschenes MR, et al. Quantity and quality of exercise for developing and maintaining cardiorespiratory, musculoskeletal, and neuromotor fitness in apparently healthy adults. Medicine & Science in Sports & Exercise. 2011;43(7):1334-1359.",
+        "year": 2011,
+        "doi": "10.1249/MSS.0b013e318213fefb"
+      },
+      {
+        "citation": "Paluch AE, Boyer WR, Franklin BA, et al. Resistance exercise training in individuals with and without cardiovascular disease: 2023 update: a scientific statement from the American Heart Association. Circulation. 2024;149(3):e217-e231.",
+        "year": 2024,
+        "doi": "10.1161/CIR.0000000000001189"
+      },
+      {
+        "citation": "Riebe D, Franklin BA, Thompson PD, et al. Updating ACSM's recommendations for exercise preparticipation health screening. Medicine & Science in Sports & Exercise. 2015;47(11):2473-2479.",
+        "year": 2015,
+        "doi": "10.1249/MSS.0000000000000664"
+      }
+    ]
+  },
+  {
+    "id": "ph-women-sex-differences-gains",
+    "topic": "populations",
+    "title": "Mulheres ganham músculo e força como os homens?",
+    "keywords": [
+      "mulher",
+      "mulheres",
+      "feminino",
+      "treino feminino",
+      "diferença entre homens e mulheres",
+      "hipertrofia feminina",
+      "ganho de massa mulher",
+      "força feminina",
+      "women",
+      "female",
+      "sex differences",
+      "hypertrophy",
+      "strength gains",
+      "muscle growth women"
+    ],
+    "summary": "Meta-análises que comparam homens e mulheres no mesmo programa de musculação mostram que o ganho relativo, em percentual do ponto de partida, é parecido entre os sexos. Roberts e colegas (2020) não acharam diferença na hipertrofia nem na força de membros inferiores, e as mulheres tiveram ganho relativo maior de força de membros superiores. Refalo e colegas (2025), com 29 estudos, observaram ganho absoluto de tamanho muscular um pouco maior nos homens (diferença pequena), mas ganho relativo praticamente igual. Como os homens costumam partir de mais massa muscular, ganham mais em números absolutos, embora a capacidade de resposta ao treino seja semelhante. Limitações: estudos curtos, geralmente com adultos de 18 a 45 anos e pouco treinados. Na prática, não há base para um treino feminino fundamentalmente diferente; os mesmos princípios de volume, esforço e progressão valem para todos.",
+    "practice": [
+      "Aplique os mesmos princípios de treino (volume, proximidade da falha, progressão de carga), independentemente do sexo.",
+      "Avalie o progresso em percentual do seu ponto de partida, não em quilos absolutos comparados com outras pessoas.",
+      "Inclua treino de membros superiores com progressão; mulheres iniciantes costumam ganhar força relativa rapidamente nessa região."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Roberts BM, Nuckols G, Krieger JW. Sex differences in resistance training: a systematic review and meta-analysis. Journal of Strength and Conditioning Research. 2020;34(5):1448-1460.",
+        "year": 2020,
+        "doi": "10.1519/JSC.0000000000003521"
+      },
+      {
+        "citation": "Refalo MC, Nuckols G, Galpin AJ, et al. Sex differences in absolute and relative changes in muscle size following resistance training in healthy adults: a systematic review with Bayesian meta-analysis. PeerJ. 2025;13:e19042.",
+        "year": 2025,
+        "doi": "10.7717/peerj.19042"
+      }
+    ]
+  },
+  {
+    "id": "ph-menstrual-cycle-training",
+    "topic": "populations",
+    "title": "Ciclo menstrual e treino",
+    "keywords": [
+      "ciclo menstrual",
+      "menstruação",
+      "fase folicular",
+      "fase lútea",
+      "tpm",
+      "treinar menstruada",
+      "cólica",
+      "periodização pelo ciclo",
+      "mulher",
+      "menstrual cycle",
+      "period",
+      "follicular phase",
+      "luteal phase",
+      "cycle syncing"
+    ],
+    "summary": "Ajustar o treino à fase do ciclo menstrual virou moda, mas a evidência é fraca. A meta-análise de McNulty e colegas (2020), com 78 estudos, sugere que o desempenho pode cair de forma trivial no início da fase folicular (dias da menstruação). O efeito, porém, é muito pequeno, varia bastante entre estudos e a qualidade da evidência foi considerada baixa; os autores não recomendam regras gerais e sim observar a resposta de cada mulher. Uma revisão guarda-chuva de 2023 concluiu que ainda é cedo para afirmar que as oscilações hormonais do ciclo mudam de modo relevante a força aguda ou os ganhos de força e hipertrofia a longo prazo, apontando falhas na confirmação das fases nos estudos. Na prática, não há base para periodizar pelo ciclo; sintomas individuais como cólica, fadiga ou sono ruim são motivo razoável para ajustar a sessão do dia.",
+    "practice": [
+      "Mantenha o plano de treino ao longo do ciclo; não há evidência sólida para mudar o programa por fase.",
+      "Ajuste a sessão do dia pelos sintomas (cólica, fadiga, sono ruim), por exemplo reduzindo carga ou séries.",
+      "Se quiser, registre ciclo e desempenho por alguns meses para observar o seu padrão individual.",
+      "Procure um ginecologista se a menstruação parar sem gravidez, ficar muito irregular ou vier com dor intensa."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "McNulty KL, Elliott-Sale KJ, Dolan E, et al. The effects of menstrual cycle phase on exercise performance in eumenorrheic women: a systematic review and meta-analysis. Sports Medicine. 2020;50(10):1813-1827.",
+        "year": 2020,
+        "doi": "10.1007/s40279-020-01319-3"
+      },
+      {
+        "citation": "Colenso-Semple LM, D'Souza AC, Elliott-Sale KJ, et al. Current evidence shows no influence of women's menstrual cycle phase on acute strength performance or adaptations to resistance exercise training. Frontiers in Sports and Active Living. 2023;5:1054542.",
+        "year": 2023,
+        "doi": "10.3389/fspor.2023.1054542"
+      }
+    ]
+  },
+  {
+    "id": "ph-oral-contraceptives-performance",
+    "topic": "populations",
+    "title": "Anticoncepcional oral e desempenho no treino",
+    "keywords": [
+      "anticoncepcional",
+      "pílula",
+      "pílula anticoncepcional",
+      "contraceptivo",
+      "hormônio",
+      "mulher",
+      "pausa da pílula",
+      "oral contraceptive",
+      "birth control pill",
+      "contraception",
+      "hormonal contraception",
+      "performance",
+      "women"
+    ],
+    "summary": "A meta-análise de Elliott-Sale e colegas (2020), com 42 estudos e 590 mulheres, comparou usuárias de pílula anticoncepcional com mulheres de ciclo natural. Em média, usuárias da pílula podem ter desempenho ligeiramente inferior, mas o efeito provável é trivial e varia muito entre estudos; a maior parte dos estudos tinha qualidade moderada, baixa ou muito baixa. O desempenho foi semelhante entre os dias de uso da pílula e a pausa. Os autores concluem que a evidência não justifica orientações gerais de usar ou não usar a pílula pensando em desempenho, sugerindo abordagem individual quando o rendimento for prioridade. A escolha do método contraceptivo é uma decisão de saúde, a ser tomada com o médico, e não deve ser guiada pelo treino.",
+    "practice": [
+      "Não inicie, troque ou suspenda anticoncepcional por causa do treino; essa decisão é com o ginecologista.",
+      "Treine normalmente durante o uso da pílula e na pausa; o desempenho tende a ser estável.",
+      "Se notar queda de rendimento ou sintomas que atribui ao anticoncepcional, converse com o médico."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Elliott-Sale KJ, McNulty KL, Ansdell P, et al. The effects of oral contraceptives on exercise performance in women: a systematic review and meta-analysis. Sports Medicine. 2020;50(10):1785-1812.",
+        "year": 2020,
+        "doi": "10.1007/s40279-020-01317-5"
+      }
+    ]
+  },
+  {
+    "id": "ph-older-adults-sarcopenia",
+    "topic": "populations",
+    "title": "Musculação para idosos e sarcopenia",
+    "keywords": [
+      "idoso",
+      "idosa",
+      "terceira idade",
+      "envelhecimento",
+      "sarcopenia",
+      "perda de massa muscular",
+      "musculação para idosos",
+      "60 anos",
+      "fraqueza",
+      "older adults",
+      "elderly",
+      "aging",
+      "muscle loss",
+      "lean mass",
+      "strength"
+    ],
+    "summary": "Com o envelhecimento caem massa, força e função muscular (sarcopenia), o que aumenta o risco de quedas e de perda de independência. Musculação é uma das intervenções mais eficazes contra isso. Em meta-análises de Peterson e colegas com pessoas de 50 anos ou mais, o treino aumentou a massa magra em cerca de 1,1 kg (49 estudos), com mais ganho em programas de maior volume, e a força em aproximadamente 24-33% conforme o exercício (47 estudos), com mais ganho em intensidades maiores. O posicionamento da NSCA (2019) recomenda treino individualizado e progressivo 2-3 vezes por semana, com 2-3 séries por grupo muscular, avançando a intensidade até cerca de 70-85% de 1RM conforme a tolerância, e inclusão de trabalho de potência; idosos frágeis também se beneficiam, começando leve e com supervisão. Os ganhos tendem a ser menores em idades mais avançadas, mas continuam relevantes.",
+    "practice": [
+      "Treine todos os grandes grupos musculares 2-3 vezes por semana, com progressão gradual de carga.",
+      "Comece leve para aprender a técnica e avance para cargas moderadas a altas, se houver boa tolerância.",
+      "Inclua tarefas funcionais (levantar da cadeira, subir degraus) e exercícios de equilíbrio.",
+      "Procure avaliação médica antes de começar se tiver doença cardíaca, pressão alta não controlada ou outra condição instável, e prefira supervisão profissional no início."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Peterson MD, Sen A, Gordon PM. Influence of resistance exercise on lean body mass in aging adults: a meta-analysis. Medicine & Science in Sports & Exercise. 2011;43(2):249-258.",
+        "year": 2011,
+        "doi": "10.1249/MSS.0b013e3181eb6265"
+      },
+      {
+        "citation": "Peterson MD, Rhea MR, Sen A, et al. Resistance exercise for muscular strength in older adults: a meta-analysis. Ageing Research Reviews. 2010;9(3):226-237.",
+        "year": 2010,
+        "doi": "10.1016/j.arr.2010.03.004"
+      },
+      {
+        "citation": "Fragala MS, Cadore EL, Dorgo S, et al. Resistance training for older adults: position statement from the National Strength and Conditioning Association. Journal of Strength and Conditioning Research. 2019;33(8):2019-2052.",
+        "year": 2019,
+        "doi": "10.1519/JSC.0000000000003230"
+      }
+    ]
+  },
+  {
+    "id": "ph-older-adults-power-training",
+    "topic": "populations",
+    "title": "Treino de potência para idosos",
+    "keywords": [
+      "potência",
+      "treino de potência",
+      "velocidade",
+      "explosão",
+      "subir rápido",
+      "idoso",
+      "terceira idade",
+      "levantar da cadeira",
+      "power training",
+      "older adults",
+      "velocity",
+      "explosive",
+      "physical function"
+    ],
+    "summary": "Treino de potência é musculação feita com a subida (fase concêntrica) o mais rápida possível e a descida controlada. Em idosos, a capacidade de produzir força rapidamente se relaciona com tarefas do dia a dia, como levantar da cadeira ou se reequilibrar após um tropeço. A meta-análise de Balachandran e colegas (2022), com 20 ensaios e 566 idosos saudáveis que vivem na comunidade, encontrou melhora adicional modesta na função física com treino de potência em comparação ao treino tradicional, mas com certeza baixa da evidência por risco de viés e imprecisão. A NSCA (2019) recomenda incluir exercícios com concêntrica em alta velocidade usando cargas moderadas, em torno de 40-60% de 1RM. O treino tradicional continua eficaz; a potência é um complemento, introduzido depois que a técnica estiver dominada.",
+    "practice": [
+      "Depois de algumas semanas de base técnica, faça a subida de alguns exercícios de forma rápida e a descida controlada.",
+      "Use cargas moderadas (cerca de 40-60% de 1RM) nos exercícios de potência, com poucas repetições de boa qualidade.",
+      "Prefira máquinas ou movimentos simples, como levantar rápido da cadeira, para quem é frágil ou iniciante.",
+      "Procure orientação profissional se tiver osteoporose importante, dor articular relevante ou histórico de quedas."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Balachandran AT, Steele J, Angielczyk D, et al. Comparison of power training vs traditional strength training on physical function in older adults: a systematic review and meta-analysis. JAMA Network Open. 2022;5(5):e2211623.",
+        "year": 2022,
+        "doi": "10.1001/jamanetworkopen.2022.11623"
+      },
+      {
+        "citation": "Fragala MS, Cadore EL, Dorgo S, et al. Resistance training for older adults: position statement from the National Strength and Conditioning Association. Journal of Strength and Conditioning Research. 2019;33(8):2019-2052.",
+        "year": 2019,
+        "doi": "10.1519/JSC.0000000000003230"
+      }
+    ]
+  },
+  {
+    "id": "ph-falls-prevention-older-adults",
+    "topic": "health",
+    "title": "Prevenção de quedas em idosos",
+    "keywords": [
+      "queda",
+      "quedas",
+      "equilíbrio",
+      "prevenção de quedas",
+      "medo de cair",
+      "idoso",
+      "terceira idade",
+      "fratura",
+      "falls",
+      "fall prevention",
+      "balance",
+      "older adults",
+      "multicomponent exercise"
+    ],
+    "summary": "A revisão Cochrane de Sherrington e colegas (2019), com 108 ensaios e mais de 23 mil idosos da comunidade, mostrou com certeza alta que exercício reduz a taxa de quedas em cerca de 23% e o número de pessoas que caem em cerca de 15%. Os programas mais eficazes trazem exercícios de equilíbrio e funcionais; programas com vários componentes (em geral equilíbrio e funcionais somados à musculação) provavelmente reduzem as quedas em cerca de 34%. O efeito de programas só de musculação, sem trabalho de equilíbrio, é incerto. Por isso a OMS (2020) recomenda que pessoas com 65 anos ou mais façam atividade multicomponente com ênfase em equilíbrio e força em 3 ou mais dias por semana. Os eventos adversos relatados foram, em geral, leves e musculoesqueléticos.",
+    "practice": [
+      "Combine musculação com exercícios de equilíbrio e funcionais (apoio em um pé, andar em linha, sentar e levantar) em 3 ou mais dias por semana.",
+      "Progrida o desafio de equilíbrio com segurança, perto de um apoio firme.",
+      "Procure um médico ou fisioterapeuta se caiu recentemente, sente tontura, tem medo de cair que limita atividades ou percebeu mudança na marcha."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Sherrington C, Fairhall NJ, Wallbank GK, et al. Exercise for preventing falls in older people living in the community. Cochrane Database of Systematic Reviews. 2019;1(1):CD012424.",
+        "year": 2019,
+        "doi": "10.1002/14651858.CD012424.pub2"
+      },
+      {
+        "citation": "Bull FC, Al-Ansari SS, Biddle S, et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. British Journal of Sports Medicine. 2020;54(24):1451-1462.",
+        "year": 2020,
+        "doi": "10.1136/bjsports-2020-102955"
+      }
+    ]
+  },
+  {
+    "id": "ph-youth-resistance-training-safety",
+    "topic": "populations",
+    "title": "Musculação para crianças e adolescentes",
+    "keywords": [
+      "criança",
+      "crianças",
+      "adolescente",
+      "jovem",
+      "musculação na adolescência",
+      "atrapalha o crescimento",
+      "para de crescer",
+      "placa de crescimento",
+      "idade para começar musculação",
+      "youth",
+      "children",
+      "adolescents",
+      "growth plate",
+      "kids lifting weights"
+    ],
+    "summary": "Posicionamentos da Academia Americana de Pediatria (2020), da NSCA (2009) e de um consenso internacional (2014) concordam que crianças e adolescentes podem fazer musculação com segurança quando há supervisão qualificada e foco em técnica. O medo de atrapalhar o crescimento não se sustenta: programas bem desenhados não mostraram efeito negativo sobre a placa de crescimento, a estatura ou o sistema cardiovascular. Em ambientes supervisionados, as taxas de lesão são menores que em outros esportes ou nas brincadeiras do recreio; os riscos vêm de supervisão ruim, progressão inadequada de carga e equipamento impróprio. A AAP sugere começar com 1-2 séries de 8-12 repetições e carga leve (até cerca de 60% de 1RM), sessões de 20-30 minutos, 2-3 vezes por semana em dias não consecutivos, e progredir a carga em 5-10% conforme a técnica melhora. Nas crianças, o ganho de força é principalmente neural.",
+    "practice": [
+      "Garanta supervisão de profissional qualificado e prioridade total para a técnica.",
+      "Comece com 1-2 séries de 8-12 repetições, carga leve, 2-3 vezes por semana em dias não seguidos.",
+      "Aumente a carga em pequenos passos (cerca de 5-10%) apenas quando a técnica estiver consistente.",
+      "Procure o pediatra antes de começar se houver pressão alta mal controlada, convulsões não controladas, doença cardíaca ou síndrome de Marfan."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Stricker PR, Faigenbaum AD, McCambridge TM; AAP Council on Sports Medicine and Fitness. Resistance training for children and adolescents. Pediatrics. 2020;145(6):e20201011.",
+        "year": 2020,
+        "doi": "10.1542/peds.2020-1011"
+      },
+      {
+        "citation": "Lloyd RS, Faigenbaum AD, Stone MH, et al. Position statement on youth resistance training: the 2014 International Consensus. British Journal of Sports Medicine. 2014;48(7):498-505.",
+        "year": 2014,
+        "doi": "10.1136/bjsports-2013-092952"
+      },
+      {
+        "citation": "Faigenbaum AD, Kraemer WJ, Blimkie CJR, et al. Youth resistance training: updated position statement paper from the National Strength and Conditioning Association. Journal of Strength and Conditioning Research. 2009;23(Suppl 5):S60-S79.",
+        "year": 2009,
+        "doi": "10.1519/JSC.0b013e31819df407"
+      }
+    ]
+  },
+  {
+    "id": "ph-pregnancy-exercise",
+    "topic": "health",
+    "title": "Musculação na gravidez",
+    "keywords": [
+      "grávida",
+      "gravidez",
+      "gestante",
+      "gestação",
+      "musculação na gravidez",
+      "exercício na gestação",
+      "pré-natal",
+      "assoalho pélvico",
+      "pregnancy",
+      "pregnant",
+      "prenatal exercise",
+      "acog",
+      "strength training pregnancy"
+    ],
+    "summary": "Diretrizes do ACOG (2020), canadense (2019) e da OMS (2020) recomendam que gestantes sem complicações façam pelo menos 150 minutos semanais de atividade moderada, distribuídos em 3 ou mais dias, combinando exercício aeróbio e de fortalecimento. Exercício na gestação está associado a menos diabetes gestacional e menos cesárea, e as diretrizes não identificaram danos relevantes na ausência de contraindicações. Quem já treinava pode, em geral, continuar, ajustando intensidade e exercícios conforme a gestação avança; quem era sedentária deve começar aos poucos. Evite esportes de contato e atividades com risco de queda, e mude de posição se ficar deitada de barriga para cima causar tontura ou mal-estar. Exercícios de assoalho pélvico podem ser feitos diariamente. Algumas condições (como sangramento persistente, pré-eclâmpsia, placenta prévia após 28 semanas ou trabalho de parto prematuro) contraindicam exercício extenuante e exigem orientação obstétrica.",
+    "practice": [
+      "Converse com seu obstetra antes de iniciar ou manter a musculação na gestação.",
+      "Busque 150 min/semana de atividade moderada incluindo fortalecimento, ajustando cargas pela sensação de esforço e conforto.",
+      "Evite atividades com risco de queda ou de impacto no abdome e mude de posição se ficar de barriga para cima causar tontura.",
+      "Pare e procure atendimento se houver sangramento vaginal, perda de líquido, contrações dolorosas regulares, dor no peito, tontura, dor de cabeça, falta de ar antes do esforço, fraqueza que afeta o equilíbrio ou dor e inchaço na panturrilha."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "American College of Obstetricians and Gynecologists. Physical activity and exercise during pregnancy and the postpartum period: ACOG Committee Opinion No. 804. Obstetrics & Gynecology. 2020;135(4):e178-e188.",
+        "year": 2020,
+        "doi": "10.1097/AOG.0000000000003772"
+      },
+      {
+        "citation": "Mottola MF, Davenport MH, Ruchat SM, et al. 2019 Canadian guideline for physical activity throughout pregnancy. British Journal of Sports Medicine. 2018;52(21):1339-1346.",
+        "year": 2018,
+        "doi": "10.1136/bjsports-2018-100056"
+      },
+      {
+        "citation": "Bull FC, Al-Ansari SS, Biddle S, et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. British Journal of Sports Medicine. 2020;54(24):1451-1462.",
+        "year": 2020,
+        "doi": "10.1136/bjsports-2020-102955"
+      }
+    ]
+  },
+  {
+    "id": "ph-postpartum-return-to-training",
+    "topic": "health",
+    "title": "Volta ao treino no pós-parto",
+    "keywords": [
+      "pós-parto",
+      "puerpério",
+      "depois do parto",
+      "voltar a treinar após o parto",
+      "cesárea",
+      "amamentação",
+      "assoalho pélvico",
+      "perda de urina",
+      "postpartum",
+      "after pregnancy",
+      "return to exercise",
+      "pelvic floor",
+      "breastfeeding"
+    ],
+    "summary": "A OMS (2020) recomenda que mulheres no pós-parto, como na gestação, busquem pelo menos 150 minutos semanais de atividade moderada, incluindo fortalecimento muscular. O ACOG (2020) orienta retomar o exercício de forma gradual assim que for clinicamente seguro, o que depende do tipo de parto e de eventuais complicações, com o plano individualizado junto ao profissional de saúde. Exercícios de assoalho pélvico podem começar logo após o parto, e a atividade física pode ajudar a prevenir depressão no pós-parto. Amamentar antes de treinar pode diminuir o desconforto das mamas. Não existe um prazo único que sirva para todas: a progressão deve respeitar a cicatrização, o sono, os sintomas pélvicos e a liberação médica, principalmente após cesárea. A evidência específica sobre quando e como voltar a cargas altas ainda é limitada.",
+    "practice": [
+      "Retome aos poucos: caminhada, respiração e assoalho pélvico primeiro, cargas maiores depois.",
+      "Combine com seu obstetra quando liberar exercícios mais intensos, especialmente após cesárea ou parto com complicações.",
+      "Se amamenta, amamente antes do treino para mais conforto.",
+      "Procure o obstetra ou um fisioterapeuta pélvico se houver sangramento que aumenta, dor pélvica ou abdominal, perda de urina, sensação de peso vaginal ou tristeza persistente."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "American College of Obstetricians and Gynecologists. Physical activity and exercise during pregnancy and the postpartum period: ACOG Committee Opinion No. 804. Obstetrics & Gynecology. 2020;135(4):e178-e188.",
+        "year": 2020,
+        "doi": "10.1097/AOG.0000000000003772"
+      },
+      {
+        "citation": "Bull FC, Al-Ansari SS, Biddle S, et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. British Journal of Sports Medicine. 2020;54(24):1451-1462.",
+        "year": 2020,
+        "doi": "10.1136/bjsports-2020-102955"
+      }
+    ]
+  },
+  {
+    "id": "ph-hypertension-blood-pressure",
+    "topic": "health",
+    "title": "Pressão alta e musculação",
+    "keywords": [
+      "pressão alta",
+      "hipertensão",
+      "hipertenso",
+      "pressão arterial",
+      "remédio de pressão",
+      "isométrico",
+      "agachamento na parede",
+      "preensão manual",
+      "blood pressure",
+      "hypertension",
+      "isometric training",
+      "wall squat",
+      "handgrip"
+    ],
+    "summary": "Treino de força ajuda a baixar a pressão arterial de repouso. Na maior meta-análise em rede (Edwards e colegas, 2023; 270 ensaios, cerca de 15,8 mil pessoas), as reduções médias foram de cerca de 4,5/3,0 mmHg com musculação dinâmica, 4,5/2,5 mmHg com aeróbio, 6,0/2,5 mmHg com treino combinado e 8,2/4,0 mmHg com treino isométrico (como agachamento na parede e preensão manual), que ficou em primeiro lugar no ranking. Outra meta-análise mostrou queda maior em quem já tem hipertensão (cerca de 6/5 mmHg) do que em quem tem pressão normal. A AHA indica que pessoas com hipertensão controlada podem fazer musculação de intensidade baixa a moderada respirando corretamente, após consultar o médico. Pressão não controlada exige avaliação antes de treinar. O exercício complementa, e não substitui, o tratamento prescrito.",
+    "practice": [
+      "Combine musculação 2-3 vezes por semana com aeróbio; isométricos como agachamento na parede podem ser incluídos com orientação.",
+      "Respire durante todo o esforço e evite prender a respiração em séries pesadas.",
+      "Se usa remédio para pressão, faça uma volta à calma mais longa ao fim do treino; nunca suspenda ou ajuste a medicação por conta própria.",
+      "Procure o médico antes de treinar se a pressão estiver sem controle, e pare na hora se sentir dor no peito, tontura, palpitação ou falta de ar desproporcional."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Edwards JJ, Deenmamode AHP, Griffiths M, et al. Exercise training and resting blood pressure: a large-scale pairwise and network meta-analysis of randomised controlled trials. British Journal of Sports Medicine. 2023;57(20):1317-1326.",
+        "year": 2023,
+        "doi": "10.1136/bjsports-2022-106503"
+      },
+      {
+        "citation": "MacDonald HV, Johnson BT, Huedo-Medina TB, et al. Dynamic resistance training as stand-alone antihypertensive lifestyle therapy: a meta-analysis. Journal of the American Heart Association. 2016;5(10):e003231.",
+        "year": 2016,
+        "doi": "10.1161/JAHA.116.003231"
+      },
+      {
+        "citation": "Paluch AE, Boyer WR, Franklin BA, et al. Resistance exercise training in individuals with and without cardiovascular disease: 2023 update: a scientific statement from the American Heart Association. Circulation. 2024;149(3):e217-e231.",
+        "year": 2024,
+        "doi": "10.1161/CIR.0000000000001189"
+      },
+      {
+        "citation": "Pescatello LS, Franklin BA, Fagard R, et al. American College of Sports Medicine position stand. Exercise and hypertension. Medicine & Science in Sports & Exercise. 2004;36(3):533-553.",
+        "year": 2004,
+        "doi": "10.1249/01.MSS.0000115224.88514.3A"
+      }
+    ]
+  },
+  {
+    "id": "ph-type-2-diabetes",
+    "topic": "health",
+    "title": "Diabetes tipo 2 e musculação",
+    "keywords": [
+      "diabetes",
+      "diabetes tipo 2",
+      "diabético",
+      "glicose",
+      "glicemia",
+      "açúcar no sangue",
+      "insulina",
+      "resistência à insulina",
+      "hemoglobina glicada",
+      "pré-diabetes",
+      "type 2 diabetes",
+      "insulin sensitivity",
+      "hba1c",
+      "blood sugar"
+    ],
+    "summary": "Exercício estruturado melhora o controle da glicemia no diabetes tipo 2. Na meta-análise de Umpierre e colegas (2011), com 47 ensaios, o exercício estruturado reduziu a HbA1c em cerca de 0,67 ponto percentual; só musculação reduziu cerca de 0,57, e programas acima de 150 min/semana tiveram queda maior. A musculação melhora a sensibilidade à insulina e a força, e a combinação com aeróbio tende a controlar melhor a glicemia que cada um isolado. A ADA (2016) e o ACSM (2022) recomendam musculação 2-3 vezes por semana em dias não consecutivos, pelo menos 150 min/semana de aeróbio e pausas frequentes no tempo sentado. Cuidados: quem usa insulina ou medicamentos que estimulam a secreção de insulina tem risco de hipoglicemia; retinopatia avançada pede evitar cargas muito pesadas e prender a respiração; neuropatia exige atenção aos pés.",
+    "practice": [
+      "Faça musculação 2-3 vezes por semana em dias alternados e some pelo menos 150 min/semana de aeróbio.",
+      "Levante e se movimente por alguns minutos a cada cerca de 30 minutos sentado.",
+      "Se usa insulina ou remédio que pode causar hipoglicemia, combine com seu médico como monitorar a glicose ao treinar e tenha carboidrato por perto.",
+      "Procure o médico antes de treinar pesado se tiver retinopatia, neuropatia, feridas nos pés ou doença cardíaca."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Umpierre D, Ribeiro PA, Kramer CK, et al. Physical activity advice only or structured exercise training and association with HbA1c levels in type 2 diabetes: a systematic review and meta-analysis. JAMA. 2011;305(17):1790-1799.",
+        "year": 2011,
+        "doi": "10.1001/jama.2011.576"
+      },
+      {
+        "citation": "Colberg SR, Sigal RJ, Yardley JE, et al. Physical activity/exercise and diabetes: a position statement of the American Diabetes Association. Diabetes Care. 2016;39(11):2065-2079.",
+        "year": 2016,
+        "doi": "10.2337/dc16-1728"
+      },
+      {
+        "citation": "Kanaley JA, Colberg SR, Corcoran MH, et al. Exercise/physical activity in individuals with type 2 diabetes: a consensus statement from the American College of Sports Medicine. Medicine & Science in Sports & Exercise. 2022;54(2):353-368.",
+        "year": 2022,
+        "doi": "10.1249/MSS.0000000000002800"
+      }
+    ]
+  },
+  {
+    "id": "ph-bone-health-osteoporosis",
+    "topic": "health",
+    "title": "Ossos, osteopenia e osteoporose: treino pesado ajuda?",
+    "keywords": [
+      "osso",
+      "ossos",
+      "osteoporose",
+      "osteopenia",
+      "densidade óssea",
+      "densitometria",
+      "menopausa",
+      "fratura",
+      "bone density",
+      "osteoporosis",
+      "low bone mass",
+      "postmenopausal",
+      "liftmor",
+      "bone health"
+    ],
+    "summary": "O osso responde a cargas altas e a impacto. No ensaio LIFTMOR (Watson e colegas, 2018), 101 mulheres pós-menopausa com osteopenia ou osteoporose (média de 65 anos), previamente triadas, fizeram 8 meses de treino supervisionado de alta intensidade, duas vezes por semana por 30 minutos: 5 séries de 5 repetições acima de 85% de 1RM, mais exercícios de impacto. Comparado a um programa leve em casa, o grupo melhorou a densidade mineral da coluna lombar (+2,9% contra -1,2%) e do colo do fêmur, além da função física, com apenas um evento adverso leve. O posicionamento da ESSA (2017) recomenda treino resistido progressivo de alta intensidade e impacto ajustados ao risco de fratura, desaconselha flexão da coluna com carga e reforça cálcio e vitamina D adequados. Limites: é um único ensaio, com amostra pequena e supervisão próxima; quem tem osteoporose não deve copiar o protocolo sem orientação.",
+    "practice": [
+      "Inclua treino de força progressivo com cargas desafiadoras e, se tolerado, exercícios de impacto, sempre com técnica supervisionada.",
+      "Evite flexão da coluna com carga (como abdominal com peso) se tiver osteoporose ou osteopenia.",
+      "Inclua treino de equilíbrio para reduzir o risco de quedas e mantenha cálcio e vitamina D adequados conforme orientação médica.",
+      "Procure médico e profissional qualificado antes de treinar pesado se já teve fratura por fragilidade, tem osteoporose grave ou dor nas costas sem explicação."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Watson SL, Weeks BK, Weis LJ, et al. High-intensity resistance and impact training improves bone mineral density and physical function in postmenopausal women with osteopenia and osteoporosis: the LIFTMOR randomized controlled trial. Journal of Bone and Mineral Research. 2018;33(2):211-220.",
+        "year": 2018,
+        "doi": "10.1002/jbmr.3284"
+      },
+      {
+        "citation": "Beck BR, Daly RM, Singh MAF, et al. Exercise and Sports Science Australia (ESSA) position statement on exercise prescription for the prevention and management of osteoporosis. Journal of Science and Medicine in Sport. 2017;20(5):438-445.",
+        "year": 2017,
+        "doi": "10.1016/j.jsams.2016.10.001"
+      }
+    ]
+  },
+  {
+    "id": "ph-chronic-low-back-pain",
+    "topic": "injury",
+    "title": "Dor lombar crônica e exercício",
+    "keywords": [
+      "dor nas costas",
+      "dor lombar",
+      "lombar",
+      "lombalgia",
+      "coluna",
+      "dor crônica",
+      "dor no fim das costas",
+      "pilates",
+      "fortalecimento do core",
+      "low back pain",
+      "chronic back pain",
+      "back pain exercise",
+      "core training"
+    ],
+    "summary": "Na dor lombar crônica inespecífica (mais de 12 semanas, sem causa grave identificada), exercício é um dos tratamentos com melhor evidência. A revisão Cochrane de Hayden e colegas (2021), com 249 ensaios, encontrou com certeza moderada uma redução de dor clinicamente importante, de cerca de 15 pontos numa escala de 0 a 100, em comparação com nenhum tratamento ou cuidado usual, e uma melhora menor na função. Meta-análises em rede colocam Pilates, treino de força e exercícios de core entre as opções mais eficazes, mas as diferenças entre modalidades são modestas e a qualidade dos estudos é variável; por isso a recomendação prática é escolher o exercício de que a pessoa gosta e consegue manter. Diretrizes também orientam manter-se ativo e não pedir exames de imagem de rotina quando não há sinais de alerta.",
+    "practice": [
+      "Mantenha-se ativo; ficar de repouso prolongado não é a recomendação para dor lombar inespecífica.",
+      "Inclua treino de força para tronco, quadril e pernas com progressão gradual, ou Pilates, conforme a preferência.",
+      "Aceite desconforto leve e passageiro durante a progressão e reduza a carga se a dor piorar no dia seguinte.",
+      "Procure atendimento médico com urgência se a dor vier com perda de controle da urina ou das fezes, dormência na região genital, fraqueza progressiva nas pernas, febre, perda de peso inexplicada ou após trauma importante."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Hayden JA, Ellis J, Ogilvie R, et al. Exercise therapy for chronic low back pain. Cochrane Database of Systematic Reviews. 2021;9(9):CD009790.",
+        "year": 2021,
+        "doi": "10.1002/14651858.CD009790.pub2"
+      },
+      {
+        "citation": "Hayden JA, Ellis J, Ogilvie R, et al. Some types of exercise are more effective than others in people with chronic low back pain: a network meta-analysis. Journal of Physiotherapy. 2021;67(4):252-262.",
+        "year": 2021,
+        "doi": "10.1016/j.jphys.2021.09.004"
+      },
+      {
+        "citation": "Fernández-Rodríguez R, Álvarez-Bueno C, Cavero-Redondo I, et al. Best exercise options for reducing pain and disability in adults with chronic low back pain: Pilates, strength, core-based, and mind-body. A network meta-analysis. Journal of Orthopaedic & Sports Physical Therapy. 2022;52(8):505-521.",
+        "year": 2022,
+        "doi": "10.2519/jospt.2022.10671"
+      },
+      {
+        "citation": "Chou R, Qaseem A, Snow V, et al. Diagnosis and treatment of low back pain: a joint clinical practice guideline from the American College of Physicians and the American Pain Society. Annals of Internal Medicine. 2007;147(7):478-491.",
+        "year": 2007,
+        "doi": "10.7326/0003-4819-147-7-200710020-00006"
+      }
+    ]
+  },
+  {
+    "id": "ph-training-around-pain",
+    "topic": "injury",
+    "title": "Treinar com dor leve: monitoramento da dor",
+    "keywords": [
+      "dor",
+      "treinar com dor",
+      "dor no treino",
+      "lesão",
+      "lesão leve",
+      "tendinite",
+      "tendinopatia",
+      "machucado",
+      "voltar a treinar",
+      "pain monitoring",
+      "training with pain",
+      "tendinopathy",
+      "minor injury",
+      "load management"
+    ],
+    "summary": "Nem toda dor durante o treino significa dano. Em lesões por sobrecarga, como tendinopatias, uma estratégia usada em reabilitação é o modelo de monitoramento da dor: a atividade é permitida se a dor durante o exercício ficar em até cerca de 5 numa escala de 0 a 10, voltar ao nível habitual até a manhã seguinte e não aumentar de semana para semana. Num ensaio com pacientes com tendinopatia de Aquiles, continuar correndo e saltando sob esse controle não trouxe prejuízo em relação a interromper essas atividades. Uma meta-análise em dor musculoesquelética crônica encontrou pequena vantagem de curto prazo para exercícios que admitem alguma dor e nenhuma diferença no médio e longo prazo. A evidência é limitada e vem de populações específicas; dor aguda forte, inchaço, deformidade ou perda de função são outra situação e pedem avaliação.",
+    "practice": [
+      "Regra prática: dor até cerca de 5/10 no exercício, que volta ao normal até a manhã seguinte e não piora semana a semana, costuma ser aceitável.",
+      "Se a dor passar desses limites, reduza carga, amplitude ou volume, ou troque o exercício, em vez de parar tudo.",
+      "Procure médico ou fisioterapeuta se a dor for forte e repentina, vier com estalo, inchaço, deformidade ou perda de força, ou se persistir ou piorar apesar dos ajustes."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Silbernagel KG, Thomeé R, Eriksson BI, et al. Continued sports activity, using a pain-monitoring model, during rehabilitation in patients with Achilles tendinopathy: a randomized controlled study. The American Journal of Sports Medicine. 2007;35(6):897-906.",
+        "year": 2007,
+        "doi": "10.1177/0363546506298279"
+      },
+      {
+        "citation": "Smith BE, Hendrick P, Smith TO, et al. Should exercises be painful in the management of chronic musculoskeletal pain? A systematic review and meta-analysis. British Journal of Sports Medicine. 2017;51(23):1679-1687.",
+        "year": 2017,
+        "doi": "10.1136/bjsports-2016-097383"
+      }
+    ]
+  },
+  {
+    "id": "ph-warning-signs-stop-and-seek-care",
+    "topic": "health",
+    "title": "Sinais de alerta: quando parar o treino e procurar atendimento",
+    "keywords": [
+      "sinais de alerta",
+      "dor no peito",
+      "falta de ar",
+      "tontura",
+      "desmaio",
+      "palpitação",
+      "quando parar o treino",
+      "emergência",
+      "procurar médico",
+      "red flags",
+      "warning signs",
+      "chest pain",
+      "stop exercising",
+      "see a doctor"
+    ],
+    "summary": "Exercício é seguro para a maioria das pessoas, e eventos cardiovasculares graves ligados ao exercício costumam ser precedidos de sinais de alerta. A AHA orienta interromper o exercício e buscar avaliação médica imediata diante de dor ou pressão no peito, tontura, falta de ar excessiva ou palpitações, voltando a treinar só após liberação. O ACSM recomenda avaliação médica antes de exercício mais intenso para quem tem sintomas ou doença cardiovascular, metabólica ou renal conhecida. Na dor nas costas, déficits neurológicos graves ou progressivos e suspeita de doença séria indicam investigação. Os sinais de alerta isolados têm baixa precisão diagnóstica, por isso a interpretação deve ser feita por um profissional de saúde, não por autodiagnóstico. Este conteúdo não substitui atendimento médico.",
+    "practice": [
+      "Pare imediatamente e procure atendimento se sentir dor, aperto ou pressão no peito, falta de ar desproporcional, tontura, desmaio ou palpitações.",
+      "Procure atendimento urgente se dor nas costas vier com perda de controle da urina ou das fezes, dormência na região genital, fraqueza progressiva nas pernas, febre ou após queda ou trauma importante.",
+      "Lesão aguda com estalo, inchaço rápido, deformidade ou incapacidade de apoiar o membro também exige avaliação.",
+      "Em emergência no Brasil, ligue para o SAMU (192)."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Paluch AE, Boyer WR, Franklin BA, et al. Resistance exercise training in individuals with and without cardiovascular disease: 2023 update: a scientific statement from the American Heart Association. Circulation. 2024;149(3):e217-e231.",
+        "year": 2024,
+        "doi": "10.1161/CIR.0000000000001189"
+      },
+      {
+        "citation": "Riebe D, Franklin BA, Thompson PD, et al. Updating ACSM's recommendations for exercise preparticipation health screening. Medicine & Science in Sports & Exercise. 2015;47(11):2473-2479.",
+        "year": 2015,
+        "doi": "10.1249/MSS.0000000000000664"
+      },
+      {
+        "citation": "Finucane LM, Downie A, Mercer C, et al. International framework for red flags for potential serious spinal pathologies. Journal of Orthopaedic & Sports Physical Therapy. 2020;50(7):350-372.",
+        "year": 2020,
+        "doi": "10.2519/jospt.2020.9971"
+      },
+      {
+        "citation": "Chou R, Qaseem A, Snow V, et al. Diagnosis and treatment of low back pain: a joint clinical practice guideline from the American College of Physicians and the American Pain Society. Annals of Internal Medicine. 2007;147(7):478-491.",
+        "year": 2007,
+        "doi": "10.7326/0003-4819-147-7-200710020-00006"
+      }
+    ]
+  },
+  {
+    "id": "ph-obesity-fat-loss-resistance-training",
+    "topic": "body-composition",
+    "title": "Musculação para emagrecer com sobrepeso ou obesidade",
+    "keywords": [
+      "emagrecer",
+      "perder peso",
+      "perder gordura",
+      "obesidade",
+      "sobrepeso",
+      "gordura",
+      "composição corporal",
+      "secar",
+      "dieta e musculação",
+      "fat loss",
+      "weight loss",
+      "obesity",
+      "body composition",
+      "lean mass"
+    ],
+    "summary": "Musculação sozinha muda pouco o peso na balança, mas melhora a composição corporal. Na meta-análise de Lopez e colegas (2022), com 114 ensaios e cerca de 4,2 mil pessoas com sobrepeso ou obesidade, o treino resistido isolado reduziu em média 1,6 ponto no percentual de gordura e 1,0 kg de gordura, e aumentou cerca de 0,8 kg de massa magra. Os maiores efeitos sobre a gordura vieram da combinação de musculação com restrição calórica (cerca de 5,3 kg de gordura a menos), que também preservou a massa magra. Num ensaio comparando modalidades (STRRIDE AT/RT), o aeróbio reduziu mais peso e gordura, enquanto os programas com musculação aumentaram a massa magra. O ACSM aponta que perda de peso clinicamente relevante costuma exigir mais de 250 min/semana de atividade ou associação com ajuste alimentar. Assim, dieta ajustada mais musculação, com aeróbio, é a combinação mais completa.",
+    "practice": [
+      "Para perder gordura, combine déficit calórico moderado com musculação 2-3 vezes por semana para preservar massa magra.",
+      "Some aeróbio ou mais passos diários para aumentar o gasto energético.",
+      "Acompanhe medidas e fotos, não só o peso: a balança pode mudar pouco enquanto a composição melhora.",
+      "Procure médico e nutricionista se tiver obesidade com doenças associadas ou precisar de estratégias de perda de peso mais intensas."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Lopez P, Taaffe DR, Galvão DA, et al. Resistance training effectiveness on body composition and body weight outcomes in individuals with overweight and obesity across the lifespan: a systematic review and meta-analysis. Obesity Reviews. 2022;23(5):e13428.",
+        "year": 2022,
+        "doi": "10.1111/obr.13428"
+      },
+      {
+        "citation": "Willis LH, Slentz CA, Bateman LA, et al. Effects of aerobic and/or resistance training on body mass and fat mass in overweight or obese adults. Journal of Applied Physiology. 2012;113(12):1831-1837.",
+        "year": 2012,
+        "doi": "10.1152/japplphysiol.01370.2011"
+      },
+      {
+        "citation": "Donnelly JE, Blair SN, Jakicic JM, et al. American College of Sports Medicine position stand. Appropriate physical activity intervention strategies for weight loss and prevention of weight regain for adults. Medicine & Science in Sports & Exercise. 2009;41(2):459-471.",
+        "year": 2009,
+        "doi": "10.1249/MSS.0b013e3181949333"
+      }
+    ]
+  },
+  {
+    "id": "ph-muscle-strengthening-mortality",
+    "topic": "health",
+    "title": "Musculação e longevidade",
+    "keywords": [
+      "longevidade",
+      "viver mais",
+      "mortalidade",
+      "saúde",
+      "musculação faz bem",
+      "doenças crônicas",
+      "câncer",
+      "doença cardíaca",
+      "quanto tempo de musculação",
+      "mortality",
+      "longevity",
+      "muscle-strengthening",
+      "all-cause mortality",
+      "health benefits"
+    ],
+    "summary": "Estudos de coorte associam atividades de fortalecimento muscular a menor risco de morte e de doenças crônicas, independentemente do aeróbio. A meta-análise de Momma e colegas (2022), com 16 estudos, encontrou risco 10-17% menor de morte por todas as causas, doença cardiovascular, câncer total, diabetes e câncer de pulmão. A maior redução apareceu com cerca de 30-60 minutos por semana; acima disso, a curva em forma de J deixa incerto se volumes muito maiores acrescentam benefício para mortalidade. Shailendra e colegas (2022) chegaram a resultado parecido: cerca de 15% menos mortalidade geral, com o máximo perto de 60 minutos semanais. Fortalecimento combinado com aeróbio teve a associação mais favorável. São dados observacionais, que mostram associação e não provam causa, e não indicam que treinar mais seja prejudicial.",
+    "practice": [
+      "Faça fortalecimento muscular em pelo menos 2 dias por semana; 30-60 minutos semanais já se associam a boa parte do benefício.",
+      "Combine com atividade aeróbia, que somada ao fortalecimento teve a associação mais favorável.",
+      "Volumes maiores podem ser usados para objetivos de força ou estética; a incerteza é apenas sobre ganho extra em longevidade."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Momma H, Kawakami R, Honda T, et al. Muscle-strengthening activities are associated with lower risk and mortality in major non-communicable diseases: a systematic review and meta-analysis of cohort studies. British Journal of Sports Medicine. 2022;56(13):755-763.",
+        "year": 2022,
+        "doi": "10.1136/bjsports-2021-105061"
+      },
+      {
+        "citation": "Shailendra P, Baldock KL, Li LSK, et al. Resistance training and mortality risk: a systematic review and meta-analysis. American Journal of Preventive Medicine. 2022;63(2):277-285.",
+        "year": 2022,
+        "doi": "10.1016/j.amepre.2022.03.020"
+      }
+    ]
+  },
+  {
+    "id": "ph-who-2020-guidelines",
+    "topic": "health",
+    "title": "Recomendações da OMS (2020) para atividade física",
+    "keywords": [
+      "oms",
+      "organização mundial da saúde",
+      "quanto exercício fazer",
+      "recomendação de atividade física",
+      "150 minutos",
+      "diretrizes",
+      "sedentarismo",
+      "tempo sentado",
+      "who",
+      "physical activity guidelines",
+      "150 minutes",
+      "muscle-strengthening",
+      "sedentary behaviour"
+    ],
+    "summary": "As diretrizes da OMS de 2020 recomendam que adultos de 18 a 64 anos façam 150-300 minutos por semana de atividade aeróbia moderada, ou 75-150 minutos de atividade vigorosa, ou uma combinação equivalente, mais fortalecimento muscular de intensidade moderada ou maior, envolvendo os grandes grupos musculares, em pelo menos 2 dias por semana. Ultrapassar 300 minutos moderados traz benefícios adicionais. Idosos seguem o mesmo e acrescentam atividade multicomponente com ênfase em equilíbrio e força em 3 ou mais dias. Crianças e adolescentes devem somar em média 60 minutos por dia, com fortalecimento muscular e ósseo em pelo menos 3 dias. Gestantes e puérperas: ao menos 150 minutos semanais com fortalecimento. A OMS também recomenda reduzir o tempo sentado. A mensagem central é que qualquer atividade é melhor que nenhuma, e quem é inativo deve começar com pouco e aumentar aos poucos.",
+    "practice": [
+      "Meta semanal para adultos: 150-300 min de aeróbio moderado (ou 75-150 min vigoroso) mais fortalecimento em pelo menos 2 dias.",
+      "Acima de 65 anos, acrescente equilíbrio e força em 3 ou mais dias por semana.",
+      "Interrompa longos períodos sentado com movimento leve; tudo conta.",
+      "Quem tem doença crônica deve conversar com um profissional de saúde sobre o tipo e a quantidade adequados."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Bull FC, Al-Ansari SS, Biddle S, et al. World Health Organization 2020 guidelines on physical activity and sedentary behaviour. British Journal of Sports Medicine. 2020;54(24):1451-1462.",
+        "year": 2020,
+        "doi": "10.1136/bjsports-2020-102955"
+      },
+      {
+        "citation": "World Health Organization. WHO guidelines on physical activity and sedentary behaviour. Geneva: World Health Organization; 2020.",
+        "year": 2020,
+        "url": "https://www.who.int/publications/i/item/9789240015128"
+      }
+    ]
+  },
+  {
+    "id": "ph-concurrent-training-interference",
+    "topic": "cardio",
+    "title": "Cardio atrapalha a hipertrofia? O efeito de interferência",
+    "keywords": [
+      "cardio",
+      "aeróbio",
+      "treino concorrente",
+      "cardio atrapalha hipertrofia",
+      "cardio perde massa",
+      "corrida",
+      "bicicleta",
+      "esteira",
+      "concurrent training",
+      "interference effect",
+      "cardio and hypertrophy",
+      "running vs cycling",
+      "endurance training"
+    ],
+    "summary": "A preocupação de que o aeróbio anule os ganhos da musculação foi exagerada. A meta-análise de Schumann e colegas (2022), com 43 estudos, comparou treino concorrente (força mais aeróbio) com o mesmo treino de força sozinho e não encontrou prejuízo para hipertrofia nem para força máxima; o que diminuiu foi a força explosiva (potência). Nessa análise, o tipo de aeróbio, corrida ou bicicleta, não mudou o resultado. Uma meta-análise anterior (Wilson e colegas, 2012) sugeriu que a interferência cresce com a frequência e a duração do aeróbio e que a corrida atrapalhou mais que a bicicleta. Uma análise no nível da fibra muscular (Lundberg e colegas, 2022) encontrou um pequeno efeito negativo, mais claro com corrida nas fibras tipo I. Na prática, volumes moderados de cardio são compatíveis com hipertrofia e força; volumes muito altos merecem mais atenção para quem prioriza músculo ou potência.",
+    "practice": [
+      "Pode fazer cardio sem medo de perder hipertrofia; mantenha volume moderado se o foco é ganhar músculo.",
+      "Se o objetivo é massa ou potência e o volume de aeróbio é alto, considere priorizar a bicicleta, que em algumas análises interferiu menos que a corrida.",
+      "Aumente o volume de aeróbio aos poucos e observe se a força ou a recuperação das pernas caem."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Schumann M, Feuerbacher JF, Sünkeler M, et al. Compatibility of concurrent aerobic and strength training for skeletal muscle size and function: an updated systematic review and meta-analysis. Sports Medicine. 2022;52(3):601-612.",
+        "year": 2022,
+        "doi": "10.1007/s40279-021-01587-7"
+      },
+      {
+        "citation": "Wilson JM, Marin PJ, Rhea MR, et al. Concurrent training: a meta-analysis examining interference of aerobic and resistance exercises. Journal of Strength and Conditioning Research. 2012;26(8):2293-2307.",
+        "year": 2012,
+        "doi": "10.1519/JSC.0b013e31823a3e2d"
+      },
+      {
+        "citation": "Lundberg TR, Feuerbacher JF, Sünkeler M, et al. The effects of concurrent aerobic and strength training on muscle fiber hypertrophy: a systematic review and meta-analysis. Sports Medicine. 2022;52(10):2391-2403.",
+        "year": 2022,
+        "doi": "10.1007/s40279-022-01688-x"
+      }
+    ]
+  },
+  {
+    "id": "ph-concurrent-order-and-spacing",
+    "topic": "cardio",
+    "title": "Ordem e intervalo entre musculação e cardio",
+    "keywords": [
+      "cardio antes ou depois",
+      "ordem do treino",
+      "musculação antes do cardio",
+      "aeróbio depois da musculação",
+      "mesmo dia",
+      "intervalo entre treinos",
+      "dois treinos no dia",
+      "concurrent training order",
+      "cardio before or after weights",
+      "exercise sequence",
+      "same session"
+    ],
+    "summary": "Quando força e aeróbio são feitos na mesma sessão, a ordem pesa um pouco para a força das pernas. Duas meta-análises (Eddens e colegas, 2018; Murlasits e colegas, 2018) mostraram que fazer musculação antes do aeróbio rendeu maior ganho de força dinâmica de membros inferiores, algo como 7% ou cerca de 4 kg a mais no 1RM, sem diferença para hipertrofia, capacidade aeróbia (VO2máx) ou gordura corporal. Na meta-análise de Schumann e colegas (2022), a perda de força explosiva foi mais evidente quando os dois treinos aconteciam na mesma sessão do que quando separados por pelo menos 3 horas. Os efeitos são pequenos e os estudos são poucos; para a maioria das pessoas, a regularidade importa mais que a ordem.",
+    "practice": [
+      "Se a prioridade é força ou potência de pernas, faça a musculação primeiro e o aeróbio depois.",
+      "Quando possível, separe as sessões por pelo menos 3 horas ou faça em dias diferentes.",
+      "Se a prioridade é o condicionamento aeróbio, a ordem pode ser invertida sem prejuízo ao VO2máx."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Eddens L, van Someren K, Howatson G. The role of intra-session exercise sequence in the interference effect: a systematic review with meta-analysis. Sports Medicine. 2018;48(1):177-188.",
+        "year": 2018,
+        "doi": "10.1007/s40279-017-0784-1"
+      },
+      {
+        "citation": "Murlasits Z, Kneffel Z, Thalib L. The physiological effects of concurrent strength and endurance training sequence: a systematic review and meta-analysis. Journal of Sports Sciences. 2018;36(11):1212-1219.",
+        "year": 2018,
+        "doi": "10.1080/02640414.2017.1364405"
+      },
+      {
+        "citation": "Schumann M, Feuerbacher JF, Sünkeler M, et al. Compatibility of concurrent aerobic and strength training for skeletal muscle size and function: an updated systematic review and meta-analysis. Sports Medicine. 2022;52(3):601-612.",
+        "year": 2022,
+        "doi": "10.1007/s40279-021-01587-7"
+      }
+    ]
+  },
+  {
+    "id": "ph-hiit-vs-steady-state-fat-loss",
+    "topic": "cardio",
+    "title": "HIIT ou aeróbio contínuo para perder gordura?",
+    "keywords": [
+      "hiit",
+      "treino intervalado",
+      "intervalado",
+      "tiro",
+      "aeróbio contínuo",
+      "aeróbio moderado",
+      "queimar gordura",
+      "emagrecer",
+      "steady state",
+      "hiit vs cardio",
+      "interval training",
+      "moderate-intensity continuous training",
+      "fat loss"
+    ],
+    "summary": "Comparações diretas entre treino intervalado de alta intensidade (HIIT) e aeróbio contínuo moderado mostram efeitos semelhantes sobre a gordura corporal. A meta-análise multinível de Steele e colegas (2021), só com ensaios randomizados de comparação direta, encontrou diferença trivial para massa gorda e massa magra, com certeza alta. Keating e colegas (2017) e Wewege e colegas (2017) também não acharam diferença; Wewege notou que o HIIT exigiu cerca de 40% menos tempo, enquanto Keating observou que protocolos de HIIT com menor gasto energético tendiam a ficar atrás do contínuo. Em programas curtos de exercício sem dieta, a perda de gordura foi modesta, em torno de 1 kg, e Keating considerou que nenhuma das modalidades produziu redução clinicamente relevante. Escolha pela preferência, pelo tempo disponível e pela tolerância, e combine com ajuste alimentar para resultados maiores.",
+    "practice": [
+      "Escolha HIIT ou aeróbio contínuo pela preferência e pelo tempo disponível; os dois funcionam de forma parecida para gordura.",
+      "Com pouco tempo, o HIIT pode ser eficiente, mas não é um atalho mágico.",
+      "Para perder gordura de forma relevante, combine o exercício com ajuste na alimentação.",
+      "Procure liberação médica antes de começar HIIT se tiver doença cardíaca, pressão alta sem controle ou sintomas ao esforço."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Steele J, Plotkin D, Van Every D, et al. Slow and steady, or hard and fast? A systematic review and meta-analysis of studies comparing body composition changes between interval training and moderate intensity continuous training. Sports. 2021;9(11):155.",
+        "year": 2021,
+        "doi": "10.3390/sports9110155"
+      },
+      {
+        "citation": "Keating SE, Johnson NA, Mielke GI, et al. A systematic review and meta-analysis of interval training versus moderate-intensity continuous training on body adiposity. Obesity Reviews. 2017;18(8):943-964.",
+        "year": 2017,
+        "doi": "10.1111/obr.12536"
+      },
+      {
+        "citation": "Wewege M, van den Berg R, Ward RE, et al. The effects of high-intensity interval training vs. moderate-intensity continuous training on body composition in overweight and obese adults: a systematic review and meta-analysis. Obesity Reviews. 2017;18(6):635-646.",
+        "year": 2017,
+        "doi": "10.1111/obr.12532"
+      }
+    ]
+  },
+  {
+    "id": "ph-daily-steps-health",
+    "topic": "health",
+    "title": "Passos por dia e saúde",
+    "keywords": [
+      "passos",
+      "passos por dia",
+      "10 mil passos",
+      "caminhada",
+      "caminhar",
+      "contador de passos",
+      "sedentarismo",
+      "quantos passos",
+      "steps per day",
+      "daily steps",
+      "walking",
+      "10000 steps",
+      "step count",
+      "mortality"
+    ],
+    "summary": "Contar passos é um jeito simples de acompanhar a atividade diária. Na meta-análise de Paluch e colegas (2022), com 15 coortes e cerca de 47 mil adultos, mais passos se associaram a menor mortalidade, com o benefício se estabilizando por volta de 6.000-8.000 passos por dia em pessoas com 60 anos ou mais e de 8.000-10.000 nos mais jovens. Ding e colegas (2025), com 57 estudos, estimaram que 7.000 passos por dia, comparados a 2.000, se associam a cerca de 47% menos mortalidade, 25% menos doença cardiovascular, 38% menos demência e 22% menos sintomas depressivos; 10.000 segue sendo uma boa meta para quem já é ativo, mas não é um número mágico. Outra meta-análise associou cada 1.000 passos diários a mais a cerca de 15% menos mortalidade. São estudos observacionais, de certeza moderada para a maioria dos desfechos. Passos complementam, mas não substituem, o fortalecimento muscular.",
+    "practice": [
+      "Se estiver bem abaixo de 7.000 passos por dia, aumente aos poucos, por exemplo em blocos de cerca de 1.000 passos.",
+      "Acima de 60 anos, 6.000-8.000 passos por dia já se associam à maior parte do benefício observado.",
+      "Mantenha também a musculação pelo menos 2 vezes por semana; passos não cobrem a necessidade de fortalecimento."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Paluch AE, Bajpai S, Bassett DR, et al. Daily steps and all-cause mortality: a meta-analysis of 15 international cohorts. The Lancet Public Health. 2022;7(3):e219-e228.",
+        "year": 2022,
+        "doi": "10.1016/S2468-2667(21)00302-9"
+      },
+      {
+        "citation": "Ding D, Nguyen B, Nau T, et al. Daily steps and health outcomes in adults: a systematic review and dose-response meta-analysis. The Lancet Public Health. 2025;10(8):e668-e681.",
+        "year": 2025,
+        "doi": "10.1016/S2468-2667(25)00164-1"
+      },
+      {
+        "citation": "Banach M, Lewek J, Surma S, et al. The association between daily step count and all-cause and cardiovascular mortality: a meta-analysis. European Journal of Preventive Cardiology. 2023;30(18):1975-1985.",
+        "year": 2023,
+        "doi": "10.1093/eurjpc/zwad229"
+      }
+    ]
+  },
+  {
+    "id": "ph-mental-health-depression-anxiety",
+    "topic": "health",
+    "title": "Musculação, depressão e ansiedade",
+    "keywords": [
+      "depressão",
+      "ansiedade",
+      "saúde mental",
+      "humor",
+      "estresse",
+      "bem-estar",
+      "tristeza",
+      "desânimo",
+      "mental health",
+      "depression",
+      "anxiety",
+      "mood",
+      "strength training mental health"
+    ],
+    "summary": "A musculação também beneficia a saúde mental. A meta-análise de Gordon e colegas (2018), com 33 ensaios e quase 1.900 pessoas, mostrou redução moderada dos sintomas depressivos, que não dependeu do volume de treino prescrito, do estado de saúde dos participantes nem de ganho significativo de força. Outra meta-análise do mesmo grupo (2017) encontrou redução pequena a moderada dos sintomas de ansiedade. Numa meta-análise em rede de 2024 (Noetel e colegas) com pessoas com depressão maior, treino de força, caminhada ou corrida e yoga ficaram entre as opções mais eficazes, com efeitos maiores em intensidades mais altas, e força e yoga foram bem toleradas. Ressalva: muitos estudos têm risco de viés e a confiança nos resultados variou de baixa a muito baixa. O exercício pode complementar psicoterapia e medicação, mas não deve substituí-las por conta própria.",
+    "practice": [
+      "Use a musculação como aliada do humor e priorize a regularidade; nos estudos o benefício não dependeu do volume total.",
+      "Não interrompa tratamento psicológico ou medicamentoso por conta própria; converse com seu médico ou psicólogo.",
+      "Procure ajuda profissional se tristeza, ansiedade ou desânimo persistirem por semanas ou atrapalharem a rotina.",
+      "Em crise ou com pensamentos de se machucar, busque ajuda imediata: no Brasil, CVV (188) ou SAMU (192)."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Gordon BR, McDowell CP, Hallgren M, et al. Association of efficacy of resistance exercise training with depressive symptoms: meta-analysis and meta-regression analysis of randomized clinical trials. JAMA Psychiatry. 2018;75(6):566-576.",
+        "year": 2018,
+        "doi": "10.1001/jamapsychiatry.2018.0572"
+      },
+      {
+        "citation": "Gordon BR, McDowell CP, Lyons M, et al. The effects of resistance exercise training on anxiety: a meta-analysis and meta-regression analysis of randomized controlled trials. Sports Medicine. 2017;47(12):2521-2532.",
+        "year": 2017,
+        "doi": "10.1007/s40279-017-0769-0"
+      },
+      {
+        "citation": "Noetel M, Sanders T, Gallardo-Gómez D, et al. Effect of exercise for depression: systematic review and network meta-analysis of randomised controlled trials. BMJ. 2024;384:e075847.",
+        "year": 2024,
+        "doi": "10.1136/bmj-2023-075847"
+      }
+    ]
+  }
+]

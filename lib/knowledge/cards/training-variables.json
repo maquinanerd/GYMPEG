@@ -1,0 +1,1132 @@
+[
+  {
+    "id": "tv-weekly-volume-hypertrophy",
+    "topic": "volume",
+    "title": "Volume semanal para hipertrofia: quantas séries por músculo",
+    "keywords": [
+      "volume semanal",
+      "séries por semana",
+      "quantas séries",
+      "séries por músculo",
+      "volume de treino",
+      "hipertrofia",
+      "ganhar massa",
+      "crescimento muscular",
+      "weekly volume",
+      "sets per week",
+      "hypertrophy",
+      "dose-resposta",
+      "dose-response",
+      "muscle growth"
+    ],
+    "summary": "Existe uma relação dose-resposta consistente entre o número de séries semanais por músculo e a hipertrofia: mais séries tendem a gerar mais crescimento, porém com retornos decrescentes. A meta-regressão de Pelland et al. (67 estudos, 2.058 participantes) confirmou que o ganho de massa aumenta com o volume, numa curva que vai achatando. A meta-análise de Schoenfeld et al. (2017) mostrou um pequeno ganho adicional a cada série extra e uma tendência de melhores resultados com 10 ou mais séries semanais por músculo. Uma revisão restrita a pessoas treinadas sugeriu 12-20 séries semanais como faixa de referência (Baz-Valle et al., 2022). O posicionamento do ACSM de 2026 recomenda ao menos 10 séries por grupo muscular por semana e, citando uma meta-regressão, aponta retornos decrescentes por volta de 18-20 séries. Ressalvas: estudos curtos (8-12 semanas), predominância de homens jovens, grande variação individual e incerteza sobre o ponto exato de platô.",
+    "practice": [
+      "Comece com cerca de 10 séries semanais efetivas por músculo e ajuste conforme o progresso e a recuperação.",
+      "Se estagnou e recupera bem, aumente o volume de forma gradual em vez de dar saltos grandes.",
+      "Acima de ~20 séries semanais por músculo o benefício extra tende a ser pequeno; priorize a qualidade e a proximidade da falha.",
+      "Conte apenas séries com esforço real; séries de aquecimento não entram na conta."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC. The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains. Sports Med. 2026;56(2):481-505.",
+        "year": 2026,
+        "doi": "10.1007/s40279-025-02344-w"
+      },
+      {
+        "citation": "Schoenfeld BJ, Ogborn D, Krieger JW. Dose-response relationship between weekly resistance training volume and increases in muscle mass: a systematic review and meta-analysis. J Sports Sci. 2017;35(11):1073-1082.",
+        "year": 2017,
+        "doi": "10.1080/02640414.2016.1210197"
+      },
+      {
+        "citation": "Baz-Valle E, Balsalobre-Fernández C, Alix-Fages C, Santos-Concejero J. A Systematic Review of the Effects of Different Resistance Training Volumes on Muscle Hypertrophy. J Hum Kinet. 2022;81:199-210.",
+        "year": 2022,
+        "doi": "10.2478/hukin-2022-0017"
+      },
+      {
+        "citation": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews. Med Sci Sports Exerc. 2026;58(4):851-872.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003897"
+      }
+    ]
+  },
+  {
+    "id": "tv-weekly-volume-strength",
+    "topic": "volume",
+    "title": "Volume semanal para força: quanto é suficiente",
+    "keywords": [
+      "volume para força",
+      "séries para força",
+      "ganhar força",
+      "1rm",
+      "força máxima",
+      "quantas séries",
+      "powerlifting",
+      "supino",
+      "agachamento",
+      "strength",
+      "weekly sets",
+      "strength gains",
+      "volume semanal"
+    ],
+    "summary": "Para força máxima (1RM), mais volume também ajuda, mas os retornos decrescentes chegam bem mais cedo do que na hipertrofia. Na meta-regressão de Pelland et al., o volume semanal teve efeito positivo sobre a força, com uma curva que achata de forma bem mais acentuada que a da hipertrofia. A meta-análise de Ralston et al. (2017) encontrou ganhos maiores com volumes semanais médio e alto do que com volume baixo. Por outro lado, a revisão de Androulakis-Korakakis et al. (2020) mostrou que uma única série de 6-12 repetições a ~70-85% de 1RM, perto da falha, 2-3 vezes por semana, já gera ganhos significativos (embora abaixo do máximo) no agachamento e no supino de homens treinados. O ACSM 2026 recomenda 2-3 séries por exercício por sessão e ao menos 2 sessões semanais. Para força, carga alta e prática do próprio movimento parecem pesar mais do que acumular muitas séries.",
+    "practice": [
+      "Para força, 2-3 séries pesadas por exercício por sessão, 2 ou mais vezes por semana, cobrem a maior parte do benefício.",
+      "Em semanas corridas, 1 série pesada perto da falha por exercício principal, 1-3 vezes por semana, ainda produz ganho em quem já treina.",
+      "Treine o próprio levantamento que quer melhorar; a especificidade conta muito para o 1RM.",
+      "Antes de adicionar séries, verifique se a carga e o esforço das séries atuais estão adequados."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC. The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains. Sports Med. 2026;56(2):481-505.",
+        "year": 2026,
+        "doi": "10.1007/s40279-025-02344-w"
+      },
+      {
+        "citation": "Ralston GW, Kilgore L, Wyatt FB, Baker JS. The Effect of Weekly Set Volume on Strength Gain: A Meta-Analysis. Sports Med. 2017;47(12):2585-2601.",
+        "year": 2017,
+        "doi": "10.1007/s40279-017-0762-7"
+      },
+      {
+        "citation": "Androulakis-Korakakis P, Fisher JP, Steele J. The Minimum Effective Training Dose Required to Increase 1RM Strength in Resistance-Trained Men: A Systematic Review and Meta-Analysis. Sports Med. 2020;50(4):751-765.",
+        "year": 2020,
+        "doi": "10.1007/s40279-019-01236-0"
+      },
+      {
+        "citation": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews. Med Sci Sports Exerc. 2026;58(4):851-872.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003897"
+      }
+    ]
+  },
+  {
+    "id": "tv-fractional-sets-synergists",
+    "topic": "volume",
+    "title": "Como contar séries para músculos sinergistas (séries fracionadas)",
+    "keywords": [
+      "séries fracionadas",
+      "meia série",
+      "sinergistas",
+      "contar séries",
+      "volume indireto",
+      "multiarticular",
+      "isolado",
+      "monoarticular",
+      "fractional sets",
+      "indirect volume",
+      "synergist",
+      "compound exercise",
+      "tríceps no supino",
+      "bíceps na remada"
+    ],
+    "summary": "Exercícios multiarticulares trabalham mais de um músculo, mas não com o mesmo estímulo para todos. Na meta-regressão de Pelland et al., o método que contava séries indiretas como meia série (1 para o músculo-alvo, 0,5 para sinergistas) teve o maior suporte relativo para prever ganhos de hipertrofia e força, em comparação com contar essas séries como 1 ou 0. Exemplo: um supino conta 1 série para o peitoral e 0,5 para tríceps e deltoide anterior. Schoenfeld et al. (2019) já argumentavam, com base em biomecânica e ativação muscular, que não se pode presumir uma relação 1:1 para todos os músculos (os posteriores de coxa, por exemplo, são pouco ativados no leg press e no agachamento), mas, pela falta de estudos longitudinais, sugeriam partir de 1:1 e ajustar com bom senso. Kinoshita et al. (2026) mostraram que o leg press fez os vastos crescerem tanto quanto a cadeira extensora, mas quase não hipertrofiou o reto femoral. Ressalva: 0,5 é uma aproximação média e a contribuição real varia por músculo e exercício.",
+    "practice": [
+      "Conte 1 série para o músculo-alvo principal e 0,5 para sinergistas relevantes (ex.: remada = 1 para costas e 0,5 para bíceps).",
+      "Não presuma que multiarticulares cobrem tudo: reto femoral e posteriores de coxa podem precisar de exercícios isolados.",
+      "Use a contagem fracionada para planejar o volume semanal por músculo sem superestimar o total."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC. The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains. Sports Med. 2026;56(2):481-505.",
+        "year": 2026,
+        "doi": "10.1007/s40279-025-02344-w"
+      },
+      {
+        "citation": "Schoenfeld B, Grgic J, Haun C, Itagaki T, Helms E. Calculating Set-Volume for the Limb Muscles with the Performance of Multi-Joint Exercises: Implications for Resistance Training Prescription. Sports (Basel). 2019;7(7):177.",
+        "year": 2019,
+        "doi": "10.3390/sports7070177"
+      },
+      {
+        "citation": "Kinoshita M, Maeo S, Kobayashi Y, et al. Hypertrophic Effects of Single- versus Multi-Joint Exercise: A Direct Comparison between Knee Extension and Leg Press. Med Sci Sports Exerc. 2026;58(7):1566-1580.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003957"
+      }
+    ]
+  },
+  {
+    "id": "tv-per-session-volume-junk-volume",
+    "topic": "volume",
+    "title": "Volume por sessão e 'junk volume': existe um teto?",
+    "keywords": [
+      "junk volume",
+      "volume lixo",
+      "séries demais",
+      "volume por treino",
+      "volume por sessão",
+      "limite de séries",
+      "excesso de volume",
+      "overtraining",
+      "per-session volume",
+      "too many sets",
+      "diminishing returns",
+      "retornos decrescentes",
+      "fadiga"
+    ],
+    "summary": "'Junk volume' é a ideia de que, a partir de certo ponto, séries extras na mesma sessão quase não acrescentam estímulo e só somam fadiga. A evidência apoia retornos decrescentes, mas não um teto exato. Pelland et al. mostraram curvas de volume que achatam com o aumento das séries semanais, de forma mais intensa para força. O ACSM 2026 recomenda ao menos duas séries por exercício e propõe que cada série adicional traga um benefício menor. Em ensaios com pessoas treinadas, os resultados divergem: Schoenfeld et al. (2019) observaram mais hipertrofia com 5 séries por exercício (3 vezes por semana) do que com 1 ou 3, enquanto Aube et al. (2022) não viram vantagem de 24 sobre 12-18 séries semanais para o quadríceps, com tendência de maior ganho no agachamento com 18 do que com 24. Um limite por sessão do tipo 'acima de X séries por músculo é desperdício' ainda não foi estabelecido em estudos revisados por pares.",
+    "practice": [
+      "Se o volume semanal de um músculo é alto, distribuí-lo em mais sessões pode ajudar a manter a qualidade das séries.",
+      "Sinais de excesso: queda forte de repetições ou carga nas últimas séries, técnica piorando e recuperação ruim até o próximo treino.",
+      "Prefira menos séries de alta qualidade (perto da falha, boa técnica) a muitas séries feitas em fadiga extrema.",
+      "Aumente o volume aos poucos e observe se o progresso acompanha; se não acompanhar, o volume extra pode não estar ajudando."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC. The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains. Sports Med. 2026;56(2):481-505.",
+        "year": 2026,
+        "doi": "10.1007/s40279-025-02344-w"
+      },
+      {
+        "citation": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews. Med Sci Sports Exerc. 2026;58(4):851-872.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003897"
+      },
+      {
+        "citation": "Schoenfeld BJ, Contreras B, Krieger J, et al. Resistance Training Volume Enhances Muscle Hypertrophy but Not Strength in Trained Men. Med Sci Sports Exerc. 2019;51(1):94-103.",
+        "year": 2019,
+        "doi": "10.1249/MSS.0000000000001764"
+      },
+      {
+        "citation": "Aube D, Wadhi T, Rauch J, et al. Progressive Resistance Training Volume: Effects on Muscle Thickness, Mass, and Strength Adaptations in Resistance-Trained Individuals. J Strength Cond Res. 2022;36(3):600-607.",
+        "year": 2022,
+        "doi": "10.1519/JSC.0000000000003524"
+      }
+    ]
+  },
+  {
+    "id": "tv-training-frequency",
+    "topic": "frequency",
+    "title": "Frequência de treino por músculo: 1, 2 ou 3 vezes por semana?",
+    "keywords": [
+      "frequência de treino",
+      "quantas vezes por semana",
+      "treinar 2x",
+      "full body",
+      "divisão de treino",
+      "abc",
+      "split",
+      "treinar o mesmo músculo",
+      "training frequency",
+      "sessions per week",
+      "volume equated",
+      "volume igualado",
+      "frequency"
+    ],
+    "summary": "Quando o volume semanal é igualado, treinar um músculo 1, 2 ou 3 ou mais vezes por semana produz hipertrofia semelhante (Schoenfeld et al., 2019; 25 estudos). Sem igualar o volume, frequências maiores mostram uma vantagem modesta, provavelmente porque permitem acumular mais séries. Para força, a meta-análise de Grgic et al. (2018) encontrou ganhos maiores com mais sessões semanais, mas o efeito desapareceu nos estudos com volume igualado. Já a meta-regressão de Pelland et al. sugere que a frequência tem efeito identificável sobre a força, com retornos decrescentes, mas efeito possivelmente desprezível sobre a hipertrofia. O ACSM 2026 recomenda pelo menos 2 sessões por semana para força. Em resumo: para hipertrofia, a frequência é sobretudo uma ferramenta para organizar o volume; para força, praticar o movimento mais vezes parece ajudar. Boa parte dos estudos envolve iniciantes e períodos curtos.",
+    "practice": [
+      "Para hipertrofia, escolha a frequência que facilita cumprir o volume semanal; 2 vezes por semana por músculo é um bom padrão.",
+      "Treinar um músculo 1 vez por semana ainda funciona se o volume e o esforço forem adequados.",
+      "Para ganhar força num levantamento específico, pratique-o 2 ou mais vezes por semana.",
+      "Escolha a divisão (full body, ABC etc.) pela agenda e preferência; ela importa menos que o volume total e a consistência."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Schoenfeld BJ, Grgic J, Krieger J. How many times per week should a muscle be trained to maximize muscle hypertrophy? A systematic review and meta-analysis of studies examining the effects of resistance training frequency. J Sports Sci. 2019;37(11):1286-1295.",
+        "year": 2019,
+        "doi": "10.1080/02640414.2018.1555906"
+      },
+      {
+        "citation": "Grgic J, Schoenfeld BJ, Davies TB, Lazinica B, Krieger JW, Pedisic Z. Effect of Resistance Training Frequency on Gains in Muscular Strength: A Systematic Review and Meta-Analysis. Sports Med. 2018;48(5):1207-1220.",
+        "year": 2018,
+        "doi": "10.1007/s40279-018-0872-x"
+      },
+      {
+        "citation": "Pelland JC, Remmert JF, Robinson ZP, Hinson SR, Zourdos MC. The Resistance Training Dose Response: Meta-Regressions Exploring the Effects of Weekly Volume and Frequency on Muscle Hypertrophy and Strength Gains. Sports Med. 2026;56(2):481-505.",
+        "year": 2026,
+        "doi": "10.1007/s40279-025-02344-w"
+      },
+      {
+        "citation": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews. Med Sci Sports Exerc. 2026;58(4):851-872.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003897"
+      }
+    ]
+  },
+  {
+    "id": "tv-load-rep-range",
+    "topic": "intensity",
+    "title": "Carga e faixa de repetições: pesado ou leve?",
+    "keywords": [
+      "carga",
+      "faixa de repetições",
+      "quantas repetições",
+      "treino pesado",
+      "treino leve",
+      "porcentagem de 1rm",
+      "8 a 12 repetições",
+      "repetições altas",
+      "load",
+      "rep range",
+      "heavy vs light",
+      "low load",
+      "high load",
+      "intensidade"
+    ],
+    "summary": "Para hipertrofia, uma faixa ampla de cargas gera crescimento semelhante quando as séries vão até a falha ou perto dela. A meta-análise de Schoenfeld et al. (2017) comparou cargas até 60% de 1RM com cargas acima disso e encontrou hipertrofia parecida, mas força máxima maior com cargas altas. Lopez et al. (2021) classificaram cargas como baixas (mais de 15RM), moderadas (9-15RM) e altas (até 8RM): não houve diferença de hipertrofia, enquanto a força melhorou mais com cargas altas e moderadas. A meta-análise em rede de Currier et al. (2023; 178 estudos de força) ranqueou prescrições com mais de 80% de 1RM como as melhores para força, e todas as prescrições promoveram hipertrofia de forma comparável. Ressalvas: cargas muito leves (20% de 1RM) foram inferiores mesmo com volume igualado (Lasevicius et al., 2018), e séries leves até a falha exigem muitas repetições e são mais desconfortáveis.",
+    "practice": [
+      "Para hipertrofia, trabalhe a maior parte das séries entre ~6 e 15 repetições, com carga que permita boa técnica e esforço alto.",
+      "Para força máxima, inclua regularmente séries pesadas (acima de ~80% de 1RM, em geral 8 repetições ou menos).",
+      "Evite basear o treino em cargas extremamente leves (abaixo de ~30% de 1RM).",
+      "Cargas mais leves perto da falha são boa opção para isolados ou quando articulações estão sensíveis."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Schoenfeld BJ, Grgic J, Ogborn D, Krieger JW. Strength and Hypertrophy Adaptations Between Low- vs. High-Load Resistance Training: A Systematic Review and Meta-analysis. J Strength Cond Res. 2017;31(12):3508-3523.",
+        "year": 2017,
+        "doi": "10.1519/JSC.0000000000002200"
+      },
+      {
+        "citation": "Lopez P, Radaelli R, Taaffe DR, et al. Resistance Training Load Effects on Muscle Hypertrophy and Strength Gain: Systematic Review and Network Meta-analysis. Med Sci Sports Exerc. 2021;53(6):1206-1216.",
+        "year": 2021,
+        "doi": "10.1249/MSS.0000000000002585"
+      },
+      {
+        "citation": "Currier BS, Mcleod JC, Banfield L, et al. Resistance training prescription for muscle strength and hypertrophy in healthy adults: a systematic review and Bayesian network meta-analysis. Br J Sports Med. 2023;57(18):1211-1220.",
+        "year": 2023,
+        "doi": "10.1136/bjsports-2023-106807"
+      },
+      {
+        "citation": "Lasevicius T, Ugrinowitsch C, Schoenfeld BJ, et al. Effects of different intensities of resistance training with equated volume load on muscle strength and hypertrophy. Eur J Sport Sci. 2018;18(6):772-780.",
+        "year": 2018,
+        "doi": "10.1080/17461391.2018.1450898"
+      }
+    ]
+  },
+  {
+    "id": "tv-proximity-to-failure",
+    "topic": "failure",
+    "title": "Quão perto da falha treinar para hipertrofia e força",
+    "keywords": [
+      "falha muscular",
+      "treinar até a falha",
+      "rir",
+      "repetições em reserva",
+      "perto da falha",
+      "falha concêntrica",
+      "intensidade de esforço",
+      "training to failure",
+      "proximity to failure",
+      "reps in reserve",
+      "failure vs non-failure",
+      "esforço",
+      "rpe"
+    ],
+    "summary": "A proximidade da falha costuma ser medida em repetições em reserva (RIR). Na meta-regressão de Robinson et al. (2024), a hipertrofia aumentou à medida que as séries terminavam mais perto da falha, enquanto a força foi parecida numa ampla faixa de RIR; para força, a carga parece pesar mais. Refalo et al. (2023) não encontraram vantagem clara de ir até a falha muscular momentânea em vez de parar um pouco antes, sugerindo uma relação não linear: chegar perto importa, cravar a falha nem tanto. Num ensaio de 8 semanas com treinados, falha e 1-2 RIR deram hipertrofia de quadríceps semelhante, mas a falha gerou mais fadiga aguda (Refalo et al., 2024). Grgic et al. (2022) não viram diferença geral de força nem de hipertrofia entre falha e não falha. Ressalva: em Robinson et al. o RIR foi estimado a partir das descrições dos estudos, então os números exatos são incertos.",
+    "practice": [
+      "Para hipertrofia, termine a maioria das séries a cerca de 0-3 repetições da falha.",
+      "Reserve a falha total para máquinas, isolados e últimas séries; evite falha frequente em agachamento e levantamento terra pesados.",
+      "Para força, não é preciso ir à falha: cargas altas com algumas repetições em reserva funcionam bem e geram menos fadiga.",
+      "Séries muito longe da falha (5 ou mais RIR) provavelmente estimulam menos a hipertrofia."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Robinson ZP, Pelland JC, Remmert JF, et al. Exploring the Dose-Response Relationship Between Estimated Resistance Training Proximity to Failure, Strength Gain, and Muscle Hypertrophy: A Series of Meta-Regressions. Sports Med. 2024;54(9):2209-2231.",
+        "year": 2024,
+        "doi": "10.1007/s40279-024-02069-2"
+      },
+      {
+        "citation": "Refalo MC, Helms ER, Trexler ET, Hamilton DL, Fyfe JJ. Influence of Resistance Training Proximity-to-Failure on Skeletal Muscle Hypertrophy: A Systematic Review with Meta-analysis. Sports Med. 2023;53(3):649-665.",
+        "year": 2023,
+        "doi": "10.1007/s40279-022-01784-y"
+      },
+      {
+        "citation": "Refalo MC, Helms ER, Robinson ZP, Hamilton DL, Fyfe JJ. Similar muscle hypertrophy following eight weeks of resistance training to momentary muscular failure or with repetitions-in-reserve in resistance-trained individuals. J Sports Sci. 2024;42(1):85-101.",
+        "year": 2024,
+        "doi": "10.1080/02640414.2024.2321021"
+      },
+      {
+        "citation": "Grgic J, Schoenfeld BJ, Orazem J, Sabol F. Effects of resistance training performed to repetition failure or non-failure on muscular strength and hypertrophy: A systematic review and meta-analysis. J Sport Health Sci. 2022;11(2):202-211.",
+        "year": 2022,
+        "doi": "10.1016/j.jshs.2021.01.007"
+      }
+    ]
+  },
+  {
+    "id": "tv-rir-rpe-estimation",
+    "topic": "autoregulation",
+    "title": "Como usar RIR e RPE e quão precisa é a estimativa",
+    "keywords": [
+      "rir",
+      "rpe",
+      "repetições em reserva",
+      "escala de esforço",
+      "percepção de esforço",
+      "autorregulação",
+      "quantas repetições sobraram",
+      "reps in reserve",
+      "rating of perceived exertion",
+      "autoregulation",
+      "rpe 8",
+      "rpe 10",
+      "precisão"
+    ],
+    "summary": "A escala de RPE baseada em repetições em reserva associa cada nota a quantas repetições ainda sobrariam: RPE 10 equivale a 0 RIR (falha), RPE 9 a 1 RIR, RPE 8 a 2 RIR, e assim por diante (Zourdos et al., 2016; Helms et al., 2016). Ela permite ajustar a carga ao dia, conforme o cansaço e a disposição do momento. A precisão, porém, não é perfeita: numa meta-análise exploratória com 12 estudos, as pessoas erraram em média cerca de 1 repetição, tendendo a subestimar quantas ainda conseguiriam fazer, com grande variação entre estudos (Halperin et al., 2022). A estimativa melhorou quando feita perto da falha, com séries mais curtas (até ~12 repetições) e em séries mais avançadas; a experiência de treino pareceu influenciar pouco. Ou seja, RIR é uma ferramenta útil, mas deve ser tratada como aproximação.",
+    "practice": [
+      "Registre o RIR ou RPE das séries principais para ajustar a carga da próxima sessão.",
+      "De vez em quando, vá até a falha num exercício seguro (ex.: máquina) para calibrar sua percepção.",
+      "Em séries longas (mais de ~12 repetições), espere mais erro na estimativa.",
+      "Se a meta era 2 RIR e você sente que faria bem mais repetições, aumente a carga."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Zourdos MC, Klemp A, Dolan C, et al. Novel Resistance Training-Specific Rating of Perceived Exertion Scale Measuring Repetitions in Reserve. J Strength Cond Res. 2016;30(1):267-275.",
+        "year": 2016,
+        "doi": "10.1519/JSC.0000000000001049"
+      },
+      {
+        "citation": "Helms ER, Cronin J, Storey A, Zourdos MC. Application of the Repetitions in Reserve-Based Rating of Perceived Exertion Scale for Resistance Training. Strength Cond J. 2016;38(4):42-49.",
+        "year": 2016,
+        "doi": "10.1519/SSC.0000000000000218"
+      },
+      {
+        "citation": "Halperin I, Malleron T, Har-Nir I, et al. Accuracy in Predicting Repetitions to Task Failure in Resistance Exercise: A Scoping Review and Exploratory Meta-analysis. Sports Med. 2022;52(2):377-390.",
+        "year": 2022,
+        "doi": "10.1007/s40279-021-01559-x"
+      }
+    ]
+  },
+  {
+    "id": "tv-rest-intervals",
+    "topic": "rest",
+    "title": "Intervalo de descanso entre séries",
+    "keywords": [
+      "descanso entre séries",
+      "intervalo",
+      "quanto descansar",
+      "tempo de descanso",
+      "pausa entre séries",
+      "1 minuto",
+      "3 minutos",
+      "rest interval",
+      "rest between sets",
+      "inter-set rest",
+      "rest period",
+      "recuperação entre séries",
+      "descanso curto"
+    ],
+    "summary": "Para hipertrofia, a meta-análise bayesiana de Singer et al. (2024; 9 estudos) sugere um pequeno benefício em descansar mais de 60 segundos, possivelmente porque descansos curtos reduzem as repetições e a carga das séries seguintes; acima de ~90 segundos não se detectou diferença apreciável. Para força, a revisão de Grgic et al. (2018) indica que descansos curtos também geram ganhos, mas em pessoas treinadas intervalos acima de 2 minutos parecem maximizar a força; em iniciantes, 60-120 segundos bastariam. Em homens treinados, 3 minutos superaram 1 minuto em força e espessura muscular (Schoenfeld et al., 2016). O ACSM 2026 não encontrou efeito consistente do descanso (menos versus mais de 1 minuto) sobre a força e considerou a evidência para hipertrofia insuficiente. Na prática, o descanso deve permitir manter o desempenho nas séries seguintes; poucos estudos e alta heterogeneidade limitam as conclusões.",
+    "practice": [
+      "Em multiarticulares pesados, descanse cerca de 2-3 minutos ou mais.",
+      "Em exercícios isolados, 1-2 minutos geralmente bastam.",
+      "Se você perde muitas repetições de uma série para outra, aumente o descanso.",
+      "Para economizar tempo, alterne músculos diferentes (superset antagonista) em vez de encurtar demais o descanso do mesmo músculo."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Singer A, Wolf M, Generoso L, et al. Give it a rest: a systematic review with Bayesian meta-analysis on the effect of inter-set rest interval duration on muscle hypertrophy. Front Sports Act Living. 2024;6:1429789.",
+        "year": 2024,
+        "doi": "10.3389/fspor.2024.1429789"
+      },
+      {
+        "citation": "Grgic J, Schoenfeld BJ, Skrepnik M, Davies TB, Mikulic P. Effects of Rest Interval Duration in Resistance Training on Measures of Muscular Strength: A Systematic Review. Sports Med. 2018;48(1):137-151.",
+        "year": 2018,
+        "doi": "10.1007/s40279-017-0788-x"
+      },
+      {
+        "citation": "Schoenfeld BJ, Pope ZK, Benik FM, et al. Longer Interset Rest Periods Enhance Muscle Strength and Hypertrophy in Resistance-Trained Men. J Strength Cond Res. 2016;30(7):1805-1812.",
+        "year": 2016,
+        "doi": "10.1519/JSC.0000000000001272"
+      },
+      {
+        "citation": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews. Med Sci Sports Exerc. 2026;58(4):851-872.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003897"
+      }
+    ]
+  },
+  {
+    "id": "tv-repetition-tempo",
+    "topic": "tempo",
+    "title": "Velocidade da repetição (cadência)",
+    "keywords": [
+      "cadência",
+      "tempo de execução",
+      "velocidade da repetição",
+      "tempo sob tensão",
+      "repetição lenta",
+      "superlento",
+      "descida controlada",
+      "tempo",
+      "repetition duration",
+      "time under tension",
+      "rep speed",
+      "slow reps",
+      "tut"
+    ],
+    "summary": "A meta-análise de Schoenfeld et al. (2015) encontrou hipertrofia semelhante com durações de repetição entre 0,5 e 8 segundos quando as séries iam até a falha; repetições voluntariamente muito lentas (mais de 10 segundos) pareceram inferiores, embora com poucos estudos controlados. O ACSM 2026 também concluiu que o tempo sob tensão e repetições rápidas versus lentas não alteraram de forma consistente a força ou a hipertrofia, e que a intenção de mover rápido na fase concêntrica favorece a potência. A revisão de Wilk et al. (2021) lembra que a cadência altera variáveis agudas da série, como quantas repetições se consegue fazer, e que a evidência sobre a duração isolada das fases excêntrica e concêntrica ainda é inconclusiva. Em resumo, há uma faixa ampla de cadências eficazes; controle do movimento e proximidade da falha importam mais do que contar segundos.",
+    "practice": [
+      "Use cadência controlada: subida intencional e descida sem deixar o peso cair, algo em torno de 1-3 segundos por fase.",
+      "Evite repetições superlentas (mais de 10 segundos por repetição) como estratégia de hipertrofia.",
+      "Para força e potência, tente subir a carga o mais rápido possível mantendo a técnica."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Schoenfeld BJ, Ogborn DI, Krieger JW. Effect of Repetition Duration During Resistance Training on Muscle Hypertrophy: A Systematic Review and Meta-Analysis. Sports Med. 2015;45(4):577-585.",
+        "year": 2015,
+        "doi": "10.1007/s40279-015-0304-0"
+      },
+      {
+        "citation": "Wilk M, Zajac A, Tufano JJ. The Influence of Movement Tempo During Resistance Training on Muscular Strength and Hypertrophy Responses: A Review. Sports Med. 2021;51(8):1629-1650.",
+        "year": 2021,
+        "doi": "10.1007/s40279-021-01465-2"
+      },
+      {
+        "citation": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews. Med Sci Sports Exerc. 2026;58(4):851-872.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003897"
+      }
+    ]
+  },
+  {
+    "id": "tv-full-vs-partial-rom",
+    "topic": "range-of-motion",
+    "title": "Amplitude completa vs parcial",
+    "keywords": [
+      "amplitude de movimento",
+      "amplitude completa",
+      "meia repetição",
+      "parcial",
+      "rom",
+      "agachamento profundo",
+      "meio agachamento",
+      "full range of motion",
+      "partial reps",
+      "partials",
+      "range of motion",
+      "full rom",
+      "amplitude"
+    ],
+    "summary": "A meta-análise de Pallarés et al. (2021; 16 estudos) encontrou vantagem da amplitude completa sobre a parcial para força e para hipertrofia de membros inferiores. A meta-análise bayesiana de Wolf et al. (2023) chegou a uma conclusão mais cautelosa: vantagem trivial a pequena da amplitude completa, com incerteza, e ganhos de força específicos da amplitude treinada (quem treina parcial fica mais forte justamente naquela parcial). Um detalhe importante: análises exploratórias sugerem que parciais feitas na posição de músculo alongado podem ser tão boas ou melhores para hipertrofia, ou seja, qual parte da amplitude é usada faz diferença (ver card sobre comprimento muscular longo). O ACSM 2026 associa a amplitude completa a mais força, mas considera insuficiente a evidência para hipertrofia. Parciais têm lugar em lesões, limitações de mobilidade ou como variação.",
+    "practice": [
+      "Use a amplitude completa (ou a maior amplitude segura) como padrão.",
+      "Se precisar encurtar a amplitude, priorize a parte em que o músculo está alongado.",
+      "Para força num movimento com amplitude definida (ex.: competição), treine na amplitude exigida.",
+      "Parciais são uma opção válida quando há dor ou limitação articular."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Pallarés JG, Hernández-Belmonte A, Martínez-Cava A, Vetrovsky T, Steffl M, Courel-Ibáñez J. Effects of range of motion on resistance training adaptations: A systematic review and meta-analysis. Scand J Med Sci Sports. 2021;31(10):1866-1881.",
+        "year": 2021,
+        "doi": "10.1111/sms.14006"
+      },
+      {
+        "citation": "Wolf M, Androulakis-Korakakis P, Fisher J, Schoenfeld B, Steele J. Partial Vs Full Range of Motion Resistance Training: A Systematic Review and Meta-Analysis. Int J Strength Cond. 2023;3(1).",
+        "year": 2023,
+        "doi": "10.47206/ijsc.v3i1.182"
+      },
+      {
+        "citation": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews. Med Sci Sports Exerc. 2026;58(4):851-872.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003897"
+      }
+    ]
+  },
+  {
+    "id": "tv-long-muscle-length-partials",
+    "topic": "range-of-motion",
+    "title": "Treinar com o músculo alongado e parciais alongadas",
+    "keywords": [
+      "parciais alongadas",
+      "parcial alongada",
+      "músculo alongado",
+      "posição alongada",
+      "alongamento sob carga",
+      "mesa flexora sentada",
+      "panturrilha",
+      "lengthened partials",
+      "long muscle length",
+      "stretch-mediated hypertrophy",
+      "stretched position",
+      "hipertrofia regional",
+      "amplitude inicial"
+    ],
+    "summary": "Vários ensaios sugerem que enfatizar a posição de músculo alongado favorece a hipertrofia. A mesa flexora sentada, que alonga mais os posteriores de coxa, gerou mais crescimento desses músculos do que a mesa flexora deitada (Maeo et al., 2021). Na panturrilha, parciais na parte alongada do movimento superaram as parciais encurtadas e, no gastrocnêmio medial, também a amplitude completa (Kassiano et al., 2023). Em treinados, parciais alongadas e amplitude completa produziram hipertrofia de braço semelhante (Wolf et al., 2025). Porém, a meta-análise de Varovic et al. (2025; 12 estudos) encontrou diferenças triviais entre treinar em comprimentos musculares médios maiores ou menores, inclusive por região do músculo, ressaltando que a diferença de comprimento entre as condições estudadas era pequena. Conclusão atual: carregar o músculo na posição alongada parece vantajoso ou, no mínimo, não pior; a magnitude do benefício é incerta e pode variar entre músculos.",
+    "practice": [
+      "Prefira variações que carregam o músculo alongado, como mesa flexora sentada em vez de deitada.",
+      "Ao fazer parciais, concentre-as na metade do movimento em que o músculo está mais alongado.",
+      "Na panturrilha, explore o alongamento no fundo do movimento.",
+      "Não abandone a amplitude completa: ela também inclui a posição alongada e é a opção mais estudada."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Maeo S, Huang M, Wu Y, et al. Greater Hamstrings Muscle Hypertrophy but Similar Damage Protection after Training at Long versus Short Muscle Lengths. Med Sci Sports Exerc. 2021;53(4):825-837.",
+        "year": 2021,
+        "doi": "10.1249/MSS.0000000000002523"
+      },
+      {
+        "citation": "Kassiano W, Costa B, Kunevaliki G, et al. Greater Gastrocnemius Muscle Hypertrophy After Partial Range of Motion Training Performed at Long Muscle Lengths. J Strength Cond Res. 2023;37(9):1746-1753.",
+        "year": 2023,
+        "doi": "10.1519/JSC.0000000000004460"
+      },
+      {
+        "citation": "Wolf M, Androulakis Korakakis P, Piñero A, et al. Lengthened partial repetitions elicit similar muscular adaptations as full range of motion repetitions during resistance training in trained individuals. PeerJ. 2025;13:e18904.",
+        "year": 2025,
+        "doi": "10.7717/peerj.18904"
+      },
+      {
+        "citation": "Varovic D, Wolf M, Schoenfeld BJ, Steele J, Grgic J, Mikulic P. Does Muscle Length Influence Regional Hypertrophy? A Systematic Review and Meta-Analysis. Int J Sports Med. 2025;46(14):1027-1036.",
+        "year": 2025,
+        "doi": "10.1055/a-2615-4935"
+      }
+    ]
+  },
+  {
+    "id": "tv-exercise-order",
+    "topic": "exercise-selection",
+    "title": "Ordem dos exercícios no treino",
+    "keywords": [
+      "ordem dos exercícios",
+      "qual exercício primeiro",
+      "pré-exaustão",
+      "multiarticular primeiro",
+      "isolado primeiro",
+      "sequência do treino",
+      "exercise order",
+      "pre-exhaustion",
+      "compound first",
+      "exercise sequence",
+      "prioridade",
+      "ordem"
+    ],
+    "summary": "A meta-análise de Nunes et al. (2021; 11 estudos) mostrou que a força aumenta mais nos exercícios feitos no início da sessão, seja o multiarticular ou o isolado, enquanto a hipertrofia foi semelhante com ordens diferentes (multiarticular antes do isolado ou o contrário). A revisão de Simão et al. (2012) já indicava que o exercício colocado primeiro rende mais repetições e volume ao longo das séries, sugeria ordenar os exercícios pela prioridade do objetivo, e não apenas pelo tamanho do músculo, e apontava que a pré-exaustão não parece aumentar o recrutamento do músculo-alvo. O ACSM 2026 confirma que fazer o exercício-alvo no começo favorece a força, sem efeito da ordem sobre a hipertrofia. A ordem, portanto, é uma ferramenta para priorizar, não um fator decisivo para o crescimento muscular.",
+    "practice": [
+      "Coloque no início o exercício ou músculo que é prioridade, como o levantamento em que você quer ficar mais forte.",
+      "Exercícios técnicos e pesados (agachamento, terra, supino) costumam render melhor no começo, com menos fadiga.",
+      "Para hipertrofia, alterne a ordem entre sessões se quiser dar prioridade a músculos diferentes."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Nunes JP, Grgic J, Cunha PM, et al. What influence does resistance exercise order have on muscular strength gains and muscle hypertrophy? A systematic review and meta-analysis. Eur J Sport Sci. 2021;21(2):149-157.",
+        "year": 2021,
+        "doi": "10.1080/17461391.2020.1733672"
+      },
+      {
+        "citation": "Simão R, de Salles BF, Figueiredo T, Dias I, Willardson JM. Exercise Order in Resistance Training. Sports Med. 2012;42(3):251-265.",
+        "year": 2012,
+        "doi": "10.2165/11597240-000000000-00000"
+      },
+      {
+        "citation": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews. Med Sci Sports Exerc. 2026;58(4):851-872.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003897"
+      }
+    ]
+  },
+  {
+    "id": "tv-drop-sets",
+    "topic": "technique",
+    "title": "Drop set: funciona para hipertrofia?",
+    "keywords": [
+      "drop set",
+      "dropset",
+      "série descendente",
+      "reduzir o peso",
+      "técnica avançada",
+      "método de intensidade",
+      "economizar tempo",
+      "drop sets",
+      "advanced techniques",
+      "time-efficient",
+      "hipertrofia",
+      "treino rápido"
+    ],
+    "summary": "No drop set, a série vai até a falha, a carga é reduzida e a série continua sem descanso. A meta-análise de Sødal et al. (2023; 6 estudos, 142 participantes) não encontrou diferença de hipertrofia entre drop sets e séries tradicionais, mas alguns protocolos com drop set levaram de metade a um terço do tempo. Num ensaio com homens treinados e volume total igualado, drop set, rest-pause e séries tradicionais geraram hipertrofia de coxa semelhante (Enes et al., 2021). A revisão de Iversen et al. (2021) aponta esse tipo de técnica como forma de reduzir o tempo de treino mantendo o volume, provavelmente mais útil para hipertrofia do que para força máxima. Os estudos são poucos, pequenos e de curta duração, e drop sets aumentam o esforço percebido.",
+    "practice": [
+      "Use drop sets para economizar tempo, principalmente em máquinas e exercícios isolados.",
+      "Aplique na última série de um exercício: reduza a carga (por exemplo, 20-30%) e continue até perto da falha.",
+      "Não espere mais músculo do que com séries tradicionais de mesmo volume; o ganho principal é eficiência de tempo."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Sødal LK, Kristiansen E, Larsen S, van den Tillaar R. Effects of Drop Sets on Skeletal Muscle Hypertrophy: A Systematic Review and Meta-analysis. Sports Med Open. 2023;9(1):66.",
+        "year": 2023,
+        "doi": "10.1186/s40798-023-00620-5"
+      },
+      {
+        "citation": "Enes A, Alves RC, Schoenfeld BJ, et al. Rest-pause and drop-set training elicit similar strength and hypertrophy adaptations compared with traditional sets in resistance-trained males. Appl Physiol Nutr Metab. 2021;46(11):1417-1424.",
+        "year": 2021,
+        "doi": "10.1139/apnm-2021-0278"
+      },
+      {
+        "citation": "Iversen VM, Norum M, Schoenfeld BJ, Fimland MS. No Time to Lift? Designing Time-Efficient Training Programs for Strength and Hypertrophy: A Narrative Review. Sports Med. 2021;51(10):2079-2095.",
+        "year": 2021,
+        "doi": "10.1007/s40279-021-01490-1"
+      }
+    ]
+  },
+  {
+    "id": "tv-supersets",
+    "topic": "technique",
+    "title": "Supersets (bi-set) para treinar em menos tempo",
+    "keywords": [
+      "superset",
+      "supersérie",
+      "bi-set",
+      "biset",
+      "conjugado",
+      "agonista antagonista",
+      "treino rápido",
+      "pouco tempo",
+      "supersets",
+      "paired sets",
+      "agonist-antagonist",
+      "time-efficient",
+      "economizar tempo"
+    ],
+    "summary": "Superset é a sequência de dois exercícios com pouco ou nenhum descanso entre eles. A meta-análise de Zhang et al. (2025; 19 estudos) indicou que supersets mantêm repetições totais e volume de carga semelhantes aos das séries tradicionais, reduzindo a duração da sessão, com adaptações crônicas de força e hipertrofia também semelhantes. Em contrapartida, aumentam lactato, dano muscular e esforço percebido, o que pode exigir mais recuperação. Pares agonista-antagonista (ex.: supino e remada) preservam melhor o volume, enquanto pares para o mesmo músculo comprometem a carga levantada. A revisão de Robbins et al. (2010) já apontava pares agonista-antagonista como forma eficiente de desenvolver força. Ressalva: há poucos estudos longitudinais e as amostras são pequenas.",
+    "practice": [
+      "Para encurtar o treino, combine músculos antagonistas (peito e costas, bíceps e tríceps) ou membros superiores e inferiores.",
+      "Evite supersets para o mesmo músculo quando o objetivo é levantar mais carga; o desempenho cai.",
+      "Descanse o suficiente entre as rodadas para manter repetições e técnica."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Zhang X, Weakley J, Li H, Li Z, García-Ramos A. Superset Versus Traditional Resistance Training Prescriptions: A Systematic Review and Meta-analysis Exploring Acute and Chronic Effects on Mechanical, Metabolic, and Perceptual Variables. Sports Med. 2025;55(4):953-975.",
+        "year": 2025,
+        "doi": "10.1007/s40279-025-02176-8"
+      },
+      {
+        "citation": "Robbins DW, Young WB, Behm DG, Payne WR. Agonist-Antagonist Paired Set Resistance Training: A Brief Review. J Strength Cond Res. 2010;24(10):2873-2882.",
+        "year": 2010,
+        "doi": "10.1519/JSC.0b013e3181f00bfc"
+      },
+      {
+        "citation": "Iversen VM, Norum M, Schoenfeld BJ, Fimland MS. No Time to Lift? Designing Time-Efficient Training Programs for Strength and Hypertrophy: A Narrative Review. Sports Med. 2021;51(10):2079-2095.",
+        "year": 2021,
+        "doi": "10.1007/s40279-021-01490-1"
+      }
+    ]
+  },
+  {
+    "id": "tv-rest-pause-myo-reps",
+    "topic": "technique",
+    "title": "Rest-pause e myo-reps",
+    "keywords": [
+      "rest-pause",
+      "rest pause",
+      "descanso-pausa",
+      "myo-reps",
+      "myo reps",
+      "mini-séries",
+      "técnica avançada",
+      "economizar tempo",
+      "rest-pause training",
+      "advanced techniques",
+      "time-efficient",
+      "hipertrofia"
+    ],
+    "summary": "No rest-pause, a série vai até perto da falha, faz-se uma pausa de poucos segundos e completam-se mini-séries com a mesma carga; myo-reps são uma variação popular desse método. Em pessoas treinadas, um ensaio de 6 semanas encontrou força semelhante e maior espessura da coxa com rest-pause em comparação com séries tradicionais (Prestes et al., 2019), e outro de 8 semanas, com volume igualado, mostrou hipertrofia semelhante e leve vantagem de força para o rest-pause (Enes et al., 2021). Revisões classificam o rest-pause como técnica eficiente em tempo, que mantém o volume com menos minutos de treino (Iversen et al., 2021). Estudos longitudinais específicos sobre o protocolo myo-reps são escassos, e as conclusões são extrapoladas da evidência de rest-pause. A evidência se resume a poucos ensaios pequenos.",
+    "practice": [
+      "Use rest-pause em exercícios estáveis (máquinas, cabos, isolados) quando o tempo estiver curto.",
+      "Faça uma série perto da falha, descanse poucos segundos e complete mini-séries com a mesma carga até o total de repetições planejado.",
+      "Evite o método em exercícios técnicos e pesados com barra livre, como agachamento e levantamento terra."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Prestes J, Tibana RA, de Araujo Sousa E, et al. Strength and Muscular Adaptations After 6 Weeks of Rest-Pause vs. Traditional Multiple-Sets Resistance Training in Trained Subjects. J Strength Cond Res. 2019;33(Suppl 1):S113-S121.",
+        "year": 2019,
+        "doi": "10.1519/JSC.0000000000001923"
+      },
+      {
+        "citation": "Enes A, Alves RC, Schoenfeld BJ, et al. Rest-pause and drop-set training elicit similar strength and hypertrophy adaptations compared with traditional sets in resistance-trained males. Appl Physiol Nutr Metab. 2021;46(11):1417-1424.",
+        "year": 2021,
+        "doi": "10.1139/apnm-2021-0278"
+      },
+      {
+        "citation": "Iversen VM, Norum M, Schoenfeld BJ, Fimland MS. No Time to Lift? Designing Time-Efficient Training Programs for Strength and Hypertrophy: A Narrative Review. Sports Med. 2021;51(10):2079-2095.",
+        "year": 2021,
+        "doi": "10.1007/s40279-021-01490-1"
+      }
+    ]
+  },
+  {
+    "id": "tv-cluster-sets",
+    "topic": "technique",
+    "title": "Cluster sets: pausas dentro da série",
+    "keywords": [
+      "cluster set",
+      "cluster",
+      "série em blocos",
+      "pausa intrassérie",
+      "redistribuição do descanso",
+      "potência",
+      "velocidade da barra",
+      "cluster sets",
+      "rest redistribution",
+      "intra-set rest",
+      "set structure",
+      "fadiga"
+    ],
+    "summary": "Cluster sets inserem pausas curtas dentro da série (por exemplo, a cada 1-3 repetições) ou redistribuem o descanso total entre as repetições. De forma aguda, essas estruturas mantêm maior velocidade e potência e reduzem a queda de desempenho, o lactato e o esforço percebido (Jukic et al., 2020; 32 estudos). A longo prazo, porém, a meta-análise de Davies et al. (2021; 29 estudos) não encontrou diferença entre cluster e séries tradicionais para força, potência, velocidade, hipertrofia ou resistência muscular, mesmo considerando volume, nível de treino e tipo de exercício. O ACSM 2026 também não viu efeito consistente da estrutura das séries sobre a força. Em resumo, clusters servem para treinar com menos fadiga e manter a qualidade das repetições, úteis em potência e cargas muito pesadas, e não para ganhar mais músculo ou força por si só.",
+    "practice": [
+      "Use clusters em trabalho de potência ou com cargas muito pesadas para manter a velocidade das repetições.",
+      "Exemplo: em vez de 1 série de 6, faça 3 blocos de 2 repetições com pausas curtas entre eles, mantendo a carga.",
+      "Para hipertrofia não há necessidade; séries tradicionais perto da falha funcionam igualmente."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Davies TB, Tran DL, Hogan CM, Haff GG, Latella C. Chronic Effects of Altering Resistance Training Set Configurations Using Cluster Sets: A Systematic Review and Meta-Analysis. Sports Med. 2021;51(4):707-736.",
+        "year": 2021,
+        "doi": "10.1007/s40279-020-01408-3"
+      },
+      {
+        "citation": "Jukic I, García Ramos A, Helms ER, McGuigan MR, Tufano JJ. Acute Effects of Cluster and Rest Redistribution Set Structures on Mechanical, Metabolic, and Perceptual Fatigue During and After Resistance Training: A Systematic Review and Meta-analysis. Sports Med. 2020;50(12):2209-2236.",
+        "year": 2020,
+        "doi": "10.1007/s40279-020-01344-2"
+      },
+      {
+        "citation": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews. Med Sci Sports Exerc. 2026;58(4):851-872.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003897"
+      }
+    ]
+  },
+  {
+    "id": "tv-eccentric-emphasis",
+    "topic": "technique",
+    "title": "Ênfase na fase excêntrica (negativa) e sobrecarga excêntrica",
+    "keywords": [
+      "excêntrica",
+      "negativa",
+      "fase de descida",
+      "sobrecarga excêntrica",
+      "excêntrica acentuada",
+      "negativas assistidas",
+      "concêntrica",
+      "eccentric",
+      "eccentric overload",
+      "accentuated eccentric loading",
+      "negatives",
+      "flywheel",
+      "hipertrofia"
+    ],
+    "summary": "A fase excêntrica (descida controlada) contribui de forma importante para a hipertrofia. A meta-análise de Schoenfeld et al. (2017; 15 estudos) mostrou uma tendência, não significativa, de mais hipertrofia com ações excêntricas do que concêntricas (média de 10,0% contra 6,8%) e concluiu que ambas devem estar presentes. Roig et al. (2009) encontraram vantagem do treino excêntrico em força e massa, associada às cargas maiores possíveis na excêntrica, mas com ganhos de força mais específicos ao tipo de contração. O ACSM 2026 lista o treino excêntrico e a sobrecarga excêntrica entre os fatores que favorecem a hipertrofia. Já a meta-análise de Zhang et al. (2026; 49 estudos) sobre carga excêntrica acentuada não encontrou vantagem crônica em força ou área muscular sobre a carga constante, e registrou mais esforço percebido e estresse metabólico. Em suma: não descuide da excêntrica; sobrecargas excêntricas especiais têm benefício incerto.",
+    "practice": [
+      "Controle a descida em todas as repetições, sem deixar o peso cair.",
+      "Não é preciso fazer excêntricas ultralentas; uma descida controlada de cerca de 1-3 segundos atende à maioria dos objetivos.",
+      "Métodos de sobrecarga excêntrica (negativas assistidas, flywheel) são opcionais e mais cansativos; use com parcimônia e com ajudante ou equipamento seguro."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Schoenfeld BJ, Ogborn DI, Vigotsky AD, Franchi MV, Krieger JW. Hypertrophic Effects of Concentric vs. Eccentric Muscle Actions: A Systematic Review and Meta-analysis. J Strength Cond Res. 2017;31(9):2599-2608.",
+        "year": 2017,
+        "doi": "10.1519/JSC.0000000000001983"
+      },
+      {
+        "citation": "Roig M, O'Brien K, Kirk G, et al. The effects of eccentric versus concentric resistance training on muscle strength and mass in healthy adults: a systematic review with meta-analysis. Br J Sports Med. 2009;43(8):556-568.",
+        "year": 2009,
+        "doi": "10.1136/bjsm.2008.051417"
+      },
+      {
+        "citation": "Zhang X, Weakley J, Li H, Marcos-Frutos D, García-Ramos A. Acute and Chronic Effects of Accentuated Eccentric Loading vs. Constant-Load Resistance Training: A Systematic Review and Meta-analysis. Sports Med. 2026;56(7):1749-1770.",
+        "year": 2026,
+        "doi": "10.1007/s40279-026-02422-7"
+      },
+      {
+        "citation": "Currier BS, D'Souza AC, Fiatarone Singh MA, et al. American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews. Med Sci Sports Exerc. 2026;58(4):851-872.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003897"
+      }
+    ]
+  },
+  {
+    "id": "tv-isometric-training",
+    "topic": "technique",
+    "title": "Treino isométrico: serve para hipertrofia e força?",
+    "keywords": [
+      "isometria",
+      "isométrico",
+      "segurar a posição",
+      "contração estática",
+      "prancha",
+      "ponto fraco",
+      "reabilitação",
+      "isometric",
+      "isometric training",
+      "static hold",
+      "joint angle",
+      "ângulo articular",
+      "força"
+    ],
+    "summary": "Isometria é a contração sem movimento articular, como segurar uma posição. A revisão sistemática de Oranchuk et al. (2019; 26 trabalhos) mostrou que o treino isométrico gera hipertrofia e ganho de força, e que isometrias com o músculo em comprimento longo produziram mais hipertrofia e mais transferência para movimentos dinâmicos do que as feitas em comprimento curto. A revisão narrativa de Lum e Barbosa (2019) sugere, para hipertrofia, contrações de ~70-75% da força máxima sustentadas por 3-30 segundos, somando mais de 80-150 segundos por sessão; para força máxima, 80-100% por 1-5 segundos. O ganho de força é bastante específico do ângulo treinado. Uma revisão recente reforça que, também nas isometrias, treinar em comprimentos musculares longos tende a favorecer o crescimento (Pedrosa et al., 2025). A evidência vem de estudos pequenos e heterogêneos.",
+    "practice": [
+      "Use isometrias como complemento, e não substituto, do treino dinâmico quando o objetivo é hipertrofia geral.",
+      "Prefira ângulos em que o músculo esteja alongado para maior hipertrofia e transferência.",
+      "Para força num ponto específico do movimento, faça contrações intensas de 1-5 segundos naquele ângulo.",
+      "Isometrias são úteis quando o movimento completo causa dor, como em fases de reabilitação."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Oranchuk DJ, Storey AG, Nelson AR, Cronin JB. Isometric training and long-term adaptations: Effects of muscle length, intensity, and intent: A systematic review. Scand J Med Sci Sports. 2019;29(4):484-503.",
+        "year": 2019,
+        "doi": "10.1111/sms.13375"
+      },
+      {
+        "citation": "Lum D, Barbosa TM. Brief Review: Effects of Isometric Strength Training on Strength and Dynamic Performance. Int J Sports Med. 2019;40(6):363-375.",
+        "year": 2019,
+        "doi": "10.1055/a-0863-4539"
+      },
+      {
+        "citation": "Pedrosa GF, Pereira MR, Kassiano W. The interplay between muscle length, range of motion, and exercise selection: a review. Sports Med Int Open. 2026;10.",
+        "year": 2026,
+        "doi": "10.1055/a-2733-7605"
+      }
+    ]
+  },
+  {
+    "id": "tv-unilateral-vs-bilateral",
+    "topic": "exercise-selection",
+    "title": "Exercícios unilaterais vs bilaterais",
+    "keywords": [
+      "unilateral",
+      "bilateral",
+      "um lado de cada vez",
+      "afundo",
+      "búlgaro",
+      "rosca alternada",
+      "assimetria",
+      "educação cruzada",
+      "single-leg",
+      "unilateral training",
+      "bilateral deficit",
+      "cross-education",
+      "lado fraco"
+    ],
+    "summary": "Exercícios unilaterais (um membro por vez, como afundo ou rosca alternada) e bilaterais (como agachamento e leg press) parecem gerar hipertrofia semelhante: em mulheres pouco treinadas, 12 semanas de cadeira extensora unilateral ou bilateral produziram aumentos parecidos de espessura do quadríceps (Botton et al., 2016). Para força, vale a especificidade: na meta-análise de Liao et al. (2022; 14 estudos), o treino bilateral melhorou mais a força bilateral e o unilateral melhorou mais o salto unilateral, sem diferença clara na força unilateral. Existe ainda a 'educação cruzada': treinar só um membro aumentou, em média, cerca de 12% a força do membro não treinado (Manca et al., 2017), o que é útil quando um lado está imobilizado. A evidência direta sobre hipertrofia é escassa.",
+    "practice": [
+      "Escolha pelo objetivo: bilateral para força em levantamentos bilaterais; unilateral para assimetrias, equilíbrio e esportes.",
+      "Combine os dois tipos no programa; para hipertrofia, ambos funcionam.",
+      "Com um membro lesionado ou imobilizado, treinar o lado saudável pode ajudar a preservar força no outro (educação cruzada)."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Liao KF, Nassis G, Bishop C, Yang W, Bian C, Li YM. Effects of unilateral vs. bilateral resistance training interventions on measures of strength, jump, linear and change of direction speed: a systematic review and meta-analysis. Biol Sport. 2022;39(3):485-497.",
+        "year": 2022,
+        "doi": "10.5114/biolsport.2022.107024"
+      },
+      {
+        "citation": "Botton CE, Radaelli R, Wilhelm EN, Rech A, Brown LE, Pinto RS. Neuromuscular Adaptations to Unilateral vs. Bilateral Strength Training in Women. J Strength Cond Res. 2016;30(7):1924-1932.",
+        "year": 2016,
+        "doi": "10.1519/JSC.0000000000001125"
+      },
+      {
+        "citation": "Manca A, Dragone D, Dvir Z, Deriu F. Cross-education of muscular strength following unilateral resistance training: a meta-analysis. Eur J Appl Physiol. 2017;117(11):2335-2354.",
+        "year": 2017,
+        "doi": "10.1007/s00421-017-3720-z"
+      }
+    ]
+  },
+  {
+    "id": "tv-minimal-effective-dose",
+    "topic": "volume",
+    "title": "Dose mínima eficaz: o mínimo para evoluir ou manter",
+    "keywords": [
+      "dose mínima",
+      "treino mínimo",
+      "pouco tempo",
+      "sem tempo",
+      "treino curto",
+      "manter resultados",
+      "manutenção",
+      "1 série",
+      "minimal dose",
+      "minimum effective dose",
+      "time-poor",
+      "maintenance",
+      "busy schedule",
+      "treinar pouco"
+    ],
+    "summary": "Treinar pouco já traz resultados. Em homens treinados, uma única série de 6-12 repetições a ~70-85% de 1RM, perto da falha, 2-3 vezes por semana, gerou ganhos significativos, embora abaixo do máximo, no agachamento e no supino (Androulakis-Korakakis et al., 2020). Também em treinados, três sessões semanais de cerca de 13 minutos, com uma série por exercício, produziram ganhos de força semelhantes aos de protocolos muito mais longos, embora a hipertrofia tenha sido maior com mais volume (Schoenfeld et al., 2019). Para manter, força e massa muscular de adultos jovens foram preservadas por até 32 semanas com 1 sessão semanal e 1 série por exercício, desde que a carga relativa fosse mantida; idosos podem precisar de 2 sessões e 2-3 séries (Spiering et al., 2021). A revisão de Fyfe et al. (2022) reforça que doses mínimas funcionam, sobretudo para força e função.",
+    "practice": [
+      "Sem tempo, mantenha a carga pesada e o esforço alto e corte primeiro o número de séries e de sessões.",
+      "Mínimo para evoluir: 1-2 séries perto da falha por exercício principal, 2 vezes por semana, cobrindo os grandes grupos musculares.",
+      "Para manter os ganhos em períodos corridos, 1 sessão semanal com as cargas habituais pode bastar por alguns meses.",
+      "Para maximizar a hipertrofia, mais volume continua sendo necessário; a dose mínima é ponto de partida, não o ideal."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Androulakis-Korakakis P, Fisher JP, Steele J. The Minimum Effective Training Dose Required to Increase 1RM Strength in Resistance-Trained Men: A Systematic Review and Meta-Analysis. Sports Med. 2020;50(4):751-765.",
+        "year": 2020,
+        "doi": "10.1007/s40279-019-01236-0"
+      },
+      {
+        "citation": "Schoenfeld BJ, Contreras B, Krieger J, et al. Resistance Training Volume Enhances Muscle Hypertrophy but Not Strength in Trained Men. Med Sci Sports Exerc. 2019;51(1):94-103.",
+        "year": 2019,
+        "doi": "10.1249/MSS.0000000000001764"
+      },
+      {
+        "citation": "Spiering BA, Mujika I, Sharp MA, Foulis SA. Maintaining Physical Performance: The Minimal Dose of Exercise Needed to Preserve Endurance and Strength Over Time. J Strength Cond Res. 2021;35(5):1449-1458.",
+        "year": 2021,
+        "doi": "10.1519/JSC.0000000000003964"
+      },
+      {
+        "citation": "Fyfe JJ, Hamilton DL, Daly RM. Minimal-Dose Resistance Training for Improving Muscle Mass, Strength, and Function: A Narrative Review of Current Evidence and Practical Considerations. Sports Med. 2022;52(3):463-479.",
+        "year": 2022,
+        "doi": "10.1007/s40279-021-01605-8"
+      }
+    ]
+  },
+  {
+    "id": "tv-session-duration",
+    "topic": "myths",
+    "title": "Duração do treino e o mito dos 60 minutos",
+    "keywords": [
+      "duração do treino",
+      "quanto tempo treinar",
+      "treino de 1 hora",
+      "treino longo",
+      "cortisol",
+      "catabolismo",
+      "treino curto",
+      "tempo de academia",
+      "session duration",
+      "workout length",
+      "cortisol myth",
+      "hormônios",
+      "testosterona"
+    ],
+    "summary": "Não há evidência de que o treino precise terminar em 45-60 minutos por causa de hormônios como o cortisol. Num estudo com 56 homens, as elevações hormonais agudas após o treino (GH, testosterona livre e IGF-1) não se associaram aos ganhos de massa magra ou de força, e o cortisol chegou a ter correlação fraca e positiva com a hipertrofia (West e Phillips, 2012). A duração adequada decorre do volume, dos descansos e do número de exercícios que o objetivo exige. Sessões curtas também podem funcionar: três treinos semanais de cerca de 13 minutos geraram ganhos de força semelhantes aos de protocolos mais longos em treinados, embora com menos hipertrofia (Schoenfeld et al., 2019). Para encurtar sem perder resultado, Iversen et al. (2021) sugerem priorizar multiarticulares, usar supersets, drop sets ou rest-pause e limitar o aquecimento ao específico. Não há ensaios que testem diretamente diferentes durações de sessão.",
+    "practice": [
+      "Defina a duração pelo volume necessário e por descansos adequados, não por um limite fixo de minutos.",
+      "Com pouco tempo, priorize multiarticulares e técnicas como supersets antagonistas.",
+      "Se a qualidade das séries cai muito no fim de treinos longos, divida o volume em mais sessões."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "West DWD, Phillips SM. Associations of exercise-induced hormone profiles and gains in strength and hypertrophy in a large cohort after weight training. Eur J Appl Physiol. 2012;112(7):2693-2702.",
+        "year": 2012,
+        "doi": "10.1007/s00421-011-2246-z"
+      },
+      {
+        "citation": "Schoenfeld BJ, Contreras B, Krieger J, et al. Resistance Training Volume Enhances Muscle Hypertrophy but Not Strength in Trained Men. Med Sci Sports Exerc. 2019;51(1):94-103.",
+        "year": 2019,
+        "doi": "10.1249/MSS.0000000000001764"
+      },
+      {
+        "citation": "Iversen VM, Norum M, Schoenfeld BJ, Fimland MS. No Time to Lift? Designing Time-Efficient Training Programs for Strength and Hypertrophy: A Narrative Review. Sports Med. 2021;51(10):2079-2095.",
+        "year": 2021,
+        "doi": "10.1007/s40279-021-01490-1"
+      }
+    ]
+  },
+  {
+    "id": "tv-warmup-sets",
+    "topic": "warmup",
+    "title": "Aquecimento e séries de aproximação antes das séries válidas",
+    "keywords": [
+      "aquecimento",
+      "séries de aproximação",
+      "séries de aquecimento",
+      "aquecer antes do treino",
+      "aquecimento específico",
+      "esteira antes do treino",
+      "warm-up",
+      "warm-up sets",
+      "ramp-up sets",
+      "specific warm-up",
+      "general warm-up",
+      "1rm",
+      "preparação"
+    ],
+    "summary": "No treino de força, aquecer parece importar mais para esforços máximos do que para séries comuns. Num estudo com 4 séries a 80% de 1RM até a falha, o total de repetições não diferiu entre nenhum aquecimento, aquecimento específico, aeróbio ou combinado (Ribeiro et al., 2014). Já antes de um teste de 1RM no leg press, somar 20 minutos de bicicleta leve ao aquecimento específico (séries leves crescentes) elevou a carga máxima em cerca de 8% (Abad et al., 2011). Uma revisão sistemática sobre membros superiores encontrou evidência de que aquecimentos dinâmicos com carga alta melhoram força e potência (McCrary et al., 2015). Para economizar tempo, Iversen et al. (2021) recomendam limitar o aquecimento a séries específicas do próprio exercício. A evidência vem de estudos pequenos e heterogêneos, e o efeito do aquecimento sobre lesões no treino resistido é pouco estudado.",
+    "practice": [
+      "Antes do primeiro exercício pesado, faça 2-3 séries de aproximação com cargas crescentes (ex.: ~50% e ~70% da carga de trabalho) e poucas repetições.",
+      "Séries de aquecimento não devem gerar fadiga: pare longe da falha e não as conte no volume.",
+      "Nos exercícios seguintes para o mesmo músculo, 0-1 série de aproximação costuma bastar.",
+      "Antes de testar 1RM ou cargas máximas, um aquecimento geral leve antes do específico pode ajudar."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Ribeiro AS, Romanzini M, Schoenfeld BJ, Souza MF, Avelar A, Cyrino ES. Effect of Different Warm-up Procedures on the Performance of Resistance Training Exercises. Percept Mot Skills. 2014;119(1):133-145.",
+        "year": 2014,
+        "doi": "10.2466/25.29.PMS.119c17z7"
+      },
+      {
+        "citation": "Abad CCC, Prado ML, Ugrinowitsch C, Tricoli V, Barroso R. Combination of General and Specific Warm-Ups Improves Leg-Press One Repetition Maximum Compared With Specific Warm-Up in Trained Individuals. J Strength Cond Res. 2011;25(8):2242-2245.",
+        "year": 2011,
+        "doi": "10.1519/JSC.0b013e3181e8611b"
+      },
+      {
+        "citation": "McCrary JM, Ackermann BJ, Halaki M. A systematic review of the effects of upper body warm-up on performance and injury. Br J Sports Med. 2015;49(14):935-942.",
+        "year": 2015,
+        "doi": "10.1136/bjsports-2014-094228"
+      },
+      {
+        "citation": "Iversen VM, Norum M, Schoenfeld BJ, Fimland MS. No Time to Lift? Designing Time-Efficient Training Programs for Strength and Hypertrophy: A Narrative Review. Sports Med. 2021;51(10):2079-2095.",
+        "year": 2021,
+        "doi": "10.1007/s40279-021-01490-1"
+      }
+    ]
+  },
+  {
+    "id": "tv-exercises-per-muscle",
+    "topic": "exercise-selection",
+    "title": "Quantos exercícios por músculo e quando variar",
+    "keywords": [
+      "quantos exercícios",
+      "exercícios por músculo",
+      "variar exercícios",
+      "trocar exercícios",
+      "confundir o músculo",
+      "hipertrofia regional",
+      "seleção de exercícios",
+      "exercise variation",
+      "exercise selection",
+      "regional hypertrophy",
+      "exercises per muscle",
+      "muscle confusion",
+      "variação"
+    ],
+    "summary": "Não existe um número ideal comprovado de exercícios por músculo, mas a evidência indica que variar exercícios de forma planejada ajuda. A revisão de Kassiano et al. (2022; 8 estudos) concluiu que alguma variação sistemática melhora a hipertrofia regional e a força, enquanto trocar exercícios de forma aleatória e muito frequente pode atrapalhar. Os músculos crescem de forma diferente conforme o exercício: agachamento e cadeira extensora hipertrofiaram regiões distintas do quadríceps (Zabaleta-Korta et al., 2021), e o leg press quase não fez crescer o reto femoral, que respondeu bem à extensora (Kinoshita et al., 2026). Em treinados, sortear os exercícios a cada sessão rendeu ganhos semelhantes aos de um programa fixo e aumentou a motivação (Baz-Valle et al., 2019). Faltam estudos que comparem diretamente 1, 2 ou 3 exercícios por músculo.",
+    "practice": [
+      "Para músculos grandes ou com várias porções (quadríceps, peitoral, costas, deltoides), use 2 ou mais exercícios com ângulos ou posições diferentes.",
+      "Mantenha os exercícios principais por algumas semanas para conseguir progredir na carga; troque com propósito, não por tédio.",
+      "Combine exercícios complementares (ex.: um multiarticular e um isolado) em vez de exercícios redundantes.",
+      "Variar exercícios pode aumentar a motivação sem prejuízo, desde que o volume e o esforço se mantenham."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Kassiano W, Nunes JP, Costa B, Ribeiro AS, Schoenfeld BJ, Cyrino ES. Does Varying Resistance Exercises Promote Superior Muscle Hypertrophy and Strength Gains? A Systematic Review. J Strength Cond Res. 2022;36(6):1753-1762.",
+        "year": 2022,
+        "doi": "10.1519/JSC.0000000000004258"
+      },
+      {
+        "citation": "Zabaleta-Korta A, Fernández-Peña E, Torres-Unda J, Garbisu-Hualde A, Santos-Concejero J. The role of exercise selection in regional Muscle Hypertrophy: A randomized controlled trial. J Sports Sci. 2021;39(20):2298-2304.",
+        "year": 2021,
+        "doi": "10.1080/02640414.2021.1929736"
+      },
+      {
+        "citation": "Kinoshita M, Maeo S, Kobayashi Y, et al. Hypertrophic Effects of Single- versus Multi-Joint Exercise: A Direct Comparison between Knee Extension and Leg Press. Med Sci Sports Exerc. 2026;58(7):1566-1580.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003957"
+      },
+      {
+        "citation": "Baz-Valle E, Schoenfeld BJ, Torres-Unda J, Santos-Concejero J, Balsalobre-Fernández C. The effects of exercise variation in muscle thickness, maximal strength and motivation in resistance trained men. PLoS One. 2019;14(12):e0226989.",
+        "year": 2019,
+        "doi": "10.1371/journal.pone.0226989"
+      }
+    ]
+  }
+]

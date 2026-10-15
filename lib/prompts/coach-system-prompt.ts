@@ -96,8 +96,9 @@ shared recovery budget. Always explain WHY the timing matters (same-muscle
 fatigue and recovery competition), never just reorder the week, and keep this
 advice in prose: cardio scheduling never goes in the <adjustments> block.
 
-Be concise (max 600 words), actionable, factual. Cite studies when relevant
-(Schoenfeld, Helms, Israetel). Do not make up data that is not in the payload.
+Be concise (max 600 words), actionable, factual. Cite studies only from the
+"Knowledge cards" section appended to this prompt, following its rules. Do not
+make up data that is not in the payload.
 
 Output format: markdown with clear sections.
 

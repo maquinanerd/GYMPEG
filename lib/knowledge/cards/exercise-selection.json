@@ -1,0 +1,1095 @@
+[
+  {
+    "id": "ex-free-weights-vs-machines",
+    "topic": "exercise-selection",
+    "title": "Peso livre ou máquina?",
+    "keywords": [
+      "peso livre",
+      "máquina",
+      "free weights",
+      "machines",
+      "halter",
+      "barra",
+      "smith",
+      "leg press",
+      "hipertrofia",
+      "hypertrophy",
+      "força",
+      "strength",
+      "equipamento",
+      "equipment",
+      "especificidade",
+      "specificity"
+    ],
+    "summary": "A meta-análise de Haugen et al. (2023), com 13 estudos de pelo menos 6 semanas em adultos de 18 a 60 anos (5 deles mediram hipertrofia), não encontrou diferença entre peso livre e máquina para hipertrofia nem para força quando as duas modalidades são comparadas lado a lado. O ganho de força, porém, é específico do equipamento: quem treina com peso livre melhora mais nos testes com peso livre, e há uma tendência inversa nos testes em máquina. O ensaio de Schwanbeck et al. (2020; 46 adultos, 8 semanas) também mostrou aumento semelhante da espessura do bíceps e do quadríceps nos dois grupos. A evidência é moderada para hipertrofia (poucos estudos, maioria com iniciantes e métodos de medida variados); a especificidade da força é o achado mais consistente.",
+    "practice": [
+      "Para ganhar massa muscular, escolha peso livre ou máquina pela preferência, conforto e disponibilidade: o resultado tende a ser parecido.",
+      "Se o objetivo é força num movimento específico (ex.: agachamento livre, supino com barra), treine esse movimento com regularidade.",
+      "Máquinas são boa opção para iniciantes, para isolar um músculo ou quando a técnica no peso livre limita a carga.",
+      "Combinar os dois tipos é válido e facilita substituições quando um aparelho está ocupado."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Haugen ME, Vårvik FT, Larsen S, et al. Effect of free-weight vs. machine-based strength training on maximal strength, hypertrophy and jump performance – a systematic review and meta-analysis. BMC Sports Sci Med Rehabil. 2023;15(1):103.",
+        "year": 2023,
+        "doi": "10.1186/s13102-023-00713-4"
+      },
+      {
+        "citation": "Schwanbeck SR, Cornish SM, Barss T, et al. Effects of Training With Free Weights Versus Machines on Muscle Mass, Strength, Free Testosterone, and Free Cortisol Levels. J Strength Cond Res. 2020;34(7):1851-1859.",
+        "year": 2020,
+        "doi": "10.1519/JSC.0000000000003349"
+      }
+    ]
+  },
+  {
+    "id": "ex-compound-vs-isolation",
+    "topic": "exercise-selection",
+    "title": "Multiarticular x isolado: preciso de exercícios isoladores?",
+    "keywords": [
+      "multiarticular",
+      "monoarticular",
+      "compound",
+      "isolation",
+      "exercício isolado",
+      "single-joint",
+      "multi-joint",
+      "rosca direta",
+      "puxada",
+      "remada",
+      "bíceps",
+      "biceps",
+      "cadeira extensora",
+      "leg press",
+      "hipertrofia",
+      "hypertrophy"
+    ],
+    "summary": "A meta-análise de Rosa et al. (2023; 7 estudos, 10 comparações) encontrou hipertrofia semelhante do músculo como um todo entre exercícios multiarticulares (puxada, remada, leg press) e monoarticulares (rosca, cadeira extensora), inclusive quando se acrescentam isoladores a um programa só de compostos. Os ensaios individuais variam: Gentil et al. (2015) viram ganhos iguais no bíceps de iniciantes com puxada ou rosca, enquanto Mannarino et al. (2021; 10 homens) viram maior espessura dos flexores do cotovelo com rosca (+11%) do que com remada (+5%). Isoladores parecem mais úteis para músculos ou porções pouco solicitados pelos compostos: o reto femoral cresceu cerca de 13% com cadeira extensora e quase nada com leg press (Kinoshita et al., 2026). Evidência moderada para o músculo inteiro; limitada para efeitos regionais.",
+    "practice": [
+      "Monte a base do treino com multiarticulares: são eficientes em tempo e trabalham vários músculos de uma vez.",
+      "Acrescente isoladores para músculos que os compostos trabalham pouco (reto femoral, cabeça longa do tríceps, deltoide lateral, panturrilha) ou que estão atrasados.",
+      "Com pouco tempo, priorize compostos; se um composto incomoda uma articulação, um isolador pode manter o estímulo do músculo-alvo."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Rosa A, Vazquez G, Grgic J, et al. Hypertrophic Effects of Single- Versus Multi-Joint Exercise of the Limb Muscles: A Systematic Review and Meta-analysis. Strength Cond J. 2023;45(1):49-57.",
+        "year": 2023,
+        "doi": "10.1519/SSC.0000000000000720"
+      },
+      {
+        "citation": "Gentil P, Soares S, Bottaro M. Single vs. Multi-Joint Resistance Exercises: Effects on Muscle Strength and Hypertrophy. Asian J Sports Med. 2015;6:e24057.",
+        "year": 2015,
+        "doi": "10.5812/asjsm.24057"
+      },
+      {
+        "citation": "Mannarino P, Matta T, Lima J, et al. Single-Joint Exercise Results in Higher Hypertrophy of Elbow Flexors Than Multijoint Exercise. J Strength Cond Res. 2021;35(10):2677-2681.",
+        "year": 2021,
+        "doi": "10.1519/JSC.0000000000003234"
+      },
+      {
+        "citation": "Kinoshita M, Maeo S, Kobayashi Y, et al. Hypertrophic Effects of Single- versus Multi-Joint Exercise: A Direct Comparison between Knee Extension and Leg Press. Med Sci Sports Exerc. 2026;58(7):1566-1580.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003957"
+      }
+    ]
+  },
+  {
+    "id": "ex-regional-hypertrophy",
+    "topic": "exercise-selection",
+    "title": "Hipertrofia regional: o músculo não cresce por igual",
+    "keywords": [
+      "hipertrofia regional",
+      "regional hypertrophy",
+      "crescimento não uniforme",
+      "non-uniform hypertrophy",
+      "variação de exercícios",
+      "exercise variation",
+      "reto femoral",
+      "rectus femoris",
+      "vasto lateral",
+      "cadeira extensora",
+      "agachamento smith",
+      "tríceps",
+      "quadríceps",
+      "porção proximal",
+      "porção distal"
+    ],
+    "summary": "A revisão sistemática de Zabaleta-Korta et al. (2020) reuniu 14 estudos; em 13 deles algumas regiões do músculo (proximal, média ou distal) cresceram mais que outras, no quadríceps, tríceps e bíceps. O padrão depende do exercício: num ensaio randomizado, a cadeira extensora fez crescer as três regiões do reto femoral, enquanto o agachamento no Smith fez crescer só a região central do vasto lateral (Zabaleta-Korta et al., 2021). Wakahara et al. (2013) mostraram, por ressonância, que as regiões do tríceps mais ativadas na sessão de treino foram as que mais cresceram após 12 semanas. A existência de hipertrofia regional está bem documentada; o quanto isso importa na prática e quais combinações de exercícios desenvolvem melhor o músculo inteiro ainda é incerto, com estudos pequenos e curtos.",
+    "practice": [
+      "Para desenvolver um músculo por completo, use dois ou mais exercícios com posições articulares ou perfis de resistência diferentes ao longo da semana.",
+      "Inclua pelo menos um exercício que carregue o músculo em posição alongada.",
+      "Varie de forma planejada e estável, em vez de trocar exercícios aleatoriamente a cada sessão."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Zabaleta-Korta A, Fernández-Peña E, Santos-Concejero J. Regional Hypertrophy, the Inhomogeneous Muscle Growth: A Systematic Review. Strength Cond J. 2020;42(5):94-101.",
+        "year": 2020,
+        "doi": "10.1519/SSC.0000000000000574"
+      },
+      {
+        "citation": "Zabaleta-Korta A, Fernández-Peña E, Torres-Unda J, et al. The role of exercise selection in regional Muscle Hypertrophy: A randomized controlled trial. J Sports Sci. 2021;39(20):2298-2304.",
+        "year": 2021,
+        "doi": "10.1080/02640414.2021.1929736"
+      },
+      {
+        "citation": "Wakahara T, Fukutani A, Kawakami Y, et al. Nonuniform muscle hypertrophy: its relation to muscle activation in training session. Med Sci Sports Exerc. 2013;45(11):2158-2165.",
+        "year": 2013,
+        "doi": "10.1249/MSS.0b013e3182995349"
+      }
+    ]
+  },
+  {
+    "id": "ex-exercise-variation",
+    "topic": "exercise-selection",
+    "title": "Quanto variar os exercícios?",
+    "keywords": [
+      "variação de exercícios",
+      "exercise variation",
+      "trocar exercício",
+      "rotina",
+      "motivação",
+      "motivation",
+      "confusão muscular",
+      "muscle confusion",
+      "hipertrofia",
+      "hypertrophy",
+      "força",
+      "strength",
+      "programa fixo",
+      "fixed program",
+      "quadríceps"
+    ],
+    "summary": "A revisão sistemática de Kassiano et al. (2022; 8 estudos, 241 homens jovens) concluiu que variar exercícios de forma sistemática, escolhendo movimentos com estímulos anatomicamente diferentes, pode favorecer a hipertrofia regional e a força, enquanto trocas excessivas e aleatórias, ou exercícios redundantes, podem atrapalhar. Fonseca et al. (2014) mostraram que, com a mesma intensidade, variar os exercícios de pernas fez crescer todas as porções do quadríceps e deu mais força, o que não ocorreu com exercício único. Por outro lado, Baz-Valle et al. (2019; 21 homens treinados, 8 semanas) não acharam diferença de hipertrofia ou força entre um programa fixo e outro com exercícios sorteados a cada sessão, e a variação aumentou a motivação. Evidência limitada: poucos estudos, curtos e quase só com homens jovens.",
+    "practice": [
+      "Mantenha os exercícios principais por um bloco de algumas semanas para conseguir progredir carga e técnica.",
+      "Varie com propósito: mude ângulo, posição ou perfil de resistência, não apenas o nome do exercício.",
+      "Exercícios de alta exigência técnica (agachamento, terra, supino) merecem mais estabilidade; acessórios podem variar mais.",
+      "Se a motivação está caindo, variar acessórios é uma forma segura de renovar o treino."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Kassiano W, Nunes JP, Costa B, et al. Does Varying Resistance Exercises Promote Superior Muscle Hypertrophy and Strength Gains? A Systematic Review. J Strength Cond Res. 2022;36(6):1753-1762.",
+        "year": 2022,
+        "doi": "10.1519/JSC.0000000000004258"
+      },
+      {
+        "citation": "Fonseca RM, Roschel H, Tricoli V, et al. Changes in exercises are more effective than in loading schemes to improve muscle strength. J Strength Cond Res. 2014;28(11):3085-3092.",
+        "year": 2014,
+        "doi": "10.1519/JSC.0000000000000539"
+      },
+      {
+        "citation": "Baz-Valle E, Schoenfeld BJ, Torres-Unda J, et al. The effects of exercise variation in muscle thickness, maximal strength and motivation in resistance trained men. PLoS One. 2019;14(12):e0226989.",
+        "year": 2019,
+        "doi": "10.1371/journal.pone.0226989"
+      }
+    ]
+  },
+  {
+    "id": "ex-long-muscle-length",
+    "topic": "range-of-motion",
+    "title": "Treinar com o músculo alongado (hipertrofia mediada por alongamento)",
+    "keywords": [
+      "músculo alongado",
+      "long muscle length",
+      "stretch-mediated hypertrophy",
+      "hipertrofia por alongamento",
+      "parcial alongada",
+      "lengthened partials",
+      "amplitude de movimento",
+      "range of motion",
+      "amplitude parcial",
+      "partial range of motion",
+      "cadeira extensora",
+      "posição alongada",
+      "fase inicial do movimento"
+    ],
+    "summary": "Vários ensaios sugerem que exercícios ou amplitudes que exigem força com o músculo alongado geram mais hipertrofia. Na cadeira extensora, treinar só a parte inicial do movimento (joelho de 100° a 65° de flexão) produziu maior ganho relativo de área em regiões do quadríceps do que a amplitude completa ou a parte final (Pedrosa et al., 2022; 45 mulheres não treinadas). A meta-análise de Wolf et al. (2023) achou diferenças triviais a pequenas a favor da amplitude completa no geral, mas um possível benefício das parciais feitas em comprimentos longos, com estimativa imprecisa. A revisão de Pedrosa, Pereira e Kassiano (2026) conclui que a vantagem aparece quando há torque externo relevante na posição alongada. Evidência moderada para a direção do efeito; a maioria dos estudos é pequena, com iniciantes e até 12 semanas.",
+    "practice": [
+      "Use a amplitude completa como padrão, garantindo que a parte em que o músculo está alongado seja feita com carga e controle.",
+      "Prefira variações que carregam o músculo alongado: tríceps acima da cabeça, cadeira flexora sentada, panturrilha em pé, rosca Scott.",
+      "Parciais na porção alongada podem complementar a série, sem precisar substituir a amplitude completa.",
+      "Progrida aos poucos: carga em posição alongada exige adaptação e deve ser confortável para a articulação."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Pedrosa GF, Lima FV, Schoenfeld BJ, et al. Partial range of motion training elicits favorable improvements in muscular adaptations when carried out at long muscle lengths. Eur J Sport Sci. 2022;22(8):1250-1260.",
+        "year": 2022,
+        "doi": "10.1080/17461391.2021.1927199"
+      },
+      {
+        "citation": "Wolf M, Androulakis-Korakakis P, Fisher J, et al. Partial Vs Full Range of Motion Resistance Training: A Systematic Review and Meta-Analysis. Int J Strength Cond. 2023;3(1).",
+        "year": 2023,
+        "doi": "10.47206/ijsc.v3i1.182"
+      },
+      {
+        "citation": "Pedrosa GF, Pereira MR, Kassiano W. The interplay between muscle length, range of motion, and exercise selection: a review. Sports Med Int Open. 2026;10.",
+        "year": 2026,
+        "doi": "10.1055/a-2733-7605"
+      }
+    ]
+  },
+  {
+    "id": "ex-triceps-overhead-vs-pushdown",
+    "topic": "exercise-selection",
+    "title": "Tríceps: extensão acima da cabeça x tríceps na polia",
+    "keywords": [
+      "tríceps",
+      "triceps",
+      "tríceps francês",
+      "overhead extension",
+      "tríceps testa",
+      "tríceps polia",
+      "pushdown",
+      "tríceps corda",
+      "cabeça longa",
+      "long head",
+      "extensão de cotovelo",
+      "elbow extension",
+      "músculo alongado",
+      "braço"
+    ],
+    "summary": "Maeo et al. (2023) treinaram 21 adultos por 12 semanas com extensão de cotovelo na polia: um braço acima da cabeça e o outro ao lado do corpo, como no tríceps na polia. Pela ressonância, o volume do tríceps cresceu cerca de 1,4 vez mais no braço acima da cabeça (+19,9% x +13,9%), com a maior diferença na cabeça longa (+28,5% x +19,6%), a única porção que cruza o ombro e fica mais alongada com o braço elevado. Isso ocorreu mesmo com cargas absolutas menores na posição acima da cabeça. Um estudo menor e mais curto (Stasinaki et al., 2018; 9 mulheres, 6 semanas) não encontrou diferença de espessura muscular entre as posições. Evidência limitada: um ensaio bem conduzido com ressonância, ainda não replicado em pessoas treinadas.",
+    "practice": [
+      "Inclua ao menos um exercício de tríceps com o braço acima da cabeça (tríceps francês, extensão na polia de costas para o cabo).",
+      "O tríceps na polia continua útil para volume e para quem sente desconforto no ombro com o braço elevado.",
+      "Espere usar menos carga na versão acima da cabeça; progrida por repetições e técnica."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Maeo S, Wu Y, Huang M, et al. Triceps brachii hypertrophy is substantially greater after elbow extension training performed in the overhead versus neutral arm position. Eur J Sport Sci. 2023;23(7):1240-1250.",
+        "year": 2023,
+        "doi": "10.1080/17461391.2022.2100279"
+      },
+      {
+        "citation": "Stasinaki AN, Zaras N, Methenitis S, et al. Triceps Brachii Muscle Strength and Architectural Adaptations with Resistance Training Exercises at Short or Long Fascicle Length. J Funct Morphol Kinesiol. 2018;3(2):28.",
+        "year": 2018,
+        "doi": "10.3390/jfmk3020028"
+      }
+    ]
+  },
+  {
+    "id": "ex-biceps-curl-selection",
+    "topic": "exercise-selection",
+    "title": "Bíceps: qual rosca escolher?",
+    "keywords": [
+      "bíceps",
+      "biceps",
+      "rosca direta",
+      "rosca scott",
+      "preacher curl",
+      "rosca inclinada",
+      "incline curl",
+      "rosca alternada",
+      "flexores do cotovelo",
+      "elbow flexors",
+      "arm curl",
+      "remada",
+      "puxada",
+      "braço",
+      "hipertrofia distal"
+    ],
+    "summary": "Os estudos com rosca são pequenos, mas seguem o princípio do comprimento muscular. Na rosca Scott com halter, treinar só a parte inicial (cotovelo de 0° a 68°, bíceps alongado) aumentou mais a área do bíceps na região distal e a força em amplitude completa do que treinar a parte final, sem diferença na soma das regiões (Pedrosa et al., 2023; 19 mulheres). Zabaleta-Korta et al. (2023; 38 mulheres treinadas) viram crescimento significativo apenas na região distal com rosca Scott e nenhum com rosca inclinada, embora sem diferença estatística entre os grupos. Depender só de remadas e puxadas dá resultados mistos: ganhos iguais em iniciantes num estudo (Gentil et al., 2015) e menores que com rosca em outro (Mannarino et al., 2021). Evidência limitada.",
+    "practice": [
+      "Inclua ao menos uma rosca para os flexores do cotovelo, além de remadas e puxadas.",
+      "A rosca Scott, que exige mais do bíceps com o cotovelo quase estendido, é boa opção para a região distal.",
+      "Desça até quase estender o cotovelo; não corte a parte inicial do movimento."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Pedrosa GF, Simões MG, Figueiredo MOC, et al. Training in the Initial Range of Motion Promotes Greater Muscle Adaptations Than at Final in the Arm Curl. Sports (Basel). 2023;11(2):39.",
+        "year": 2023,
+        "doi": "10.3390/sports11020039"
+      },
+      {
+        "citation": "Zabaleta-Korta A, Fernández-Peña E, Torres-Unda J, et al. Regional Hypertrophy: The Effect of Exercises at Long and Short Muscle Lengths in Recreationally Trained Women. J Hum Kinet. 2023.",
+        "year": 2023,
+        "doi": "10.5114/jhk/163561"
+      },
+      {
+        "citation": "Mannarino P, Matta T, Lima J, et al. Single-Joint Exercise Results in Higher Hypertrophy of Elbow Flexors Than Multijoint Exercise. J Strength Cond Res. 2021;35(10):2677-2681.",
+        "year": 2021,
+        "doi": "10.1519/JSC.0000000000003234"
+      },
+      {
+        "citation": "Gentil P, Soares S, Bottaro M. Single vs. Multi-Joint Resistance Exercises: Effects on Muscle Strength and Hypertrophy. Asian J Sports Med. 2015;6:e24057.",
+        "year": 2015,
+        "doi": "10.5812/asjsm.24057"
+      }
+    ]
+  },
+  {
+    "id": "ex-hamstrings-seated-vs-lying-curl",
+    "topic": "exercise-selection",
+    "title": "Posteriores de coxa: cadeira flexora x mesa flexora",
+    "keywords": [
+      "posterior de coxa",
+      "isquiotibiais",
+      "hamstrings",
+      "cadeira flexora",
+      "seated leg curl",
+      "mesa flexora",
+      "lying leg curl",
+      "prone leg curl",
+      "flexão de joelho",
+      "knee flexion",
+      "bíceps femoral",
+      "biceps femoris",
+      "semitendíneo",
+      "músculo alongado"
+    ],
+    "summary": "Maeo et al. (2021) treinaram 20 adultos por 12 semanas, uma perna na cadeira flexora (sentado, quadril flexionado) e a outra na mesa flexora (deitado de bruços). Pela ressonância, o volume total dos posteriores cresceu mais na cadeira flexora (+14% x +9%), com vantagem nos músculos biarticulares, que cruzam quadril e joelho e ficam mais alongados na posição sentada (+8% a +24% x +4% a +19%). A cabeça curta do bíceps femoral, que só cruza o joelho, cresceu igual nas duas (+10% x +9%). Os dois treinos deram proteção semelhante contra dano muscular numa sessão excêntrica posterior. Evidência limitada: um único ensaio, bem desenhado (comparação na mesma pessoa e ressonância), com não treinados.",
+    "practice": [
+      "Se houver as duas opções, prefira a cadeira flexora (sentado) para hipertrofia dos posteriores.",
+      "Faça a amplitude completa, estendendo bem o joelho na volta, quando o músculo está mais alongado.",
+      "A mesa flexora segue válida para variar o estímulo ou quando a cadeira não está disponível."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Maeo S, Huang M, Wu Y, et al. Greater Hamstrings Muscle Hypertrophy but Similar Damage Protection after Training at Long versus Short Muscle Lengths. Med Sci Sports Exerc. 2021;53(4):825-837.",
+        "year": 2021,
+        "doi": "10.1249/MSS.0000000000002523"
+      }
+    ]
+  },
+  {
+    "id": "ex-hamstrings-hip-vs-knee-dominant",
+    "topic": "exercise-selection",
+    "title": "Posteriores: stiff/terra romeno x flexora",
+    "keywords": [
+      "stiff",
+      "stiff-leg deadlift",
+      "levantamento terra romeno",
+      "romanian deadlift",
+      "rdl",
+      "flexora",
+      "leg curl",
+      "nórdico",
+      "nordic hamstring",
+      "extensão de quadril",
+      "hip extension",
+      "posterior de coxa",
+      "hamstrings",
+      "semimembranáceo",
+      "semitendíneo",
+      "bíceps femoral"
+    ],
+    "summary": "Exercícios de extensão de quadril (stiff, terra romeno) e de flexão de joelho (flexoras, nórdico) fazem crescer partes diferentes dos posteriores. Morin et al. (2025; 36 iniciantes, 9 semanas, ultrassom 3D) viram hipertrofia total semelhante com stiff e nórdico, mas o stiff favoreceu o semimembranáceo (+11%) e o nórdico o semitendíneo (+24%). Maeo et al. (2024; 42 homens, 12 semanas, ressonância) mostraram que uma flexora excêntrica com o quadril bem flexionado cresceu mais os posteriores no total (+18% x +11%) e o bíceps femoral cabeça longa (+19% x +5%) do que o nórdico. Bourne et al. (2017) já tinham visto maior hipertrofia da cabeça longa do bíceps femoral com extensão de quadril do que com nórdico. Evidência limitada, com amostras pequenas, mas coerente: combinar os dois tipos de movimento cobre melhor o grupo.",
+    "practice": [
+      "Inclua na semana um exercício de dobradiça de quadril (stiff ou terra romeno) e um de flexão de joelho (cadeira ou mesa flexora).",
+      "Na flexão de joelho, posições com o quadril flexionado (sentado) tendem a favorecer a hipertrofia.",
+      "O nórdico é útil para o semitendíneo e para prevenção de lesões, mas sozinho não substitui os demais exercícios."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Morin T, Doguet V, Nordez A, et al. Minimal Role of Hamstring Hypertrophy in Strength Transfer Between Nordic Hamstring and Stiff-Leg Deadlift: A Blinded Randomized Controlled Trial. J Strength Cond Res. 2025;39(9):924-932.",
+        "year": 2025,
+        "doi": "10.1519/JSC.0000000000005159"
+      },
+      {
+        "citation": "Maeo S, Balshaw TG, Nin DZ, et al. Hamstrings Hypertrophy Is Specific to the Training Exercise: Nordic Hamstring versus Lengthened State Eccentric Training. Med Sci Sports Exerc. 2024;56(10):1893-1905.",
+        "year": 2024,
+        "doi": "10.1249/MSS.0000000000003490"
+      },
+      {
+        "citation": "Bourne MN, Duhig SJ, Timmins RG, et al. Impact of the Nordic hamstring and hip extension exercises on hamstring architecture and morphology: implications for injury prevention. Br J Sports Med. 2017;51(5):469-477.",
+        "year": 2017,
+        "doi": "10.1136/bjsports-2016-096130"
+      }
+    ]
+  },
+  {
+    "id": "ex-calves-standing-vs-seated",
+    "topic": "exercise-selection",
+    "title": "Panturrilha: em pé, sentado e amplitude",
+    "keywords": [
+      "panturrilha",
+      "calves",
+      "gêmeos",
+      "gastrocnêmio",
+      "gastrocnemius",
+      "sóleo",
+      "soleus",
+      "elevação de panturrilha",
+      "calf raise",
+      "panturrilha em pé",
+      "standing calf raise",
+      "panturrilha sentado",
+      "seated calf raise",
+      "panturrilha no leg press",
+      "amplitude alongada"
+    ],
+    "summary": "Kinoshita et al. (2023) treinaram 14 adultos por 12 semanas, uma perna com panturrilha em pé (joelho estendido) e a outra sentada (joelho a 90°). Pela ressonância, os gastrocnêmios cresceram bem mais em pé (lateral +12,4% x +1,7%; medial +9,2% x +0,6%), enquanto o sóleo cresceu de forma parecida nas duas posições (cerca de 2 a 3%). Com o joelho flexionado o gastrocnêmio fica encurtado e quase não respondeu. Kassiano et al. (2023; 42 mulheres, 8 semanas) mostraram que fazer só a metade do movimento com o tornozelo em dorsiflexão (músculo alongado) aumentou mais a espessura do gastrocnêmio medial (+15,2%) do que a amplitude completa (+6,7%) ou só a metade final (+3,4%). Evidência limitada: poucos estudos pequenos, mas consistentes com o princípio do comprimento muscular.",
+    "practice": [
+      "Priorize panturrilha com o joelho estendido (em pé, no leg press ou no smith) para os gêmeos.",
+      "Desça bem o calcanhar até um alongamento confortável e controle essa fase; não encurte a parte de baixo do movimento.",
+      "Use a panturrilha sentado como complemento para o sóleo, não como exercício principal."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Kinoshita M, Maeo S, Kobayashi Y, et al. Triceps surae muscle hypertrophy is greater after standing versus seated calf-raise training. Front Physiol. 2023;14:1272106.",
+        "year": 2023,
+        "doi": "10.3389/fphys.2023.1272106"
+      },
+      {
+        "citation": "Kassiano W, Costa B, Kunevaliki G, et al. Greater Gastrocnemius Muscle Hypertrophy After Partial Range of Motion Training Performed at Long Muscle Lengths. J Strength Cond Res. 2023;37(9):1746-1753.",
+        "year": 2023,
+        "doi": "10.1519/JSC.0000000000004460"
+      }
+    ]
+  },
+  {
+    "id": "ex-squat-depth-hypertrophy",
+    "topic": "exercise-selection",
+    "title": "Profundidade do agachamento e hipertrofia",
+    "keywords": [
+      "agachamento",
+      "squat",
+      "agachamento profundo",
+      "deep squat",
+      "agachamento completo",
+      "full squat",
+      "meio agachamento",
+      "half squat",
+      "profundidade",
+      "squat depth",
+      "glúteo",
+      "glutes",
+      "adutores",
+      "adductors",
+      "quadríceps",
+      "quadriceps"
+    ],
+    "summary": "Kubo et al. (2019) compararam agachamento completo (cerca de 140° de flexão do joelho) e meio agachamento (cerca de 90°) por 10 semanas em 17 homens. O volume do quadríceps cresceu de forma parecida (+4,9% x +4,6%), mas adutores (+6,2% x +2,7%) e glúteo máximo (+6,7% x +2,2%) cresceram mais no agachamento completo; reto femoral e posteriores não mudaram em nenhum grupo. Bloomquist et al. (2013; 17 homens, 12 semanas) encontraram maior aumento da área da frente da coxa com agachamento profundo (0 a 120°) do que com o raso (0 a 60°). A força foi específica: cada grupo melhorou mais na amplitude que treinou. Evidência limitada (dois ensaios pequenos com homens jovens), mas ambos favorecem agachar com amplitude ampla.",
+    "practice": [
+      "Agache até a maior profundidade que você controla com boa técnica e sem dor.",
+      "Agachamento profundo trabalha mais glúteos e adutores que o meio agachamento.",
+      "Para o reto femoral, o agachamento não basta: inclua cadeira extensora.",
+      "Use meio agachamento apenas com objetivo específico (força nessa amplitude), não como substituto do profundo."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Kubo K, Ikebukuro T, Yata H. Effects of squat training with different depths on lower limb muscle volumes. Eur J Appl Physiol. 2019;119(9):1933-1942.",
+        "year": 2019,
+        "doi": "10.1007/s00421-019-04181-y"
+      },
+      {
+        "citation": "Bloomquist K, Langberg H, Karlsen S, et al. Effect of range of motion in heavy load squatting on muscle and tendon adaptations. Eur J Appl Physiol. 2013;113(8):2133-2142.",
+        "year": 2013,
+        "doi": "10.1007/s00421-013-2642-7"
+      }
+    ]
+  },
+  {
+    "id": "ex-quads-exercise-selection",
+    "topic": "exercise-selection",
+    "title": "Quadríceps: cadeira extensora, leg press e agachamento",
+    "keywords": [
+      "quadríceps",
+      "quadriceps",
+      "cadeira extensora",
+      "leg extension",
+      "knee extension",
+      "leg press",
+      "agachamento",
+      "squat",
+      "hack",
+      "agachamento hack",
+      "reto femoral",
+      "rectus femoris",
+      "vasto lateral",
+      "vastus lateralis",
+      "coxa"
+    ],
+    "summary": "Kinoshita et al. (2026) treinaram 17 iniciantes por 12 semanas, uma perna na cadeira extensora e a outra no leg press, com medida por ressonância. O quadríceps total (+7,1% x +4,9%) e os vastos cresceram de forma semelhante, mas o reto femoral cresceu muito mais com a extensora (+13,2% x +1,1%); em compensação, só o leg press fez crescer glúteo máximo (+15,4%) e adutor magno (+6,2%). Zabaleta-Korta et al. (2021) viram padrão parecido: a extensora fez crescer as três regiões do reto femoral, e o agachamento no Smith só a região central do vasto lateral. Plotkin et al. (2023) mostraram que o agachamento cresce mais quadríceps e adutores do que o hip thrust. Faltam estudos longitudinais que comparem o hack diretamente com esses exercícios. Evidência limitada, mas consistente quanto ao reto femoral.",
+    "practice": [
+      "Use um multiarticular (agachamento, leg press ou hack) como base para quadríceps, glúteos e adutores.",
+      "Inclua cadeira extensora para o reto femoral, que os multiarticulares estimulam pouco.",
+      "Leg press e agachamento são intercambiáveis para os vastos; escolha pelo conforto e pela disponibilidade."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Kinoshita M, Maeo S, Kobayashi Y, et al. Hypertrophic Effects of Single- versus Multi-Joint Exercise: A Direct Comparison between Knee Extension and Leg Press. Med Sci Sports Exerc. 2026;58(7):1566-1580.",
+        "year": 2026,
+        "doi": "10.1249/MSS.0000000000003957"
+      },
+      {
+        "citation": "Zabaleta-Korta A, Fernández-Peña E, Torres-Unda J, et al. The role of exercise selection in regional Muscle Hypertrophy: A randomized controlled trial. J Sports Sci. 2021;39(20):2298-2304.",
+        "year": 2021,
+        "doi": "10.1080/02640414.2021.1929736"
+      },
+      {
+        "citation": "Plotkin DL, Rodas MA, Vigotsky AD, et al. Hip thrust and back squat training elicit similar gluteus muscle hypertrophy and transfer similarly to the deadlift. Front Physiol. 2023;14:1279170.",
+        "year": 2023,
+        "doi": "10.3389/fphys.2023.1279170"
+      }
+    ]
+  },
+  {
+    "id": "ex-glutes-hip-thrust-vs-squat",
+    "topic": "exercise-selection",
+    "title": "Glúteos: elevação pélvica (hip thrust) x agachamento",
+    "keywords": [
+      "glúteo",
+      "glutes",
+      "glúteo máximo",
+      "gluteus maximus",
+      "elevação pélvica",
+      "hip thrust",
+      "agachamento",
+      "squat",
+      "agachamento profundo",
+      "levantamento terra",
+      "deadlift",
+      "ponte de glúteo",
+      "glute bridge",
+      "eletromiografia",
+      "emg"
+    ],
+    "summary": "Plotkin et al. (2023) randomizaram 34 iniciantes para hip thrust ou agachamento livre por 9 semanas, com o mesmo número de séries, e mediram os músculos por ressonância. O ganho de área dos glúteos foi semelhante entre os grupos (estimativas levemente a favor do hip thrust, mas com grande incerteza); o agachamento cresceu mais quadríceps e adutores; cada grupo ficou mais forte no próprio exercício, e o levantamento terra melhorou igualmente nos dois. Embora o hip thrust tenha gerado mais sinal de EMG nos glúteos, isso não previu de forma consistente a hipertrofia. Kubo et al. (2019) mostraram que a profundidade importa: o agachamento completo cresceu o glúteo máximo cerca de três vezes mais que o meio agachamento. Evidência limitada: um ensaio direto, com iniciantes e curta duração.",
+    "practice": [
+      "Agachamento profundo e hip thrust são ambos eficazes para glúteos; escolha pela preferência, equipamento e conforto.",
+      "Se o objetivo inclui a coxa (quadríceps e adutores), o agachamento entrega mais por série.",
+      "O hip thrust é uma boa alternativa quando o agachamento incomoda joelho ou lombar.",
+      "Combinar os dois é razoável para quem prioriza glúteos."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Plotkin DL, Rodas MA, Vigotsky AD, et al. Hip thrust and back squat training elicit similar gluteus muscle hypertrophy and transfer similarly to the deadlift. Front Physiol. 2023;14:1279170.",
+        "year": 2023,
+        "doi": "10.3389/fphys.2023.1279170"
+      },
+      {
+        "citation": "Kubo K, Ikebukuro T, Yata H. Effects of squat training with different depths on lower limb muscle volumes. Eur J Appl Physiol. 2019;119(9):1933-1942.",
+        "year": 2019,
+        "doi": "10.1007/s00421-019-04181-y"
+      }
+    ]
+  },
+  {
+    "id": "ex-chest-bench-incline-flyes",
+    "topic": "exercise-selection",
+    "title": "Peitoral: supino reto, inclinado, pegada e crucifixo",
+    "keywords": [
+      "peitoral",
+      "chest",
+      "pectoralis major",
+      "supino",
+      "bench press",
+      "supino inclinado",
+      "incline bench press",
+      "supino reto",
+      "pegada",
+      "grip width",
+      "crucifixo",
+      "fly",
+      "voador",
+      "pec deck",
+      "peitoral superior",
+      "upper chest",
+      "porção clavicular"
+    ],
+    "summary": "A evidência longitudinal é escassa. Chaves et al. (2020; 47 iniciantes, 8 semanas) compararam supino reto, inclinado e a combinação: a força melhorou igual, mas o inclinado aumentou mais a espessura da parte superior do peitoral (diferença em 1 de 3 pontos medidos). Num estudo de EMG, a porção clavicular foi mais ativada com o banco a 30°, e acima de 45° o deltoide anterior passou a predominar (Rodríguez-Ridao et al., 2020). No voador (pec deck), as porções clavicular e esternocostal cresceram de forma parecida (17 a 21%) em 12 semanas (Pinto et al., 2025). Quanto à pegada, a fechada reduziu a carga máxima e a aberta ativou menos o tríceps (Saeterbakken et al., 2021), mas não há estudos de hipertrofia comparando larguras. Evidência limitada.",
+    "practice": [
+      "Use supino reto ou inclinado como base; inclua o inclinado (cerca de 30°) se quiser ênfase na parte superior do peitoral.",
+      "Evite inclinações muito altas (acima de 45°) quando o foco for o peitoral: o ombro passa a dominar.",
+      "Pegadas média e aberta permitem mais carga; a fechada desloca parte do trabalho para o tríceps.",
+      "Crucifixo ou voador são bons complementos e trabalham as duas porções do peitoral."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Chaves SFN, Rocha-Júnior VA, Encarnação IGA, et al. Effects of Horizontal and Incline Bench Press on Neuromuscular Adaptations in Untrained Young Men. Int J Exerc Sci. 2020;13(6):859-872.",
+        "year": 2020,
+        "doi": "10.70252/FDNB1158"
+      },
+      {
+        "citation": "Rodríguez-Ridao D, Antequera-Vique JA, Martín-Fuentes I, et al. Effect of Five Bench Inclinations on the Electromyographic Activity of the Pectoralis Major, Anterior Deltoid, and Triceps Brachii during the Bench Press Exercise. Int J Environ Res Public Health. 2020;17(19):7339.",
+        "year": 2020,
+        "doi": "10.3390/ijerph17197339"
+      },
+      {
+        "citation": "Pinto MD, Ughini C, Nunes JP, et al. Pectoralis Clavicular and Sternocostal Thicknesses Increase Similarly in Response to One and Three Sets of Pec Deck Resistance Training in Untrained Young Men. J Strength Cond Res. 2025;39(5):523-530.",
+        "year": 2025,
+        "doi": "10.1519/JSC.0000000000005045"
+      },
+      {
+        "citation": "Saeterbakken AH, Stien N, Pedersen H, et al. The Effect of Grip Width on Muscle Strength and Electromyographic Activity in Bench Press among Novice- and Resistance-Trained Men. Int J Environ Res Public Health. 2021;18(12):6444.",
+        "year": 2021,
+        "doi": "10.3390/ijerph18126444"
+      }
+    ]
+  },
+  {
+    "id": "ex-back-grip-pulldown-row",
+    "topic": "exercise-selection",
+    "title": "Costas: a pegada da puxada e da remada importa?",
+    "keywords": [
+      "costas",
+      "back",
+      "latíssimo",
+      "latissimus dorsi",
+      "dorsal",
+      "puxada",
+      "lat pulldown",
+      "puxada aberta",
+      "puxada fechada",
+      "pegada supinada",
+      "pegada pronada",
+      "remada",
+      "row",
+      "barra fixa",
+      "pull-up",
+      "pegada",
+      "grip"
+    ],
+    "summary": "Os estudos sobre pegada para as costas são agudos (EMG) e não medem hipertrofia ao longo de semanas. Andersen et al. (2014; 15 homens) compararam a puxada com pegadas de 1, 1,5 e 2 vezes a largura dos ombros: a ativação do latíssimo foi parecida, e a pegada mais aberta permitiu um pouco menos de carga (6RM de cerca de 77 kg contra 80 kg). Lusk et al. (2010; 12 homens) acharam maior ativação do latíssimo com pegada pronada do que supinada, independentemente da largura. Como a amplitude de EMG não é um preditor validado de hipertrofia (Vigotsky et al., 2022), essas diferenças pequenas não justificam regras rígidas. Evidência limitada: a pegada parece ter pouca importância para o crescimento das costas.",
+    "practice": [
+      "Escolha a pegada da puxada e da remada pelo conforto de ombros e cotovelos e pela carga que você consegue progredir.",
+      "Pegadas entre 1 e 2 vezes a largura dos ombros são razoáveis; pegadas muito abertas tendem a reduzir a carga.",
+      "Variar pegadas entre exercícios é uma forma simples de diversificar o estímulo, sem expectativa de grande diferença."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Andersen V, Fimland MS, Wiik E, et al. Effects of grip width on muscle strength and activation in the lat pull-down. J Strength Cond Res. 2014;28(4):1135-1142.",
+        "year": 2014,
+        "doi": "10.1097/JSC.0000000000000232"
+      },
+      {
+        "citation": "Lusk SJ, Hale BD, Russell DM. Grip width and forearm orientation effects on muscle activity during the lat pull-down. J Strength Cond Res. 2010;24(7):1895-1900.",
+        "year": 2010,
+        "doi": "10.1519/JSC.0b013e3181ddb0ab"
+      },
+      {
+        "citation": "Vigotsky AD, Halperin I, Trajano GS, et al. Longing for a Longitudinal Proxy: Acutely Measured Surface EMG Amplitude is not a Validated Predictor of Muscle Hypertrophy. Sports Med. 2022;52(2):193-199.",
+        "year": 2022,
+        "doi": "10.1007/s40279-021-01619-2"
+      }
+    ]
+  },
+  {
+    "id": "ex-shoulders-deltoids",
+    "topic": "exercise-selection",
+    "title": "Ombros: elevação lateral, desenvolvimento e deltoide posterior",
+    "keywords": [
+      "ombro",
+      "shoulders",
+      "deltoide",
+      "deltoid",
+      "elevação lateral",
+      "lateral raise",
+      "desenvolvimento",
+      "overhead press",
+      "shoulder press",
+      "deltoide lateral",
+      "deltoide posterior",
+      "rear delt",
+      "halter",
+      "cabo",
+      "polia",
+      "cable"
+    ],
+    "summary": "Num estudo de EMG com homens treinados, o desenvolvimento ativou mais o deltoide anterior; elevação lateral e desenvolvimento ativaram a porção média muito mais que supino e crucifixo; e a elevação lateral foi o exercício, entre os quatro testados, que mais ativou o deltoide posterior (Campos et al., 2020). Isso sugere que o supino sozinho pouco solicita as porções média e posterior, lembrando que EMG não prevê hipertrofia de forma validada. Num dos poucos ensaios longitudinais específicos, Larsen et al. (2025; 24 treinados, 8 semanas) compararam elevação lateral com halter e com cabo, um braço de cada: a espessura do deltoide lateral subiu 3,3 a 4,6% e a análise favoreceu ausência de diferença entre os dois. Faltam estudos de hipertrofia sobre desenvolvimento e deltoide posterior. Evidência limitada.",
+    "practice": [
+      "Inclua elevação lateral (halter, cabo ou máquina) para o deltoide médio; halter e cabo parecem funcionar de forma parecida.",
+      "Não dependa só do supino para os ombros: ele quase não ativa as porções média e posterior.",
+      "Supino e desenvolvimento já solicitam bastante o deltoide anterior; volume direto extra para essa porção costuma ser opcional."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Campos YAC, Vianna JM, Guimarães MP, et al. Different Shoulder Exercises Affect the Activation of Deltoid Portions in Resistance-Trained Individuals. J Hum Kinet. 2020;75:5-14.",
+        "year": 2020,
+        "doi": "10.2478/hukin-2020-0033"
+      },
+      {
+        "citation": "Larsen S, Wolf M, Schoenfeld BJ, et al. Dumbbell versus cable lateral raises for lateral deltoid hypertrophy: an experimental study. Front Physiol. 2025;16:1611468.",
+        "year": 2025,
+        "doi": "10.3389/fphys.2025.1611468"
+      }
+    ]
+  },
+  {
+    "id": "ex-spot-reduction-abs",
+    "topic": "myths",
+    "title": "Abdominal queima a gordura da barriga? (gordura localizada)",
+    "keywords": [
+      "gordura localizada",
+      "spot reduction",
+      "perder barriga",
+      "belly fat",
+      "abdominal",
+      "sit-up",
+      "crunch",
+      "gordura abdominal",
+      "abdominal fat",
+      "queima localizada",
+      "localized fat",
+      "emagrecer",
+      "fat loss",
+      "treino localizado"
+    ],
+    "summary": "Treinar um músculo não reduz preferencialmente a gordura que está sobre ele. A meta-análise de Ramirez-Campillo et al. (2021) reuniu 13 estudos (1.158 participantes de 14 a 71 anos) que treinaram um membro e usaram o outro como controle: o efeito combinado foi praticamente nulo (g = -0,03), com baixa heterogeneidade. Num ensaio específico, 6 semanas de abdominais (7 exercícios, 5 vezes por semana) sem mudança na dieta não reduziram gordura abdominal, circunferência nem dobras cutâneas, embora tenham melhorado a resistência abdominal (Vispute et al., 2011). Em outro, treinar uma perna só no leg press, com mais de 900 repetições por sessão, reduziu gordura no tronco e nos braços, mas não na perna treinada (Ramírez-Campillo et al., 2013). Evidência moderada e consistente.",
+    "practice": [
+      "Para reduzir a gordura abdominal, foque em déficit calórico, treino de força e atividade física total, não em séries extras de abdominal.",
+      "Treine abdominais pela força e resistência do core, não para queimar gordura local."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Ramirez-Campillo R, Andrade DC, Clemente FM, et al. A proposed model to test the hypothesis of exercise-induced localized fat reduction (spot reduction), including a systematic review with meta-analysis. Hum Mov. 2022;23(3):1-14.",
+        "year": 2022,
+        "doi": "10.5114/hm.2022.110373"
+      },
+      {
+        "citation": "Vispute SS, Smith JD, LeCheminant JD, et al. The effect of abdominal exercise on abdominal fat. J Strength Cond Res. 2011;25(9):2559-2564.",
+        "year": 2011,
+        "doi": "10.1519/JSC.0b013e3181fb4a46"
+      },
+      {
+        "citation": "Ramírez-Campillo R, Andrade DC, Campos-Jara C, et al. Regional fat changes induced by localized muscle endurance resistance training. J Strength Cond Res. 2013;27(8):2219-2224.",
+        "year": 2013,
+        "doi": "10.1519/JSC.0b013e31827e8681"
+      }
+    ]
+  },
+  {
+    "id": "ex-abs-situps-spine-safety",
+    "topic": "injury",
+    "title": "Abdominal em flexão (sit-up, supra) faz mal à coluna?",
+    "keywords": [
+      "abdominal",
+      "sit-up",
+      "abdominal supra",
+      "crunch",
+      "core",
+      "flexão de tronco",
+      "trunk flexion",
+      "coluna",
+      "lombar",
+      "low back",
+      "dor lombar",
+      "low back pain",
+      "prancha",
+      "plank",
+      "estabilização",
+      "core stability",
+      "reto abdominal"
+    ],
+    "summary": "O melhor dado prático vem do ensaio randomizado por grupos de Childs et al. (2010): 1.141 soldados treinaram 16 semanas com um programa tradicional (sit-ups e exercícios de reto abdominal, oblíquos e flexores do quadril) ou com estabilização de core sem sit-ups. A incidência de lesões musculoesqueléticas foi igual entre os grupos; houve apenas indício marginal de menos dias de afastamento por lesão lombar no grupo de estabilização. Em sedentários, 6 semanas de abdominais melhoraram a resistência do core, sem efeito sobre a gordura local (Vispute et al., 2011). Evidência limitada: um grande ensaio em militares, sem dados de longo prazo em praticantes de academia e sem estudos longitudinais sobre o risco em quem já tem dor lombar.",
+    "practice": [
+      "Abdominais em flexão (supra, sit-up, crunch) podem fazer parte do treino de quem não tem dor lombar, em volumes moderados.",
+      "Quem tem dor lombar pode preferir exercícios de estabilização (prancha, por exemplo) e reintroduzir a flexão aos poucos, conforme a tolerância.",
+      "Se um exercício abdominal provoca dor na coluna, troque por outro do core em vez de insistir."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Childs JD, Teyhen DS, Casey PR, et al. Effects of traditional sit-up training versus core stabilization exercises on short-term musculoskeletal injuries in US Army soldiers: a cluster randomized trial. Phys Ther. 2010;90(10):1404-1412.",
+        "year": 2010,
+        "doi": "10.2522/ptj.20090389"
+      },
+      {
+        "citation": "Vispute SS, Smith JD, LeCheminant JD, et al. The effect of abdominal exercise on abdominal fat. J Strength Cond Res. 2011;25(9):2559-2564.",
+        "year": 2011,
+        "doi": "10.1519/JSC.0b013e3181fb4a46"
+      }
+    ]
+  },
+  {
+    "id": "ex-squat-knees-over-toes-safety",
+    "topic": "technique",
+    "title": "Agachamento: joelho passando da ponta do pé e agachar fundo",
+    "keywords": [
+      "agachamento",
+      "squat",
+      "joelho passando da ponta do pé",
+      "knees over toes",
+      "joelho",
+      "knee",
+      "agachamento profundo",
+      "deep squat",
+      "técnica",
+      "technique",
+      "segurança",
+      "safety",
+      "lombar",
+      "quadril",
+      "hip",
+      "patelar"
+    ],
+    "summary": "Impedir o joelho de passar da ponta do pé muda a distribuição do esforço, mas não necessariamente para melhor. Fry et al. (2003; 7 homens treinados) mostraram que, ao bloquear o avanço do joelho, o torque no joelho caiu cerca de 22%, mas o torque no quadril ficou mais de dez vezes maior e o tronco inclinou mais à frente, transferindo carga para quadril e lombar. A revisão de Hartmann et al. (2013) concluiu que o agachamento profundo, aprendido com técnica e progressão adequadas, não aumenta o risco de lesão dos tecidos passivos do joelho; as maiores forças de compressão atrás da patela ocorrem perto de 90°, e o meio agachamento com cargas muito altas pode sobrecarregar mais joelhos e coluna a longo prazo. Evidência limitada: biomecânica e revisão narrativa, sem ensaios que contem lesões.",
+    "practice": [
+      "Deixe o joelho avançar naturalmente além da ponta do pé, desde que o calcanhar fique apoiado e não haja dor.",
+      "Agache na maior profundidade que você controla com técnica; para joelhos saudáveis, a profundidade por si só não é o problema.",
+      "Aumente a carga de forma progressiva e aprenda a técnica com orientação.",
+      "Evite trocar o agachamento profundo por meio agachamento com cargas muito acima das que você usa no profundo."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Fry AC, Smith JC, Schilling BK. Effect of knee position on hip and knee torques during the barbell squat. J Strength Cond Res. 2003;17(4):629-633.",
+        "year": 2003,
+        "doi": "10.1519/1533-4287(2003)017<0629:eokpoh>2.0.co;2"
+      },
+      {
+        "citation": "Hartmann H, Wirth K, Klusemann M. Analysis of the load on the knee joint and vertebral column with changes in squatting depth and weight load. Sports Med. 2013;43(10):993-1008.",
+        "year": 2013,
+        "doi": "10.1007/s40279-013-0073-6"
+      }
+    ]
+  },
+  {
+    "id": "ex-deadlift-lumbar-sumo-conventional",
+    "topic": "technique",
+    "title": "Levantamento terra: coluna arredondada e sumô x convencional",
+    "keywords": [
+      "levantamento terra",
+      "deadlift",
+      "terra sumô",
+      "sumo deadlift",
+      "terra convencional",
+      "conventional deadlift",
+      "coluna",
+      "lombar",
+      "flexão lombar",
+      "lumbar flexion",
+      "costas arredondadas",
+      "dor lombar",
+      "low back pain",
+      "técnica",
+      "technique"
+    ],
+    "summary": "A revisão sistemática com meta-análise de Saraceni et al. (2020) não encontrou evidência de que flexionar mais a coluna lombar ao levantar cargas seja fator de risco para dor lombar ou diferencie pessoas com e sem dor; em alguns estudos, quem tinha dor até flexionou um pouco menos (cerca de 6°). Os estudos, porém, eram de baixa qualidade e avaliaram tarefas de levantamento em geral, não o terra com cargas máximas. Entre os estilos, Escamilla et al. (2000) mostraram em atletas de powerlifting que o sumô usa base mais larga, tronco mais vertical e percurso da barra 25 a 40% menor que o convencional. Em EMG, o sumô ativou mais vastos e tibial anterior, e o convencional mais o gastrocnêmio medial (Escamilla et al., 2002). Evidência limitada; nenhum estilo é comprovadamente mais seguro.",
+    "practice": [
+      "Um leve arredondamento da lombar durante o levantamento não deve ser tratado como sinônimo de lesão; progrida a carga gradualmente.",
+      "Escolha entre sumô e convencional pela anatomia, conforto e objetivo: o sumô encurta o percurso da barra e deixa o tronco mais vertical.",
+      "Se o terra provocar dor, ajuste carga, amplitude ou estilo e observe a resposta antes de abandonar o exercício."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Saraceni N, Kent P, Ng L, et al. To Flex or Not to Flex? Is There a Relationship Between Lumbar Spine Flexion During Lifting and Low Back Pain? A Systematic Review With Meta-analysis. J Orthop Sports Phys Ther. 2020;50(3):121-130.",
+        "year": 2020,
+        "doi": "10.2519/jospt.2020.9218"
+      },
+      {
+        "citation": "Escamilla RF, Francisco AC, Fleisig GS, et al. A three-dimensional biomechanical analysis of sumo and conventional style deadlifts. Med Sci Sports Exerc. 2000;32(7):1265-1275.",
+        "year": 2000,
+        "doi": "10.1097/00005768-200007000-00013"
+      },
+      {
+        "citation": "Escamilla RF, Francisco AC, Kayes AV, et al. An electromyographic analysis of sumo and conventional style deadlifts. Med Sci Sports Exerc. 2002;34(4):682-688.",
+        "year": 2002,
+        "doi": "10.1097/00005768-200204000-00019"
+      }
+    ]
+  },
+  {
+    "id": "ex-emg-limitations",
+    "topic": "exercise-selection",
+    "title": "EMG (ativação muscular) não prevê hipertrofia",
+    "keywords": [
+      "eletromiografia",
+      "emg",
+      "electromyography",
+      "ativação muscular",
+      "muscle activation",
+      "melhor exercício",
+      "best exercise",
+      "hipertrofia",
+      "hypertrophy",
+      "ranking de exercícios",
+      "estudo agudo",
+      "acute study",
+      "conexão mente-músculo"
+    ],
+    "summary": "Muitos rankings de \"melhor exercício\" se baseiam na amplitude do sinal de EMG de superfície medida numa única sessão. As revisões de Vigotsky et al. (2018; 2022) mostram que essa amplitude depende de vários fatores técnicos e fisiológicos além do esforço do músculo, e que não há validação de que ela preveja a hipertrofia obtida ao longo de semanas; conclusões desse tipo costumam ir além do que os dados permitem. Um exemplo prático: no estudo de Plotkin et al. (2023), o hip thrust gerou mais sinal de EMG nos glúteos que o agachamento, mas a hipertrofia dos glúteos foi semelhante entre os grupos. Evidência moderada de que EMG agudo é um guia fraco para escolher exercícios; estudos longitudinais com medida de hipertrofia (ressonância, ultrassom) devem ter prioridade.",
+    "practice": [
+      "Desconfie de afirmações como \"o exercício X ativa 40% mais\" usadas como prova de que ele faz crescer mais.",
+      "Baseie a escolha de exercícios em estudos de hipertrofia de longo prazo e em princípios como amplitude e comprimento muscular.",
+      "Use dados de EMG só como pista inicial sobre quais músculos um exercício envolve."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Vigotsky AD, Halperin I, Lehman GJ, et al. Interpreting Signal Amplitudes in Surface Electromyography Studies in Sport and Rehabilitation Sciences. Front Physiol. 2018;8:985.",
+        "year": 2018,
+        "doi": "10.3389/fphys.2017.00985"
+      },
+      {
+        "citation": "Vigotsky AD, Halperin I, Trajano GS, et al. Longing for a Longitudinal Proxy: Acutely Measured Surface EMG Amplitude is not a Validated Predictor of Muscle Hypertrophy. Sports Med. 2022;52(2):193-199.",
+        "year": 2022,
+        "doi": "10.1007/s40279-021-01619-2"
+      },
+      {
+        "citation": "Plotkin DL, Rodas MA, Vigotsky AD, et al. Hip thrust and back squat training elicit similar gluteus muscle hypertrophy and transfer similarly to the deadlift. Front Physiol. 2023;14:1279170.",
+        "year": 2023,
+        "doi": "10.3389/fphys.2023.1279170"
+      }
+    ]
+  },
+  {
+    "id": "ex-belts-valsalva",
+    "topic": "technique",
+    "title": "Cinto de musculação e respiração (Valsalva)",
+    "keywords": [
+      "cinto",
+      "cinturão",
+      "lifting belt",
+      "weightlifting belt",
+      "valsalva",
+      "respiração",
+      "breathing",
+      "pressão intra-abdominal",
+      "intra-abdominal pressure",
+      "bracing",
+      "agachamento",
+      "levantamento terra",
+      "pressão arterial",
+      "blood pressure"
+    ],
+    "summary": "O cinto aumenta a pressão intra-abdominal: no terra a 90% da carga máxima, a pressão subiu mais cedo e chegou a picos maiores com cinto (Harman et al., 1989); em séries de agachamento com a carga de 8RM, ficou 25 a 40% maior (Lander et al., 1992). Num estudo recente com 49 adultos, o cinto aumentou as repetições no agachamento com a carga de 6RM (de cerca de 6,5 para 8,1) e a velocidade, independentemente de sexo ou experiência, sem melhorar a estabilidade postural medida (Veltzke et al., 2026). A manobra de Valsalva (segurar o ar durante o esforço) é praticamente inevitável com cargas acima de cerca de 80% ou perto da falha; ela eleva a pressão intra-abdominal e a pressão arterial, mas riscos para pessoas saudáveis não foram confirmados (Hackett e Chow, 2013). Evidência limitada: estudos agudos e pequenos.",
+    "practice": [
+      "O cinto é opcional: pode ajudar em séries pesadas de agachamento e terra, mas não substitui técnica.",
+      "Em cargas altas, inspire, contraia o abdômen e segure o ar na parte mais difícil da repetição, soltando em seguida.",
+      "Quem tem hipertensão não controlada ou doença cardiovascular deve conversar com o médico antes de treinar com cargas máximas e Valsalva."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Harman EA, Rosenstein RM, Frykman PN, et al. Effects of a belt on intra-abdominal pressure during weight lifting. Med Sci Sports Exerc. 1989;21(2):186-190.",
+        "year": 1989,
+        "doi": "10.1249/00005768-198904000-00012"
+      },
+      {
+        "citation": "Lander JE, Hundley JR, Simonton RL. The effectiveness of weight-belts during multiple repetitions of the squat exercise. Med Sci Sports Exerc. 1992;24(5):603-609.",
+        "year": 1992,
+        "doi": "10.1249/00005768-199205000-00015"
+      },
+      {
+        "citation": "Veltzke F, Qiu F, Bey ME, et al. A Weight lifting Belt Increases Squat Performance and Subjectively Perceived But Not Objectively Measured Postural Stability. J Strength Cond Res. 2026;40(8):944-952.",
+        "year": 2026,
+        "doi": "10.1519/JSC.0000000000005426"
+      },
+      {
+        "citation": "Hackett DA, Chow CM. The Valsalva maneuver: its effect on intra-abdominal pressure and safety issues during resistance exercise. J Strength Cond Res. 2013;27(8):2338-2345.",
+        "year": 2013,
+        "doi": "10.1519/JSC.0b013e31827de07d"
+      }
+    ]
+  },
+  {
+    "id": "ex-injury-rates-resistance-training",
+    "topic": "injury",
+    "title": "Musculação é perigosa? Taxas de lesão",
+    "keywords": [
+      "lesão",
+      "injury",
+      "taxa de lesão",
+      "injury rate",
+      "musculação",
+      "weight training",
+      "powerlifting",
+      "levantamento olímpico",
+      "weightlifting",
+      "fisiculturismo",
+      "bodybuilding",
+      "segurança",
+      "safety",
+      "prevenção de lesões",
+      "injury prevention",
+      "ombro",
+      "lombar",
+      "joelho"
+    ],
+    "summary": "A revisão sistemática de Keogh e Winwood (2017) sobre esportes de levantamento de peso encontrou taxas baixas de lesão: no fisiculturismo, 0,24 a 1 lesão por 1.000 horas de treino; as maiores taxas foram no strongman (4,5 a 6,1) e nos Highland Games (7,5), ainda baixas em comparação com esportes coletivos comuns. Aasa et al. (2017) relataram 2,4 a 3,3 lesões por 1.000 horas no levantamento olímpico e 1,0 a 4,4 no powerlifting, níveis semelhantes aos de outros esportes sem contato e menores que os de esportes de contato. Ombro, lombar e joelho são os locais mais afetados. Além disso, a meta-análise de Lauersen et al. (2018; 6 ensaios, 7.738 participantes) mostrou que programas de força reduziram lesões esportivas em cerca de dois terços (RR 0,34). Evidência moderada; a maioria dos estudos de incidência é retrospectiva e de baixa qualidade.",
+    "practice": [
+      "Musculação bem orientada tem risco de lesão baixo e não é motivo para ser evitada.",
+      "Dê atenção especial a ombro, lombar e joelho: progrida a carga aos poucos e ajuste exercícios que causam dor.",
+      "Para quem pratica outros esportes, o treino de força é também uma ferramenta de prevenção de lesões."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Keogh JWL, Winwood PW. The Epidemiology of Injuries Across the Weight-Training Sports. Sports Med. 2017;47(3):479-501.",
+        "year": 2017,
+        "doi": "10.1007/s40279-016-0575-0"
+      },
+      {
+        "citation": "Aasa U, Svartholm I, Andersson F, et al. Injuries among weightlifters and powerlifters: a systematic review. Br J Sports Med. 2017;51(4):211-219.",
+        "year": 2017,
+        "doi": "10.1136/bjsports-2016-096037"
+      },
+      {
+        "citation": "Lauersen JB, Andersen TE, Andersen LB. Strength training as superior, dose-dependent and safe prevention of acute and overuse sports injuries: a systematic review, qualitative analysis and meta-analysis. Br J Sports Med. 2018;52(24):1557-1563.",
+        "year": 2018,
+        "doi": "10.1136/bjsports-2018-099078"
+      }
+    ]
+  },
+  {
+    "id": "ex-exercise-swap-rules",
+    "topic": "exercise-selection",
+    "title": "Como substituir um exercício (aparelho ocupado ou dor)",
+    "keywords": [
+      "substituir exercício",
+      "exercise substitution",
+      "trocar exercício",
+      "swap exercise",
+      "aparelho ocupado",
+      "equipment busy",
+      "alternativa",
+      "alternative",
+      "dor",
+      "pain",
+      "desconforto",
+      "discomfort",
+      "variação",
+      "variation",
+      "adaptar treino"
+    ],
+    "summary": "Para hipertrofia, trocar peso livre por máquina, ou o contrário, gera resultados semelhantes, embora a força seja específica do equipamento treinado (Haugen et al., 2023). A variação sistemática, trocando por um exercício que trabalha o mesmo músculo em posição e amplitude parecidas, preserva os ganhos, enquanto trocas aleatórias e frequentes podem prejudicá-los (Kassiano et al., 2022). Quanto à dor: em dor musculoesquelética crônica, exercícios que provocam algum desconforto tiveram pequeno benefício de curto prazo e resultados iguais a médio e longo prazo em relação a exercícios sem dor (Smith et al., 2017); na tendinopatia de Aquiles, continuar a atividade guiada por monitoramento da dor não piorou a recuperação (Silbernagel et al., 2007). Evidência limitada; as regras práticas abaixo são extrapolações desses dados.",
+    "practice": [
+      "Substitua por um exercício que trabalhe o mesmo músculo com movimento parecido (ex.: supino com barra por supino com halteres ou máquina; agachamento por leg press ou hack; puxada por barra fixa assistida).",
+      "Mantenha o mesmo número de séries e um esforço parecido, ajustando a carga ao novo equipamento.",
+      "Se doer, tente primeiro reduzir carga ou amplitude, ou mudar pegada e posição; desconforto leve que não piora no dia seguinte costuma ser aceitável, e dor forte ou que piora pede troca e, se persistir, avaliação profissional.",
+      "Volte ao exercício original quando o aparelho liberar ou a dor melhorar, para manter a progressão e a especificidade de força."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Haugen ME, Vårvik FT, Larsen S, et al. Effect of free-weight vs. machine-based strength training on maximal strength, hypertrophy and jump performance – a systematic review and meta-analysis. BMC Sports Sci Med Rehabil. 2023;15(1):103.",
+        "year": 2023,
+        "doi": "10.1186/s13102-023-00713-4"
+      },
+      {
+        "citation": "Kassiano W, Nunes JP, Costa B, et al. Does Varying Resistance Exercises Promote Superior Muscle Hypertrophy and Strength Gains? A Systematic Review. J Strength Cond Res. 2022;36(6):1753-1762.",
+        "year": 2022,
+        "doi": "10.1519/JSC.0000000000004258"
+      },
+      {
+        "citation": "Smith BE, Hendrick P, Smith TO, et al. Should exercises be painful in the management of chronic musculoskeletal pain? A systematic review and meta-analysis. Br J Sports Med. 2017;51(23):1679-1687.",
+        "year": 2017,
+        "doi": "10.1136/bjsports-2016-097383"
+      },
+      {
+        "citation": "Silbernagel KG, Thomeé R, Eriksson BI, et al. Continued sports activity, using a pain-monitoring model, during rehabilitation in patients with Achilles tendinopathy: a randomized controlled study. Am J Sports Med. 2007;35(6):897-906.",
+        "year": 2007,
+        "doi": "10.1177/0363546506298279"
+      }
+    ]
+  }
+]

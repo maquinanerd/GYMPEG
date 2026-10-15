@@ -8,10 +8,13 @@ import {
   isStalledOverTime,
   isoWeekStart,
   totalVolume,
+  trainingConsistency,
   weekStartBefore,
   weeklyConditioning,
   WEEKLY_CONDITIONING_TARGET_MIN,
 } from '@/lib/stats';
+import { describeSet } from '@/lib/training-history';
+import { knowledgeSectionFor } from '@/lib/knowledge';
 import { getUserTimeZone } from '@/lib/user-timezone';
 import { READINESS_RECENCY_HOURS } from '@/lib/progression';
 import { isCardioSet } from '@/lib/cardio';
@@ -80,6 +83,10 @@ export interface CoachPayload {
   // chat is opened from the session runner with a session the user owns.
   // Additive and input-side only; the output contract is unchanged.
   currentSession?: CurrentSessionContext;
+  // The longer view the chat needs to answer "what did I train?": the saved
+  // programs, the latest sessions set by set, and how often the user trained
+  // over the last 12 weeks. Attached by the chat route only.
+  trainingHistory?: TrainingHistoryContext;
   // All-time personal records per strength exercise (issue #212), via the SAME
   // lib/records.ts exerciseRecords derivation the progress page's records board
   // uses: heaviest working set ever (weight x reps) and best estimated 1RM ever,
@@ -205,6 +212,44 @@ export interface CurrentSessionContext {
     sleepQuality: number;
     soreness: Record<string, number> | null;
   } | null;
+}
+
+export interface TrainingHistoryContext {
+  // Finished sessions over the whole account, with the first and last dates.
+  totalSessions: number;
+  firstSessionDate: string | null;
+  lastSessionDate: string | null;
+  // Distinct trained days per ISO week, oldest first (lib/stats
+  // trainingConsistency, the same derivation as the progress page).
+  weeklyTrainedDays: Array<{ weekStart: string; trainedDays: number }>;
+  // Saved programs, the active one first, then the most recently edited.
+  programs: Array<{
+    name: string;
+    phase: string;
+    isActive: boolean;
+    workouts: Array<{
+      name: string;
+      dayOfWeek: number | null;
+      exercises: Array<{
+        exerciseName: string;
+        targetSets: number;
+        targetRepsMin: number;
+        targetRepsMax: number;
+        targetRIR: number;
+        restSec: number;
+      }>;
+    }>;
+  }>;
+  // The latest finished sessions, newest first; each set as compact text
+  // (lib/training-history describeSet), effective loads.
+  recentSessions: Array<{
+    date: string;
+    workoutName: string | null;
+    programName: string | null;
+    durationMin: number | null;
+    notes: string | null;
+    exercises: Array<{ exerciseName: string; sets: string[] }>;
+  }>;
 }
 
 interface ReadinessSummary {
@@ -987,8 +1032,156 @@ export async function buildCurrentSessionContext(
 }
 
 // ============================================================
+// Training history for the chat
+// ============================================================
+
+// Caps that keep the history compact: the chat needs the shape of the
+// training, not every set ever logged.
+const HISTORY_PROGRAMS_CAP = 5;
+const HISTORY_SESSIONS_CAP = 20;
+const HISTORY_SESSIONS_DAYS = 120;
+const HISTORY_WEEKS = 12;
+
+export async function buildTrainingHistoryContext(
+  userId: string,
+  now: Date = new Date(),
+): Promise<TrainingHistoryContext> {
+  const timeZone = await getUserTimeZone(userId);
+  const consistencySince = weekStartBefore(isoWeekStart(now, timeZone), HISTORY_WEEKS, timeZone);
+  const finished = { userId, finishedAt: { not: null } };
+
+  const [user, totalSessions, first, last, consistencySessions, programs, sessions] =
+    await Promise.all([
+      db.user.findUnique({ where: { id: userId }, select: { bodyweight: true } }),
+      db.session.count({ where: finished }),
+      db.session.findFirst({
+        where: finished,
+        orderBy: { startedAt: 'asc' },
+        select: { startedAt: true },
+      }),
+      db.session.findFirst({
+        where: finished,
+        orderBy: { startedAt: 'desc' },
+        select: { startedAt: true },
+      }),
+      db.session.findMany({
+        where: { ...finished, startedAt: { gte: consistencySince } },
+        select: { startedAt: true },
+      }),
+      db.program.findMany({
+        where: { userId },
+        orderBy: [{ isActive: 'desc' }, { updatedAt: 'desc' }],
+        take: HISTORY_PROGRAMS_CAP,
+        include: {
+          workouts: {
+            orderBy: { order: 'asc' },
+            include: {
+              exercises: {
+                orderBy: { order: 'asc' },
+                include: { exercise: { select: { name: true } } },
+              },
+            },
+          },
+        },
+      }),
+      db.session.findMany({
+        where: { ...finished, startedAt: { gte: addDays(now, -HISTORY_SESSIONS_DAYS) } },
+        orderBy: { startedAt: 'desc' },
+        take: HISTORY_SESSIONS_CAP,
+        include: {
+          workout: { select: { name: true } },
+          program: { select: { name: true } },
+          sets: {
+            orderBy: [{ exerciseId: 'asc' }, { setNumber: 'asc' }],
+            include: { exercise: { select: { name: true, usesBodyweight: true } } },
+          },
+        },
+      }),
+    ]);
+  const bodyweight = user?.bodyweight ?? null;
+
+  const consistency = trainingConsistency(
+    consistencySessions.map((s) => s.startedAt),
+    { windowWeeks: HISTORY_WEEKS, now, timeZone },
+  );
+
+  return {
+    totalSessions,
+    firstSessionDate: first?.startedAt.toISOString() ?? null,
+    lastSessionDate: last?.startedAt.toISOString() ?? null,
+    weeklyTrainedDays: consistency.weeks.map((w) => ({
+      weekStart: w.weekStartIso,
+      trainedDays: w.trainedDays,
+    })),
+    programs: programs.map((p) => ({
+      name: p.name,
+      phase: p.phase,
+      isActive: p.isActive,
+      workouts: p.workouts.map((w) => ({
+        name: w.name,
+        dayOfWeek: w.dayOfWeek,
+        exercises: w.exercises.map((pe) => ({
+          exerciseName: pe.exercise.name,
+          targetSets: pe.targetSets,
+          targetRepsMin: pe.targetRepsMin,
+          targetRepsMax: pe.targetRepsMax,
+          targetRIR: pe.targetRIR,
+          restSec: pe.restSec,
+        })),
+      })),
+    })),
+    recentSessions: sessions.map((s) => {
+      const byExercise = new Map<string, { exerciseName: string; sets: string[] }>();
+      for (const set of s.sets) {
+        let entry = byExercise.get(set.exerciseId);
+        if (!entry) {
+          entry = { exerciseName: set.exercise.name, sets: [] };
+          byExercise.set(set.exerciseId, entry);
+        }
+        entry.sets.push(
+          describeSet({
+            ...set,
+            weight: effectiveWeight(set.weight, set.exercise.usesBodyweight, bodyweight),
+          }),
+        );
+      }
+      return {
+        date: s.startedAt.toISOString(),
+        workoutName: s.workout?.name ?? null,
+        programName: s.program?.name ?? null,
+        durationMin:
+          s.finishedAt != null
+            ? Math.round((s.finishedAt.getTime() - s.startedAt.getTime()) / 60000)
+            : null,
+        notes: s.notes,
+        exercises: [...byExercise.values()],
+      };
+    }),
+  };
+}
+
+// ============================================================
 // Coach call (routed through the configured LLM provider)
 // ============================================================
+
+// The weekly debrief always reasons about progression, stalls, fatigue and
+// volume; the user's note and goal, and cardio when there is any, steer which
+// other cards come along.
+const DEBRIEF_KNOWLEDGE_TOPICS =
+  'progressão de carga sobrecarga progressiva platô estagnação deload fadiga volume semanal séries RIR proximidade da falha';
+
+export function debriefKnowledgeQuery(payload: CoachPayload): string {
+  return [
+    DEBRIEF_KNOWLEDGE_TOPICS,
+    payload.userProfile.goal,
+    payload.userProfile.coachNote,
+    payload.conditioning.weekCurrent.sessions > 0
+      ? 'cardio treino concorrente interferência'
+      : null,
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
 
 export interface CoachCompletion {
   markdown: string;
@@ -1004,7 +1197,7 @@ export async function callCoach(payload: CoachPayload): Promise<CoachCompletion>
   const userMessage = JSON.stringify(payload, null, 2);
 
   const { text, modelUsed } = await provider.complete({
-    system: COACH_SYSTEM_PROMPT,
+    system: `${COACH_SYSTEM_PROMPT}\n\n${knowledgeSectionFor(debriefKnowledgeQuery(payload), 6)}`,
     messages: [{ role: 'user', content: userMessage }],
     temperature: 0.4,
     maxTokens: 8000,

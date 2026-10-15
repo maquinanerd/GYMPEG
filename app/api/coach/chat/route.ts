@@ -4,9 +4,14 @@ import { db } from '@/lib/db';
 import { ApiError, handleApiError, parseJsonBody, requireApiUserId } from '@/lib/api';
 import { rateLimit } from '@/lib/rate-limit';
 import { getLlmProvider, LlmError } from '@/lib/llm';
-import { buildCoachPayload, buildCurrentSessionContext } from '@/lib/coach';
+import {
+  buildCoachPayload,
+  buildCurrentSessionContext,
+  buildTrainingHistoryContext,
+} from '@/lib/coach';
 import { CHAT_SYSTEM_PROMPT } from '@/lib/prompts/chat-system-prompt';
-import { deriveConversationTitle } from '@/lib/chat';
+import { chatKnowledgeQuery, deriveConversationTitle } from '@/lib/chat';
+import { knowledgeSectionFor } from '@/lib/knowledge';
 
 const bodySchema = z.object({
   conversationId: z.string().cuid().optional(),
@@ -66,7 +71,11 @@ export async function POST(req: Request) {
       content: m.content,
     }));
 
-    const payload = await buildCoachPayload(userId);
+    const [payload, trainingHistory] = await Promise.all([
+      buildCoachPayload(userId),
+      buildTrainingHistoryContext(userId),
+    ]);
+    payload.trainingHistory = trainingHistory;
     // In-session context (issue #111): additive payload section, input-side
     // only. Ownership is enforced in the builder (null for a foreign id), so
     // the chat silently stays a normal chat on a bad sessionId.
@@ -74,9 +83,16 @@ export async function POST(req: Request) {
       const currentSession = await buildCurrentSessionContext(userId, sessionId);
       if (currentSession) payload.currentSession = currentSession;
     }
-    const system = `${CHAT_SYSTEM_PROMPT}\n\n# Trainee's current training data (JSON)\n${JSON.stringify(payload, null, 2)}`;
 
     const provider = getLlmProvider();
+    // Stable text first (cacheable prefix), then the evidence matched to this
+    // question, then the trainee's data.
+    const system = [
+      CHAT_SYSTEM_PROMPT,
+      `# About this assistant\nModel: ${provider.label} (${provider.model}).`,
+      knowledgeSectionFor(chatKnowledgeQuery(llmMessages)),
+      `# Trainee's current training data (JSON)\n${JSON.stringify(payload, null, 2)}`,
+    ].join('\n\n');
     const encoder = new TextEncoder();
     let assistant = '';
 

@@ -41,6 +41,7 @@ const COVERED_ELSEWHERE: Record<string, string> = {
     'tests/integration/program-revisions.test.ts',
   'app/api/sessions/[id]/sets/batch/route.ts': 'tests/integration/set-sync-batch.test.ts',
   'app/api/ai/workout-plan/confirm/route.ts': 'tests/integration/ai-workout-plan-route.test.ts',
+  'app/api/admin/users/[id]/password/route.ts': 'tests/integration/admin-password-route.test.ts',
 };
 
 // Routes that take a resource id in the request body AND are not already
@@ -66,7 +67,9 @@ function findParameterizedRoutes(dir: string): string[] {
     if (entry.isDirectory()) {
       out.push(...findParameterizedRoutes(full));
     } else if (entry.name === 'route.ts' && /\[[^\]]+\]/.test(relative(ROOT, full))) {
-      out.push(relative(ROOT, full));
+      // Forward slashes on every OS: the suites import routes as '@/app/api/...'
+      // and COVERED_ELSEWHERE is keyed the same way.
+      out.push(relative(ROOT, full).replace(/\\/g, '/'));
     }
   }
   return out;

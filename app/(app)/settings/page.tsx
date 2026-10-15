@@ -48,6 +48,7 @@ export default async function SettingsPage() {
         unit: true,
         aiConsentAt: true,
         aiConsentVersion: true,
+        role: true,
       },
     }),
     db.gym.count({ where: { userId: auth.userId } }),
@@ -169,6 +170,12 @@ export default async function SettingsPage() {
         />
         <DeleteAccountRow email={auth.email} />
       </SettingsGroup>
+
+      {user?.role === 'ADMIN' && (
+        <SettingsGroup id="settings-admin" title={t('admin.title')}>
+          <ListRow href="/admin" title={t('admin.title')} meta={t('admin.description')} chevron />
+        </SettingsGroup>
+      )}
 
       <LogoutButton label={t('overview.signOut')} />
       <p className="text-center text-small text-muted-foreground">
