@@ -58,8 +58,9 @@ test('a lifter can set, track, achieve, and remove an exercise goal', async ({ p
   await seedLoggedSet(page);
 
   // Set a goal of 100x5: the 90x5 best (e1RM 105 vs 116.7) is 90% there.
-  await page.goto('/progress');
-  await expect(page.getByText('Goal - Goal Bench')).toBeVisible();
+  // Goals sit on the Training tab of Progress, under the selected exercise.
+  await page.goto('/progress?tab=training');
+  await expect(page.getByRole('heading', { name: 'Goal: Goal Bench' })).toBeVisible();
   await page.getByRole('button', { name: 'Set a goal' }).click();
   await page.getByLabel(/target load/i).fill('100');
   await page.getByLabel(/target reps/i).fill('5');

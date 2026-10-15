@@ -20,24 +20,26 @@ test('a lifter can log and delete a body measurement on the progress page', asyn
   });
   expect(registerRes.ok()).toBeTruthy();
 
-  await page.goto('/progress');
-  // Scope to the Measurements card (the page also has a Bodyweight card).
+  // Measurements live on the Body tab of Progress.
+  await page.goto('/progress?tab=body');
+  // Scope to the Measurements block (the tab also has Bodyweight).
   const card = page.getByRole('region', { name: 'Measurements' });
   await expect(card.getByRole('heading', { name: 'Measurements' })).toBeVisible();
-  await expect(card.getByText(/no waist measurement yet/i)).toBeVisible();
+  await expect(card.getByText(/no measurements yet/i)).toBeVisible();
 
-  // Default site is Waist; quick-add 82.5 cm.
-  await card.getByLabel(/value \(cm\)/i).fill('82.5');
+  // The log sheet opens on Waist; add 82.5 cm.
   await card.getByRole('button', { name: 'Log', exact: true }).click();
+  const sheet = page.getByRole('dialog', { name: 'Log a measurement' });
+  await expect(sheet.getByText(/no waist measurement yet/i)).toBeVisible();
+  await sheet.getByLabel(/value \(cm\)/i).fill('82.5');
+  await sheet.getByRole('button', { name: 'Save', exact: true }).click();
 
-  // Latest-per-site shows the value, and a deletable row appears.
-  await expect(card.getByText('82.5 cm').first()).toBeVisible();
-  const deleteButton = card
-    .getByRole('button', { name: /delete waist measurement/i })
-    .first();
+  // The sheet's history gets a deletable row, and the list the latest value.
+  const deleteButton = sheet.getByRole('button', { name: /delete waist measurement/i }).first();
   await expect(deleteButton).toBeVisible();
+  await expect(card.getByText('82.5 cm')).toBeVisible();
 
   // Delete it: back to the empty trend state for waist.
   await deleteButton.click();
-  await expect(card.getByText(/no waist measurement yet/i)).toBeVisible();
+  await expect(sheet.getByText(/no waist measurement yet/i)).toBeVisible();
 });

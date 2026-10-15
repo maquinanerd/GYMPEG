@@ -30,6 +30,9 @@ interface Props {
   // The global defaults, shown as the reset target.
   defaultMev: number;
   defaultMrv: number;
+  // The element that opens the dialog (a <button>); a small "Edit" button
+  // when omitted. The sets-per-muscle rows pass the whole row.
+  children?: React.ReactElement;
 }
 
 // Inline editor (issue #211) for one muscle group's weekly volume target. Opens
@@ -44,6 +47,7 @@ export function VolumeTargetEditor({
   custom,
   defaultMev,
   defaultMrv,
+  children,
 }: Props) {
   const t = useTranslations('progress.volumeTarget');
   const common = useTranslations('common');
@@ -133,9 +137,11 @@ export function VolumeTargetEditor({
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-7 px-2 text-xs">
-          {t('edit')}
-        </Button>
+        {children ?? (
+          <Button variant="ghost" size="sm">
+            {t('edit')}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -149,7 +155,7 @@ export function VolumeTargetEditor({
           </DialogDescription>
         </DialogHeader>
         <div className="flex gap-4">
-          <div className="flex-1">
+          <div className="flex flex-1 flex-col gap-2">
             <Label htmlFor={`mev-${muscleGroup}`}>{t('mev')}</Label>
             <Input
               id={`mev-${muscleGroup}`}
@@ -160,7 +166,7 @@ export function VolumeTargetEditor({
               onChange={(e) => setMevValue(e.target.value)}
             />
           </div>
-          <div className="flex-1">
+          <div className="flex flex-1 flex-col gap-2">
             <Label htmlFor={`mrv-${muscleGroup}`}>{t('mrv')}</Label>
             <Input
               id={`mrv-${muscleGroup}`}
@@ -172,14 +178,18 @@ export function VolumeTargetEditor({
             />
           </div>
         </div>
-        {error && <p className="text-sm text-destructive">{error}</p>}
+        {error && (
+          <p role="alert" className="text-caption text-destructive-text">
+            {error}
+          </p>
+        )}
         <DialogFooter className="gap-2 sm:gap-2">
           {custom && (
-            <Button variant="outline" onClick={clear} disabled={busy} className="mr-auto">
+            <Button variant="outline" onClick={clear} disabled={busy} className="sm:mr-auto">
               {t('reset')}
             </Button>
           )}
-          <Button onClick={save} disabled={busy}>
+          <Button variant="ink" onClick={save} disabled={busy}>
             {common('actions.save')}
           </Button>
         </DialogFooter>

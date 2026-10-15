@@ -1,24 +1,23 @@
 'use client';
 
-import { useCallback, useId, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { RulerIcon, TrashIcon } from '@/components/ui/icon';
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { TrashIcon } from '@/components/ui/icon';
 import type { BodyMeasurementSite, WeightUnit } from '@/lib/prisma-client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button, IconButton } from '@/components/ui/button';
+import {
+  BottomSheet,
+  BottomSheetContent,
+  BottomSheetDescription,
+  BottomSheetTitle,
+} from '@/components/ui/bottom-sheet';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Num } from '@/components/ui/num';
+import { Section } from '@/components/ui/section';
+import { LineChart } from '@/components/progress/line-chart';
 import {
   formatLength,
   fromDisplayLength,
@@ -47,13 +46,17 @@ interface Props {
   bodyFat?: { percent: number; basedOn: string; usesHips?: boolean } | null;
 }
 
-// Body-measurement card (issue #202), mirroring the bodyweight card (#99):
-// pick a site, quick-add a value in the display unit (cm in metric, inches in
-// imperial), see the latest value per site and a trend for the selected site,
-// delete bad entries. Storage is always cm; the unit only affects display.
+// Native select in the look of the v2 field (48px, radius 12, input hairline).
+const SELECT =
+  'flex h-12 w-full rounded-md border border-input bg-card px-3.5 text-body font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+
+// Measurements (issue #202, Corpo tab): the latest value of each site as a
+// list (site · date · value), the estimated body fat as the last row with its
+// Navy-formula footnote. A site row, or "Registrar", opens a sheet to log a
+// value in the display unit (cm in metric, inches in imperial) and see that
+// site's trend and recent entries, deletable. Storage is always cm.
 export function MeasurementsCard({ entries, unit, listLimit = 5, bodyFat = null }: Props) {
   const t = useTranslations('progress.measurements');
-  const headingId = useId();
   const siteT = useTranslations('progress.measurements.sites');
   const common = useTranslations('common');
   const format = useFormatter();
@@ -65,6 +68,7 @@ export function MeasurementsCard({ entries, unit, listLimit = 5, bodyFat = null 
     [format],
   );
 
+  const [open, setOpen] = useState(false);
   const [site, setSite] = useState<BodyMeasurementSite>('WAIST');
   const [valueField, setValueField] = useState('');
   const [busy, setBusy] = useState(false);
@@ -73,28 +77,27 @@ export function MeasurementsCard({ entries, unit, listLimit = 5, bodyFat = null 
     [siteT],
   );
 
-  // Newest entry per site, for the "latest per site" summary grid.
+  // Newest entry per site, in the order of the site list.
   const latestPerSite = useMemo(() => {
     const map = new Map<BodyMeasurementSite, BodyMeasurementView>();
     // entries are newest-first, so the first one seen per site is the latest.
     for (const e of entries) {
       if (!map.has(e.site)) map.set(e.site, e);
     }
-    return map;
+    return MEASUREMENT_SITES.filter((s) => map.has(s)).map((s) => map.get(s)!);
   }, [entries]);
 
-  // Entries for the selected site, newest first.
+  // Entries for the selected site, newest first, and its trend oldest first.
   const siteEntries = useMemo(() => entries.filter((e) => e.site === site), [entries, site]);
-
-  // Chart data for the selected site, oldest to newest, in the display unit.
-  const chartData = useMemo(
-    () =>
-      [...siteEntries].reverse().map((e) => ({
-        label: shortDate(e.measuredAt),
-        value: roundLength(toDisplayLength(e.valueCm, metric)),
-      })),
-    [siteEntries, metric, shortDate],
+  const trend = useMemo(
+    () => [...siteEntries].reverse().map((e) => roundLength(toDisplayLength(e.valueCm, metric))),
+    [siteEntries, metric],
   );
+
+  function openSheet(value?: BodyMeasurementSite) {
+    if (value) setSite(value);
+    setOpen(true);
+  }
 
   async function addEntry() {
     const value = parseFloat(valueField);
@@ -138,152 +141,186 @@ export function MeasurementsCard({ entries, unit, listLimit = 5, bodyFat = null 
     }
   }
 
+  const oldest = siteEntries.at(-1);
+  const newest = siteEntries[0];
+
   return (
-    <Card role="region" aria-labelledby={headingId}>
-      <CardHeader className="pb-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 id={headingId} className="flex items-center gap-2 text-base font-semibold">
-            <RulerIcon className="size-4" />
-            {t('title')}
-          </h2>
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        {bodyFat && (
-          <div data-testid="body-fat" className="flex flex-col gap-0.5 text-sm">
-            <p className="font-medium">
-              {t('bodyFat', { percent: format.number(bodyFat.percent) })}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {t('bodyFatHint', {
-                hips: bodyFat.usesHips ? 'yes' : 'no',
-                date: shortDate(bodyFat.basedOn),
-              })}
-            </p>
-          </div>
-        )}
-        {/* Site selector + quick add, in the display unit */}
-        <form
-          className="flex flex-wrap items-end gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            void addEntry();
-          }}
-        >
-          <div className="flex-1 space-y-1">
-            <Label htmlFor="measurement-site">{t('site')}</Label>
-            <select
-              id="measurement-site"
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-              value={site}
-              onChange={(e) => setSite(e.target.value as BodyMeasurementSite)}
-            >
-              {MEASUREMENT_SITES.map((s) => (
-                <option key={s} value={s}>
-                  {siteLabel(s)}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex-1 space-y-1">
-            <Label htmlFor="measurement-value">{t('value', { unit: unitSuffix })}</Label>
-            <Input
-              id="measurement-value"
-              type="number"
-              inputMode="decimal"
-              step="0.1"
-              min="0"
-              value={valueField}
-              onChange={(e) => setValueField(e.target.value)}
-            />
-          </div>
-          <Button type="submit" disabled={busy}>
-            {busy ? common('actions.saving') : t('log')}
-          </Button>
-        </form>
-
-        {/* Latest value per site */}
-        {latestPerSite.size > 0 && (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm sm:grid-cols-3">
-            {MEASUREMENT_SITES.filter((s) => latestPerSite.has(s)).map((s) => (
-              <div key={s} className="flex items-center justify-between gap-2">
-                <span className="text-muted-foreground">{siteLabel(s)}</span>
-                <span className="font-medium">
-                  {formatLength(latestPerSite.get(s)!.valueCm, metric)}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Trend for the selected site */}
-        {chartData.length < 2 ? (
-          <p className="text-sm text-muted-foreground">
-            {chartData.length === 0
-              ? t('empty', { site: siteLabel(site) })
-              : t('second', { site: siteLabel(site) })}
-          </p>
-        ) : (
-          <div className="h-48 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 5, right: 10, bottom: 0, left: -10 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="label" tick={{ fontSize: 11 }} />
-                <YAxis
-                  tick={{ fontSize: 11 }}
-                  domain={['auto', 'auto']}
-                  tickFormatter={(v: number) => String(v)}
-                />
-                <Tooltip
-                  contentStyle={{
-                    background: 'hsl(var(--popover))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: 6,
-                    fontSize: 12,
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  name={`${siteLabel(site)} (${unitSuffix})`}
-                  stroke="hsl(var(--primary))"
-                  strokeWidth={2}
-                  dot={{ r: 3 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        )}
-
-        {/* Recent entries for the selected site, deletable */}
-        {siteEntries.length > 0 && (
-          <ul className="flex flex-col gap-1">
-            {siteEntries.slice(0, listLimit).map((e) => (
-              <li key={e.id} className="flex items-center justify-between gap-3 text-sm">
-                <span>
-                  <span className="font-medium">{formatLength(e.valueCm, metric)}</span>{' '}
-                  <span className="text-muted-foreground">
-                    {t('onDate', { date: shortDate(e.measuredAt) })}
+    <Section
+      size="sm"
+      divider
+      title={t('title')}
+      className="gap-1.5"
+      action={
+        <Button variant="outline" size="sm" onClick={() => openSheet()}>
+          {t('log')}
+        </Button>
+      }
+    >
+      {latestPerSite.length === 0 && !bodyFat ? (
+        <p className="pt-1 text-caption text-muted-foreground">{t('none')}</p>
+      ) : (
+        <ul>
+          {latestPerSite.map((e) => (
+            <li key={e.site} className="border-t border-border first:border-t-0">
+              <button
+                type="button"
+                onClick={() => openSheet(e.site)}
+                aria-label={t('openSite', {
+                  site: siteLabel(e.site),
+                  value: formatLength(e.valueCm, metric),
+                  date: shortDate(e.measuredAt),
+                })}
+                className="flex min-h-11 w-full items-baseline justify-between gap-3 py-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+              >
+                <span className="text-[0.9375rem] font-medium">{siteLabel(e.site)}</span>
+                <span className="flex items-baseline gap-2.5">
+                  <span className="text-[0.8125rem] font-medium text-muted-foreground">
+                    {shortDate(e.measuredAt)}
                   </span>
+                  <Num stretch={112} className="text-[0.9375rem]">
+                    {formatLength(e.valueCm, metric)}
+                  </Num>
                 </span>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  aria-label={t('deleteAria', {
-                    site: siteLabel(e.site),
-                    date: shortDate(e.measuredAt),
-                  })}
-                  onClick={() => void deleteEntry(e.id)}
-                  disabled={busy}
+              </button>
+            </li>
+          ))}
+          {bodyFat && (
+            <li
+              data-testid="body-fat"
+              className="flex min-h-11 items-baseline justify-between gap-3 border-t border-border py-2.5 first:border-t-0"
+            >
+              <span className="text-[0.9375rem] font-medium">{t('bodyFat')}</span>
+              <span className="flex items-baseline gap-2.5">
+                <span className="text-[0.8125rem] font-medium text-muted-foreground">
+                  {shortDate(bodyFat.basedOn)}
+                </span>
+                <Num stretch={112} className="text-[0.9375rem]">
+                  {format.number(bodyFat.percent)}%
+                </Num>
+              </span>
+            </li>
+          )}
+        </ul>
+      )}
+      {bodyFat && (
+        <p className="pt-1.5 text-small text-muted-foreground text-pretty" data-testid="body-fat-hint">
+          {t('bodyFatHint', {
+            hips: bodyFat.usesHips ? 'yes' : 'no',
+            date: shortDate(bodyFat.basedOn),
+          })}
+        </p>
+      )}
+
+      <BottomSheet open={open} onOpenChange={setOpen}>
+        <BottomSheetContent>
+          <BottomSheetTitle>{t('sheetTitle')}</BottomSheetTitle>
+          <BottomSheetDescription className="sr-only">
+            {t('history', { site: siteLabel(site) })}
+          </BottomSheetDescription>
+          {/* Site selector + quick add, in the display unit */}
+          <form
+            className="flex flex-col gap-3"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void addEntry();
+            }}
+          >
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="measurement-site">{t('site')}</Label>
+                <select
+                  id="measurement-site"
+                  className={SELECT}
+                  value={site}
+                  onChange={(e) => setSite(e.target.value as BodyMeasurementSite)}
                 >
-                  <TrashIcon className="size-4" />
-                </Button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </CardContent>
-    </Card>
+                  {MEASUREMENT_SITES.map((s) => (
+                    <option key={s} value={s}>
+                      {siteLabel(s)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="measurement-value">{t('value', { unit: unitSuffix })}</Label>
+                <Input
+                  id="measurement-value"
+                  type="number"
+                  inputMode="decimal"
+                  step="0.1"
+                  min="0"
+                  value={valueField}
+                  onChange={(e) => setValueField(e.target.value)}
+                />
+              </div>
+            </div>
+            <Button type="submit" variant="ink" loading={busy}>
+              {common('actions.save')}
+            </Button>
+          </form>
+
+          {/* Trend and recent entries of the selected site */}
+          <div className="flex flex-col gap-2">
+            <h3 className="text-caption font-semibold">{t('history', { site: siteLabel(site) })}</h3>
+            {trend.length < 2 ? (
+              <p className="text-caption text-muted-foreground">
+                {trend.length === 0
+                  ? t('empty', { site: siteLabel(site) })
+                  : t('second', { site: siteLabel(site) })}
+              </p>
+            ) : (
+              oldest &&
+              newest && (
+                <LineChart
+                  height={110}
+                  series={[{ values: trend, tone: 'ink' }]}
+                  label={t('chartAria', {
+                    site: siteLabel(site),
+                    first: formatLength(oldest.valueCm, metric),
+                    firstDate: shortDate(oldest.measuredAt),
+                    last: formatLength(newest.valueCm, metric),
+                    lastDate: shortDate(newest.measuredAt),
+                  })}
+                  startLabel={shortDate(oldest.measuredAt)}
+                  endLabel={shortDate(newest.measuredAt)}
+                  formatTick={(v) => format.number(v)}
+                />
+              )
+            )}
+            {siteEntries.length > 0 && (
+              <ul>
+                {siteEntries.slice(0, listLimit).map((e) => (
+                  <li
+                    key={e.id}
+                    className="flex items-center justify-between gap-3 border-t border-border"
+                  >
+                    <span className="text-[0.8125rem] font-medium text-muted-foreground">
+                      {shortDate(e.measuredAt)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Num stretch={112} className="text-[0.9375rem]">
+                        {formatLength(e.valueCm, metric)}
+                      </Num>
+                      <IconButton
+                        type="button"
+                        size="sm"
+                        aria-label={t('deleteAria', {
+                          site: siteLabel(e.site),
+                          date: shortDate(e.measuredAt),
+                        })}
+                        onClick={() => void deleteEntry(e.id)}
+                        disabled={busy}
+                      >
+                        <TrashIcon />
+                      </IconButton>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </BottomSheetContent>
+      </BottomSheet>
+    </Section>
   );
 }

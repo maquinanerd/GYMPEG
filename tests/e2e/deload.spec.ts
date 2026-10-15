@@ -73,7 +73,8 @@ test('a lifter can start a planned deload week from the banner and end it early'
   await seedLowReadiness(page);
 
   // The recommendation banner shows with the one-tap action.
-  await page.goto('/progress');
+  // The deload note sits on the Training tab of Progress.
+  await page.goto('/progress?tab=training');
   await expect(page.getByText('A deload week looks due')).toBeVisible();
   await page.getByRole('button', { name: 'Start a deload week' }).click();
 
