@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getTrainingDisplayName } from '@/i18n/training-names';
+import { TrainingHeader } from '@/components/nav/screen-header';
 
 export default async function ProgramsPage() {
   const t = await getTranslations('programs');
@@ -22,15 +23,10 @@ export default async function ProgramsPage() {
   });
 
   return (
-    <main className="flex-1 px-4 py-6">
-      <div className="mx-auto flex max-w-3xl flex-col gap-6">
+    <main className="flex-1">
+      <TrainingHeader />
+      <div className="mx-auto flex max-w-2xl flex-col gap-6 px-5 py-5">
         <div className="flex items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
-            <p className="text-sm text-muted-foreground">
-              {t('count', { count: programs.length })}
-            </p>
-          </div>
           <div className="flex gap-2">
             <Button asChild variant="outline" className="min-h-tap">
               <Link href="/programs/generate">

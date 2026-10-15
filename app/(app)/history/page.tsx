@@ -7,6 +7,7 @@ import { applyBodyweight, totalVolume } from '@/lib/stats';
 import { formatWeight } from '@/lib/units';
 import { formatDistance, formatDuration } from '@/lib/cardio';
 import { HistoryFilters } from '@/components/history/history-filters';
+import { TrainingHeader } from '@/components/nav/screen-header';
 import {
   HistoryCalendar,
   type HistoryCalendarSession,
@@ -149,12 +150,9 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
   });
 
   return (
-    <main className="flex-1 px-4 py-6">
-      <div className="mx-auto flex max-w-2xl flex-col gap-6">
-        <div className="flex items-center gap-3">
-          <CalendarDotsIcon className="size-6" />
-          <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
-        </div>
+    <main className="flex-1">
+      <TrainingHeader />
+      <div className="mx-auto flex max-w-2xl flex-col gap-6 px-5 py-4">
 
         <HistoryFilters
           programs={programs}

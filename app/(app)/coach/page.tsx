@@ -15,8 +15,8 @@ import {
 } from '@/components/coach/chat-client';
 import { CoachContextCard } from '@/components/coach/coach-context-card';
 import { CoachNoteCard } from '@/components/coach/coach-note-card';
-import { SegmentedLinks } from '@/components/ui/segmented';
-import { SparkleIcon } from '@/components/ui/icon';
+import { ScreenHeader } from '@/components/nav/screen-header';
+import { TabLinks } from '@/components/ui/tabs';
 
 interface SearchParams {
   tab?: string;
@@ -35,31 +35,23 @@ export default async function CoachPage(props: { searchParams: Promise<SearchPar
   const tab = searchParams.tab === 'analyses' && !searchParams.sessionId ? 'analyses' : 'chat';
 
   return (
-    <main className="flex-1 px-4 py-6">
-      <div className="mx-auto flex max-w-2xl flex-col gap-6">
-        <div className="flex items-center gap-3">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-ai">
-            <SparkleIcon className="size-5" />
-          </span>
-          <div>
-            <h1 className="text-title">{t('title')}</h1>
-            <p className="text-caption text-muted-foreground">
-              {tab === 'chat' ? t('chatDescription') : t('description')}
-            </p>
-          </div>
-        </div>
-
-        <SegmentedLinks
-          label={t('tabs.label')}
-          items={[
-            { href: '/coach', label: t('tabs.conversation'), active: tab === 'chat' },
-            {
-              href: '/coach?tab=analyses',
-              label: t('tabs.analyses'),
-              active: tab === 'analyses',
-            },
-          ]}
-        />
+    <main className="flex-1">
+      <ScreenHeader
+        title={t('title')}
+        subtitle={tab === 'chat' ? t('chatDescription') : t('description')}
+      />
+      <TabLinks
+        label={t('tabs.label')}
+        items={[
+          { href: '/coach', label: t('tabs.conversation'), active: tab === 'chat' },
+          {
+            href: '/coach?tab=analyses',
+            label: t('tabs.analyses'),
+            active: tab === 'analyses',
+          },
+        ]}
+      />
+      <div className="mx-auto flex max-w-2xl flex-col gap-6 px-5 py-5">
 
         {tab === 'chat' ? (
           <CoachConversation

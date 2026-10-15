@@ -6,7 +6,7 @@ import type { GreetingPeriod, WeekDayStatus } from '@/lib/home-week';
 import type { HomeInsightKind } from '@/lib/home-insight';
 import { formatWeight } from '@/lib/units';
 import { cn } from '@/lib/utils';
-import { SyncIndicator } from '@/components/offline/sync-indicator';
+import { SyncStatus } from '@/components/offline/sync-status';
 import { StartWorkoutButton } from '@/components/session/start-workout-button';
 import { MuscleMap } from '@/components/progress/muscle-map';
 import { Button } from '@/components/ui/button';
@@ -134,7 +134,7 @@ function HomeHeader({ data }: { data: HomeData }) {
         <span className="text-caption text-muted-foreground">{t(`greeting.${data.greeting}`)}</span>
         <span className="truncate text-subtitle">{data.name}</span>
       </h1>
-      <SyncIndicator />
+      <SyncStatus />
     </header>
   );
 }

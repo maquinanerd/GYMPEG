@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { CaretLeftIcon, CaretRightIcon } from '@/components/ui/icon';
+import { CaretLeftIcon, CaretRightIcon, ChatCircleTextIcon } from '@/components/ui/icon';
 import type {
   Exercise,
   Program,
@@ -23,8 +23,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { toast } from 'sonner';
 import { Button, IconButton } from '@/components/ui/button';
 import { ProgressSegments } from '@/components/ui/progress-segments';
-import { CoachFab } from '@/components/coach/coach-fab';
-import { SyncIndicator } from '@/components/offline/sync-indicator';
+import { SyncStatus } from '@/components/offline/sync-status';
 import { acquireWakeLock, bindWakeLockToVisibility, releaseWakeLock } from '@/lib/wake-lock';
 import { vibrate, VIBRATION_PATTERNS } from '@/lib/vibrate';
 import { generateLocalId, getDB, type PendingSet } from '@/lib/indexeddb';
@@ -817,12 +816,15 @@ export function SessionRunner({
             {/* In-session coach access (issue #111): the chat with this
                 session attached, so the advice is grounded in the live
                 workout. Always available, never auto-triggered. */}
-            <CoachFab
-              variant="header"
+            <SyncStatus compact />
+            <Link
               href={`/coach?sessionId=${session.id}`}
-              label={t('askCoach')}
-            />
-            <SyncIndicator size="lg" />
+              aria-label={t('askCoach')}
+              title={t('askCoach')}
+              className="flex size-12 shrink-0 items-center justify-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <ChatCircleTextIcon className="size-[22px]" />
+            </Link>
           </div>
           <ProgressSegments
             total={programExercises.length}
@@ -994,7 +996,7 @@ export function SessionRunner({
         <div className="mx-auto flex max-w-2xl gap-3">
           <IconButton
             size="session"
-            tone="pill"
+            tone="outline"
             onClick={goPrev}
             disabled={currentIdx === 0 || mode.kind !== 'input'}
             aria-label={t('previous')}
@@ -1007,7 +1009,7 @@ export function SessionRunner({
           </Button>
           <IconButton
             size="session"
-            tone="pill"
+            tone="outline"
             onClick={goNext}
             disabled={navNextIdx == null || mode.kind !== 'input'}
             aria-label={t('next')}

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Logo } from '@/components/brand/logo';
-import { SyncIndicator } from '@/components/offline/sync-indicator';
+import { SyncStatus } from '@/components/offline/sync-status';
 import { LocalSessionRunner } from '@/components/session/local-session-runner';
 import { OfflineHome } from '@/components/offline/offline-home';
 import { bindAutoSync } from '@/lib/sync';
@@ -56,15 +56,15 @@ export function OfflineApp() {
     <div className="flex min-h-screen flex-col">
       {/* The session runner brings its own header (back, coach, sync). */}
       {!sessionId && (
-        <header className="mx-auto flex w-full max-w-2xl items-center justify-between px-4 pb-2 pt-4">
+        <header className="mx-auto flex w-full max-w-2xl items-center justify-between px-5 pb-2 pt-4">
           <button
             type="button"
             onClick={() => window.location.assign(offlineAwareHref('/'))}
-            className="flex items-center gap-2 rounded-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex items-center gap-2 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Logo size="sm" />
           </button>
-          <SyncIndicator />
+          <SyncStatus />
         </header>
       )}
       {sessionId ? (
