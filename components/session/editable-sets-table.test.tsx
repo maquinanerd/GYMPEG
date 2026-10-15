@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { EditableSetsTable, initialDraft } from './editable-sets-table';
@@ -240,13 +240,16 @@ describe('EditableSetsTable', () => {
     );
 
     // 100 kg on a 20 kg bar: empty bar, 40, 60, 80 kg.
+    // Each ramp step is a row of the sheet, logged with its own round check.
     const steps = screen.getAllByRole('button', { name: /^Log warm-up/ });
-    expect(steps.map((step) => step.textContent)).toEqual([
-      '20 kg × 8',
-      '40 kg × 5',
-      '60 kg × 3',
-      '80 kg × 2',
+    expect(steps.map((step) => step.getAttribute('aria-label'))).toEqual([
+      'Log warm-up 20 kg × 8',
+      'Log warm-up 40 kg × 5',
+      'Log warm-up 60 kg × 3',
+      'Log warm-up 80 kg × 2',
     ]);
+    expect(steps.every((step) => step.getAttribute('aria-pressed') === 'false')).toBe(true);
+    expect(screen.getByTestId('warmup-sets')).toHaveTextContent('60');
     fireEvent.click(screen.getByRole('button', { name: 'Log warm-up 40 kg × 5' }));
     await waitFor(() =>
       expect(onSubmit).toHaveBeenCalledWith(
@@ -803,8 +806,9 @@ describe('EditableSetsTable', () => {
     expect(onSubmit.mock.calls[0]?.[0]).not.toMatchObject({ weight: 100 });
   });
 
-  // Design round 1: every control of the running workout is a 64px target and
-  // the rows fit a phone screen, so the old sideways-scrolling grid is gone.
+  // Every control of the running workout is a 64px target and the rows fit a
+  // phone screen, so there is no sideways-scrolling grid. Design v2 draws the
+  // number cells 48px tall inside a real table; their tap area reaches 64px.
   it('gives the set row controls 64px targets without sideways scrolling', () => {
     render(
       <EditableSetsTable
@@ -821,11 +825,74 @@ describe('EditableSetsTable', () => {
     );
 
     expect(screen.queryByTestId('editable-sets-scroll')).not.toBeInTheDocument();
-    expect(screen.getByTestId('editable-sets-grid')).not.toHaveClass('overflow-x-auto');
-    expect(screen.getByRole('button', { name: /set 1 weight/i })).toHaveClass('h-16');
-    expect(screen.getByRole('button', { name: /set 1 repetitions/i })).toHaveClass('h-16');
-    expect(screen.getByRole('button', { name: /set 1 reps in reserve/i })).toHaveClass('h-16');
-    expect(screen.getByRole('button', { name: /confirm set 1/i })).toHaveClass('size-16');
+    const grid = screen.getByTestId('editable-sets-grid');
+    expect(grid.tagName).toBe('TABLE');
+    expect(grid).not.toHaveClass('overflow-x-auto');
+    for (const name of [/set 1 weight/i, /set 1 repetitions/i, /set 1 reps in reserve/i]) {
+      // 48px drawn, 8px of invisible hit area above and below.
+      expect(screen.getByRole('button', { name })).toHaveClass('h-12', 'after:-inset-y-2');
+    }
+    const confirm = screen.getByRole('button', { name: /confirm set 1/i });
+    expect(confirm).toHaveClass('size-16');
+    expect(confirm).toHaveAttribute('aria-pressed', 'false');
+    // The set being logged is the lit row of the sheet.
+    expect(screen.getByTestId('current-set-row')).toHaveClass('bg-row-current');
+  });
+
+  it('lets the footer log the current set through the row and mirrors it', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined);
+    const onCurrentSetChange = vi.fn();
+    const actionRef = { current: null as { confirm: () => Promise<void> } | null };
+    render(
+      <EditableSetsTable
+        programExercise={programExercise}
+        sets={[]}
+        lastPerformance={lastTime([{ weight: 80, reps: 8, rir: 2 }])}
+        readiness={null}
+        deloadActive={false}
+        unit="KG"
+        onSubmit={onSubmit}
+        onDeleteSet={vi.fn()}
+        onUpdateSet={vi.fn().mockResolvedValue(undefined)}
+        actionRef={actionRef}
+        onCurrentSetChange={onCurrentSetChange}
+      />,
+    );
+
+    expect(onCurrentSetChange).toHaveBeenLastCalledWith({
+      number: 1,
+      weight: 80,
+      reps: 8,
+      isWarmup: false,
+      canConfirm: true,
+    });
+    await act(async () => {
+      await actionRef.current?.confirm();
+    });
+    expect(onSubmit).toHaveBeenCalledWith(
+      expect.objectContaining({ weight: 80, reps: 8, rir: 2, type: 'WORKING', isWarmup: false }),
+    );
+  });
+
+  it('adds a planned row on demand without changing what gets logged', () => {
+    render(
+      <EditableSetsTable
+        programExercise={programExercise}
+        sets={[]}
+        lastPerformance={undefined}
+        readiness={null}
+        deloadActive={false}
+        unit="KG"
+        onSubmit={vi.fn()}
+        onDeleteSet={vi.fn()}
+        onUpdateSet={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+    const rows = () => screen.getByTestId('editable-sets-grid').querySelectorAll('tbody tr');
+    const before = rows().length;
+    fireEvent.click(screen.getByRole('button', { name: 'Add set' }));
+    expect(rows().length).toBe(before + 1);
+    expect(screen.getByRole('button', { name: /confirm set 1/i })).toBeInTheDocument();
   });
 
   it('uses persisted set numbers and exposes undo only for the latest completed set', () => {

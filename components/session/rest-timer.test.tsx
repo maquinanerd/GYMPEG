@@ -90,6 +90,69 @@ describe('RestTimer controls (issue #393)', () => {
     expect(screen.getByRole('button', { name: 'Remove 15 seconds' })).toBeDisabled();
   });
 
+  it('fills the screen with a lime block that drains as the rest runs out', () => {
+    renderTimer({ endsAt: Date.now() + 60_000, totalSec: 120, pausedRemainingMs: 60_000 });
+
+    expect(screen.getByRole('dialog', { name: 'Rest' })).toBeInTheDocument();
+    expect(screen.getByTestId('rest-remaining')).toHaveTextContent('01:00');
+    const fill = screen.getByTestId('rest-fill');
+    expect(fill).toHaveStyle({ height: '50.00%' });
+    // 1s linear drain, none with reduced motion.
+    expect(fill).toHaveClass('duration-1000', 'ease-linear', 'motion-reduce:transition-none');
+    expect(screen.getByRole('button', { name: 'Skip rest' })).toHaveClass('h-touch-session');
+  });
+
+  it('names the next set and what was just logged', () => {
+    renderTimer({
+      nextSet: { number: 3, total: 3 },
+      context: 'Bench press · set 2 logged, 82.5 × 7',
+    });
+    expect(screen.getByText('Next: set 3 of 3')).toBeInTheDocument();
+    expect(screen.getByText('Bench press · set 2 logged, 82.5 × 7')).toBeInTheDocument();
+  });
+
+  it('folds into a bar over the workout and comes back', () => {
+    const onMinimize = vi.fn();
+    const onExpand = vi.fn();
+    const { rerender } = render(
+      <RestTimer
+        endsAt={Date.now() + 90_000}
+        totalSec={120}
+        nextLabel={null}
+        unit="KG"
+        onEnd={vi.fn()}
+        onSkip={vi.fn()}
+        onPause={vi.fn()}
+        onResume={vi.fn()}
+        onAdjust={vi.fn()}
+        onMinimize={onMinimize}
+        onExpand={onExpand}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Back to the workout' }));
+    expect(onMinimize).toHaveBeenCalledTimes(1);
+
+    rerender(
+      <RestTimer
+        endsAt={Date.now() + 90_000}
+        totalSec={120}
+        nextLabel={null}
+        unit="KG"
+        onEnd={vi.fn()}
+        onSkip={vi.fn()}
+        onPause={vi.fn()}
+        onResume={vi.fn()}
+        onAdjust={vi.fn()}
+        minimized
+        onMinimize={onMinimize}
+        onExpand={onExpand}
+      />,
+    );
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Show the rest timer/ }));
+    expect(onExpand).toHaveBeenCalledTimes(1);
+  });
+
   it('ends a running rest once its time is up', () => {
     vi.useFakeTimers();
     const { onEnd } = renderTimer({ endsAt: Date.now() + 1_000 });

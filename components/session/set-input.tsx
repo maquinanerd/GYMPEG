@@ -12,7 +12,6 @@ import {
   unitLabel,
 } from '@/lib/units';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
@@ -308,30 +307,27 @@ export function SetInput({
   }
 
   return (
-    <Card>
-      <CardContent className="flex flex-col gap-4 pt-6">
+    <div className="flex flex-col gap-5">
         {recommendation && !isCardio && (
-          <div className="rounded-sm bg-suggestion p-3 text-suggestion-foreground">
-            <p className="text-xs font-medium uppercase text-muted-foreground">
-              {autoT('nextSet')}
-            </p>
-            <p className="mt-1 text-lg font-semibold">
+          <div className="flex flex-col gap-1 rounded-md bg-accent px-4 py-3.5 text-accent-foreground">
+            <p className="text-caption font-semibold">{autoT('nextSet')}</p>
+            <p className="font-num text-number tabular-nums text-foreground stretch-118">
               {unit === 'LB'
                 ? roundWeight(toDisplayWeight(recommendation.weight, unit), 1)
                 : recommendation.weight}{' '}
               {unitLabel(unit)} × {recommendation.reps} · RIR {recommendation.rir}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-caption leading-[1.4]">
               {autoT(`reasons.${recommendation.reason}`)}
             </p>
           </div>
         )}
         {/* Opt-in AI free-text parse (issue #210): fills the form below from a
             plain-language description. Deliberate action, never auto-logs. */}
-        <div className="space-y-1">
+        <div className="flex flex-col gap-1.5">
           <Label
             htmlFor="ai-parse"
-            className="text-xs uppercase tracking-wide text-muted-foreground"
+            className="text-caption font-semibold"
           >
             {t('describe')}
           </Label>
@@ -350,7 +346,7 @@ export function SetInput({
             />
             <Button
               type="button"
-              variant="secondary"
+              variant="outline"
               onClick={handleAiParse}
               disabled={aiParsing || aiText.trim() === ''}
               className="shrink-0"
@@ -359,9 +355,9 @@ export function SetInput({
             </Button>
           </div>
           {aiHint ? (
-            <p className="text-xs text-muted-foreground">{aiHint}</p>
+            <p className="text-small text-muted-foreground">{aiHint}</p>
           ) : (
-            <p className="text-xs text-muted-foreground">{t('parseHelp')}</p>
+            <p className="text-small text-muted-foreground">{t('parseHelp')}</p>
           )}
         </div>
 
@@ -369,7 +365,7 @@ export function SetInput({
           <div className="space-y-1">
             <Label
               htmlFor="gym-equipment"
-              className="text-xs uppercase tracking-wide text-muted-foreground"
+              className="text-caption font-semibold"
             >
               {t('equipment')}
             </Label>
@@ -377,7 +373,7 @@ export function SetInput({
               id="gym-equipment"
               value={gymEquipmentId}
               onChange={(event) => setGymEquipmentId(event.target.value)}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              className="flex h-12 w-full rounded-md border border-input bg-card px-3.5 text-body font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               <option value="">{t('equipmentNone')}</option>
               {equipmentOptions.map((equipment) => (
@@ -395,7 +391,7 @@ export function SetInput({
             <div className="space-y-1">
               <Label
                 htmlFor="cardio-duration"
-                className="text-xs uppercase tracking-wide text-muted-foreground"
+                className="text-caption font-semibold"
               >
                 {t('duration')}
               </Label>
@@ -408,10 +404,10 @@ export function SetInput({
                 onChange={(e) => setForm((f) => ({ ...f, durationInput: e.target.value }))}
                 placeholder={t('durationExample')}
                 aria-invalid={durationInvalid}
-                className="h-14 text-center text-2xl font-semibold"
+                className="h-16 text-center font-num text-number tabular-nums stretch-118"
               />
               {durationInvalid && (
-                <p className="text-xs text-muted-foreground">{t('durationError')}</p>
+                <p className="text-small text-muted-foreground">{t('durationError')}</p>
               )}
             </div>
 
@@ -419,7 +415,7 @@ export function SetInput({
             <div className="space-y-1">
               <Label
                 htmlFor="cardio-distance"
-                className="text-xs uppercase tracking-wide text-muted-foreground"
+                className="text-caption font-semibold"
               >
                 {t('distance')}
               </Label>
@@ -433,10 +429,10 @@ export function SetInput({
                 onChange={(e) => setForm((f) => ({ ...f, distanceInput: e.target.value }))}
                 placeholder={t('distanceExample')}
                 aria-invalid={distanceInvalid}
-                className="h-14 text-center text-2xl font-semibold"
+                className="h-16 text-center font-num text-number tabular-nums stretch-118"
               />
               {distanceInvalid && (
-                <p className="text-xs text-muted-foreground">{t('distanceError')}</p>
+                <p className="text-small text-muted-foreground">{t('distanceError')}</p>
               )}
             </div>
           </>
@@ -446,7 +442,7 @@ export function SetInput({
             <div className="space-y-1">
               <Label
                 htmlFor="quick-entry"
-                className="text-xs uppercase tracking-wide text-muted-foreground"
+                className="text-caption font-semibold"
               >
                 {t('quickEntry')}
               </Label>
@@ -461,14 +457,14 @@ export function SetInput({
                 aria-invalid={quickEntryInvalid}
               />
               {quickEntryInvalid && (
-                <p className="text-xs text-muted-foreground">{t('quickEntryError')}</p>
+                <p className="text-small text-muted-foreground">{t('quickEntryError')}</p>
               )}
             </div>
 
             {/* Load */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+                <Label className="text-caption font-semibold">
                   {t('load', { unit: unitLabel(unit) })}
                 </Label>
                 <div className="flex items-center gap-1">
@@ -507,7 +503,7 @@ export function SetInput({
                       weight: fromDisplayWeight(parseFloat(e.target.value) || 0, unit),
                     }))
                   }
-                  className="h-14 text-center text-2xl font-semibold"
+                  className="h-16 text-center font-num text-number tabular-nums stretch-118"
                 />
                 <Button
                   type="button"
@@ -524,7 +520,7 @@ export function SetInput({
 
             {/* Reps */}
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+              <Label className="text-caption font-semibold">
                 {t('reps')}
               </Label>
               <div className="flex items-center gap-2">
@@ -545,7 +541,7 @@ export function SetInput({
                   onChange={(e) =>
                     setForm((f) => ({ ...f, reps: parseInt(e.target.value, 10) || 0 }))
                   }
-                  className="h-14 text-center text-2xl font-semibold"
+                  className="h-16 text-center font-num text-number tabular-nums stretch-118"
                 />
                 <Button
                   type="button"
@@ -562,7 +558,7 @@ export function SetInput({
 
             {/* RIR */}
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+              <Label className="text-caption font-semibold">
                 {t('repsInReserve')}
               </Label>
               <div className="grid grid-cols-4 gap-2">
@@ -570,9 +566,10 @@ export function SetInput({
                   <Button
                     key={opt}
                     type="button"
-                    variant={form.rir === opt ? 'default' : 'outline'}
+                    variant={form.rir === opt ? 'ink' : 'outline'}
+                    aria-pressed={form.rir === opt}
                     onClick={() => setForm((f) => ({ ...f, rir: opt }))}
-                    className="min-h-tap text-lg font-semibold"
+                    className="h-16 px-0 font-num text-number tabular-nums stretch-118"
                   >
                     {opt}
                   </Button>
@@ -581,7 +578,7 @@ export function SetInput({
             </div>
 
             {/* Toggles */}
-            <div className="flex flex-wrap items-center gap-4 text-sm">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-body">
               <label className="flex cursor-pointer items-center gap-2">
                 <Switch
                   checked={form.isDropSet}
@@ -605,7 +602,7 @@ export function SetInput({
         <div className="space-y-2">
           <Label
             htmlFor="set-notes"
-            className="text-xs uppercase tracking-wide text-muted-foreground"
+            className="text-caption font-semibold"
           >
             {t('note')}
           </Label>
@@ -618,17 +615,21 @@ export function SetInput({
           />
         </div>
 
+        {/* Ink, not lime: the footer of the running workout keeps the one
+            lime button of the screen. */}
         <Button
           type="button"
+          variant="ink"
+          size="session"
           onClick={handleValidate}
           disabled={submitting || cardioInvalid}
-          className="h-20 w-full text-lg font-semibold"
+          loading={submitting}
+          className="w-full"
         >
-          <CheckIcon className="size-6" />
-          <span className="ml-2">{submitting ? common('actions.saving') : t('logSet')}</span>
+          {!submitting && <CheckIcon weight="bold" />}
+          <span>{submitting ? common('actions.saving') : t('logSet')}</span>
         </Button>
-      </CardContent>
-    </Card>
+    </div>
   );
 }
 

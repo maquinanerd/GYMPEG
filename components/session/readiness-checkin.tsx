@@ -1,16 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { HeartbeatIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import type { MuscleGroup } from '@/lib/prisma-client';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { readinessCheckinInputSchema } from '@/lib/schemas/readiness';
 import { muscleGroupMessageKeys } from '@/i18n/enum-keys';
+import { cn } from '@/lib/utils';
 
 // Optional, skippable pre-session readiness check-in (issue #38). Adds no
 // friction: it is collapsed by default behind a single tap and never blocks
@@ -30,6 +29,7 @@ export function ReadinessCheckin() {
   const t = useTranslations('session.readiness');
   const exerciseT = useTranslations('exercises');
   const common = useTranslations('common');
+  const titleId = useId();
   const [open, setOpen] = useState(false);
   const [readiness, setReadiness] = useState<number | null>(null);
   const [sleepQuality, setSleepQuality] = useState<number | null>(null);
@@ -104,81 +104,88 @@ export function ReadinessCheckin() {
         className="self-start"
         onClick={() => setOpen(true)}
       >
-        <HeartbeatIcon className="size-4" />
-        <span className="ml-2">{saved ? t('update') : t('open')}</span>
+        {saved ? t('update') : t('open')}
       </Button>
     );
   }
 
+  // Straight on the page under a hairline (no card): two 1-5 scales, the
+  // optional soreness and note behind a second tap, then skip / save.
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <h2 className="text-base font-semibold">{t('title')}</h2>
-        <p className="text-xs text-muted-foreground">{t('description')}</p>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <ScaleRow label={t('overall')} value={readiness} onChange={setReadiness} />
-        <ScaleRow label={t('sleep')} value={sleepQuality} onChange={setSleepQuality} />
+    <section aria-labelledby={titleId} className="flex flex-col gap-5 border-t border-border pt-5">
+      <div className="flex flex-col gap-1">
+        <h2 id={titleId} className="text-subtitle">
+          {t('title')}
+        </h2>
+        <p className="text-caption text-muted-foreground text-pretty">{t('description')}</p>
+      </div>
+      <ScaleRow label={t('overall')} value={readiness} onChange={setReadiness} />
+      <ScaleRow label={t('sleep')} value={sleepQuality} onChange={setSleepQuality} />
 
-        {!detailsOpen ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="self-start"
-            onClick={() => setDetailsOpen(true)}
-          >
-            {t('details')}
-          </Button>
-        ) : (
-          <div className="flex flex-col gap-4 border-t pt-4">
-            <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-wide text-muted-foreground">
-                {t('soreness')}
-              </Label>
-              <p className="text-xs text-muted-foreground">{t('sorenessDescription')}</p>
-              <div className="flex flex-col gap-3">
-                {MUSCLE_GROUPS.map((group) => (
-                  <SorenessRow
-                    key={group}
-                    label={exerciseT(`muscleGroups.${muscleGroupMessageKeys[group]}`)}
-                    value={soreness[group] ?? null}
-                    onChange={(v) => setSorenessFor(group, v)}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label
-                htmlFor="readiness-note"
-                className="text-xs uppercase tracking-wide text-muted-foreground"
-              >
-                {t('note')}
-              </Label>
-              <Textarea
-                id="readiness-note"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                maxLength={500}
-                rows={3}
-                placeholder={t('notePlaceholder')}
-              />
-            </div>
+      {!detailsOpen ? (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="-ml-3.5 self-start"
+          onClick={() => setDetailsOpen(true)}
+        >
+          {t('details')}
+        </Button>
+      ) : (
+        <div className="flex flex-col gap-5 border-t border-border pt-5">
+          <fieldset className="flex flex-col gap-2">
+            <legend className="text-caption font-semibold">{t('soreness')}</legend>
+            <p className="text-small text-muted-foreground">{t('sorenessDescription')}</p>
+            <ul className="mt-1">
+              {MUSCLE_GROUPS.map((group) => (
+                <SorenessRow
+                  key={group}
+                  label={exerciseT(`muscleGroups.${muscleGroupMessageKeys[group]}`)}
+                  value={soreness[group] ?? null}
+                  onChange={(v) => setSorenessFor(group, v)}
+                />
+              ))}
+            </ul>
+          </fieldset>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="readiness-note" className="text-caption font-semibold">
+              {t('note')}
+            </Label>
+            <Textarea
+              id="readiness-note"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              maxLength={500}
+              rows={3}
+              placeholder={t('notePlaceholder')}
+            />
           </div>
-        )}
-
-        <div className="flex justify-end gap-2">
-          <Button type="button" variant="ghost" onClick={() => setOpen(false)} disabled={saving}>
-            {t('skip')}
-          </Button>
-          <Button type="button" onClick={submit} disabled={saving}>
-            {saving ? common('actions.saving') : t('save')}
-          </Button>
         </div>
-      </CardContent>
-    </Card>
+      )}
+
+      <div className="flex gap-2.5">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setOpen(false)}
+          disabled={saving}
+        >
+          {t('skip')}
+        </Button>
+        <Button type="button" onClick={submit} disabled={saving} loading={saving} className="flex-1">
+          {saving ? common('actions.saving') : t('save')}
+        </Button>
+      </div>
+    </section>
   );
 }
+
+// A 1-5 rating: toggle buttons in the widened number style, the chosen one ink.
+const RATING_BUTTON =
+  'flex items-center justify-center border font-num font-semibold tabular-nums stretch-112 transition-colors duration-[120ms] ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none';
+const RATING_ON = 'border-ink bg-ink text-ink-foreground';
+const RATING_OFF = 'border-input bg-transparent text-foreground hover:bg-muted';
 
 function ScaleRow({
   label,
@@ -190,24 +197,23 @@ function ScaleRow({
   onChange: (v: number) => void;
 }) {
   return (
-    <div className="space-y-2">
-      <Label className="text-xs uppercase tracking-wide text-muted-foreground">{label}</Label>
+    <fieldset className="flex flex-col gap-2">
+      <legend className="mb-2 text-caption font-semibold">{label}</legend>
       <div className="grid grid-cols-5 gap-2">
         {SCALE.map((n) => (
-          <Button
+          <button
             key={n}
             type="button"
-            variant={value === n ? 'default' : 'outline'}
             onClick={() => onChange(n)}
-            className="min-h-tap text-lg font-semibold"
+            className={cn(RATING_BUTTON, 'h-14 rounded-md text-number', value === n ? RATING_ON : RATING_OFF)}
             aria-label={`${label}: ${n}`}
             aria-pressed={value === n}
           >
             {n}
-          </Button>
+          </button>
         ))}
       </div>
-    </div>
+    </fieldset>
   );
 }
 
@@ -223,24 +229,26 @@ function SorenessRow({
   const t = useTranslations('session.readiness');
 
   return (
-    <div className="flex items-center justify-between gap-3">
-      <span className="text-sm">{label}</span>
-      <div className="grid grid-cols-5 gap-1">
+    <li className="flex items-center justify-between gap-3 border-t border-border py-2">
+      <span className="min-w-0 text-caption font-medium">{label}</span>
+      <div className="grid shrink-0 grid-cols-5 gap-1">
         {SCALE.map((n) => (
-          <Button
+          <button
             key={n}
             type="button"
-            size="sm"
-            variant={value === n ? 'default' : 'outline'}
             onClick={() => onChange(n)}
-            className="min-h-tap w-9 px-0 text-sm font-semibold"
+            className={cn(
+              RATING_BUTTON,
+              'size-11 rounded-sm text-caption',
+              value === n ? RATING_ON : RATING_OFF,
+            )}
             aria-label={t('sorenessAria', { name: label, value: n })}
             aria-pressed={value === n}
           >
             {n}
-          </Button>
+          </button>
         ))}
       </div>
-    </div>
+    </li>
   );
 }

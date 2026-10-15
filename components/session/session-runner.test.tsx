@@ -32,6 +32,8 @@ type TableProps = {
   loadConstraints?: { weightOptions?: number[] } | null;
   onEquipmentWeightsUpdated?: (equipment: EquipmentOption) => void;
   onSubmit: (values: Record<string, unknown>) => Promise<void>;
+  actionRef?: { current: { confirm: () => Promise<void> } | null };
+  onCurrentSetChange?: (current: Record<string, unknown>) => void;
 };
 
 const harness = vi.hoisted(() => ({
@@ -41,6 +43,7 @@ const harness = vi.hoisted(() => ({
   table: null as unknown,
   tableUnmounts: 0,
   refresh: vi.fn(),
+  confirm: vi.fn(),
 }));
 
 vi.mock('next/navigation', () => ({
@@ -109,6 +112,12 @@ vi.mock('@/components/session/editable-sets-table', () => ({
       },
       [],
     );
+    // Like the real table: hands the footer its confirm and the lit row.
+    const { actionRef, onCurrentSetChange } = props;
+    useEffect(() => {
+      if (actionRef) actionRef.current = { confirm: harness.confirm };
+      onCurrentSetChange?.({ number: 1, weight: 60, reps: 8, isWarmup: false, canConfirm: true });
+    }, [actionRef, onCurrentSetChange]);
     return <div data-testid="sets-table">{props.programExercise.id}</div>;
   },
 }));
@@ -207,6 +216,42 @@ beforeEach(() => {
   harness.table = null;
   harness.tableUnmounts = 0;
   harness.refresh.mockClear();
+  harness.confirm.mockClear();
+});
+
+describe('SessionRunner footer', () => {
+  it('logs the lit set through the sets table and shows its load', async () => {
+    await renderRunner(runner([row('bench', 1), row('fly', 2)]));
+    const log = screen.getByRole('button', { name: /Log set 1/ });
+    expect(log).toHaveTextContent('60 kg × 8');
+    fireEvent.click(log);
+    expect(harness.confirm).toHaveBeenCalledOnce();
+  });
+
+  it('moves on to the next exercise once the target sets are logged', async () => {
+    harness.liveSets = [1, 2, 3].map((setNumber) => ({
+      localId: `l${setNumber}`,
+      exerciseId: 'bench',
+      setNumber,
+      isWarmup: false,
+      isDropSet: false,
+      weight: 60,
+      reps: 8,
+    })) as unknown as PendingSet[];
+    await renderRunner(runner([row('bench', 1), row('fly', 2)]));
+    fireEvent.click(screen.getByRole('button', { name: /Next exercise fly/ }));
+    expect(screen.getByTestId('sets-table')).toHaveTextContent('pe-fly');
+    expect(harness.confirm).not.toHaveBeenCalled();
+  });
+
+  it('covers the workout with the rest screen and keeps it mounted underneath', async () => {
+    await renderRunner(runner([row('bench', 1), row('fly', 2)]));
+    await act(async () => {
+      await table().onSubmit({ ...loggedSet, isWarmup: false, isDropSet: false, notes: null });
+    });
+    expect(await screen.findByRole('button', { name: 'skip rest' })).toBeInTheDocument();
+    expect(screen.getByTestId('sets-table').closest('[inert]')).not.toBeNull();
+  });
 });
 
 afterEach(() => {

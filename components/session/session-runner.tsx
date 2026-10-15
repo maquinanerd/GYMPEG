@@ -1,10 +1,16 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { CaretLeftIcon, CaretRightIcon, ChatCircleTextIcon } from '@/components/ui/icon';
+import {
+  CaretDownIcon,
+  CaretLeftIcon,
+  CaretRightIcon,
+  ChatCircleTextIcon,
+  DotsThreeVerticalIcon,
+} from '@/components/ui/icon';
 import type {
   Exercise,
   Program,
@@ -22,7 +28,15 @@ import { resolveSetType } from '@/lib/schemas/set';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { toast } from 'sonner';
 import { Button, IconButton } from '@/components/ui/button';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Num } from '@/components/ui/num';
 import { ProgressSegments } from '@/components/ui/progress-segments';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { SyncStatus } from '@/components/offline/sync-status';
 import { acquireWakeLock, bindWakeLockToVisibility, releaseWakeLock } from '@/lib/wake-lock';
 import { vibrate, VIBRATION_PATTERNS } from '@/lib/vibrate';
@@ -59,13 +73,18 @@ import { hydrateFromServerSets } from '@/lib/sync-hydration';
 import { finishSession, rememberSession, swapExerciseForSession } from '@/lib/session-lifecycle';
 import { parseExerciseSwaps } from '@/lib/session-swaps';
 import { offlineAwareHref } from '@/lib/offline-navigation';
+import { formatWeight } from '@/lib/units';
 import { ExerciseCard } from '@/components/session/exercise-card';
 import {
   SessionExerciseMenu,
   type SessionCatalogExercise,
 } from '@/components/session/session-exercise-menu';
 import { SetsList } from '@/components/session/sets-list';
-import { EditableSetsTable } from '@/components/session/editable-sets-table';
+import {
+  EditableSetsTable,
+  type CurrentSetSummary,
+  type EditableSetsTableHandle,
+} from '@/components/session/editable-sets-table';
 import type { LiveEquipmentOption } from '@/components/session/live-equipment-weight-editor';
 import { SetInput } from '@/components/session/set-input';
 import { RestTimer } from '@/components/session/rest-timer';
@@ -73,6 +92,7 @@ import { RestEndFlash } from '@/components/session/rest-end-flash';
 import { SessionSummary } from '@/components/session/session-summary';
 import { ReturnToTrainingNotice } from '@/components/session/return-to-training-notice';
 import { SessionExerciseStrip } from '@/components/session/session-exercise-strip';
+import { formatClock } from '@/components/session/session-format';
 import { useExerciseName } from '@/components/shared/use-exercise-name';
 import { useTrainingName } from '@/components/shared/use-training-name';
 import { gymLoadConstraintsFor, type GymLoadConstraints } from '@/lib/gym-loads';
@@ -147,6 +167,15 @@ type Mode =
     }
   | { kind: 'summary' };
 
+// What was just logged, for the rest screen's subtitle.
+type LoggedSet = {
+  exerciseName: string;
+  setNumber: number;
+  isWarmup: boolean;
+  weight: number;
+  reps: number;
+};
+
 export function SessionRunner({
   session,
   lastPerformances,
@@ -159,6 +188,8 @@ export function SessionRunner({
 }: SessionRunnerProps) {
   const t = useTranslations('session');
   const cardT = useTranslations('session.exerciseCard');
+  const restT = useTranslations('session.rest');
+  const locale = useLocale();
   const exerciseName = useExerciseName();
   const trainingName = useTrainingName();
   const router = useRouter();
@@ -234,6 +265,9 @@ export function SessionRunner({
     removedProgramExerciseId?: string;
   } | null>(null);
   const [mode, setMode] = useState<Mode>({ kind: 'input' });
+  // The rest screen folded into a bar over the workout (the timer runs on).
+  const [restMinimized, setRestMinimized] = useState(false);
+  const [lastLogged, setLastLogged] = useState<LoggedSet | null>(null);
   // Bumped each time a rest runs out with the flash preference on (issue #393).
   const [restFlashCount, setRestFlashCount] = useState(0);
   const [closing, setClosing] = useState(false);
@@ -242,6 +276,10 @@ export function SessionRunner({
   // preference lives in localStorage, so it is read after mount; until then we
   // assume the default (on) so the first render matches the server output.
   const [autoRegulate, setAutoRegulate] = useState(true);
+  // The footer's "Log set N" mirrors the row being logged and confirms it
+  // through the sets table itself.
+  const tableRef = useRef<EditableSetsTableHandle>(null);
+  const [currentSet, setCurrentSet] = useState<CurrentSetSummary | null>(null);
 
   const currentPE = programExercises[currentIdx];
   const currentTarget = effectiveProgramExercises[currentIdx];
@@ -523,12 +561,21 @@ export function SessionRunner({
         ? SUPERSET_TRANSITION_REST_SEC
         : currentTarget.restSec;
 
+    setLastLogged({
+      exerciseName: exerciseName(currentPE.exercise.name),
+      setNumber: existing.filter((s) => !s.isWarmup).length + 1,
+      isWarmup: kind.isWarmup,
+      weight: values.weight,
+      reps: values.reps,
+    });
+
     // For a same-superset transition, show the next exercise immediately so
     // the lifter can get into position while the short transition rest runs.
     // The timer still keeps input locked until it ends or is skipped.
     const navigatedImmediately = transition && nextIdx != null;
     if (navigatedImmediately) selectExercise(nextIdx);
 
+    setRestMinimized(false);
     setMode({
       kind: 'rest',
       endsAt: Date.now() + restSec * 1000,
@@ -713,6 +760,7 @@ export function SessionRunner({
     return (
       <SessionSummary
         session={session}
+        workoutName={trainingName(workout.name)}
         sets={liveSets}
         programExercises={effectiveProgramExercises}
         unit={unit}
@@ -726,16 +774,21 @@ export function SessionRunner({
 
   if (!currentPE || !currentTarget) {
     return (
-      <main className="flex flex-1 items-center justify-center px-4 py-6">
-        <p className="text-muted-foreground">{t('noExercises')}</p>
+      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-5 pt-[calc(1.5rem+env(safe-area-inset-top))]">
+        <EmptyState title={t('noExercises')} />
       </main>
     );
   }
 
   const lastPerf = lastPerformances[currentPE.exerciseId];
   const currentSets = setsByExercise.get(currentPE.exerciseId) ?? [];
+  const currentWorkingCount = currentSets.filter((set) => !set.isWarmup).length;
   const currentReturnRecommendation = returnRecommendations[currentPE.id];
   const currentRecommendation = recommendationFor(currentTarget, Date.now());
+  const isCardio = currentPE.exercise.category === 'CARDIO';
+  const resting = mode.kind === 'rest';
+  // The full rest screen covers the workout: nothing under it is reachable.
+  const covered = resting && !restMinimized;
   const setInputCard = (
     <SetInput
       programExercise={currentTarget}
@@ -758,12 +811,18 @@ export function SessionRunner({
     mode.kind === 'rest'
       ? mode.nextExerciseIdx != null
         ? (effectiveProgramExercises[mode.nextExerciseIdx] ?? null)
-        : currentSets.filter((set) => !set.isWarmup).length < currentTarget.targetSets
+        : currentWorkingCount < currentTarget.targetSets
           ? currentTarget
           : null
       : null;
+  // On the exercise on screen, the rest names the next set ("set 3 of 3");
+  // when the rest moves on to another exercise, it names that exercise.
+  const restNextSet =
+    restNextPe && restNextPe.id === currentTarget.id && currentWorkingCount < currentTarget.targetSets
+      ? { number: currentWorkingCount + 1, total: currentTarget.targetSets }
+      : null;
   const restNextLabel =
-    mode.kind === 'rest' && !mode.navigatedImmediately && restNextPe
+    mode.kind === 'rest' && restNextPe && !restNextSet
       ? exerciseName(restNextPe.exercise.name)
       : null;
   const restRecommendation =
@@ -775,6 +834,15 @@ export function SessionRunner({
           mode.pausedRemainingMs != null ? Date.now() + mode.pausedRemainingMs : mode.endsAt,
         )
       : null;
+  const bare = (weight: number) =>
+    formatWeight(weight, unit, { decimals: 2, group: false, locale, withUnit: false });
+  const restContext = lastLogged
+    ? restT(lastLogged.isWarmup ? 'loggedWarmup' : 'logged', {
+        name: lastLogged.exerciseName,
+        number: lastLogged.setNumber,
+        load: `${bare(lastLogged.weight)} × ${lastLogged.reps}`,
+      })
+    : null;
 
   const completedIndexes = new Set(
     programExercises.flatMap((pe, index) => (completedProgramExerciseIds.has(pe.id) ? [index] : [])),
@@ -787,50 +855,96 @@ export function SessionRunner({
     currentRecommendation?.weight ??
     lastPerf?.maxWeight ??
     0;
-  const programName = workout.program?.name ? trainingName(workout.program.name) : null;
+
+  // The footer's main button: log the set on the lit row while the exercise
+  // still has sets to do; once it is done, move on (or finish the workout).
+  const loggable =
+    !isCardio &&
+    currentSet != null &&
+    (currentSet.isWarmup || currentWorkingCount < currentTarget.targetSets);
+  const cta = loggable
+    ? {
+        label: currentSet.isWarmup ? t('logWarmup') : t('logSet', { number: currentSet.number }),
+        sub: `${
+          currentSet.weight === 0 && currentPE.exercise.usesBodyweight
+            ? cardT('bodyweight')
+            : formatWeight(currentSet.weight, unit, { decimals: 2, group: false, locale })
+        } × ${currentSet.reps}`,
+        disabled: !hydrated || mode.kind !== 'input' || !currentSet.canConfirm,
+        onClick: () => void tableRef.current?.confirm(),
+      }
+    : upNext
+      ? {
+          label: t('nextExercise'),
+          sub: exerciseName(upNext.exercise.name),
+          disabled: mode.kind !== 'input',
+          onClick: goNext,
+        }
+      : {
+          label: t('finishWorkout'),
+          sub: null,
+          disabled: false,
+          onClick: () => setMode({ kind: 'summary' }),
+        };
 
   return (
     <main className="flex flex-1 flex-col">
       <RestEndFlash count={restFlashCount} />
-      {/* One fixed header: back, workout, coach, sync, progress and the
-          exercise chips. Nothing else of the app chrome shows in a workout. */}
-      <header className="sticky top-0 z-20 bg-background px-5 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))]">
-        <div className="mx-auto flex max-w-2xl flex-col gap-3.5">
-          <div className="flex items-center gap-3">
-            <IconButton asChild aria-label={t('quit')} title={t('quit')}>
+      {/* One header: minimize, workout, sync, coach and the workout menu, then
+          the progress segments and the exercise tabs. Nothing else of the app
+          chrome shows in a workout. */}
+      <header
+        inert={covered || undefined}
+        className="sticky top-0 z-20 bg-background pt-[env(safe-area-inset-top)]"
+      >
+        <div className="mx-auto max-w-2xl">
+          <div className="flex items-center gap-1 px-2">
+            <IconButton asChild aria-label={t('minimize')} title={t('minimize')}>
               <Link href="/">
-                <CaretLeftIcon />
+                <CaretDownIcon />
               </Link>
             </IconButton>
-            <div className="min-w-0 flex-1">
+            <div className="flex min-w-0 flex-1 flex-col">
               <p className="truncate text-subtitle">{trainingName(workout.name)}</p>
-              <p className="truncate text-caption text-muted-foreground">
-                {[
-                  programName,
-                  t('exerciseOf', { current: currentIdx + 1, total: programExercises.length }),
-                ]
-                  .filter(Boolean)
-                  .join(' · ')}
+              <p className="truncate text-[0.8125rem] font-medium tabular-nums text-muted-foreground">
+                <ElapsedTime startedAt={session.startedAt} label={t('elapsed')} />
+                {t('exerciseOf', { current: currentIdx + 1, total: programExercises.length })}
               </p>
             </div>
+            <SyncStatus compact />
             {/* In-session coach access (issue #111): the chat with this
                 session attached, so the advice is grounded in the live
                 workout. Always available, never auto-triggered. */}
-            <SyncStatus compact />
-            <Link
-              href={`/coach?sessionId=${session.id}`}
-              aria-label={t('askCoach')}
-              title={t('askCoach')}
-              className="flex size-12 shrink-0 items-center justify-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <ChatCircleTextIcon className="size-[22px]" />
-            </Link>
+            <IconButton asChild aria-label={t('askCoach')} title={t('askCoach')}>
+              <Link href={`/coach?sessionId=${session.id}`}>
+                <ChatCircleTextIcon />
+              </Link>
+            </IconButton>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <IconButton aria-label={t('workoutMenu')} title={t('workoutMenu')}>
+                  <DotsThreeVerticalIcon />
+                </IconButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  disabled={mode.kind !== 'input'}
+                  onSelect={() => setExerciseMenuOpen(true)}
+                >
+                  {cardT('actions')}
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setMode({ kind: 'summary' })}>
+                  {t('finishWorkout')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <ProgressSegments
             total={programExercises.length}
             done={completedIndexes}
             current={currentIdx}
             label={t('progressLabel')}
+            className="px-5 pt-1.5"
           />
           <SessionExerciseStrip
             exercises={programExercises}
@@ -852,7 +966,10 @@ export function SessionRunner({
         </div>
       </header>
 
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-5 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-1">
+      <div
+        inert={covered || undefined}
+        className="mx-auto flex w-full max-w-2xl flex-col gap-5 px-5 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-5"
+      >
         <ExerciseCard
           programExercise={currentPE}
           lastPerformance={lastPerf}
@@ -895,7 +1012,7 @@ export function SessionRunner({
           usesBodyweight={currentTarget.exercise.usesBodyweight}
         />
 
-        {currentPE.exercise.category === 'CARDIO' ? (
+        {isCardio ? (
           <SetsList
             programExercise={currentTarget}
             sets={currentSets}
@@ -925,75 +1042,64 @@ export function SessionRunner({
             onSubmit={handleValidate}
             onDeleteSet={handleDeleteSet}
             onUpdateSet={handleUpdateSet}
+            actionRef={tableRef}
+            onCurrentSetChange={setCurrentSet}
           />
         )}
 
         {/* One logger: for strength the rows above are the logger (prefilled
             with the suggestion, set type, RPE and note in its options). The
-            full card stays one tap away for text shortcuts and AI parsing;
+            full form stays one tap away for text shortcuts and AI parsing;
             cardio keeps it as its only input. */}
-        {!hydrated ? null : mode.kind === 'input' ? (
-          currentPE.exercise.category === 'CARDIO' ? (
+        {hydrated && mode.kind === 'input' ? (
+          isCardio ? (
             setInputCard
           ) : (
-            <details className="group rounded border border-border bg-card">
-              <summary className="flex min-h-tap cursor-pointer list-none items-center justify-between rounded px-4 text-caption font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <details className="group border-t border-border">
+              <summary className="flex min-h-tap cursor-pointer list-none items-center justify-between gap-3 text-caption font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
                 {t('detailedEntry')}
-                <CaretRightIcon className="size-4 transition-transform group-open:rotate-90 motion-reduce:transition-none" />
+                <CaretDownIcon className="size-4 text-muted-foreground transition-transform duration-[120ms] ease-out-quart group-open:rotate-180 motion-reduce:transition-none" />
               </summary>
-              <div className="border-t border-border p-4">{setInputCard}</div>
+              <div className="pb-2">{setInputCard}</div>
             </details>
           )
-        ) : (
-          <RestTimer
-            endsAt={mode.endsAt}
-            pausedRemainingMs={mode.pausedRemainingMs}
-            totalSec={mode.totalSec}
-            nextLabel={restNextLabel}
-            recommendation={restRecommendation}
-            unit={unit}
-            onEnd={handleRestEnd}
-            onSkip={handleSkipRest}
-            onPause={handlePauseRest}
-            onResume={handleResumeRest}
-            onAdjust={handleAdjustRest}
-          />
-        )}
+        ) : null}
 
         {upNext && mode.kind === 'input' && (
-          <div className="flex items-center gap-3 rounded border border-border bg-card p-3">
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-sm bg-pill text-subtitle tabular-nums">
-              {supersetView.labels.get(upNext.id) ?? (navNextIdx ?? 0) + 1}
-            </span>
+          <div className="flex items-baseline justify-between gap-3 border-t border-border pt-3.5">
             <div className="flex min-w-0 flex-col gap-0.5">
-              <span className="text-small text-muted-foreground">{t('upNext')}</span>
+              <span className="text-[0.8125rem] font-medium text-muted-foreground">
+                {t('upNext')}
+              </span>
               <span className="truncate text-body font-semibold">
+                {supersetView.labels.get(upNext.id)
+                  ? `${supersetView.labels.get(upNext.id)} · `
+                  : ''}
                 {exerciseName(upNext.exercise.name)}
               </span>
-              {upNext.exercise.category !== 'CARDIO' && (
-                <span className="text-small text-muted-foreground tabular-nums">
-                  {[
-                    cardT('setsReps', {
-                      sets: upNext.targetSets,
-                      reps:
-                        upNext.targetRepsMin === upNext.targetRepsMax
-                          ? `${upNext.targetRepsMin}`
-                          : `${upNext.targetRepsMin}‑${upNext.targetRepsMax}`,
-                    }),
-                    cardT('rir', { rir: upNext.targetRIR }),
-                    cardT('rest', { seconds: upNext.restSec }),
-                  ].join(' • ')}
-                </span>
-              )}
             </div>
+            {upNext.exercise.category !== 'CARDIO' && (
+              <Num stretch={112} className="shrink-0 text-caption">
+                {cardT('setsReps', {
+                  sets: upNext.targetSets,
+                  reps:
+                    upNext.targetRepsMin === upNext.targetRepsMax
+                      ? `${upNext.targetRepsMin}`
+                      : `${upNext.targetRepsMin}‑${upNext.targetRepsMax}`,
+                })}
+              </Num>
+            )}
           </div>
         )}
       </div>
 
-      {/* Fixed footer: previous, finish, next; 64px targets above the safe
-          area. */}
-      <footer className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background px-5 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3">
-        <div className="mx-auto flex max-w-2xl gap-3">
+      {/* Fixed footer, docked: previous, the main action, next; 64px targets
+          above the safe area. Finishing the workout is in the header menu. */}
+      <footer
+        inert={covered || undefined}
+        className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card px-5 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3"
+      >
+        <div className="mx-auto flex max-w-2xl gap-2.5">
           <IconButton
             size="session"
             tone="outline"
@@ -1004,8 +1110,18 @@ export function SessionRunner({
           >
             <CaretLeftIcon />
           </IconButton>
-          <Button size="session" onClick={() => setMode({ kind: 'summary' })} className="flex-1">
-            {t('finish')}
+          <Button
+            size="session"
+            onClick={cta.onClick}
+            disabled={cta.disabled}
+            className="min-w-0 flex-1 flex-col gap-px px-3"
+          >
+            <span className="max-w-full truncate text-subtitle">{cta.label}</span>
+            {cta.sub && (
+              <span className="max-w-full truncate text-[0.8125rem] font-semibold tabular-nums text-brand-strong">
+                {cta.sub}
+              </span>
+            )}
           </Button>
           <IconButton
             size="session"
@@ -1019,6 +1135,49 @@ export function SessionRunner({
           </IconButton>
         </div>
       </footer>
+
+      {mode.kind === 'rest' && (
+        <RestTimer
+          endsAt={mode.endsAt}
+          pausedRemainingMs={mode.pausedRemainingMs}
+          totalSec={mode.totalSec}
+          nextLabel={restNextLabel}
+          nextSet={restNextSet}
+          context={restContext}
+          recommendation={restRecommendation}
+          unit={unit}
+          minimized={restMinimized}
+          onMinimize={() => setRestMinimized(true)}
+          onExpand={() => setRestMinimized(false)}
+          onEnd={handleRestEnd}
+          onSkip={handleSkipRest}
+          onPause={handlePauseRest}
+          onResume={handleResumeRest}
+          onAdjust={handleAdjustRest}
+        />
+      )}
     </main>
+  );
+}
+
+// Time since the workout started, ticking each second. Rendered after mount
+// only, so the server and the first client render agree.
+function ElapsedTime({ startedAt, label }: { startedAt: Date | string; label: string }) {
+  const start = new Date(startedAt).getTime();
+  const [now, setNow] = useState<number | null>(null);
+
+  useEffect(() => {
+    setNow(Date.now());
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (now == null || !Number.isFinite(start)) return null;
+  return (
+    <>
+      <span className="sr-only">{label}: </span>
+      {formatClock((now - start) / 1000)}
+      <span aria-hidden> · </span>
+    </>
   );
 }

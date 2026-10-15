@@ -36,7 +36,7 @@ export function BarbellSideDiagram({
 
   return (
     <div
-      className={`rounded-md border bg-muted/20 ${compact ? 'px-3 py-2' : 'p-3'}`}
+      className={`rounded-md bg-muted ${compact ? 'px-3 py-2' : 'p-3'}`}
       data-testid="barbell-side-diagram"
       data-target-weight={targetWeight}
     >
@@ -46,7 +46,7 @@ export function BarbellSideDiagram({
             compact ? 'min-h-12' : 'min-h-16'
           }`}
         >
-          <div className="absolute inset-x-2 top-1/2 h-2 -translate-y-1/2 rounded-full bg-muted-foreground" />
+          <div className="absolute inset-x-2 top-1/2 h-2 -translate-y-1/2 rounded-[2px] bg-subtle" />
           <span aria-hidden />
           <div
             className={`relative z-10 flex items-center gap-0.5 ${compact ? 'h-12' : 'h-14'}`}
@@ -60,7 +60,7 @@ export function BarbellSideDiagram({
               <div
                 key={plate.key}
                 data-testid="barbell-plate"
-                className={`flex shrink-0 items-center justify-center rounded-sm border border-border bg-foreground font-bold text-background ${
+                className={`flex shrink-0 items-center justify-center rounded-xs bg-ink font-num font-semibold tabular-nums text-ink-foreground ${
                   compact ? 'w-4 text-[0.55rem]' : 'w-5 text-[0.6rem]'
                 }`}
                 style={{

@@ -1,7 +1,7 @@
 'use client';
 
-import { ArrowCounterClockwiseIcon } from '@/components/ui/icon';
 import { useLocale, useTranslations } from 'next-intl';
+import { Tag } from '@/components/ui/tag';
 import type { WeightUnit } from '@/lib/prisma-client';
 import type { ReturnRecommendation } from '@/lib/return-to-training';
 import { formatWeight } from '@/lib/units';
@@ -31,22 +31,22 @@ export function ReturnToTrainingNotice({ recommendation, unit, usesBodyweight }:
           })
       : t('muscleReintro');
 
+  // A hairline block led by the warning tag: the state in words, then the
+  // calibration targets (accents are fills, never tinted boxes).
   return (
     <section
       data-testid="return-to-training-notice"
-      className="rounded-md border border-warning/50 bg-warning/10 px-3 py-3 text-foreground"
+      className="flex flex-col gap-2 border-t border-border pt-4 text-foreground"
     >
-      <div className="flex items-start gap-2.5">
-        <ArrowCounterClockwiseIcon className="mt-0.5 size-4 shrink-0" aria-hidden />
-        <div className="min-w-0 space-y-1 text-xs leading-relaxed sm:text-sm">
-          <p className="font-semibold">{t('title')}</p>
-          <p>{description}</p>
-          <p className="font-medium">
-            {t('targets', {
-              sets: recommendation.targetSets,
-              rir: recommendation.targetRIR,
-            })}
-          </p>
+      <Tag variant="warning">{t('title')}</Tag>
+      <div className="flex min-w-0 flex-col gap-1 text-caption leading-[1.45]">
+        <p>{description}</p>
+        <p className="font-semibold">
+          {t('targets', {
+            sets: recommendation.targetSets,
+            rir: recommendation.targetRIR,
+          })}
+        </p>
           {recommendation.suggestedWeight != null ? (
             <p>
               {usesBodyweight && recommendation.suggestedWeight === 0
@@ -71,8 +71,7 @@ export function ReturnToTrainingNotice({ recommendation, unit, usesBodyweight }:
               })}
             </p>
           )}
-          <p>{t('calibrate')}</p>
-        </div>
+          <p className="text-muted-foreground">{t('calibrate')}</p>
       </div>
     </section>
   );

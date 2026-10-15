@@ -313,7 +313,7 @@ export function SessionExerciseMenu({
               className="min-h-tap justify-start"
               onClick={() => openView('replace')}
             >
-              <SwapIcon className="mr-2 size-4" aria-hidden />
+              <SwapIcon aria-hidden />
               {t('replace')}
             </Button>
             <Button
@@ -322,7 +322,7 @@ export function SessionExerciseMenu({
               className="min-h-tap justify-start"
               onClick={() => openView('add')}
             >
-              <PlusIcon className="mr-2 size-4" aria-hidden />
+              <PlusIcon aria-hidden />
               {t('addExercises')}
             </Button>
             <ExerciseMediaDialog
@@ -342,17 +342,17 @@ export function SessionExerciseMenu({
             )}
             <Button
               type="button"
-              variant="destructive"
-              className="min-h-tap justify-start"
+              variant="outline"
+              className="min-h-tap justify-start text-destructive-text"
               disabled={onlyExercise}
               aria-describedby={onlyExercise ? removeBlockedId : undefined}
               onClick={() => openView('removeConfirm')}
             >
-              <TrashIcon className="mr-2 size-4" aria-hidden />
+              <TrashIcon aria-hidden />
               {t('remove')}
             </Button>
             {onlyExercise && (
-              <p id={removeBlockedId} className="text-sm text-muted-foreground">
+              <p id={removeBlockedId} className="text-caption text-muted-foreground">
                 {t('removeLastBlocked')}
               </p>
             )}
@@ -361,7 +361,7 @@ export function SessionExerciseMenu({
 
         {view === 'removeConfirm' && (
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-caption text-muted-foreground">
               {loggedSetCount > 0 ? t('removeLoggedWarning') : t('removeConfirm')}
             </p>
             <div className="flex justify-end gap-2">
@@ -389,13 +389,13 @@ export function SessionExerciseMenu({
 
         {(view === 'replace' || view === 'add') && pendingReplacement ? (
           <div className="space-y-4">
-            <p className="text-sm font-medium">
+            <p className="text-body font-semibold">
               {t('replaceChoice', {
                 name: exerciseName(pendingReplacement.name),
                 previous: exerciseName(programExercise.exercise.name),
               })}
             </p>
-            <ul className="space-y-1 text-sm text-muted-foreground">
+            <ul className="space-y-1 text-caption text-muted-foreground">
               <li>{t('replaceSessionOnlyHint')}</li>
               <li>{loggedSetCount > 0 ? t('replaceLoggedWarning') : t('replaceConfirm')}</li>
             </ul>
@@ -445,7 +445,7 @@ export function SessionExerciseMenu({
             </div>
             <div className="flex flex-col gap-1">
               {choices.length === 0 ? (
-                <p className="py-4 text-center text-sm text-muted-foreground">{t('noExercises')}</p>
+                <p className="py-4 text-center text-caption text-muted-foreground">{t('noExercises')}</p>
               ) : (
                 choices.map((exercise) => (
                   <Button

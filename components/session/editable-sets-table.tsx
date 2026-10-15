@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import {
-  CheckIcon,
   CaretDownIcon,
-  CaretUpIcon,
+  CheckIcon,
   CircleNotchIcon,
   PencilSimpleIcon,
+  PlusIcon,
   SlidersHorizontalIcon,
-  TrophyIcon,
 } from '@/components/ui/icon';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Exercise, ProgramExercise, SetType, WeightUnit } from '@/lib/prisma-client';
@@ -42,7 +41,9 @@ import {
 } from '@/lib/units';
 import { detectPRs, type PRType } from '@/lib/records';
 import { IconButton } from '@/components/ui/button';
-import { Chip } from '@/components/ui/chip';
+import { FilterChip } from '@/components/ui/chip';
+import { Highlight } from '@/components/ui/highlight';
+import { SetCell, SetCheck } from '@/components/ui/set-check';
 import { Tag } from '@/components/ui/tag';
 import { SetValuePicker } from '@/components/session/set-value-picker';
 import { RirPicker } from '@/components/session/rir-picker';
@@ -61,6 +62,22 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+// What the screen's footer needs to mirror the set being logged ("Log set 2",
+// "82.5 kg × 7") and whether it can log it now.
+export interface CurrentSetSummary {
+  number: number;
+  weight: number;
+  reps: number;
+  isWarmup: boolean;
+  canConfirm: boolean;
+}
+
+// Lets the footer log the current set through the row's own path (same
+// validation, same values) instead of a second implementation.
+export interface EditableSetsTableHandle {
+  confirm: () => Promise<void>;
+}
 
 interface Props {
   programExercise: ProgramExercise & { exercise: Exercise };
@@ -91,6 +108,8 @@ interface Props {
   onEquipmentWeightsUpdated?: (equipment: LiveEquipmentOption) => void;
   onDeleteSet: (set: PendingSet) => Promise<boolean | void> | boolean | void;
   onUpdateSet: (set: PendingSet, values: DraftSet) => Promise<void>;
+  actionRef?: React.Ref<EditableSetsTableHandle>;
+  onCurrentSetChange?: (current: CurrentSetSummary) => void;
 }
 
 interface DraftSet {
@@ -109,6 +128,18 @@ const SET_TYPE_OPTIONS = [
   { type: 'FAILURE', key: 'failure' },
   { type: 'BACKOFF', key: 'backoff' },
 ] as const satisfies readonly { type: SetType; key: string }[];
+
+// A number cell is 48px tall (the sheet's look) but its tap area reaches the
+// 64px of the running workout through an invisible extension above and below.
+const CELL_HIT_AREA = "relative after:absolute after:inset-x-0 after:-inset-y-2 after:content-['']";
+
+// The widened number shrinks on narrow phones so a five-character load
+// ("102,5") still fits its column at 320px.
+function cellTextSize(value: string): string {
+  return value.length > 4
+    ? 'text-[1.0625rem] font-semibold min-[375px]:text-heading'
+    : 'text-heading font-semibold min-[360px]:text-number';
+}
 
 function metricValue(metric: SetTableMetric, draft: DraftSet): number {
   if (metric === 'VOLUME') return draft.weight * draft.reps;
@@ -192,6 +223,12 @@ export function initialDraft(
   };
 }
 
+// The set sheet of the running exercise (design v2): a real table of Set ·
+// kg · reps · RIR · done. Warm-ups come first with their "W" tag (logged ones
+// done, suggested ramp steps one tap away), then the working sets: logged
+// rows stay editable, the current row is lit (white fields, prefilled with
+// the suggestion) and confirmed with the round check, and the sets still to
+// come show last time's numbers as a reference.
 export function EditableSetsTable({
   programExercise,
   sets,
@@ -209,6 +246,8 @@ export function EditableSetsTable({
   onEquipmentWeightsUpdated,
   onDeleteSet,
   onUpdateSet,
+  actionRef,
+  onCurrentSetChange,
 }: Props) {
   const t = useTranslations('session.editableSets');
   const inputT = useTranslations('session.input');
@@ -240,6 +279,9 @@ export function EditableSetsTable({
   const [nextType, setNextType] = useState<SetType>('WORKING');
   const [nextRpe, setNextRpe] = useState<number | null>(null);
   const [nextNotes, setNextNotes] = useState('');
+  // Rows the lifter added to the plan of this exercise ("Add set"): display
+  // only, the next row is always loggable whatever the count.
+  const [extraRows, setExtraRows] = useState(0);
   const workingSets = useMemo(() => sets.filter((set) => !set.isWarmup), [sets]);
   const warmupSets = useMemo(() => sets.filter((set) => set.isWarmup), [sets]);
   const latestWorkingSetId = workingSets.at(-1)?.localId ?? null;
@@ -328,7 +370,10 @@ export function EditableSetsTable({
     setPicker(null);
     setRirTarget(null);
     setAppliedRecommendationKey(null);
-    if (previous.id !== programExercise.id) resetNextOptions();
+    if (previous.id !== programExercise.id) {
+      resetNextOptions();
+      setExtraRows(0);
+    }
     const recentEquipmentId = workingSets.at(-1)?.gymEquipmentId ?? '';
     setGymEquipmentId(
       equipmentOptions.some((equipment) => equipment.id === recentEquipmentId)
@@ -403,15 +448,12 @@ export function EditableSetsTable({
   ]);
 
   const currentNumber = workingSets.length + 1;
-  const totalRows = Math.max(programExercise.targetSets, currentNumber);
+  const totalRows = Math.max(programExercise.targetSets, currentNumber) + extraRows;
+  const bare = (weight: number) =>
+    formatWeight(weight, unit, { decimals: 2, group: false, locale, withUnit: false });
   // Same formatting as the confirmed rows, so a picked value reads identically
   // before and after logging.
-  const displayWeight = formatWeight(draft.weight, unit, {
-    decimals: 2,
-    group: false,
-    locale,
-    withUnit: false,
-  });
+  const displayWeight = bare(draft.weight);
   const availableWeights = useMemo(() => {
     const constrained = gymWeightOptions(pickerLoadConstraints, pickerReferenceWeight);
     if (constrained.length > 0) return constrained;
@@ -526,6 +568,8 @@ export function EditableSetsTable({
     setOptionsOpen(false);
   }
 
+  const canConfirm = !disabled && !submitting && draft.reps > 0 && draft.weight >= 0;
+
   async function confirmRow() {
     if (disabled || submitting || draft.reps <= 0 || draft.weight < 0) return;
     setSubmitting(true);
@@ -549,6 +593,23 @@ export function EditableSetsTable({
       setSubmitting(false);
     }
   }
+
+  // The footer's "Log set N" runs this very confirmation.
+  useImperativeHandle(actionRef, () => ({ confirm: confirmRow }));
+
+  // Keep the footer's label in step with the row ("Log set 2", "82.5 × 7").
+  const reportCurrent = useRef(onCurrentSetChange);
+  reportCurrent.current = onCurrentSetChange;
+  const nextIsWarmup = resolveSetType({ type: nextType }).isWarmup;
+  useEffect(() => {
+    reportCurrent.current?.({
+      number: currentNumber,
+      weight: draft.weight,
+      reps: draft.reps,
+      isWarmup: nextIsWarmup,
+      canConfirm,
+    });
+  }, [currentNumber, draft.weight, draft.reps, nextIsWarmup, canConfirm]);
 
   // One tap logs a suggested ramp step as a WARMUP set (outside the working
   // set numbering, like any warm-up), on the selected equipment.
@@ -606,11 +667,48 @@ export function EditableSetsTable({
       : rirTarget.set.rir
     : draft.rir;
 
+  const hasMetrics = metrics.length > 0;
+  // Working rows are 76px; with the calculated line under them the line takes
+  // part of that height.
+  const workingRowHeight = hasMetrics ? 'h-[4.25rem]' : 'h-[4.75rem]';
+  const warmupTag = (
+    <Tag variant="warmup" title={t('setTypes.warmup')} className="h-6 min-w-6 justify-center px-1">
+      {t('warmupTag')}
+    </Tag>
+  );
+
+  // The calculated line (1RM, 10RM, volume) under a working row.
+  function metricsRow(
+    values: DraftSet,
+    testId: (metric: SetTableMetric) => string,
+    current: boolean,
+  ) {
+    if (!hasMetrics) return null;
+    return (
+      <tr className={cn(current && 'bg-row-current')}>
+        <td />
+        <td colSpan={3} className="pb-2 text-center text-small tabular-nums text-muted-foreground">
+          <span className="inline-flex flex-wrap justify-center gap-x-3">
+            {metrics.map((metric) => (
+              <span key={metric}>
+                <span data-testid={current ? `set-metric-header-${metric}` : undefined}>
+                  {metricLabel(metric, true)}
+                </span>{' '}
+                <span data-testid={testId(metric)}>{formatMetric(metric, values)}</span>
+              </span>
+            ))}
+          </span>
+        </td>
+        <td />
+      </tr>
+    );
+  }
+
   return (
-    <section className="flex flex-col gap-5">
+    <section className="flex flex-col gap-4">
       {equipmentOptions.length > 0 && (
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="inline-gym-equipment" className="text-caption text-muted-foreground">
+          <label htmlFor="inline-gym-equipment" className="text-caption font-semibold">
             {inputT('equipment')}
           </label>
           <div className="flex gap-2">
@@ -619,7 +717,7 @@ export function EditableSetsTable({
               disabled={disabled}
               onValueChange={(value) => setGymEquipmentId(value === 'none' ? '' : value)}
             >
-              <SelectTrigger id="inline-gym-equipment" className="h-12 flex-1 rounded-pill">
+              <SelectTrigger id="inline-gym-equipment" className="flex-1">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -634,6 +732,7 @@ export function EditableSetsTable({
             {canEditSelectedEquipment && (
               <IconButton
                 type="button"
+                tone="outline"
                 disabled={disabled}
                 onClick={() => setWeightEditorOpen(true)}
                 aria-label={t('weightEditor.open')}
@@ -656,29 +755,77 @@ export function EditableSetsTable({
         />
       )}
 
-      {/* Warm-up ramp: suggested steps are outlined (a tap logs one), logged
-          ones are filled (a tap removes it again). */}
-      {(warmupSets.length > 0 || warmupSuggestions.length > 0) && (
-        <div data-testid="warmup-sets" className="flex flex-col gap-2.5">
-          <div className="flex items-baseline justify-between gap-3">
-            <h3 className="text-subtitle">{t('warmups')}</h3>
-            <span className="text-small text-muted-foreground">{t('warmupHint')}</span>
-          </div>
-          <div className="flex flex-wrap gap-2">
+      <table
+        data-testid="editable-sets-grid"
+        className="-mx-3 w-[calc(100%+1.5rem)] table-fixed border-collapse"
+      >
+        <caption className="sr-only">{t('title')}</caption>
+        <thead>
+          <tr className="h-8 text-center text-small font-semibold text-muted-foreground">
+            <th scope="col" className="w-11 pl-2 font-semibold">
+              {t('columns.set')}
+            </th>
+            <th scope="col" className="font-semibold">
+              {unitLabel(unit)}
+            </th>
+            <th scope="col" className="font-semibold">
+              {t('columns.reps')}
+            </th>
+            <th scope="col" className="font-semibold">
+              {t('columns.rir')}
+            </th>
+            <th scope="col" className="w-[4.75rem] pr-2">
+              <span className="sr-only">{t('columns.done')}</span>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label={t('metrics.open')}
+                    title={t('metrics.open')}
+                    className="-my-2 ml-auto flex size-11 items-center justify-center rounded-sm text-muted-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <SlidersHorizontalIcon className="size-5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>{t('metrics.label')}</DropdownMenuLabel>
+                  {SET_TABLE_METRICS.map((metric) => (
+                    <DropdownMenuCheckboxItem
+                      key={metric}
+                      checked={metrics.includes(metric)}
+                      disabled={metrics.length === 1 && metrics[0] === metric}
+                      onSelect={(event) => event.preventDefault()}
+                      onCheckedChange={(checked) => updateMetric(metric, checked === true)}
+                    >
+                      {metricLabel(metric)}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </th>
+          </tr>
+        </thead>
+
+        {/* Warm-ups: logged ones are done (the check takes one back), the
+            suggested ramp steps are one tap from being logged. */}
+        {(warmupSets.length > 0 || warmupSuggestions.length > 0) && (
+          <tbody data-testid="warmup-sets">
             {warmupSets.map((set, index) => (
-              <button
-                key={set.localId}
-                type="button"
-                disabled={disabled}
-                onClick={() => void onDeleteSet(set)}
-                aria-label={t('deleteWarmup', { number: index + 1 })}
-                className="flex h-16 min-w-[4.5rem] flex-1 flex-col items-center justify-center rounded-pill border-[1.5px] border-warmup bg-warmup text-warmup-foreground tabular-nums transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
-              >
-                <span className="text-subtitle">
-                  {formatWeight(set.weight, unit, { decimals: 2, group: false, locale })}
-                </span>{' '}
-                <span className="text-small">× {set.reps}</span>
-              </button>
+              <tr key={set.localId} className="h-16 border-t border-border">
+                <td className="pl-2 text-center">{warmupTag}</td>
+                <StaticCell value={bare(set.weight)} tone="done" />
+                <StaticCell value={String(set.reps)} tone="done" />
+                <StaticCell value={set.rir == null ? '–' : String(set.rir)} tone="done" />
+                <td className="pl-1 pr-2">
+                  <SetCheck
+                    done
+                    disabled={disabled}
+                    onClick={() => void onDeleteSet(set)}
+                    aria-label={t('deleteWarmup', { number: index + 1 })}
+                    title={t('deleteWarmup', { number: index + 1 })}
+                  />
+                </td>
+              </tr>
             ))}
             {warmupSuggestions.map((step) => {
               const weight = formatWeight(step.weightKg, unit, {
@@ -687,67 +834,30 @@ export function EditableSetsTable({
                 locale,
               });
               return (
-                <button
+                <tr
                   key={`suggested-${step.weightKg}-${step.reps}`}
-                  type="button"
-                  disabled={disabled || submitting}
-                  onClick={() => void logWarmup(step)}
-                  aria-label={t('logWarmup', { weight, reps: step.reps })}
-                  title={t('logWarmupHint', { percent: step.percent })}
-                  className="flex h-16 min-w-[4.5rem] flex-1 flex-col items-center justify-center rounded-pill border-[1.5px] border-warmup bg-transparent text-foreground tabular-nums transition-colors hover:bg-warmup/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                  className="h-16 border-t border-border"
                 >
-                  <span className="text-subtitle">{weight}</span>{' '}
-                  <span className="text-small">× {step.reps}</span>
-                </button>
+                  <td className="pl-2 text-center">{warmupTag}</td>
+                  <StaticCell value={bare(step.weightKg)} tone="pending" />
+                  <StaticCell value={String(step.reps)} tone="pending" />
+                  <StaticCell value="–" tone="pending" />
+                  <td className="pl-1 pr-2">
+                    <SetCheck
+                      done={false}
+                      disabled={disabled || submitting}
+                      onClick={() => void logWarmup(step)}
+                      aria-label={t('logWarmup', { weight, reps: step.reps })}
+                      title={t('logWarmupHint', { percent: step.percent })}
+                    />
+                  </td>
+                </tr>
               );
             })}
-          </div>
-        </div>
-      )}
+          </tbody>
+        )}
 
-      <div className="flex flex-col gap-2.5">
-        <div className="flex items-center justify-between gap-2">
-          <h3 className="text-subtitle">{t('title')}</h3>
-          <div className="flex min-w-0 items-center gap-1">
-            <span className="truncate text-small text-muted-foreground">{t('tapToAdjust')}</span>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
-                  aria-label={t('metrics.open')}
-                  title={t('metrics.open')}
-                  className="-my-2 flex size-11 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <SlidersHorizontalIcon className="size-5" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{t('metrics.label')}</DropdownMenuLabel>
-                {SET_TABLE_METRICS.map((metric) => (
-                  <DropdownMenuCheckboxItem
-                    key={metric}
-                    checked={metrics.includes(metric)}
-                    disabled={metrics.length === 1 && metrics[0] === metric}
-                    onSelect={(event) => event.preventDefault()}
-                    onCheckedChange={(checked) => updateMetric(metric, checked === true)}
-                  >
-                    {metricLabel(metric)}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-        {/* The calculated columns the lifter picked, read under each row. */}
-        <div className="-mt-1 flex gap-2 text-small text-muted-foreground" aria-hidden>
-          {metrics.map((metric) => (
-            <span key={metric} data-testid={`set-metric-header-${metric}`}>
-              {metricLabel(metric)}
-            </span>
-          ))}
-        </div>
-
-        <div data-testid="editable-sets-grid" className="flex flex-col gap-2">
+        <tbody>
           {workingSets.map((set, setIndex) => {
             const isEditing = editingSet?.set.localId === set.localId;
             const rowDraft = isEditing
@@ -756,92 +866,101 @@ export function EditableSetsTable({
             const isUpdating = updatingSetId === set.localId;
             const prs = prsFor(set, setIndex);
             const isLatest = set.localId === latestWorkingSetId;
+            const weightText = bare(rowDraft.weight);
+            const checkLabel = isLatest
+              ? t('undo', { number: set.setNumber })
+              : t('delete', { number: set.setNumber });
             return (
-              <div key={set.localId} className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-1.5 rounded-[26px] border-[1.5px] border-transparent p-[5px]">
-                  <SetNumber state="done">{set.setNumber}</SetNumber>
-                  <ValueField
-                    value={formatWeight(rowDraft.weight, unit, {
-                      decimals: 2,
-                      group: false,
-                      locale,
-                      withUnit: false,
-                    })}
-                    caption={unitLabel(unit)}
-                    disabled={disabled || isUpdating}
-                    onClick={() => openPicker('weight', set)}
-                    aria-label={t('weight', { number: set.setNumber, unit })}
-                  />
-                  <ValueField
-                    value={String(rowDraft.reps)}
-                    caption={t('repsShort')}
-                    disabled={disabled || isUpdating}
-                    onClick={() => openPicker('reps', set)}
-                    aria-label={t('reps', { number: set.setNumber })}
-                  />
-                  <ValueField
-                    value={rowDraft.rir == null ? '–' : String(rowDraft.rir)}
-                    caption="RIR"
-                    disabled={disabled || isUpdating}
-                    onClick={() => openRir(set)}
-                    aria-label={t('rir', { number: set.setNumber })}
-                  />
-                  {isUpdating ? (
-                    <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                      <CircleNotchIcon className="size-6 motion-safe:animate-spin" />
+              // A logged row and its calculated line, kept together.
+              <Fragment key={set.localId}>
+                <tr className={cn(workingRowHeight, 'border-t border-border')}>
+                  <td className="pl-2 text-center">
+                    <span className="inline-flex flex-col items-center gap-[3px]">
+                      <SetLabel>{set.setNumber}</SetLabel>
+                      {prs.length > 0 && (
+                        <Highlight
+                          stretch={100}
+                          className="px-1 py-px text-[0.625rem] font-bold leading-tight"
+                          title={prs
+                            .map((pr) => prT(pr === 'weight' ? 'weightPrTitle' : 'oneRmPrTitle'))
+                            .join(' · ')}
+                        >
+                          <span aria-hidden>{t('pr')}</span>
+                          {prs.map((pr) => (
+                            <span key={pr} className="sr-only">
+                              {prT(pr === 'weight' ? 'weightPr' : 'oneRmPr')}
+                            </span>
+                          ))}
+                        </Highlight>
+                      )}
                     </span>
-                  ) : (
-                    // A logged set: the filled check takes it back (undo for the
-                    // latest, delete for an older one), through the outbox.
-                    <button
-                      type="button"
-                      onClick={() => void onDeleteSet(set)}
-                      aria-label={
-                        isLatest
-                          ? t('undo', { number: set.setNumber })
-                          : t('delete', { number: set.setNumber })
-                      }
-                      title={
-                        isLatest
-                          ? t('undo', { number: set.setNumber })
-                          : t('delete', { number: set.setNumber })
-                      }
-                      className="flex size-16 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  </td>
+                  <td className="px-1">
+                    <SetCell
+                      tone="done"
+                      disabled={disabled || isUpdating}
+                      onClick={() => openPicker('weight', set)}
+                      aria-label={t('weight', { number: set.setNumber, unit })}
+                      className={cn(CELL_HIT_AREA, cellTextSize(weightText))}
                     >
-                      <CheckIcon className="size-7" />
-                    </button>
-                  )}
-                </div>
-                {(prs.length > 0 || metrics.length > 0) && (
-                  <div className="ml-[39px] flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                    {prs.map((pr) => (
-                      <Tag
-                        key={pr}
-                        fill="pr"
-                        icon={TrophyIcon}
-                        title={prT(pr === 'weight' ? 'weightPrTitle' : 'oneRmPrTitle')}
-                      >
-                        {prT(pr === 'weight' ? 'weightPr' : 'oneRmPr')}
-                      </Tag>
-                    ))}
-                    {metrics.map((metric) => (
-                      <span key={metric} className="text-small text-muted-foreground tabular-nums">
-                        {metricLabel(metric, true)}{' '}
-                        <span data-testid={`completed-set-${set.setNumber}-metric-${metric}`}>
-                          {formatMetric(metric, rowDraft)}
-                        </span>
+                      {weightText}
+                    </SetCell>
+                  </td>
+                  <td className="px-1">
+                    <SetCell
+                      tone="done"
+                      disabled={disabled || isUpdating}
+                      onClick={() => openPicker('reps', set)}
+                      aria-label={t('reps', { number: set.setNumber })}
+                      className={cn(CELL_HIT_AREA, cellTextSize(String(rowDraft.reps)))}
+                    >
+                      {rowDraft.reps}
+                    </SetCell>
+                  </td>
+                  <td className="px-1">
+                    <SetCell
+                      tone="done"
+                      disabled={disabled || isUpdating}
+                      onClick={() => openRir(set)}
+                      aria-label={t('rir', { number: set.setNumber })}
+                      className={cn(CELL_HIT_AREA, cellTextSize('0'))}
+                    >
+                      {rowDraft.rir == null ? '–' : rowDraft.rir}
+                    </SetCell>
+                  </td>
+                  <td className="pl-1 pr-2">
+                    {isUpdating ? (
+                      <span className="flex size-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                        <CircleNotchIcon className="size-6 motion-safe:animate-spin" />
                       </span>
-                    ))}
-                  </div>
+                    ) : (
+                      // A logged set: the filled check takes it back (undo for
+                      // the latest, delete for an older one), through the outbox.
+                      <SetCheck
+                        done
+                        onClick={() => void onDeleteSet(set)}
+                        aria-label={checkLabel}
+                        title={checkLabel}
+                      />
+                    )}
+                  </td>
+                </tr>
+                {metricsRow(
+                  rowDraft,
+                  (metric) => `completed-set-${set.setNumber}-metric-${metric}`,
+                  false,
                 )}
-              </div>
+              </Fragment>
             );
           })}
 
-          {/* The set being logged: prefilled with the suggestion, outlined in
-              lime, confirmed with the round button. */}
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-1.5 rounded-[26px] border-[1.5px] border-primary p-[5px]">
+          {/* The set being logged: lit, its fields white, prefilled with the
+              suggestion and confirmed with the round check (or the footer). */}
+          <tr
+            data-testid="current-set-row"
+            className={cn(workingRowHeight, 'border-t border-border bg-row-current')}
+          >
+            <td className="pl-2 text-center">
               {recommendation ? (
                 <button
                   type="button"
@@ -849,183 +968,179 @@ export function EditableSetsTable({
                   disabled={disabled || !canApplyRecommendation}
                   aria-label={t('applyRecommendation', { number: currentNumber })}
                   title={t('applyRecommendation', { number: currentNumber })}
-                  className="relative -m-2 flex size-11 shrink-0 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default"
+                  className="relative mx-auto flex size-11 items-center justify-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default"
                 >
-                  <SetNumber state="current">{currentNumber}</SetNumber>
+                  <SetLabel>{currentNumber}</SetLabel>
                   {canApplyRecommendation && (
                     <span
                       data-testid="set-recommendation-dot"
                       aria-hidden
-                      className="absolute right-1.5 top-1.5 size-2 rounded-full bg-brand ring-2 ring-card"
+                      className="absolute right-1 top-1 size-2 rounded-[2px] bg-brand"
                     />
                   )}
                 </button>
               ) : (
-                <SetNumber state="current">{currentNumber}</SetNumber>
+                <SetLabel>{currentNumber}</SetLabel>
               )}
-              <ValueField
-                value={displayWeight}
-                caption={unitLabel(unit)}
+            </td>
+            <td className="px-1">
+              <SetCell
+                tone="current"
                 onClick={() => openPicker('weight')}
                 aria-label={t('weight', { number: currentNumber, unit })}
-              />
-              <ValueField
-                value={String(draft.reps)}
-                caption={t('repsShort')}
+                className={cn(CELL_HIT_AREA, cellTextSize(displayWeight))}
+              >
+                {displayWeight}
+              </SetCell>
+            </td>
+            <td className="px-1">
+              <SetCell
+                tone="current"
                 onClick={() => openPicker('reps')}
                 aria-label={t('reps', { number: currentNumber })}
-              />
-              <ValueField
-                value={draft.rir == null ? '–' : String(draft.rir)}
-                caption="RIR"
+                className={cn(CELL_HIT_AREA, cellTextSize(String(draft.reps)))}
+              >
+                {draft.reps}
+              </SetCell>
+            </td>
+            <td className="px-1">
+              <SetCell
+                tone="current"
                 onClick={() => openRir()}
                 aria-label={t('rir', { number: currentNumber })}
-              />
-              <button
-                type="button"
-                onClick={confirmRow}
-                disabled={disabled || submitting || draft.reps <= 0}
-                aria-label={t('confirm', { number: currentNumber })}
-                className="flex size-16 shrink-0 items-center justify-center rounded-full border-2 border-muted-foreground/40 bg-card text-muted-foreground transition-colors hover:border-brand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50"
+                className={cn(CELL_HIT_AREA, cellTextSize('0'))}
               >
-                {submitting ? (
-                  <CircleNotchIcon className="size-6 motion-safe:animate-spin" />
-                ) : (
-                  <CheckIcon className="size-7" />
-                )}
-              </button>
-            </div>
-            {metrics.length > 0 && (
-              <div className="ml-[39px] flex flex-wrap gap-x-3 text-small text-muted-foreground tabular-nums">
-                {metrics.map((metric) => (
-                  <span key={metric}>
-                    {metricLabel(metric, true)}{' '}
-                    <span data-testid={`active-set-metric-${metric}`}>
-                      {formatMetric(metric, draft)}
-                    </span>
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
+                {draft.rir == null ? '–' : draft.rir}
+              </SetCell>
+            </td>
+            <td className="pl-1 pr-2">
+              <SetCheck
+                done={false}
+                onClick={() => void confirmRow()}
+                disabled={!canConfirm}
+                aria-busy={submitting || undefined}
+                aria-label={t('confirm', { number: currentNumber })}
+              />
+            </td>
+          </tr>
+          {metricsRow(draft, (metric) => `active-set-metric-${metric}`, true)}
 
           {/* Sets still to come, with last session's numbers as a reference. */}
           {Array.from({ length: Math.max(0, totalRows - currentNumber) }, (_, index) => {
             const rowNumber = currentNumber + index + 1;
             const previous = lastPerformance?.sets[rowNumber - 1];
             return (
-              <div
-                key={`upcoming-${rowNumber}`}
-                className="flex items-center gap-1.5 rounded-[26px] border-[1.5px] border-transparent p-[5px] text-muted-foreground"
-              >
-                <SetNumber state="upcoming">{rowNumber}</SetNumber>
-                <ValueField
-                  muted
-                  value={
-                    previous
-                      ? formatWeight(previous.weight, unit, {
-                          decimals: 2,
-                          group: false,
-                          locale,
-                          withUnit: false,
-                        })
-                      : '–'
-                  }
-                  caption={unitLabel(unit)}
-                />
-                <ValueField muted value={previous ? String(previous.reps) : '–'} caption={t('repsShort')} />
-                <ValueField
-                  muted
+              <tr key={`upcoming-${rowNumber}`} className="h-[4.75rem] border-t border-border">
+                <td className="pl-2 text-center text-muted-foreground">
+                  <SetLabel>{rowNumber}</SetLabel>
+                </td>
+                <StaticCell value={previous ? bare(previous.weight) : '–'} tone="pending" />
+                <StaticCell value={previous ? String(previous.reps) : '–'} tone="pending" />
+                <StaticCell
                   value={previous?.rir != null ? String(previous.rir) : '–'}
-                  caption="RIR"
+                  tone="pending"
                 />
-                <span
-                  aria-hidden
-                  className="size-16 shrink-0 rounded-full border-2 border-dashed border-muted-foreground/25"
-                />
-              </div>
+                <td className="pl-1 pr-2">
+                  <span
+                    aria-hidden
+                    className="flex size-16 items-center justify-center rounded-full border-[1.5px] border-input bg-card text-input"
+                  >
+                    <CheckIcon className="size-[26px]" />
+                  </span>
+                </td>
+              </tr>
             );
           })}
-        </div>
-      </div>
+        </tbody>
+      </table>
 
-      <div className="flex flex-col gap-3">
+      <div className="-mt-2 flex items-center justify-between gap-3">
+        <button
+          type="button"
+          onClick={() => setExtraRows((count) => count + 1)}
+          disabled={disabled}
+          className="flex h-12 items-center gap-2 rounded-sm text-[0.9375rem] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
+        >
+          <PlusIcon className="size-4" />
+          {t('addSet')}
+        </button>
         <button
           type="button"
           onClick={() => setOptionsOpen((open) => !open)}
           aria-expanded={optionsOpen}
           aria-controls="next-set-options"
           disabled={disabled}
-          className="flex min-h-11 w-full items-center justify-between gap-2 rounded-pill text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+          className="flex h-12 min-w-0 items-center gap-2 rounded-sm text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
         >
           <span className="text-caption font-semibold">{t('options.toggle')}</span>
-          <span className="flex items-center gap-2 text-muted-foreground">
-            {optionsSummary && <span className="text-small">{optionsSummary}</span>}
-            {optionsOpen ? (
-              <CaretUpIcon className="size-4" />
-            ) : (
-              <CaretDownIcon className="size-4" />
+          {optionsSummary && (
+            <span className="truncate text-small text-muted-foreground">{optionsSummary}</span>
+          )}
+          <CaretDownIcon
+            className={cn(
+              'size-4 shrink-0 text-muted-foreground transition-transform duration-[120ms] ease-out-quart motion-reduce:transition-none',
+              optionsOpen && 'rotate-180',
             )}
-          </span>
+          />
         </button>
-        {optionsOpen && (
-          <div
-            id="next-set-options"
-            className="flex flex-col gap-4 rounded border border-border bg-card p-4"
-          >
-            <fieldset className="flex flex-col gap-2">
-              <legend className="mb-2 text-caption text-muted-foreground">{t('options.type')}</legend>
-              <div className="flex flex-wrap gap-2">
-                {SET_TYPE_OPTIONS.map((option) => (
-                  <Chip
-                    key={option.type}
-                    selected={nextType === option.type}
-                    disabled={disabled}
-                    onClick={() => setNextType(option.type)}
-                  >
-                    {t(`setTypes.${option.key}`)}
-                  </Chip>
-                ))}
-              </div>
-            </fieldset>
-            <div className="grid grid-cols-[6.5rem_1fr] items-end gap-3">
-              <div className="flex flex-col gap-1.5">
-                <span className="text-caption text-muted-foreground">{t('options.rpe')}</span>
-                <Select
-                  value={nextRpe == null ? 'none' : String(nextRpe)}
+      </div>
+      {optionsOpen && (
+        <div
+          id="next-set-options"
+          className="-mt-2 flex flex-col gap-4 border-t border-border pt-4"
+        >
+          <fieldset className="flex flex-col gap-2">
+            <legend className="mb-2 text-caption font-semibold">{t('options.type')}</legend>
+            <div className="flex flex-wrap gap-2">
+              {SET_TYPE_OPTIONS.map((option) => (
+                <FilterChip
+                  key={option.type}
+                  selected={nextType === option.type}
                   disabled={disabled}
-                  onValueChange={(value) => setNextRpe(value === 'none' ? null : Number(value))}
+                  onClick={() => setNextType(option.type)}
                 >
-                  <SelectTrigger aria-label={t('options.rpe')}>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">{t('options.rpeNone')}</SelectItem>
-                    {RPE_VALUES.map((value) => (
-                      <SelectItem key={value} value={String(value)}>
-                        {value}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="next-set-notes" className="text-caption text-muted-foreground">
-                  {t('options.notes')}
-                </label>
-                <Input
-                  id="next-set-notes"
-                  value={nextNotes}
-                  maxLength={500}
-                  disabled={disabled}
-                  placeholder={t('options.notesPlaceholder')}
-                  onChange={(event) => setNextNotes(event.target.value)}
-                />
-              </div>
+                  {t(`setTypes.${option.key}`)}
+                </FilterChip>
+              ))}
+            </div>
+          </fieldset>
+          <div className="grid grid-cols-[6.5rem_1fr] items-end gap-3">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-caption font-semibold">{t('options.rpe')}</span>
+              <Select
+                value={nextRpe == null ? 'none' : String(nextRpe)}
+                disabled={disabled}
+                onValueChange={(value) => setNextRpe(value === 'none' ? null : Number(value))}
+              >
+                <SelectTrigger aria-label={t('options.rpe')}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">{t('options.rpeNone')}</SelectItem>
+                  {RPE_VALUES.map((value) => (
+                    <SelectItem key={value} value={String(value)}>
+                      {value}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="next-set-notes" className="text-caption font-semibold">
+                {t('options.notes')}
+              </label>
+              <Input
+                id="next-set-notes"
+                value={nextNotes}
+                maxLength={500}
+                disabled={disabled}
+                placeholder={t('options.notesPlaceholder')}
+                onChange={(event) => setNextNotes(event.target.value)}
+              />
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       <SetValuePicker
         open={picker != null}
@@ -1054,79 +1169,29 @@ export function EditableSetsTable({
   );
 }
 
-// Round set number: lime ring once logged, neutral for the current and the
-// coming ones.
-function SetNumber({
-  state,
-  children,
-}: {
-  state: 'done' | 'current' | 'upcoming';
-  children: React.ReactNode;
-}) {
+// The set number in the first column, in the sheet's widened number style.
+function SetLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span
-      className={cn(
-        'flex size-7 shrink-0 items-center justify-center rounded-full border-[1.5px] text-caption font-semibold tabular-nums',
-        state === 'done'
-          ? 'border-brand text-brand'
-          : state === 'current'
-            ? 'border-muted-foreground/40 text-foreground'
-            : 'border-muted-foreground/25 text-muted-foreground',
-      )}
-    >
+    <span className="inline-flex h-6 min-w-6 items-center justify-center px-1 font-num text-[0.8125rem] font-semibold tabular-nums stretch-112">
       {children}
     </span>
   );
 }
 
-// One 64px value of a set row (load, reps, RIR): the number in the number
-// style with its unit below. A button when it can be tapped to adjust.
-function ValueField({
-  value,
-  caption,
-  muted = false,
-  onClick,
-  disabled,
-  'aria-label': ariaLabel,
-}: {
-  value: string;
-  caption: string;
-  muted?: boolean;
-  onClick?: () => void;
-  disabled?: boolean;
-  'aria-label'?: string;
-}) {
-  const content = (
-    <>
+// A value that cannot be tapped (a warm-up, a set still to come): the cell's
+// look without the button.
+function StaticCell({ value, tone }: { value: string; tone: 'done' | 'pending' }) {
+  return (
+    <td className="px-1">
       <span
         className={cn(
-          'leading-none tabular-nums',
-          value.length > 5 ? 'text-heading' : 'text-number',
-          muted && 'text-muted-foreground',
+          'flex h-12 w-full items-center justify-center font-num font-semibold tabular-nums stretch-118',
+          cellTextSize(value),
+          tone === 'done' ? 'text-foreground' : 'text-muted-foreground',
         )}
       >
         {value}
       </span>
-      <span className="text-small text-muted-foreground">{caption}</span>
-    </>
-  );
-  const box = cn(
-    'flex h-16 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-[20px]',
-    muted ? 'bg-pill/60' : 'bg-pill',
-  );
-  if (!onClick) return <div className={box}>{content}</div>;
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={ariaLabel}
-      className={cn(
-        box,
-        'transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
-      )}
-    >
-      {content}
-    </button>
+    </td>
   );
 }

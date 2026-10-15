@@ -65,7 +65,9 @@ function renderCard(readiness: ReadinessSignal | null, deloadActive = false) {
 }
 
 describe('ExerciseCard mobile title layout', () => {
-  it('keeps a long exercise title on one horizontally scrollable line', () => {
+  // Design v2: the exercise name is the screen's h1 (28px) and a long one
+  // wraps onto balanced lines instead of hiding behind a sideways scroll.
+  it('shows a long exercise title in full as the heading of the screen', () => {
     const longName = 'An exceptionally long incline dumbbell press exercise name';
     const longExercise = { ...exo, name: longName };
     const longProgramExercise = { ...pe, exercise: longExercise };
@@ -80,16 +82,22 @@ describe('ExerciseCard mobile title layout', () => {
       />,
     );
 
-    expect(screen.getByTestId('exercise-title-scroll')).toHaveClass('overflow-x-auto');
-    expect(screen.getByRole('heading', { level: 2, name: longName })).toHaveClass(
-      'w-max',
-      'whitespace-nowrap',
-    );
+    const title = screen.getByRole('heading', { level: 1, name: longName });
+    expect(title).toHaveClass('text-title', 'text-balance');
+    expect(title).not.toHaveClass('whitespace-nowrap');
+    // The section is named by the exercise.
+    expect(screen.getByRole('region', { name: longName })).toBeInTheDocument();
+  });
+
+  it('shows the muscle map in the picture slot when the exercise has no media', () => {
+    renderCard(null);
+    expect(screen.getByTestId('exercise-media-fallback')).toHaveClass('aspect-[3/2]', 'bg-muted');
+    expect(screen.getByRole('group', { name: /quads/i })).toBeInTheDocument();
   });
 });
 
 describe('ExerciseCard actions button', () => {
-  it('is a full tap target next to the scrollable title', () => {
+  it('is a full tap target next to the title', () => {
     render(
       <ExerciseCard
         programExercise={pe}
@@ -106,7 +114,7 @@ describe('ExerciseCard actions button', () => {
       'min-w-tap',
       'shrink-0',
     );
-    expect(screen.getByTestId('exercise-title-scroll')).toHaveClass('min-w-0', 'flex-1');
+    expect(screen.getByTestId('exercise-title')).toHaveClass('min-w-0', 'flex-1');
   });
 
   it('stays in the header but disabled while the menu is unavailable', () => {
