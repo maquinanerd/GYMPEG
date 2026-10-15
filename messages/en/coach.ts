@@ -1,5 +1,7 @@
 export const coach = {
   title: 'Coach',
+  // Label above anything the AI wrote (shown in italic).
+  label: 'Coach',
   description: 'Weekly AI debrief of your training.',
   chatTitle: 'Chat',
   chatDescription: 'Talk to your coach with your training data in context.',

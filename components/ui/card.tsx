@@ -2,6 +2,8 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+// The white surface (radius 16). At most one per screen, never nested: most
+// content sits straight on the page, split by hairlines (ui/section).
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -9,7 +11,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded border border-border bg-card text-card-foreground",
+      "rounded-lg bg-card text-card-foreground",
       className
     )}
     {...props}
@@ -47,7 +49,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-caption text-muted-foreground", className)}
     {...props}
   />
 ))

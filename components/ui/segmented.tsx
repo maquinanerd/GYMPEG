@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
-// Segmented control: a pill track (bg-pill) with one raised segment. Two
-// flavours share the look: links, for sections that are separate routes
-// (Treinos, Coach), and buttons, for an in-page choice.
+// Segmented control for a small in-page choice (unit, view): a row of 44px
+// segments at radius 8 inside an input hairline; the chosen one is ink.
+// Sections that are separate routes use the underlined tabs (ui/tabs).
 
-const TRACK = 'flex w-full gap-1 rounded-pill bg-pill p-1';
+const TRACK = 'flex w-full gap-1 rounded-md border border-input p-1';
 const SEGMENT =
-  'flex min-h-11 flex-1 items-center justify-center rounded-pill px-3 text-caption transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
-const ACTIVE = 'bg-card font-semibold text-foreground shadow-sm';
+  'flex min-h-touch flex-1 items-center justify-center rounded-sm px-3 text-caption font-semibold transition-colors duration-[120ms] ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+const ACTIVE = 'bg-ink text-ink-foreground';
 const INACTIVE = 'text-muted-foreground hover:text-foreground';
 
 export interface SegmentedLinkItem {

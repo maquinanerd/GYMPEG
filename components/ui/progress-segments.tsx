@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 
-// One 4px bar per step (exercises of a workout): done and current steps are
-// lime, the rest is the track. The bar is a progressbar for assistive tech.
+// One 3px bar per step (exercises of a workout): done and current steps are
+// ink, the rest is the track. The bar is a progressbar for assistive tech.
 export function ProgressSegments({
   total,
   done,
@@ -25,14 +25,14 @@ export function ProgressSegments({
       aria-valuemin={0}
       aria-valuemax={total}
       aria-valuenow={completed.size}
-      className={cn('flex gap-1', className)}
+      className={cn('flex gap-[3px]', className)}
     >
       {Array.from({ length: total }, (_, index) => (
         <span
           key={index}
           className={cn(
-            'h-1 flex-1 rounded-full transition-colors',
-            completed.has(index) || index === current ? 'bg-primary' : 'bg-track',
+            'h-[3px] flex-1 rounded-[2px]',
+            completed.has(index) || index === current ? 'bg-ink' : 'bg-track',
           )}
         />
       ))}

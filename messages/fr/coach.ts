@@ -3,6 +3,7 @@ import type { MessageShape } from '@/i18n/message-types';
 
 export const coach = {
   title: 'Coach',
+  label: 'Coach',
   description: 'Débrief IA hebdomadaire de vos entraînements.',
   chatTitle: 'Chat',
   chatDescription: 'Discutez avec votre coach, vos données d’entraînement en contexte.',

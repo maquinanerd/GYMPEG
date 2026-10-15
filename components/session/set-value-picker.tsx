@@ -274,7 +274,7 @@ export function SetValuePicker({
           <IconButton
             type="button"
             size="session"
-            tone="pill"
+            tone="outline"
             onClick={() => step(-1)}
             aria-label={t('decrease')}
           >
@@ -299,7 +299,7 @@ export function SetValuePicker({
           <IconButton
             type="button"
             size="session"
-            tone="pill"
+            tone="outline"
             onClick={() => step(1)}
             aria-label={t('increase')}
           >
