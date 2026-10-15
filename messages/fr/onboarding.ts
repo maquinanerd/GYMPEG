@@ -7,10 +7,10 @@ export const onboarding = {
   next: 'Continuer',
   back: 'Retour',
   finish: 'Enregistrer et terminer',
-  saving: 'Enregistrement...',
   skip: 'Passer pour l’instant',
   saved: 'C’est prêt ! Votre profil d’entraînement est enregistré.',
   error: 'Impossible d’enregistrer. Réessayez.',
+  offline: 'Pas de connexion. Vos réponses restent sur cet écran ; connectez-vous pour les enregistrer.',
   goal: {
     title: 'Quel est votre objectif principal ?',
     description: 'Vous pourrez le modifier à tout moment dans les Réglages.',

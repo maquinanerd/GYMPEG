@@ -9,8 +9,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { OfflineNotice } from '@/components/ui/screen-state';
+import { textLinkClass } from '@/components/ui/section';
+import { cn } from '@/lib/utils';
+import {
+  AuthHeading,
+  FormField,
+  FormMessage,
+  fieldErrorId,
+  inlineLinkClass,
+} from '@/components/auth/form-field';
+import { useOnline } from '@/components/auth/use-online';
 
 type FormValues = { email: string; password: string };
 
@@ -25,6 +34,7 @@ export function LoginForm() {
   const t = useTranslations('auth');
   const common = useTranslations('common');
   const router = useRouter();
+  const online = useOnline();
   const [serverError, setServerError] = useState<string | null>(null);
   const schema = useMemo(
     () =>
@@ -70,88 +80,84 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>{t('login.title')}</CardTitle>
-        <CardDescription>{t('login.description')}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        {showDemo && (
-          <div className="mb-4 space-y-2 rounded-md border border-dashed bg-muted/50 p-3">
-            <p className="text-sm font-medium">{t('login.demoTitle')}</p>
-            <p className="text-sm text-muted-foreground">
-              {demoEmail} / {demoPassword}
-            </p>
-            <Button
-              type="button"
-              variant="secondary"
-              className="min-h-tap w-full"
-              onClick={loginAsDemo}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? t('login.submitting') : t('login.demoSubmit')}
-            </Button>
-          </div>
-        )}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-          <div className="space-y-2">
-            <Label htmlFor="email">{common('fields.email')}</Label>
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              autoCapitalize="off"
-              autoCorrect="off"
-              spellCheck={false}
-              aria-invalid={errors.email ? 'true' : 'false'}
-              {...register('email')}
-            />
-            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
-          </div>
+    <div className="flex flex-col gap-8">
+      <AuthHeading title={t('login.title')} description={t('login.description')} />
 
-          <div className="space-y-2">
-            <Label htmlFor="password">{common('fields.password')}</Label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              aria-invalid={errors.password ? 'true' : 'false'}
-              {...register('password')}
-            />
-            {errors.password && (
-              <p className="text-sm text-destructive">{errors.password.message}</p>
-            )}
-            <p className="text-right text-sm">
-              <Link
-                href="/forgot-password"
-                className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-              >
-                {t('login.forgotPassword')}
-              </Link>
-            </p>
-          </div>
+      {!online && <OfflineNotice>{t('offline')}</OfflineNotice>}
 
-          {serverError && (
-            <p className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">
-              {serverError}
-            </p>
-          )}
-
-          <Button type="submit" className="min-h-tap w-full text-base" disabled={isSubmitting}>
-            {isSubmitting ? t('login.submitting') : t('login.submit')}
-          </Button>
-
-          <p className="text-center text-sm text-muted-foreground">
-            {t('login.noAccount')}{' '}
-            <Link
-              href="/signup"
-              className="font-medium text-foreground underline-offset-4 hover:underline"
-            >
-              {t('login.createAccount')}
-            </Link>
+      {showDemo && (
+        <section
+          aria-labelledby="demo-title"
+          className="flex flex-col gap-3 border-y border-border py-4"
+        >
+          <h2 id="demo-title" className="text-subtitle">
+            {t('login.demoTitle')}
+          </h2>
+          <p className="text-caption text-muted-foreground">
+            {demoEmail} / {demoPassword}
           </p>
-        </form>
-      </CardContent>
-    </Card>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={loginAsDemo}
+            loading={isSubmitting}
+          >
+            {t('login.demoSubmit')}
+          </Button>
+        </section>
+      )}
+
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5" noValidate>
+        <FormField id="email" label={common('fields.email')} error={errors.email?.message}>
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck={false}
+            aria-invalid={errors.email ? 'true' : 'false'}
+            aria-describedby={errors.email ? fieldErrorId('email') : undefined}
+            {...register('email')}
+          />
+        </FormField>
+
+        <FormField
+          id="password"
+          label={common('fields.password')}
+          error={errors.password?.message}
+        >
+          <Input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            aria-invalid={errors.password ? 'true' : 'false'}
+            aria-describedby={errors.password ? fieldErrorId('password') : undefined}
+            {...register('password')}
+          />
+        </FormField>
+
+        <Link
+          href="/forgot-password"
+          className={cn(textLinkClass, 'inline-flex min-h-touch items-center self-start')}
+        >
+          {t('login.forgotPassword')}
+        </Link>
+
+        {serverError && <FormMessage>{serverError}</FormMessage>}
+
+        <Button type="submit" className="w-full" loading={isSubmitting}>
+          {t('login.submit')}
+        </Button>
+      </form>
+
+      <p className="border-t border-border pt-5 text-caption text-muted-foreground">
+        {t('login.noAccount')}{' '}
+        <Link href="/signup" className={inlineLinkClass}>
+          {t('login.createAccount')}
+        </Link>
+      </p>
+    </div>
   );
 }
