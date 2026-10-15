@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Urbanist } from 'next/font/google';
+import { Archivo } from 'next/font/google';
 import { headers } from 'next/headers';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
@@ -9,11 +9,14 @@ import { PwaUpdateManager } from '@/components/shared/pwa-update-manager';
 import { NONCE_HEADER } from '@/lib/csp';
 import './globals.css';
 
-// Brand typeface (OFL), self-hosted by next/font so the CSP keeps font-src 'self'.
-const urbanist = Urbanist({
+// The one typeface (Archivo, OFL), self-hosted by next/font so the CSP keeps
+// font-src 'self'. Variable in weight and width: text at 100%, numbers widened
+// with the stretch-* utilities; italic is reserved for what the AI writes.
+const archivo = Archivo({
   subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-urbanist',
+  axes: ['wdth'],
+  style: ['normal', 'italic'],
+  variable: '--font-archivo',
   display: 'swap',
 });
 
@@ -60,7 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   // Light theme for everyone; dark is opt-in from Perfil > Tema (next-themes).
   return (
-    <html lang={locale} className={urbanist.variable} suppressHydrationWarning>
+    <html lang={locale} className={archivo.variable} suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider nonce={nonce}>

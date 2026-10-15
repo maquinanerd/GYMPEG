@@ -7,6 +7,7 @@ import {
   ArrowRightIcon as PhArrowRight,
   ArrowSquareOutIcon as PhArrowSquareOut,
   ArrowsClockwiseIcon as PhArrowsClockwise,
+  ArrowsOutIcon as PhArrowsOut,
   BarbellIcon as PhBarbell,
   BatteryChargingIcon as PhBatteryCharging,
   BatteryLowIcon as PhBatteryLow,
@@ -23,6 +24,7 @@ import {
   ChartLineUpIcon as PhChartLineUp,
   ChatCenteredDotsIcon as PhChatCenteredDots,
   ChatCircleIcon as PhChatCircle,
+  ChatCircleTextIcon as PhChatCircleText,
   ChatTextIcon as PhChatText,
   CheckIcon as PhCheck,
   CircleIcon as PhCircle,
@@ -36,6 +38,7 @@ import {
   CopyIcon as PhCopy,
   DeviceMobileIcon as PhDeviceMobile,
   DotsThreeIcon as PhDotsThree,
+  DotsThreeVerticalIcon as PhDotsThreeVertical,
   DownloadSimpleIcon as PhDownloadSimple,
   EyeIcon as PhEye,
   FastForwardIcon as PhFastForward,
@@ -64,6 +67,7 @@ import {
   MinusIcon as PhMinus,
   MonitorIcon as PhMonitor,
   MoonIcon as PhMoon,
+  PaperclipIcon as PhPaperclip,
   PaperPlaneRightIcon as PhPaperPlaneRight,
   PauseIcon as PhPause,
   PencilSimpleIcon as PhPencilSimple,
@@ -96,6 +100,7 @@ import {
   TrendUpIcon as PhTrendUp,
   TrophyIcon as PhTrophy,
   UploadSimpleIcon as PhUploadSimple,
+  UserCircleIcon as PhUserCircle,
   UserIcon as PhUser,
   WarningCircleIcon as PhWarningCircle,
   WarningIcon as PhWarning,
@@ -104,9 +109,10 @@ import {
   XIcon as PhX,
 } from '@phosphor-icons/react/ssr';
 
-// The app's icon set (Phosphor, MIT). One place decides the look: "fill" by
-// default, "bold" only for the line glyphs that have nothing to fill (chevrons,
-// check, plus/minus, the dots menu, the spinner). Sizing follows the className
+// The app's icon set (Phosphor, MIT). One place decides the look: "regular" by
+// default, "bold" for chevrons, check, plus/minus, the dots menu and the
+// spinner, "fill" only on the active item of the bottom bar (and the play /
+// pause glyphs, which read as solid controls). Sizing follows the className
 // (size-4, size-5…); without one the icon is 24px. Decorative unless it gets an
 // aria-label or alt. The SSR build has no React context, so these render in
 // server and client components alike.
@@ -116,7 +122,7 @@ export type AppIcon = (props: IconProps) => JSX.Element;
 
 const DEFAULT_SIZE = 24;
 
-function icon(Glyph: PhosphorIcon, defaultWeight: IconWeight = 'fill'): AppIcon {
+function icon(Glyph: PhosphorIcon, defaultWeight: IconWeight = 'regular'): AppIcon {
   function AppIconGlyph({ weight = defaultWeight, size = DEFAULT_SIZE, ...props }: IconProps) {
     const labelled = props['aria-label'] != null || props.alt != null;
     return <Glyph aria-hidden={labelled ? undefined : true} weight={weight} size={size} {...props} />;
@@ -131,6 +137,7 @@ export const ArrowLeftIcon = icon(PhArrowLeft);
 export const ArrowRightIcon = icon(PhArrowRight);
 export const ArrowSquareOutIcon = icon(PhArrowSquareOut);
 export const ArrowsClockwiseIcon = icon(PhArrowsClockwise);
+export const ArrowsOutIcon = icon(PhArrowsOut, 'bold');
 export const BarbellIcon = icon(PhBarbell);
 export const BatteryChargingIcon = icon(PhBatteryCharging);
 export const BatteryLowIcon = icon(PhBatteryLow);
@@ -147,6 +154,7 @@ export const CaretUpIcon = icon(PhCaretUp, 'bold');
 export const ChartLineUpIcon = icon(PhChartLineUp);
 export const ChatCenteredDotsIcon = icon(PhChatCenteredDots);
 export const ChatCircleIcon = icon(PhChatCircle);
+export const ChatCircleTextIcon = icon(PhChatCircleText);
 export const ChatTextIcon = icon(PhChatText);
 export const CheckIcon = icon(PhCheck, 'bold');
 export const CircleIcon = icon(PhCircle);
@@ -160,6 +168,7 @@ export const CloudSlashIcon = icon(PhCloudSlash);
 export const CopyIcon = icon(PhCopy);
 export const DeviceMobileIcon = icon(PhDeviceMobile);
 export const DotsThreeIcon = icon(PhDotsThree, 'bold');
+export const DotsThreeVerticalIcon = icon(PhDotsThreeVertical, 'bold');
 export const DownloadSimpleIcon = icon(PhDownloadSimple);
 export const EyeIcon = icon(PhEye);
 export const FastForwardIcon = icon(PhFastForward);
@@ -188,11 +197,12 @@ export const MagnifyingGlassIcon = icon(PhMagnifyingGlass);
 export const MinusIcon = icon(PhMinus, 'bold');
 export const MonitorIcon = icon(PhMonitor);
 export const MoonIcon = icon(PhMoon);
-export const PaperPlaneRightIcon = icon(PhPaperPlaneRight);
-export const PauseIcon = icon(PhPause);
+export const PaperclipIcon = icon(PhPaperclip, 'bold');
+export const PaperPlaneRightIcon = icon(PhPaperPlaneRight, 'fill');
+export const PauseIcon = icon(PhPause, 'fill');
 export const PencilSimpleIcon = icon(PhPencilSimple);
 export const PlayCircleIcon = icon(PhPlayCircle);
-export const PlayIcon = icon(PhPlay);
+export const PlayIcon = icon(PhPlay, 'fill');
 export const PlugIcon = icon(PhPlug);
 export const PlusIcon = icon(PhPlus, 'bold');
 export const PrinterIcon = icon(PhPrinter);
@@ -220,6 +230,7 @@ export const TrendDownIcon = icon(PhTrendDown);
 export const TrendUpIcon = icon(PhTrendUp);
 export const TrophyIcon = icon(PhTrophy);
 export const UploadSimpleIcon = icon(PhUploadSimple);
+export const UserCircleIcon = icon(PhUserCircle);
 export const UserIcon = icon(PhUser);
 export const WarningCircleIcon = icon(PhWarningCircle);
 export const WarningIcon = icon(PhWarning);

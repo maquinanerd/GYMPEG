@@ -25,7 +25,7 @@ export function BrandMark({ className, title }: { className?: string; title?: st
   );
 }
 
-// "GYM" Urbanist 600 + "Peg" Urbanist 400. The product name is not translated.
+// "GYM" Archivo 600 + "Peg" Archivo 400. The product name is not translated.
 export function Wordmark({ className }: { className?: string }) {
   return (
     <span className={cn('leading-none tracking-tight', className)}>
