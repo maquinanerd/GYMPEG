@@ -221,7 +221,7 @@ export function HistoryCalendar({
         )}
       >
         <div className="flex items-center justify-between gap-2">
-          <h2 id="history-month-heading" className="text-heading capitalize">
+          <h2 id="history-month-heading" className="text-heading first-letter:uppercase">
             {monthLabel}
           </h2>
           <div className="-mr-3 flex items-center">
@@ -321,7 +321,9 @@ export function HistoryCalendar({
         </div>
       </section>
 
-      {filtersSlot}
+      {/* A server-rendered slot: wrapped so React does not read it as an
+          unkeyed child of this list of siblings. */}
+      <div>{filtersSlot}</div>
 
       <section aria-labelledby="history-list-heading" className="flex flex-col">
         {selectedDate ? (
@@ -401,9 +403,10 @@ export function HistoryCalendar({
   );
 }
 
-// Every other locale (en, pt-BR) starts the week on Sunday, the US and
-// Brazilian calendar convention.
-const MONDAY_FIRST_LOCALES = ['ru', 'fr'];
+// English starts the week on Sunday (the US convention). pt-BR follows the
+// design v2 mocks and the home week strip, Monday to Sunday, so the month
+// and the week read the same way.
+const MONDAY_FIRST_LOCALES = ['ru', 'fr', 'pt'];
 const DATE_LABEL_FORMAT = {
   weekday: 'long',
   day: 'numeric',
