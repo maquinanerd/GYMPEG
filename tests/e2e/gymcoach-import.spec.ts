@@ -32,10 +32,10 @@ test('a lifter can preview and confirm a GymCoach CSV import', async ({ page }) 
   await page.goto('/settings');
   await expect(page.getByText('Import from Strong')).toBeVisible();
 
-  // Switch the source to GymCoach CSV: the unit toggle (Strong-only) disappears.
+  // Switch the source to GYM Peg CSV: the unit toggle (Strong-only) disappears.
   await page.getByLabel('Source app').click();
-  await page.getByRole('option', { name: 'GymCoach CSV' }).click();
-  await expect(page.getByText('Import from GymCoach')).toBeVisible();
+  await page.getByRole('option', { name: 'GYM Peg CSV' }).click();
+  await expect(page.getByText('Import from GYM Peg')).toBeVisible();
   await expect(page.getByText('Strong weight unit')).not.toBeVisible();
 
   // Upload the file: the dry-run preview appears, nothing imported yet.

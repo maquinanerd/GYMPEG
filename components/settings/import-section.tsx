@@ -136,8 +136,8 @@ const FORMAT_META: Record<
     fileKind: 'CSV',
   },
   GYMCOACH: {
-    label: 'GymCoach',
-    source: 'a GymCoach history CSV',
+    label: 'GYM Peg',
+    source: 'a GYM Peg history CSV',
     endpoint: '/api/import/gymcoach',
     exportHint:
       'use the CSV from the History page export, or any spreadsheet with the same columns (session_date, workout, exercise, set_number, external_load_kg, reps, ...)',
@@ -421,7 +421,7 @@ export function ImportSection() {
               <SelectContent>
                 <SelectItem value="STRONG">Strong</SelectItem>
                 <SelectItem value="HEVY">Hevy</SelectItem>
-                <SelectItem value="GYMCOACH">GymCoach CSV</SelectItem>
+                <SelectItem value="GYMCOACH">GYM Peg CSV</SelectItem>
                 <SelectItem value="TCX">TCX file</SelectItem>
                 <SelectItem value="GPX">GPX file</SelectItem>
                 <SelectItem value="FIT">FIT file</SelectItem>

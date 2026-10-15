@@ -55,7 +55,7 @@ export class OpenRouterProvider implements LlmProvider {
   constructor() {
     this.apiKey = process.env.OPENROUTER_API_KEY;
     this.model = process.env.OPENROUTER_MODEL?.trim() || DEFAULT_MODEL;
-    this.appName = process.env.OPENROUTER_APP_NAME ?? 'GymCoach';
+    this.appName = process.env.OPENROUTER_APP_NAME ?? 'GYM Peg';
     this.appUrl = process.env.OPENROUTER_APP_URL ?? 'http://localhost:3030';
   }
 
