@@ -111,9 +111,12 @@ describe('POST /api/progress-photos - valid uploads', () => {
       const abs = path.join(uploadsDir, 'progress-photos', row!.storagePath);
       expect(existsSync(abs)).toBe(true);
       expect(new Uint8Array(await readFile(abs))).toEqual(bytes);
-      // Written non-executable, owner-only (0o600).
-      const mode = (await stat(abs)).mode & 0o777;
-      expect(mode).toBe(0o600);
+      // Written non-executable, owner-only (0o600). Windows has no POSIX
+      // permission bits, so the mode is checked where the app runs (Linux).
+      if (process.platform !== 'win32') {
+        const mode = (await stat(abs)).mode & 0o777;
+        expect(mode).toBe(0o600);
+      }
     },
   );
 
