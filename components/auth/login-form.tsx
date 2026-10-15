@@ -66,7 +66,8 @@ export function LoginForm() {
       return;
     }
 
-    setServerError(t('login.error'));
+    const body = (await res.json().catch(() => null)) as { code?: string } | null;
+    setServerError(body?.code === 'ACCOUNT_BLOCKED' ? t('login.blocked') : t('login.error'));
   }
 
   return (

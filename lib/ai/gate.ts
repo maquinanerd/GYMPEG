@@ -5,13 +5,14 @@
 import { db } from '@/lib/db';
 import { ApiError } from '@/lib/api';
 import { hasAiConsent, isAiFeatureEnabled, type AiFeature } from '@/lib/ai/features';
+import { getRuntimeEnv } from '@/lib/runtime-env';
 
 // Error texts the client recognises to show the consent card or a notice.
 export const AI_CONSENT_REQUIRED = 'AI_CONSENT_REQUIRED';
 export const AI_FEATURE_DISABLED = 'AI_FEATURE_DISABLED';
 
 export async function requireAiAccess(userId: string, feature: AiFeature): Promise<void> {
-  if (!isAiFeatureEnabled(feature)) {
+  if (!isAiFeatureEnabled(feature, await getRuntimeEnv())) {
     throw new ApiError(403, AI_FEATURE_DISABLED);
   }
   const user = await db.user.findUnique({

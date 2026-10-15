@@ -33,7 +33,7 @@ export async function createAuthSession(input: {
 }
 
 // True when the token's session row exists, belongs to the token's user, is
-// not revoked and has not expired.
+// not revoked, has not expired and the account is not blocked.
 export async function isSessionActive(
   claims: SessionClaims,
   now: Date = new Date(),
@@ -41,9 +41,21 @@ export async function isSessionActive(
   if (!claims.sid) return false;
   const row = await db.authSession.findUnique({
     where: { id: claims.sid },
-    select: { userId: true, revokedAt: true, expiresAt: true, lastSeenAt: true },
+    select: {
+      userId: true,
+      revokedAt: true,
+      expiresAt: true,
+      lastSeenAt: true,
+      user: { select: { blockedAt: true } },
+    },
   });
-  if (!row || row.userId !== claims.userId || row.revokedAt || row.expiresAt <= now) {
+  if (
+    !row ||
+    row.userId !== claims.userId ||
+    row.revokedAt ||
+    row.expiresAt <= now ||
+    row.user.blockedAt
+  ) {
     return false;
   }
   if (now.getTime() - row.lastSeenAt.getTime() > TOUCH_INTERVAL_MS) {

@@ -12,6 +12,7 @@ import {
 import { CHAT_SYSTEM_PROMPT } from '@/lib/prompts/chat-system-prompt';
 import { chatKnowledgeQuery, deriveConversationTitle } from '@/lib/chat';
 import { knowledgeSectionFor } from '@/lib/knowledge';
+import { getRuntimeEnv } from '@/lib/runtime-env';
 
 const bodySchema = z.object({
   conversationId: z.string().cuid().optional(),
@@ -84,7 +85,7 @@ export async function POST(req: Request) {
       if (currentSession) payload.currentSession = currentSession;
     }
 
-    const provider = getLlmProvider();
+    const provider = getLlmProvider(await getRuntimeEnv());
     // Stable text first (cacheable prefix), then the evidence matched to this
     // question, then the trainee's data.
     const system = [

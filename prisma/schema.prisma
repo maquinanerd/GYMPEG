@@ -18,6 +18,9 @@ model User {
   // ADMIN may set a new password for another account (/admin). Granted by
   // hand in the database (docs/10_COOLIFY_DEPLOYMENT.md), never by signup.
   role              UserRole                              @default(USER)
+  // Set by an admin (/admin/users): login, sessions and MCP tokens stop
+  // working until it is cleared. Null = active.
+  blockedAt         DateTime?
   // Bodyweight in kg, used to compute the effective tonnage on bodyweight
   // exercises (Set.weight = added load, always >= 0; the input schemas clamp
   // it). Null = not filled in yet, so no bodyweight bonus is applied
@@ -176,6 +179,27 @@ model AuditLog {
 
   @@index([entity, entityId, createdAt])
   @@index([actorUserId, createdAt])
+}
+
+// Instance settings an admin edits in /admin, one row per environment
+// variable they override (lib/runtime-env). A row wins over the variable;
+// no row = the variable applies. Never a secret: those go to AppSecret.
+model AppSetting {
+  key         String   @id
+  value       String
+  updatedAt   DateTime @updatedAt
+  updatedById String?
+}
+
+// API keys entered in /admin, encrypted with AES-256-GCM under a key derived
+// from the server secret (lib/secret-box). Only the last 4 characters stay in
+// clear, to tell one key from another. Never sent back to the browser.
+model AppSecret {
+  key         String   @id
+  ciphertext  String
+  last4       String
+  updatedAt   DateTime @updatedAt
+  updatedById String?
 }
 
 enum Sex {

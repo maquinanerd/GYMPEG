@@ -11,11 +11,12 @@ import type { Prisma, ProgramRevisionSource } from '@/lib/prisma-client';
 import { pickableExerciseWhere } from '@/lib/catalog/access';
 import { ensureUsableExercise } from '@/lib/catalog/resolve';
 import { recordProgramRevision } from '@/lib/program-revisions';
+import { getRuntimeEnv } from '@/lib/runtime-env';
 
 // Generates a structured program draft from a natural-language goal. Does not
 // persist anything: the result is previewed (and edited) before saving.
 export async function generateProgram(userId: string, goal: string): Promise<GeneratedProgram> {
-  const provider = getLlmProvider();
+  const provider = getLlmProvider(await getRuntimeEnv());
 
   const [user, exercises] = await Promise.all([
     db.user.findUnique({

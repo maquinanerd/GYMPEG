@@ -12,6 +12,7 @@ export const auth = {
     noAccount: 'Pas encore de compte ?',
     createAccount: 'En créer un',
     error: 'Erreur de connexion.',
+    blocked: "Ce compte est bloqué. Contactez l'administrateur.",
     accountDeleted: 'Votre compte et toutes ses données ont été supprimés.',
     forgotPassword: 'Mot de passe oublié ?',
     passwordReset: 'Mot de passe modifié. Connectez-vous avec le nouveau mot de passe.',

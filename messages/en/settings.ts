@@ -179,7 +179,7 @@ export const settings = {
   },
   admin: {
     title: 'Admin',
-    description: 'Accounts and passwords',
+    description: 'Accounts, AI and e-mail',
   },
   privacy: {
     title: 'Data and privacy',

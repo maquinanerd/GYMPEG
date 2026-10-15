@@ -183,7 +183,7 @@ export const settings = {
   },
   admin: {
     title: 'Administração',
-    description: 'Contas e senhas',
+    description: 'Contas, IA e e-mail',
   },
   privacy: {
     title: 'Dados e privacidade',

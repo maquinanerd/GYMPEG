@@ -167,6 +167,7 @@ describe('listUsersForAdmin', () => {
       email: 'member@test.dev',
       displayName: null,
       role: 'USER',
+      blocked: false,
       createdAt: member.createdAt.toISOString(),
       lastSeenAt: seen.toISOString(),
     });

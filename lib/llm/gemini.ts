@@ -5,6 +5,7 @@ import {
   type LlmCompletionResult,
   type LlmProvider,
   type LlmUsage,
+  type LlmEnv,
 } from './types';
 
 // Google Gemini through the Generative Language REST API (v1beta). Default is
@@ -88,9 +89,9 @@ export class GeminiProvider implements LlmProvider {
   readonly model: string;
   private readonly apiKey: string | undefined;
 
-  constructor() {
-    this.apiKey = process.env.GEMINI_API_KEY?.trim() || undefined;
-    this.model = process.env.GEMINI_MODEL?.trim() || DEFAULT_MODEL;
+  constructor(env: LlmEnv = process.env) {
+    this.apiKey = env.GEMINI_API_KEY?.trim() || undefined;
+    this.model = env.GEMINI_MODEL?.trim() || DEFAULT_MODEL;
   }
 
   isConfigured(): boolean {

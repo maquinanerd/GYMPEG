@@ -3,6 +3,7 @@ import {
   type LlmCompletionRequest,
   type LlmCompletionResult,
   type LlmProvider,
+  type LlmEnv,
 } from './types';
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:8317/v1';
@@ -76,10 +77,10 @@ export class CodexLbProvider implements LlmProvider {
   private readonly apiKey: string | undefined;
   private readonly baseUrl: string;
 
-  constructor() {
-    this.apiKey = process.env.CODEX_LB_API_KEY?.trim();
-    this.baseUrl = normalizeBaseUrl(process.env.CODEX_LB_BASE_URL?.trim() || DEFAULT_BASE_URL);
-    this.model = process.env.CODEX_LB_MODEL?.trim() || DEFAULT_MODEL;
+  constructor(env: LlmEnv = process.env) {
+    this.apiKey = env.CODEX_LB_API_KEY?.trim();
+    this.baseUrl = normalizeBaseUrl(env.CODEX_LB_BASE_URL?.trim() || DEFAULT_BASE_URL);
+    this.model = env.CODEX_LB_MODEL?.trim() || DEFAULT_MODEL;
   }
 
   isConfigured(): boolean {
