@@ -14,7 +14,7 @@ Contract pendente do 1.5: `isWarmup`/`isDropSet` continuam gravados em sincronia
 2. Pegar o próximo épico do G1, na ordem do roadmap.
 3. Para cada épico:
    1. ler as notas da área em `docs/audit/` (com `arquivo:linha`);
-   2. migration *expand* com backfill testado (ADR-003);
+   2. migration _expand_ com backfill testado (ADR-003);
    3. serviço em `lib/services/` e domínio puro em `lib/`;
    4. rota fina e UI com textos via `messages/` (pt-BR e en);
    5. testes unit + integração;
@@ -30,15 +30,15 @@ Contract pendente do 1.5: `isWarmup`/`isDropSet` continuam gravados em sincronia
 
 ## Decisões pendentes do usuário
 
-| Decisão | Opções | Bloqueia |
-|---|---|---|
-| Domínio público do app | subdomínio a escolher | Deploy |
-| Chaves de IA | `GEMINI_API_KEY` (e `DEEPSEEK_API_KEY` para fallback) ou `AI_PROVIDER=demo` | IA real em produção |
-| Object storage | Cloudflare R2 (recomendado) × MinIO × S3 | G3 (fotos, mídia, backup off-site) |
-| Mídia de exercícios | sessão de fotos com termo de cessão × ilustração encomendada × pacote comercial licenciado | Fase 1 de mídia |
-| Validação jurídica | metadados do free-exercise-db; licença do nosso próprio código (repo público) | Lançamento comercial |
-| Visibilidade do repositório | público (hoje) × privado | — |
-| Provedor de e-mail | Resend (implementado: `EMAIL_PROVIDER=resend`, `RESEND_API_KEY`, `EMAIL_FROM` com domínio verificado) ou outro a implementar | Reset de senha em produção |
+| Decisão                     | Opções                                                                                                                                                            | Bloqueia                           |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| Domínio público do app      | subdomínio a escolher                                                                                                                                             | Deploy                             |
+| Chaves de IA                | Decidido em 2026-10-14: DeepSeek (`AI_PROVIDER=deepseek` + `DEEPSEEK_API_KEY`). Até a chave entrar no Coolify, produção segue em `demo` (respostas fixas, sem IA) | IA real em produção                |
+| Object storage              | Cloudflare R2 (recomendado) × MinIO × S3                                                                                                                          | G3 (fotos, mídia, backup off-site) |
+| Mídia de exercícios         | sessão de fotos com termo de cessão × ilustração encomendada × pacote comercial licenciado                                                                        | Fase 1 de mídia                    |
+| Validação jurídica          | metadados do free-exercise-db; licença do nosso próprio código (repo público)                                                                                     | Lançamento comercial               |
+| Visibilidade do repositório | público (hoje) × privado                                                                                                                                          | —                                  |
+| Provedor de e-mail          | Resend (implementado: `EMAIL_PROVIDER=resend`, `RESEND_API_KEY`, `EMAIL_FROM` com domínio verificado) ou outro a implementar                                      | Reset de senha em produção         |
 
 ## Riscos a monitorar
 

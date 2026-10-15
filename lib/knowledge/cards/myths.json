@@ -1,0 +1,999 @@
+[
+  {
+    "id": "my-spot-reduction",
+    "topic": "myths",
+    "title": "Mito: fazer abdominal queima a gordura da barriga",
+    "keywords": [
+      "abdominal perde barriga",
+      "queimar gordura localizada",
+      "gordura localizada",
+      "perder barriga",
+      "exercício localizado emagrece",
+      "abdominal seca barriga",
+      "gordura do braço",
+      "secar a barriga",
+      "spot reduction",
+      "localized fat loss",
+      "abs burn belly fat",
+      "targeted fat loss"
+    ],
+    "summary": "A ideia parece lógica: se o músculo trabalha, a gordura logo acima dele seria usada como combustível. Mas a gordura mobilizada no exercício vem do corpo todo, e a região de onde ela sai primeiro não é escolhida pelo músculo treinado. Num ensaio randomizado, 6 semanas de abdominais (7 exercícios, 5 dias por semana) não reduziram gordura abdominal, circunferência nem dobras cutâneas, embora tenham melhorado a resistência do abdômen. Em outro estudo, 12 semanas de leg press com uma perna só, com quase mil repetições por sessão, reduziram a gordura total, mas a perda apareceu no tronco e nos braços, não na perna treinada. Uma meta-análise com 13 estudos e 37 comparações entre membro treinado e não treinado encontrou efeito praticamente nulo. O que é verdade: treinar abdômen fortalece o core e todo exercício soma gasto energético; só não decide de onde a gordura sai.",
+    "practice": [
+      "Para perder barriga, combine déficit calórico sustentável com treino de força e atividade física regular.",
+      "Treine o abdômen pela função (estabilidade e força do core), não para 'secar' a região.",
+      "Acompanhe a cintura e o peso ao longo de semanas, não depois de cada treino.",
+      "Se a gordura sair primeiro de outras regiões, isso é esperado e não significa que o treino falhou."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Vispute SS, Smith JD, LeCheminant JD, et al. The effect of abdominal exercise on abdominal fat. J Strength Cond Res. 2011;25(9):2559-2564.",
+        "year": 2011,
+        "doi": "10.1519/JSC.0b013e3181fb4a46"
+      },
+      {
+        "citation": "Ramírez-Campillo R, Andrade DC, Campos-Jara C, et al. Regional fat changes induced by localized muscle endurance resistance training. J Strength Cond Res. 2013;27(8):2219-2224.",
+        "year": 2013,
+        "doi": "10.1519/JSC.0b013e31827e8681"
+      },
+      {
+        "citation": "Ramirez-Campillo R, Andrade DC, Clemente FM, et al. A proposed model to test the hypothesis of exercise-induced localized fat reduction (spot reduction), including a systematic review with meta-analysis. Hum Mov. 2022;23(3):1-14.",
+        "year": 2022,
+        "doi": "10.5114/hm.2022.110373"
+      }
+    ]
+  },
+  {
+    "id": "my-muscle-confusion",
+    "topic": "myths",
+    "title": "Mito: é preciso mudar o treino toda semana para 'confundir' ou 'chocar' o músculo",
+    "keywords": [
+      "confusão muscular",
+      "mudar treino toda semana",
+      "chocar o músculo",
+      "músculo acostuma com o treino",
+      "variar exercícios",
+      "trocar a ficha de treino",
+      "drop set funciona",
+      "técnicas avançadas de treino",
+      "muscle confusion",
+      "exercise variation",
+      "shock the muscle",
+      "change workout routine"
+    ],
+    "summary": "A crença vem da sensação de que o corpo 'se acostuma' e para de responder. O músculo não fica confuso: ele responde a tensão mecânica suficiente, volume adequado e progressão ao longo do tempo. Uma revisão sistemática (8 estudos, 241 homens jovens) concluiu que alguma variação planejada de exercícios pode favorecer regiões diferentes do músculo e a força, mas trocar exercícios com muita frequência e de forma aleatória pode atrapalhar os ganhos. Num ensaio com homens treinados, sortear os exercícios a cada sessão gerou ganhos parecidos aos de um treino fixo e aumentou a motivação. Técnicas de 'choque', como o drop set, produziram hipertrofia semelhante à do treino tradicional numa meta-análise, porém em menos tempo. Parte verdadeira: variar com critério tem valor, e motivação importa. Evidência moderada: são poucos estudos, quase todos com homens jovens.",
+    "practice": [
+      "Mantenha os exercícios principais por blocos de algumas semanas para conseguir progredir carga ou repetições.",
+      "Troque exercícios com propósito: outro ângulo, outra região do músculo, desconforto articular ou falta de equipamento.",
+      "Use drop set e técnicas parecidas para economizar tempo, não como obrigação.",
+      "Se a motivação estiver caindo, variar os exercícios acessórios é uma forma válida de manter a adesão."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Kassiano W, Nunes JP, Costa B, et al. Does varying resistance exercises promote superior muscle hypertrophy and strength gains? A systematic review. J Strength Cond Res. 2022;36(6):1753-1762.",
+        "year": 2022,
+        "doi": "10.1519/JSC.0000000000004258"
+      },
+      {
+        "citation": "Baz-Valle E, Schoenfeld BJ, Torres-Unda J, et al. The effects of exercise variation in muscle thickness, maximal strength and motivation in resistance trained men. PLoS One. 2019;14(12):e0226989.",
+        "year": 2019,
+        "doi": "10.1371/journal.pone.0226989"
+      },
+      {
+        "citation": "Fonseca RM, Roschel H, Tricoli V, et al. Changes in exercises are more effective than in loading schemes to improve muscle strength. J Strength Cond Res. 2014;28(11):3085-3092.",
+        "year": 2014,
+        "doi": "10.1519/JSC.0000000000000539"
+      },
+      {
+        "citation": "Sødal LK, Kristiansen E, Larsen S, et al. Effects of drop sets on skeletal muscle hypertrophy: a systematic review and meta-analysis. Sports Med Open. 2023;9(1):66.",
+        "year": 2023,
+        "doi": "10.1186/s40798-023-00620-5"
+      }
+    ]
+  },
+  {
+    "id": "my-toning-high-reps",
+    "topic": "myths",
+    "title": "Mito: repetição alta 'define' e 'tonifica', repetição baixa só dá volume",
+    "keywords": [
+      "tonificar",
+      "definir músculo",
+      "definição muscular",
+      "treino para definir",
+      "muitas repetições define",
+      "série longa para secar",
+      "peso leve para definir",
+      "tônus muscular",
+      "toning",
+      "high reps for definition",
+      "low reps for mass",
+      "muscle definition"
+    ],
+    "summary": "Muita gente acredita que séries longas com peso leve 'secam' e 'definem', enquanto pesos altos 'incham'. Visualmente, definição é a soma de músculo desenvolvido com pouca gordura por cima; não existe um músculo 'tonificado' diferente do músculo que cresceu. Meta-análises mostram que, com séries levadas perto da falha, cargas leves e pesadas geram hipertrofia parecida; a diferença aparece na força máxima, que cresce mais com cargas altas, e na resistência muscular, que melhora mais com cargas leves. Repetições altas também não queimam a gordura do local: num estudo com quase mil repetições de leg press por sessão, a perna treinada não perdeu gordura específica. Uma revisão relata que cerca de 10 semanas de musculação podem somar ganho de massa magra (~1,4 kg) e perda de gordura (~1,8 kg). Parte verdadeira: a faixa de repetições muda o perfil de força e resistência, mas o aspecto 'definido' depende de ganhar músculo e reduzir gordura, o que passa muito pela alimentação.",
+    "practice": [
+      "Para hipertrofia, várias faixas de repetições funcionam se a série chegar perto da falha; escolha pela preferência e pelo conforto.",
+      "Para 'definir', combine treino de força progressivo com controle da ingestão calórica.",
+      "Inclua séries com cargas mais altas se ganhar força máxima for importante para você.",
+      "Não espere que séries longas eliminem a gordura da região treinada."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Schoenfeld BJ, Grgic J, Ogborn D, et al. Strength and hypertrophy adaptations between low- vs. high-load resistance training: a systematic review and meta-analysis. J Strength Cond Res. 2017;31(12):3508-3523.",
+        "year": 2017,
+        "doi": "10.1519/JSC.0000000000002200"
+      },
+      {
+        "citation": "Schoenfeld BJ, Peterson MD, Ogborn D, et al. Effects of low- vs. high-load resistance training on muscle strength and hypertrophy in well-trained men. J Strength Cond Res. 2015;29(10):2954-2963.",
+        "year": 2015,
+        "doi": "10.1519/JSC.0000000000000958"
+      },
+      {
+        "citation": "Ramírez-Campillo R, Andrade DC, Campos-Jara C, et al. Regional fat changes induced by localized muscle endurance resistance training. J Strength Cond Res. 2013;27(8):2219-2224.",
+        "year": 2013,
+        "doi": "10.1519/JSC.0b013e31827e8681"
+      },
+      {
+        "citation": "Westcott WL. Resistance training is medicine: effects of strength training on health. Curr Sports Med Rep. 2012;11(4):209-216.",
+        "year": 2012,
+        "doi": "10.1249/JSR.0b013e31825dabb8"
+      }
+    ]
+  },
+  {
+    "id": "my-light-weights",
+    "topic": "myths",
+    "title": "Mito: peso leve não constrói músculo",
+    "keywords": [
+      "peso leve hipertrofia",
+      "peso leve ganha massa",
+      "precisa pegar pesado",
+      "carga leve funciona",
+      "treino com pouco peso",
+      "muitas repetições hipertrofia",
+      "treinar em casa com peso leve",
+      "elástico ganha músculo",
+      "light weights build muscle",
+      "low load hypertrophy",
+      "high reps muscle growth",
+      "heavy vs light weights"
+    ],
+    "summary": "A crença vem da cultura do 'quem não pega pesado não cresce'. Uma meta-análise de 21 estudos, com todas as séries até a falha, comparou cargas de até 60% de 1RM com cargas maiores: a hipertrofia foi semelhante, mas a força máxima (1RM) cresceu mais com as cargas pesadas. Uma meta-análise em rede com 28 estudos e 747 adultos chegou à mesma conclusão comparando cargas leves (mais de 15 repetições), moderadas e altas. Em homens já treinados, 12 semanas com 20-25 repetições a cerca de 30-50% de 1RM geraram ganho de massa magra e de área das fibras semelhante ao treino com 8-12 repetições. A condição é o esforço: com peso leve, a série precisa terminar perto da falha, o que é mais desconfortável e demorado. Parte verdadeira: para ficar mais forte em cargas máximas, treinar pesado é superior.",
+    "practice": [
+      "Com cargas leves, leve a série até perto da falha (cerca de 0 a 3 repetições na reserva); parar cedo demais reduz o estímulo.",
+      "Cargas leves são uma boa opção com desconforto articular, pouco equipamento ou treino em casa.",
+      "Se força máxima for objetivo, inclua séries com cargas altas.",
+      "Misturar faixas de repetição ao longo da semana é uma estratégia válida."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Schoenfeld BJ, Grgic J, Ogborn D, et al. Strength and hypertrophy adaptations between low- vs. high-load resistance training: a systematic review and meta-analysis. J Strength Cond Res. 2017;31(12):3508-3523.",
+        "year": 2017,
+        "doi": "10.1519/JSC.0000000000002200"
+      },
+      {
+        "citation": "Lopez P, Radaelli R, Taaffe DR, et al. Resistance training load effects on muscle hypertrophy and strength gain: systematic review and network meta-analysis. Med Sci Sports Exerc. 2021;53(6):1206-1216.",
+        "year": 2021,
+        "doi": "10.1249/MSS.0000000000002585"
+      },
+      {
+        "citation": "Morton RW, Oikawa SY, Wavell CG, et al. Neither load nor systemic hormones determine resistance training-mediated hypertrophy or strength gains in resistance-trained young men. J Appl Physiol. 2016;121(1):129-138.",
+        "year": 2016,
+        "doi": "10.1152/japplphysiol.00154.2016"
+      }
+    ]
+  },
+  {
+    "id": "my-women-bulky",
+    "topic": "myths",
+    "title": "Mito: mulher que faz musculação fica 'masculinizada' ou grande demais",
+    "keywords": [
+      "mulher fica grande com musculação",
+      "musculação masculiniza",
+      "mulher fica bombada",
+      "medo de ficar musculosa",
+      "treino feminino",
+      "mulher pode pegar peso",
+      "ficar forte sem crescer muito",
+      "women get bulky",
+      "women lifting weights",
+      "female hypertrophy",
+      "testosterone women muscle"
+    ],
+    "summary": "O medo vem de imagens de atletas de fisiculturismo e da ideia de que pesos 'engrossam' o corpo. Uma meta-análise de estudos com o mesmo protocolo para homens e mulheres encontrou ganho relativo de massa muscular semelhante entre os sexos, e ganho relativo de força de membros superiores até maior nas mulheres. Mas o ponto de partida e o teto são diferentes: a testosterona circulante de homens adultos é mais de 15 vezes a das mulheres, o que explica boa parte da diferença em massa muscular e força absolutas. Na prática, mulheres ganham músculo de verdade, porém de forma gradual, e o resultado mais comum é um corpo mais firme e forte, não um crescimento 'descontrolado'. Parte verdadeira: com anos de treino focado em hipertrofia, alimentação voltada para isso e genética favorável, a mulher pode ficar visivelmente musculosa, se esse for o objetivo; o processo é lento e ajustável.",
+    "practice": [
+      "Mulheres podem usar cargas desafiadoras com a mesma lógica de progressão dos homens.",
+      "Se não quiser aumentar muito uma região, ajuste o volume de treino daquela região em vez de evitar pesos.",
+      "A aparência 'definida' depende também do percentual de gordura, ou seja, da alimentação.",
+      "Avalie a evolução por medidas e fotos ao longo de meses; mudanças musculares são graduais."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Roberts BM, Nuckols G, Krieger JW. Sex differences in resistance training: a systematic review and meta-analysis. J Strength Cond Res. 2020;34(5):1448-1460.",
+        "year": 2020,
+        "doi": "10.1519/JSC.0000000000003521"
+      },
+      {
+        "citation": "Handelsman DJ, Hirschberg AL, Bermon S. Circulating testosterone as the hormonal basis of sex differences in athletic performance. Endocr Rev. 2018;39(5):803-829.",
+        "year": 2018,
+        "doi": "10.1210/er.2018-00020"
+      },
+      {
+        "citation": "Nuzzo JL. Narrative review of sex differences in muscle strength, endurance, activation, size, fiber type, and strength training participation rates, preferences, motivations, injuries, and neuromuscular adaptations. J Strength Cond Res. 2023;37(2):494-536.",
+        "year": 2023,
+        "doi": "10.1519/JSC.0000000000004329"
+      }
+    ]
+  },
+  {
+    "id": "my-youth-growth",
+    "topic": "myths",
+    "title": "Mito: musculação atrapalha o crescimento de crianças e adolescentes",
+    "keywords": [
+      "musculação atrapalha crescimento",
+      "criança pode fazer musculação",
+      "adolescente na academia",
+      "musculação para crianças",
+      "placa de crescimento",
+      "idade para começar musculação",
+      "musculação deixa baixinho",
+      "youth resistance training",
+      "lifting stunts growth",
+      "growth plate injury",
+      "kids lifting weights",
+      "teenager weight training"
+    ],
+    "summary": "O receio é que os pesos lesionem as placas de crescimento e deixem a criança mais baixa. O consenso internacional de 2014 e a Academia Americana de Pediatria (2020) consideram o treino de força seguro e benéfico para crianças e adolescentes quando bem supervisionado. Uma revisão de 22 estudos com pré-púberes e jovens no início da puberdade não encontrou efeito negativo sobre altura ou peso e registrou poucas lesões (cerca de 0,05 a 0,18 por 100 horas de treino). Os relatos de lesão de placa de crescimento vêm sobretudo de situações sem supervisão, com técnica ruim, cargas excessivas ou acidentes com equipamentos em casa; estudos prospectivos com orientação profissional não relataram esse tipo de lesão. Parte verdadeira: a placa de crescimento é mais frágil que o tecido ao redor, então supervisão qualificada, técnica e progressão gradual são indispensáveis.",
+    "practice": [
+      "Crianças podem começar quando conseguem seguir instruções (há estudos a partir de 6-8 anos), sempre com supervisão qualificada.",
+      "Priorize técnica, variedade de movimentos e progressão lenta, não a carga máxima.",
+      "Evite que crianças treinem sozinhas em casa com barras e anilhas.",
+      "Em jovens atletas, o treino de força bem orientado também ajuda a reduzir lesões no esporte."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Lloyd RS, Faigenbaum AD, Stone MH, et al. Position statement on youth resistance training: the 2014 International Consensus. Br J Sports Med. 2014;48(7):498-505.",
+        "year": 2014,
+        "doi": "10.1136/bjsports-2013-092952"
+      },
+      {
+        "citation": "Stricker PR, Faigenbaum AD, McCambridge TM; Council on Sports Medicine and Fitness. Resistance training for children and adolescents. Pediatrics. 2020;145(6):e20201011.",
+        "year": 2020,
+        "doi": "10.1542/peds.2020-1011"
+      },
+      {
+        "citation": "Malina RM. Weight training in youth-growth, maturation, and safety: an evidence-based review. Clin J Sport Med. 2006;16(6):478-487.",
+        "year": 2006,
+        "doi": "10.1097/01.jsm.0000248843.31874.be"
+      },
+      {
+        "citation": "Faigenbaum AD, Myer GD. Resistance training among young athletes: safety, efficacy and injury prevention effects. Br J Sports Med. 2010;44(1):56-63.",
+        "year": 2010,
+        "doi": "10.1136/bjsm.2009.068098"
+      }
+    ]
+  },
+  {
+    "id": "my-soreness-growth",
+    "topic": "myths",
+    "title": "Mito: se não ficou dolorido, o treino não funcionou",
+    "keywords": [
+      "dor muscular tardia",
+      "não senti dor o treino não funcionou",
+      "dor depois do treino",
+      "sem dor sem ganho",
+      "no pain no gain",
+      "dor muscular significa hipertrofia",
+      "dolorido no dia seguinte",
+      "doms",
+      "muscle soreness growth",
+      "delayed onset muscle soreness",
+      "sore after workout"
+    ],
+    "summary": "A dor muscular tardia, que aparece nos dias seguintes a treinos novos ou muito intensos, virou sinônimo de 'treino bom'. Mas ela é um marcador fraco de crescimento. Num estudo, um grupo que fez adaptação gradual evitou quase toda a dor e o dano muscular (enzima CK cinco vezes menor) e teve o mesmo ganho de tamanho e de força (25% contra 26%) que o grupo que começou com uma sessão muito dolorosa. Outro estudo, com biópsias, mostrou que nas primeiras sessões a síntese de proteína fica voltada a reparar dano; ela só passou a se relacionar com a hipertrofia depois que o dano diminuiu, a partir da terceira semana. Com a repetição do treino, a dor diminui mesmo com o músculo continuando a crescer. Parte verdadeira: alguma dor após mudar o treino é normal, mas dor forte e frequente pode atrapalhar as sessões seguintes. Evidência moderada.",
+    "practice": [
+      "Avalie o treino pela progressão de carga e repetições e por medidas ao longo de semanas, não pela dor.",
+      "Ao começar ou trocar exercícios, aumente o volume aos poucos para evitar dor excessiva.",
+      "Dor intensa que limita movimentos ou dura muitos dias é sinal para reduzir o volume.",
+      "Dor articular ou pontual não é a dor muscular comum de treino: procure avaliação."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Flann KL, LaStayo PC, McClain DA, et al. Muscle damage and muscle remodeling: no pain, no gain? J Exp Biol. 2011;214(Pt 4):674-679.",
+        "year": 2011,
+        "doi": "10.1242/jeb.050112"
+      },
+      {
+        "citation": "Damas F, Phillips SM, Libardi CA, et al. Resistance training-induced changes in integrated myofibrillar protein synthesis are related to hypertrophy only after attenuation of muscle damage. J Physiol. 2016;594(18):5209-5222.",
+        "year": 2016,
+        "doi": "10.1113/JP272472"
+      },
+      {
+        "citation": "Schoenfeld BJ, Contreras B. Is postexercise muscle soreness a valid indicator of muscular adaptations? Strength Cond J. 2013;35(5):16-21.",
+        "year": 2013,
+        "doi": "10.1519/SSC.0b013e3182a61820"
+      }
+    ]
+  },
+  {
+    "id": "my-failure-every-set",
+    "topic": "myths",
+    "title": "Mito: toda série precisa ir até a falha",
+    "keywords": [
+      "treinar até a falha",
+      "falha muscular",
+      "toda série até falhar",
+      "repetições na reserva",
+      "rir",
+      "quantas repetições deixar sobrando",
+      "falha concêntrica",
+      "intensidade do treino",
+      "training to failure",
+      "every set to failure",
+      "reps in reserve",
+      "proximity to failure"
+    ],
+    "summary": "Chegar à falha parece garantia de estímulo máximo. Meta-análises mostram outra coisa: comparando treino até a falha com treino sem falha, não houve diferença significativa na força, e a diferença na hipertrofia foi pequena e incerta; em pessoas já treinadas surgiu uma vantagem pequena para a falha. Outra meta-análise, com 15 estudos, encontrou vantagem trivial quando 'falha' era definida de forma ampla e nenhuma vantagem para a falha muscular momentânea propriamente dita. Uma série de meta-regressões sugere que a hipertrofia melhora conforme a série termina mais perto da falha, enquanto a força fica parecida numa faixa ampla de repetições na reserva. Parte verdadeira: a proximidade da falha importa para crescer, principalmente com cargas leves. Mas ir à falha absoluta em toda série aumenta a fadiga e pode reduzir o volume que você consegue completar. Evidência moderada; a relação exata ainda é incerta.",
+    "practice": [
+      "Na maior parte das séries, termine com cerca de 1 a 3 repetições na reserva.",
+      "Reserve a falha para exercícios em máquina ou isolados, de preferência na última série.",
+      "Evite falha frequente em exercícios técnicos e pesados, como agachamento livre e levantamento terra.",
+      "Com cargas leves, chegue mais perto da falha para garantir o estímulo."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Grgic J, Schoenfeld BJ, Orazem J, et al. Effects of resistance training performed to repetition failure or non-failure on muscular strength and hypertrophy: a systematic review and meta-analysis. J Sport Health Sci. 2022;11(2):202-211.",
+        "year": 2022,
+        "doi": "10.1016/j.jshs.2021.01.007"
+      },
+      {
+        "citation": "Refalo MC, Helms ER, Trexler ET, et al. Influence of resistance training proximity-to-failure on skeletal muscle hypertrophy: a systematic review with meta-analysis. Sports Med. 2023;53(3):649-665.",
+        "year": 2023,
+        "doi": "10.1007/s40279-022-01784-y"
+      },
+      {
+        "citation": "Robinson ZP, Pelland JC, Remmert JF, et al. Exploring the dose-response relationship between estimated resistance training proximity to failure, strength gain, and muscle hypertrophy: a series of meta-regressions. Sports Med. 2024;54(9):2209-2231.",
+        "year": 2024,
+        "doi": "10.1007/s40279-024-02069-2"
+      }
+    ]
+  },
+  {
+    "id": "my-cardio-kills-gains",
+    "topic": "myths",
+    "title": "Mito: fazer aeróbico atrapalha o ganho de massa muscular",
+    "keywords": [
+      "aeróbico atrapalha hipertrofia",
+      "cardio perde massa muscular",
+      "esteira queima músculo",
+      "treino concorrente",
+      "aeróbico antes ou depois da musculação",
+      "corrida atrapalha ganho",
+      "aeróbico é catabólico",
+      "cardio kills gains",
+      "concurrent training",
+      "interference effect",
+      "cardio and muscle growth"
+    ],
+    "summary": "O medo é que o aeróbico 'queime músculo' ou anule o estímulo da musculação. A meta-análise mais atualizada, com 43 estudos, comparou musculação sozinha com musculação somada a aeróbico e não encontrou prejuízo para a hipertrofia nem para a força máxima. O que caiu foi a força explosiva (potência), sobretudo quando os dois treinos eram feitos na mesma sessão. Uma meta-análise anterior indicou que a interferência aumenta com corrida e com maior frequência e duração do aeróbico. Quando os dois são feitos juntos, começar pela musculação rendeu em média cerca de 4 kg a mais no 1RM de membros inferiores. Parte verdadeira: volumes muito altos de aeróbico e modalidades que dependem de potência podem sofrer alguma interferência. Para quem treina por saúde e estética, aeróbico em volume moderado é compatível com ganho de massa. Evidência moderada, com estudos em geral curtos.",
+    "practice": [
+      "Aeróbico em volume moderado é compatível com hipertrofia; aumente aos poucos e observe sua recuperação.",
+      "Se fizer os dois na mesma sessão e a prioridade for força de pernas, faça a musculação primeiro.",
+      "Quando potência e explosão forem importantes, separe aeróbico e musculação por algumas horas.",
+      "Se o desempenho na musculação cair, reduza primeiro a duração ou a frequência do aeróbico."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Schumann M, Feuerbacher JF, Sünkeler M, et al. Compatibility of concurrent aerobic and strength training for skeletal muscle size and function: an updated systematic review and meta-analysis. Sports Med. 2022;52(3):601-612.",
+        "year": 2022,
+        "doi": "10.1007/s40279-021-01587-7"
+      },
+      {
+        "citation": "Wilson JM, Marin PJ, Rhea MR, et al. Concurrent training: a meta-analysis examining interference of aerobic and resistance exercises. J Strength Cond Res. 2012;26(8):2293-2307.",
+        "year": 2012,
+        "doi": "10.1519/JSC.0b013e31823a3e2d"
+      },
+      {
+        "citation": "Murlasits Z, Kneffel Z, Thalib L. The physiological effects of concurrent strength and endurance training sequence: a systematic review and meta-analysis. J Sports Sci. 2018;36(11):1212-1219.",
+        "year": 2018,
+        "doi": "10.1080/02640414.2017.1364405"
+      }
+    ]
+  },
+  {
+    "id": "my-protein-30g-limit",
+    "topic": "myths",
+    "title": "Mito: o corpo só aproveita 30 g de proteína por refeição",
+    "keywords": [
+      "quanto de proteína por refeição",
+      "corpo só absorve 30g de proteína",
+      "limite de proteína por refeição",
+      "proteína em excesso é desperdiçada",
+      "quantas gramas de proteína por refeição",
+      "dividir proteína no dia",
+      "dose de whey",
+      "protein per meal limit",
+      "30g protein myth",
+      "protein absorption",
+      "how much protein per meal"
+    ],
+    "summary": "O mito nasceu de estudos que mediram a síntese de proteína muscular por poucas horas após doses de proteína isolada de digestão rápida: acima de 20-25 g o efeito parecia estabilizar. Estudos mais recentes mostram outra coisa. Após treino de corpo inteiro, 40 g de whey estimularam mais a síntese muscular que 20 g. Um estudo de 2023 com traçadores mostrou que 100 g de proteína geraram resposta anabólica maior e mais longa (mais de 12 horas) que 25 g, com impacto desprezível na oxidação de aminoácidos. O fator principal continua sendo o total diário: numa meta-análise, o ganho de massa magra deixou de aumentar acima de cerca de 1,6 g/kg/dia. Parte verdadeira: distribuir a proteína em várias refeições (cerca de 0,4 g/kg em pelo menos 4 refeições) é uma estratégia prática recomendada, mas comer mais numa refeição não é desperdício. Evidência moderada: estudos agudos não medem hipertrofia diretamente.",
+    "practice": [
+      "Priorize a meta diária de proteína; para hipertrofia, algo entre 1,6 e 2,2 g/kg/dia é o mais citado.",
+      "Distribuir em 3 a 5 refeições com cerca de 0,4 g/kg cada facilita chegar à meta.",
+      "Uma refeição com mais de 30-40 g de proteína não significa que o excesso foi perdido.",
+      "Não é preciso fracionar a proteína em doses pequenas por medo de 'não absorver'."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Trommelen J, van Lieshout GAA, Nyakayiru J, et al. The anabolic response to protein ingestion during recovery from exercise has no upper limit in magnitude and duration in vivo in humans. Cell Rep Med. 2023;4(12):101324.",
+        "year": 2023,
+        "doi": "10.1016/j.xcrm.2023.101324"
+      },
+      {
+        "citation": "Macnaughton LS, Wardle SL, Witard OC, et al. The response of muscle protein synthesis following whole-body resistance exercise is greater following 40 g than 20 g of ingested whey protein. Physiol Rep. 2016;4(15):e12893.",
+        "year": 2016,
+        "doi": "10.14814/phy2.12893"
+      },
+      {
+        "citation": "Schoenfeld BJ, Aragon AA. How much protein can the body use in a single meal for muscle-building? Implications for daily protein distribution. J Int Soc Sports Nutr. 2018;15:10.",
+        "year": 2018,
+        "doi": "10.1186/s12970-018-0215-1"
+      },
+      {
+        "citation": "Morton RW, Murphy KT, McKellar SR, et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376-384.",
+        "year": 2018,
+        "doi": "10.1136/bjsports-2017-097608"
+      }
+    ]
+  },
+  {
+    "id": "my-anabolic-window",
+    "topic": "myths",
+    "title": "Mito: é obrigatório tomar proteína até 30 minutos depois do treino (janela anabólica)",
+    "keywords": [
+      "janela anabólica",
+      "whey logo após o treino",
+      "30 minutos depois do treino",
+      "comer depois do treino",
+      "proteína pós-treino",
+      "proteína antes ou depois do treino",
+      "perdi a janela anabólica",
+      "anabolic window",
+      "post workout protein timing",
+      "nutrient timing",
+      "protein timing"
+    ],
+    "summary": "A ideia é que existe uma janela curta após o treino e que, se a proteína não chegar a tempo, o ganho se perde. Uma meta-análise com 23 estudos sobre hipertrofia mostrou que, quando se ajusta pela quantidade total de proteína do dia, o horário da ingestão deixa de fazer diferença; o total diário foi o principal preditor do resultado. Num ensaio com homens treinados, 25 g de proteína tomados imediatamente antes ou imediatamente depois do treino geraram ganhos semelhantes de força e massa muscular. O posicionamento da ISSN aponta que o efeito anabólico do exercício dura pelo menos 24 horas, embora diminua com o tempo. Parte verdadeira: comer proteína perto do treino é útil e prático, sobretudo se você treinou em jejum ou passou muitas horas sem comer; a janela existe, mas é larga, de algumas horas, e não de 30 minutos.",
+    "practice": [
+      "Garanta a proteína total do dia antes de se preocupar com o horário.",
+      "Faça uma refeição com proteína algumas horas antes ou depois do treino; não é preciso correr para o shake.",
+      "Se treinar em jejum, faça uma refeição com proteína logo depois.",
+      "Escolha o horário mais prático para a sua rotina."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Schoenfeld BJ, Aragon AA, Krieger JW. The effect of protein timing on muscle strength and hypertrophy: a meta-analysis. J Int Soc Sports Nutr. 2013;10(1):53.",
+        "year": 2013,
+        "doi": "10.1186/1550-2783-10-53"
+      },
+      {
+        "citation": "Schoenfeld BJ, Aragon A, Wilborn C, et al. Pre- versus post-exercise protein intake has similar effects on muscular adaptations. PeerJ. 2017;5:e2825.",
+        "year": 2017,
+        "doi": "10.7717/peerj.2825"
+      },
+      {
+        "citation": "Aragon AA, Schoenfeld BJ. Nutrient timing revisited: is there a post-exercise anabolic window? J Int Soc Sports Nutr. 2013;10(1):5.",
+        "year": 2013,
+        "doi": "10.1186/1550-2783-10-5"
+      },
+      {
+        "citation": "Jäger R, Kerksick CM, Campbell BI, et al. International Society of Sports Nutrition Position Stand: protein and exercise. J Int Soc Sports Nutr. 2017;14:20.",
+        "year": 2017,
+        "doi": "10.1186/s12970-017-0177-8"
+      }
+    ]
+  },
+  {
+    "id": "my-creatine-steroid-hair",
+    "topic": "myths",
+    "title": "Mito: creatina é anabolizante, faz cair cabelo e só incha",
+    "keywords": [
+      "creatina é anabolizante",
+      "creatina faz cair cabelo",
+      "creatina calvície",
+      "creatina retém líquido",
+      "creatina incha",
+      "creatina engorda",
+      "creatina dht",
+      "creatina mexe com hormônio",
+      "creatina precisa saturar",
+      "creatine steroid",
+      "creatine hair loss",
+      "creatine water retention"
+    ],
+    "summary": "A creatina é um composto que o próprio corpo produz e que também vem da carne; ela aumenta a reserva de energia rápida do músculo. Tem estrutura química diferente dos esteroides e não age em receptores androgênicos. Numa revisão, 10 de 12 estudos não viram mudança na testosterona e dois viram aumentos pequenos. O medo da calvície vem de um único estudo de 2009 com jogadores de rúgbi, no qual o DHT subiu após a fase de saturação; o cabelo não foi avaliado e o achado não foi replicado. Em 2025, um ensaio randomizado de 12 semanas com 5 g/dia não encontrou diferença em DHT, densidade ou espessura dos fios em relação ao placebo. Creatina também não aumenta gordura. Parte verdadeira: nos primeiros dias, principalmente com saturação, a água corporal sobe, parte dela dentro da célula muscular, e o peso pode aumentar um pouco. Faltam estudos longos em pessoas com predisposição à calvície.",
+    "practice": [
+      "Creatina monohidratada a 3-5 g/dia é a forma mais estudada; a fase de saturação é opcional.",
+      "Sem saturação, leva cerca de 4 semanas de uso diário para encher os estoques musculares.",
+      "Um pequeno aumento de peso nas primeiras semanas é água e músculo, não gordura.",
+      "Quem tem histórico forte de calvície e está preocupado pode acompanhar com dermatologista, mas não há evidência de que a creatina cause queda."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Antonio J, Candow DG, Forbes SC, et al. Common questions and misconceptions about creatine supplementation: what does the scientific evidence really show? J Int Soc Sports Nutr. 2021;18(1):13.",
+        "year": 2021,
+        "doi": "10.1186/s12970-021-00412-w"
+      },
+      {
+        "citation": "van der Merwe J, Brooks NE, Myburgh KH. Three weeks of creatine monohydrate supplementation affects dihydrotestosterone to testosterone ratio in college-aged rugby players. Clin J Sport Med. 2009;19(5):399-404.",
+        "year": 2009,
+        "doi": "10.1097/JSM.0b013e3181b8b52f"
+      },
+      {
+        "citation": "Lak M, Forbes SC, Ashtary-Larky D, et al. Does creatine cause hair loss? A 12-week randomized controlled trial. J Int Soc Sports Nutr. 2025;22(sup1):2495229.",
+        "year": 2025,
+        "doi": "10.1080/15502783.2025.2495229"
+      }
+    ]
+  },
+  {
+    "id": "my-creatine-kidneys",
+    "topic": "myths",
+    "title": "Mito: creatina faz mal aos rins",
+    "keywords": [
+      "creatina faz mal aos rins",
+      "creatina e rim",
+      "creatina prejudica os rins",
+      "creatina e creatinina",
+      "creatinina alta por causa da creatina",
+      "creatina é segura",
+      "creatina faz mal",
+      "exame de sangue creatina",
+      "creatine kidney damage",
+      "creatine safety",
+      "creatinine and creatine",
+      "is creatine safe"
+    ],
+    "summary": "A preocupação cresceu por causa de relatos de caso isolados e porque o exame de creatinina pode subir em quem usa creatina. A creatinina é um produto da degradação da creatina: usar o suplemento, ou comer muita carne, pode elevar esse valor sem que o rim esteja funcionando pior, o que confunde a leitura do exame. Após mais de 20 anos de pesquisa, revisões e o posicionamento da ISSN concluem que, em pessoas saudáveis, as doses recomendadas não causam dano renal; houve uso de até 30 g/dia por 5 anos bem tolerado. Uma meta-análise de 2019 também concluiu que não houve dano renal nas doses e durações estudadas. Os relatos de caso envolviam doença renal prévia, remédios ou outros suplementos, doses muito altas ou uso de anabolizantes. Parte verdadeira: quem já tem doença renal deve usar apenas com acompanhamento médico.",
+    "practice": [
+      "Para pessoas saudáveis, 3-5 g/dia de creatina monohidratada é considerado seguro.",
+      "Avise o médico que usa creatina antes de exames de sangue: a creatinina pode vir um pouco mais alta sem indicar doença.",
+      "Se você tem doença renal diagnosticada, use somente com orientação médica.",
+      "Não ultrapasse as doses recomendadas nem combine vários suplementos sem necessidade."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Antonio J, Candow DG, Forbes SC, et al. Common questions and misconceptions about creatine supplementation: what does the scientific evidence really show? J Int Soc Sports Nutr. 2021;18(1):13.",
+        "year": 2021,
+        "doi": "10.1186/s12970-021-00412-w"
+      },
+      {
+        "citation": "Kreider RB, Kalman DS, Antonio J, et al. International Society of Sports Nutrition position stand: safety and efficacy of creatine supplementation in exercise, sport, and medicine. J Int Soc Sports Nutr. 2017;14:18.",
+        "year": 2017,
+        "doi": "10.1186/s12970-017-0173-z"
+      },
+      {
+        "citation": "de Souza E Silva A, Pertille A, Reis Barbosa CG, et al. Effects of creatine supplementation on renal function: a systematic review and meta-analysis. J Ren Nutr. 2019;29(6):480-489.",
+        "year": 2019,
+        "doi": "10.1053/j.jrn.2019.05.004"
+      }
+    ]
+  },
+  {
+    "id": "my-stretching-injury",
+    "topic": "myths",
+    "title": "Mito: alongar antes da musculação previne lesões",
+    "keywords": [
+      "alongar antes do treino",
+      "alongamento previne lesão",
+      "alongamento estático antes do treino",
+      "aquecimento antes da musculação",
+      "alongamento tira força",
+      "precisa alongar",
+      "alongar depois do treino",
+      "stretching before lifting",
+      "static stretching injury prevention",
+      "warm-up before lifting",
+      "stretching strength loss"
+    ],
+    "summary": "Alongar antes de treinar é um hábito antigo e parece proteger o músculo. Um ensaio com 1.538 recrutas militares não encontrou redução de lesões com alongamento estático no aquecimento. Uma meta-análise de 25 ensaios, com mais de 26 mil participantes, não viu efeito do alongamento sobre lesões (risco relativo ~0,96), enquanto o treino de força reduziu as lesões esportivas para menos de um terço. O alongamento estático logo antes do esforço também pode reduzir um pouco a força, em média ~5% numa meta-análise, com efeito bem menor quando cada alongamento dura menos de 45-60 segundos ou é seguido de aquecimento dinâmico. Parte verdadeira: alongar aumenta a amplitude de movimento por um curto período, e uma revisão sugere que, dentro de um aquecimento completo, pode ajudar a reduzir lesões musculares em algumas atividades. Não é proibido, só não substitui um bom aquecimento.",
+    "practice": [
+      "Aqueça com movimentos dinâmicos e séries leves do próprio exercício.",
+      "Se quiser alongar antes, faça curto (menos de 60 s por músculo) e siga com aquecimento dinâmico.",
+      "Para prevenir lesões, invista em treino de força com progressão gradual.",
+      "Alongamento para ganhar flexibilidade pode ser feito depois do treino ou em outro momento."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Pope RP, Herbert RD, Kirwan JD, et al. A randomized trial of preexercise stretching for prevention of lower-limb injury. Med Sci Sports Exerc. 2000;32(2):271-277.",
+        "year": 2000,
+        "doi": "10.1097/00005768-200002000-00004"
+      },
+      {
+        "citation": "Lauersen JB, Bertelsen DM, Andersen LB. The effectiveness of exercise interventions to prevent sports injuries: a systematic review and meta-analysis of randomised controlled trials. Br J Sports Med. 2014;48(11):871-877.",
+        "year": 2014,
+        "doi": "10.1136/bjsports-2013-092538"
+      },
+      {
+        "citation": "Simic L, Sarabon N, Markovic G. Does pre-exercise static stretching inhibit maximal muscular performance? A meta-analytical review. Scand J Med Sci Sports. 2013;23(2):131-148.",
+        "year": 2013,
+        "doi": "10.1111/j.1600-0838.2012.01444.x"
+      },
+      {
+        "citation": "Behm DG, Blazevich AJ, Kay AD, et al. Acute effects of muscle stretching on physical performance, range of motion, and injury incidence in healthy active individuals: a systematic review. Appl Physiol Nutr Metab. 2016;41(1):1-11.",
+        "year": 2016,
+        "doi": "10.1139/apnm-2015-0235"
+      }
+    ]
+  },
+  {
+    "id": "my-squat-depth-knees",
+    "topic": "myths",
+    "title": "Mito: agachar fundo ou deixar o joelho passar da ponta do pé estraga o joelho",
+    "keywords": [
+      "agachamento profundo faz mal",
+      "agachamento abaixo de 90 graus",
+      "joelho passar da ponta do pé",
+      "joelho não pode passar do pé",
+      "agachamento completo joelho",
+      "agachar fundo machuca",
+      "dor no joelho agachamento",
+      "deep squat knees",
+      "knees over toes",
+      "squat depth",
+      "full squat vs half squat",
+      "squat knee safety"
+    ],
+    "summary": "Duas orientações comuns são parar o agachamento em 90° e impedir o joelho de passar da ponta do pé. Uma revisão com mais de 160 artigos concluiu que agachamentos profundos, com técnica aprendida e carga progressiva, não aumentam o risco de lesão das estruturas passivas do joelho; a maior compressão atrás da patela ocorre por volta de 90°, e com mais flexão a carga se distribui por uma área maior. A mesma revisão alerta que meio agachamento com cargas muito altas pode sobrecarregar mais joelho e coluna. Num ensaio, o agachamento completo gerou mais hipertrofia de glúteo e adutores que o meio agachamento. Quanto ao joelho: bloquear o avanço reduziu o torque no joelho em ~22%, mas multiplicou o torque no quadril e aumentou a inclinação do tronco e o movimento da coluna. Parte verdadeira: com dor ou lesão no joelho, limitar a amplitude temporariamente pode ser necessário.",
+    "practice": [
+      "Agache na maior amplitude que conseguir manter com boa técnica e sem dor.",
+      "Deixe os joelhos avançarem naturalmente na direção dos pés; não force a canela a ficar vertical.",
+      "Aumente a carga de forma progressiva e evite cargas muito altas só porque a amplitude é curta.",
+      "Com dor ou lesão no joelho, procure avaliação e ajuste a amplitude temporariamente."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Hartmann H, Wirth K, Klusemann M. Analysis of the load on the knee joint and vertebral column with changes in squatting depth and weight load. Sports Med. 2013;43(10):993-1008.",
+        "year": 2013,
+        "doi": "10.1007/s40279-013-0073-6"
+      },
+      {
+        "citation": "Kubo K, Ikebukuro T, Yata H. Effects of squat training with different depths on lower limb muscle volumes. Eur J Appl Physiol. 2019;119(9):1933-1942.",
+        "year": 2019,
+        "doi": "10.1007/s00421-019-04181-y"
+      },
+      {
+        "citation": "Fry AC, Smith JC, Schilling BK. Effect of knee position on hip and knee torques during the barbell squat. J Strength Cond Res. 2003;17(4):629-633.",
+        "year": 2003,
+        "doi": "10.1519/1533-4287(2003)017<0629:eokpoh>2.0.co;2"
+      },
+      {
+        "citation": "List R, Gülay T, Stoop M, et al. Kinematics of the trunk and the lower extremities during restricted and unrestricted squats. J Strength Cond Res. 2013;27(6):1529-1538.",
+        "year": 2013,
+        "doi": "10.1519/JSC.0b013e3182736034"
+      }
+    ]
+  },
+  {
+    "id": "my-machines-useless",
+    "topic": "myths",
+    "title": "Mito: máquina não serve, só peso livre dá resultado",
+    "keywords": [
+      "máquina ou peso livre",
+      "aparelho não dá resultado",
+      "peso livre é melhor",
+      "treinar só em máquina",
+      "smith ou barra livre",
+      "máquina é para iniciante",
+      "halteres ou aparelhos",
+      "machines vs free weights",
+      "free weights better",
+      "machine training hypertrophy",
+      "smith machine"
+    ],
+    "summary": "O peso livre exige mais estabilização e equilíbrio e, por isso, é visto como 'o treino de verdade'. Uma meta-análise de 13 estudos (1.016 participantes) não encontrou diferença entre peso livre e máquina para hipertrofia, nem na comparação direta de força e salto. O que existe é especificidade: quem treina com peso livre melhora mais nos testes com peso livre, e quem treina em máquina tende a melhorar mais nos testes em máquina. Num ensaio de 8 semanas com 46 jovens, os dois grupos tiveram aumento semelhante de espessura muscular e de força no supino e no agachamento livres. Parte verdadeira: se o objetivo é desempenho em movimentos livres, como num esporte ou em levantamentos, treinar esses movimentos é importante. Máquinas facilitam o aprendizado, o isolamento e a progressão com segurança. Evidência moderada: poucos estudos mediram hipertrofia diretamente.",
+    "practice": [
+      "Escolha o equipamento pelo objetivo, conforto e disponibilidade; os dois constroem músculo.",
+      "Para ficar forte num movimento livre específico, inclua esse movimento no treino.",
+      "Máquinas são boas para iniciantes, para treinar perto da falha com segurança e para isolar músculos.",
+      "Combinar peso livre e máquinas é uma estratégia prática."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Haugen ME, Vårvik FT, Larsen S, et al. Effect of free-weight vs. machine-based strength training on maximal strength, hypertrophy and jump performance - a systematic review and meta-analysis. BMC Sports Sci Med Rehabil. 2023;15(1):103.",
+        "year": 2023,
+        "doi": "10.1186/s13102-023-00713-4"
+      },
+      {
+        "citation": "Schwanbeck SR, Cornish SM, Barss T, et al. Effects of training with free weights versus machines on muscle mass, strength, free testosterone, and free cortisol levels. J Strength Cond Res. 2020;34(7):1851-1859.",
+        "year": 2020,
+        "doi": "10.1519/JSC.0000000000003349"
+      }
+    ]
+  },
+  {
+    "id": "my-sweat-fat",
+    "topic": "myths",
+    "title": "Mito: quanto mais suor, mais gordura queimada",
+    "keywords": [
+      "suar emagrece",
+      "suor queima gordura",
+      "treinar de agasalho",
+      "roupa de plástico emagrece",
+      "sauna emagrece",
+      "treinar com cinta para suar",
+      "perdi peso suando",
+      "quanto mais suor mais gordura",
+      "sweating burns fat",
+      "sweat weight loss",
+      "sauna suit",
+      "sweat equals fat loss"
+    ],
+    "summary": "Depois de um treino suado a balança mostra menos peso, e isso parece prova de gordura queimada. Mas o suor serve para resfriar o corpo: é água com eletrólitos. A quantidade de suor varia muito entre pessoas e depende de calor, umidade, roupa, aclimatação ao calor, tamanho corporal e intensidade, fatores que não medem quanta gordura foi usada como energia. A ciência usa justamente a diferença de peso antes e depois do exercício para estimar a perda de suor, ou seja, de água, que volta quando você se hidrata. Treinar com agasalho, plástico ou em sauna aumenta a perda de líquido e o risco de desidratação; perder mais de 2% do peso corporal em água já pode prejudicar o desempenho. Parte verdadeira: treinos mais intensos e longos gastam mais energia e também fazem suar mais, mas o suor é consequência do calor, não uma medida da queima de gordura.",
+    "practice": [
+      "Avalie o emagrecimento pela tendência do peso e da cintura ao longo de semanas, não pelo peso logo após o treino.",
+      "Não treine com roupas de plástico ou agasalho em excesso para 'suar mais'.",
+      "Reponha líquidos: pesar-se antes e depois do treino ajuda a estimar quanto beber.",
+      "Em dias quentes, reduza a intensidade e reforce a hidratação."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Sawka MN, Burke LM, Eichner ER, et al.; American College of Sports Medicine. American College of Sports Medicine position stand. Exercise and fluid replacement. Med Sci Sports Exerc. 2007;39(2):377-390.",
+        "year": 2007,
+        "doi": "10.1249/mss.0b013e31802ca597"
+      },
+      {
+        "citation": "Baker LB. Sweating rate and sweat sodium concentration in athletes: a review of methodology and intra/interindividual variability. Sports Med. 2017;47(Suppl 1):111-128.",
+        "year": 2017,
+        "doi": "10.1007/s40279-017-0691-5"
+      },
+      {
+        "citation": "Baker LB. Physiology of sweat gland function: the roles of sweating and sweat composition in human health. Temperature (Austin). 2019;6(3):211-259.",
+        "year": 2019,
+        "doi": "10.1080/23328940.2019.1632145"
+      }
+    ]
+  },
+  {
+    "id": "my-fasted-cardio",
+    "topic": "myths",
+    "title": "Mito: aeróbico em jejum queima mais gordura e emagrece mais",
+    "keywords": [
+      "aeróbico em jejum",
+      "aeaj",
+      "cardio em jejum emagrece",
+      "treinar em jejum",
+      "jejum queima mais gordura",
+      "treino em jejum perde massa",
+      "aeróbico de manhã em jejum",
+      "fasted cardio",
+      "fasted exercise fat loss",
+      "training fasted",
+      "empty stomach workout"
+    ],
+    "summary": "A lógica é que, sem comida recente, o corpo usaria mais gordura como combustível. Isso é parcialmente verdade durante o exercício: uma meta-análise de 27 estudos mostrou maior oxidação de gordura no aeróbico em jejum, em média cerca de 3 g a mais por sessão. Mas o que importa para emagrecer é o balanço energético ao longo de dias e semanas. Num ensaio de 4 semanas com mulheres jovens em dieta hipocalórica, fazer 1 hora de aeróbico em jejum ou alimentada levou à mesma perda de peso e de gordura. Uma meta-análise de 5 estudos (96 pessoas) encontrou diferença trivial entre jejum e alimentado na composição corporal, com a ressalva de que há poucos dados. Conclusão: treinar em jejum é questão de preferência, tolerância e rotina, não um atalho para perder gordura. Evidência moderada.",
+    "practice": [
+      "Faça aeróbico no horário e no estado (jejum ou alimentado) em que você se sente melhor e consegue manter a rotina.",
+      "Para perder gordura, foque no déficit calórico total e na constância.",
+      "Se treinar em jejum, faça uma refeição com proteína depois.",
+      "Se sentir tontura ou queda forte de rendimento em jejum, coma algo leve antes."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Vieira AF, Costa RR, Macedo RC, et al. Effects of aerobic exercise performed in fasted v. fed state on fat and carbohydrate metabolism in adults: a systematic review and meta-analysis. Br J Nutr. 2016;116(7):1153-1164.",
+        "year": 2016,
+        "doi": "10.1017/S0007114516003160"
+      },
+      {
+        "citation": "Schoenfeld BJ, Aragon AA, Wilborn CD, et al. Body composition changes associated with fasted versus non-fasted aerobic exercise. J Int Soc Sports Nutr. 2014;11(1):54.",
+        "year": 2014,
+        "doi": "10.1186/s12970-014-0054-7"
+      },
+      {
+        "citation": "Hackett D, Hagstrom AD. Effect of overnight fasted exercise on weight loss and body composition: a systematic review and meta-analysis. J Funct Morphol Kinesiol. 2017;2(4):43.",
+        "year": 2017,
+        "doi": "10.3390/jfmk2040043"
+      }
+    ]
+  },
+  {
+    "id": "my-fat-burning-zone",
+    "topic": "myths",
+    "title": "Mito: para emagrecer é preciso ficar na 'zona de queima de gordura'",
+    "keywords": [
+      "zona de queima de gordura",
+      "frequência cardíaca para queimar gordura",
+      "aeróbico leve queima mais gordura",
+      "hiit ou aeróbico contínuo",
+      "intensidade para emagrecer",
+      "caminhada queima mais gordura",
+      "fat burning zone",
+      "fatmax",
+      "hiit vs steady state",
+      "best heart rate for fat loss"
+    ],
+    "summary": "Esteiras e relógios mostram uma faixa de 'queima de gordura', geralmente de intensidade moderada. A base fisiológica é real: a taxa de oxidação de gordura sobe da intensidade leve para a moderada e cai em intensidades altas, com pico costumando ficar entre cerca de 45% e 65% do VO2máx, conforme o nível de treino, o sexo e a alimentação. Mas usar mais gordura como combustível durante o exercício não significa perder mais gordura corporal. Meta-análises que compararam treino intervalado de alta intensidade com aeróbico contínuo moderado encontraram reduções semelhantes de gordura corporal; uma delas, com 31 estudos, observou que nenhum dos dois, sozinho e em curto prazo, produziu perdas clinicamente grandes. O que mais pesa é o gasto energético total somado à alimentação. Parte verdadeira: intensidade moderada é confortável e pode ser mantida por mais tempo, o que ajuda na adesão.",
+    "practice": [
+      "Escolha a intensidade que você consegue manter com regularidade; constância vale mais que a 'zona'.",
+      "Use intervalado quando tiver pouco tempo e contínuo moderado quando preferir um ritmo confortável.",
+      "Para perder gordura, combine aeróbico com treino de força e ajuste da alimentação.",
+      "Não se prenda ao número de 'calorias de gordura' mostrado pelo aparelho."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Achten J, Jeukendrup AE. Optimizing fat oxidation through exercise and diet. Nutrition. 2004;20(7-8):716-727.",
+        "year": 2004,
+        "doi": "10.1016/j.nut.2004.04.005"
+      },
+      {
+        "citation": "Purdom T, Kravitz L, Dokladny K, et al. Understanding the factors that effect maximal fat oxidation. J Int Soc Sports Nutr. 2018;15:3.",
+        "year": 2018,
+        "doi": "10.1186/s12970-018-0207-1"
+      },
+      {
+        "citation": "Wewege M, van den Berg R, Ward RE, et al. The effects of high-intensity interval training vs. moderate-intensity continuous training on body composition in overweight and obese adults: a systematic review and meta-analysis. Obes Rev. 2017;18(6):635-646.",
+        "year": 2017,
+        "doi": "10.1111/obr.12532"
+      },
+      {
+        "citation": "Keating SE, Johnson NA, Mielke GI, et al. A systematic review and meta-analysis of interval training versus moderate-intensity continuous training on body adiposity. Obes Rev. 2017;18(8):943-964.",
+        "year": 2017,
+        "doi": "10.1111/obr.12536"
+      }
+    ]
+  },
+  {
+    "id": "my-muscle-turns-fat",
+    "topic": "myths",
+    "title": "Mito: se parar de treinar, o músculo vira gordura",
+    "keywords": [
+      "músculo vira gordura",
+      "parar de treinar engorda",
+      "parei a academia e perdi tudo",
+      "férias da academia",
+      "destreino",
+      "memória muscular",
+      "quanto tempo para perder massa muscular",
+      "muscle turns into fat",
+      "detraining",
+      "muscle memory",
+      "stop working out",
+      "break from the gym"
+    ],
+    "summary": "Músculo e gordura são tecidos diferentes; um não se transforma no outro. O que costuma acontecer ao parar é uma combinação: o músculo diminui por falta de estímulo e, se a alimentação continua igual com gasto menor, a gordura aumenta. Uma meta-análise de 103 estudos mostrou que interromper o treino reduz a força de forma proporcional ao tempo parado, com perdas maiores em idosos e em pessoas inativas. Mas a perda é gradual: a força cai devagar e costuma permanecer acima do nível inicial por longos períodos. Num estudo, pausas de 3 semanas a cada 6 semanas de treino resultaram, após 6 meses, em hipertrofia semelhante à de quem treinou sem parar, porque a retomada foi rápida. Em outro, 20 semanas sem treino levaram o tamanho muscular de volta ao início, mas parte do ganho de força foi mantida. Parte verdadeira: em pausas longas sem ajuste da dieta, perde-se músculo e ganha-se gordura.",
+    "practice": [
+      "Pausas curtas para descanso ou viagem não apagam seus resultados.",
+      "Se precisar reduzir o treino, mantenha a intensidade e corte volume e frequência: isso preserva boa parte dos ganhos.",
+      "Ao parar ou reduzir o treino, ajuste a alimentação ao gasto menor.",
+      "Ao voltar, recomece com volume menor e progrida aos poucos."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Bosquet L, Berryman N, Dupuy O, et al. Effect of training cessation on muscular performance: a meta-analysis. Scand J Med Sci Sports. 2013;23(3):e140-e149.",
+        "year": 2013,
+        "doi": "10.1111/sms.12047"
+      },
+      {
+        "citation": "Ogasawara R, Yasuda T, Ishii N, et al. Comparison of muscle hypertrophy following 6-month of continuous and periodic strength training. Eur J Appl Physiol. 2013;113(4):975-985.",
+        "year": 2013,
+        "doi": "10.1007/s00421-012-2511-9"
+      },
+      {
+        "citation": "Psilander N, Eftestøl E, Cumming KT, et al. Effects of training, detraining, and retraining on strength, hypertrophy, and myonuclear number in human skeletal muscle. J Appl Physiol. 2019;126(6):1636-1645.",
+        "year": 2019,
+        "doi": "10.1152/japplphysiol.00917.2018"
+      },
+      {
+        "citation": "Mujika I, Padilla S. Detraining: loss of training-induced physiological and performance adaptations. Part II: long term insufficient training stimulus. Sports Med. 2000;30(3):145-154.",
+        "year": 2000,
+        "doi": "10.2165/00007256-200030030-00001"
+      }
+    ]
+  },
+  {
+    "id": "my-supplements-needed",
+    "topic": "myths",
+    "title": "Mito: sem suplemento não dá para ganhar massa muscular",
+    "keywords": [
+      "precisa de suplemento para crescer",
+      "whey é obrigatório",
+      "suplementos necessários",
+      "quais suplementos tomar",
+      "suplemento funciona",
+      "ganhar massa sem suplemento",
+      "suplemento contaminado",
+      "do i need supplements",
+      "supplements for muscle growth",
+      "is whey necessary",
+      "supplement contamination"
+    ],
+    "summary": "O marketing faz parecer que o resultado depende de potes. O consenso do Comitê Olímpico Internacional conclui que, entre os suplementos que prometem melhorar o desempenho, poucos têm boa evidência (como cafeína, creatina, tamponantes e nitrato), e que a alimentação deve ser avaliada antes de qualquer suplemento. O whey ajuda, mas pelo motivo certo: uma meta-análise de 49 ensaios mostrou que suplementar proteína aumentou o ganho de massa magra em média em apenas ~0,3 kg, e acima de cerca de 1,6 g/kg/dia de proteína total não houve benefício adicional. Ou seja, é uma forma prática de bater a meta diária, não algo indispensável. Há também riscos: numa análise internacional, cerca de 15% de 634 suplementos 'comuns' continham esteroides anabolizantes não declarados no rótulo (amostras de 2000-2001). Parte verdadeira: a creatina tem efeito consistente, e o whey facilita atingir a proteína do dia.",
+    "practice": [
+      "Priorize treino progressivo, proteína total do dia e calorias adequadas antes de pensar em suplementos.",
+      "Use whey se tiver dificuldade em atingir a proteína do dia pela comida.",
+      "Se quiser um suplemento com boa evidência para força e massa, a creatina é a principal opção.",
+      "Prefira produtos com laudo ou certificação de terceiros para reduzir o risco de contaminação."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Maughan RJ, Burke LM, Dvorak J, et al. IOC consensus statement: dietary supplements and the high-performance athlete. Br J Sports Med. 2018;52(7):439-455.",
+        "year": 2018,
+        "doi": "10.1136/bjsports-2018-099027"
+      },
+      {
+        "citation": "Morton RW, Murphy KT, McKellar SR, et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376-384.",
+        "year": 2018,
+        "doi": "10.1136/bjsports-2017-097608"
+      },
+      {
+        "citation": "Geyer H, Parr MK, Mareck U, et al. Analysis of non-hormonal nutritional supplements for anabolic-androgenic steroids - results of an international study. Int J Sports Med. 2004;25(2):124-129.",
+        "year": 2004,
+        "doi": "10.1055/s-2004-819955"
+      }
+    ]
+  },
+  {
+    "id": "my-training-frequency",
+    "topic": "myths",
+    "title": "Mito: é preciso treinar cada músculo todo dia, ou dar uma semana inteira de descanso",
+    "keywords": [
+      "quantas vezes treinar cada músculo",
+      "treinar o mesmo músculo todo dia",
+      "frequência de treino",
+      "descanso entre treinos",
+      "músculo precisa de uma semana de descanso",
+      "treino abc ou full body",
+      "divisão de treino",
+      "training frequency",
+      "how often to train each muscle",
+      "bro split",
+      "full body vs split",
+      "rest days"
+    ],
+    "summary": "Duas crenças opostas convivem: treinar o músculo todo dia para crescer mais rápido, ou treinar cada grupo só uma vez por semana para ele 'se recuperar'. Uma meta-análise de 25 estudos mostrou que, com o volume semanal igualado, a frequência por si só não muda de forma significativa a hipertrofia: o que conta é o total de séries bem feitas. Uma análise anterior sugeriu vantagem em treinar cada músculo 2 vezes por semana em vez de 1, e frequências maiores ajudam porque facilitam distribuir mais volume. Quanto à recuperação, num estudo pequeno com jovens, a síntese de proteína muscular ficou mais que o dobro do normal 24 horas após um treino pesado e voltou perto do basal em ~36 horas; esperar uma semana inteira não é necessário. Parte verdadeira: o músculo precisa de recuperação, e treinar o mesmo grupo pesado todo dia com muito volume pode acumular fadiga.",
+    "practice": [
+      "Treinar cada músculo cerca de 2 vezes por semana é um ponto de partida prático.",
+      "Escolha a divisão (full body, AB, ABC etc.) que encaixa na sua rotina e permite completar o volume semanal.",
+      "Se o mesmo músculo for treinado em dias seguidos, observe se o desempenho se mantém.",
+      "Se o desempenho cair de um treino para o outro, aumente o descanso ou reduza o volume."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Schoenfeld BJ, Grgic J, Krieger J. How many times per week should a muscle be trained to maximize muscle hypertrophy? A systematic review and meta-analysis of studies examining the effects of resistance training frequency. J Sports Sci. 2019;37(11):1286-1295.",
+        "year": 2019,
+        "doi": "10.1080/02640414.2018.1555906"
+      },
+      {
+        "citation": "Schoenfeld BJ, Ogborn D, Krieger JW. Effects of resistance training frequency on measures of muscle hypertrophy: a systematic review and meta-analysis. Sports Med. 2016;46(11):1689-1697.",
+        "year": 2016,
+        "doi": "10.1007/s40279-016-0543-8"
+      },
+      {
+        "citation": "MacDougall JD, Gibala MJ, Tarnopolsky MA, et al. The time course for elevated muscle protein synthesis following heavy resistance exercise. Can J Appl Physiol. 1995;20(4):480-486.",
+        "year": 1995,
+        "doi": "10.1139/h95-038"
+      }
+    ]
+  }
+]

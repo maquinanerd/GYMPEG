@@ -1,0 +1,1100 @@
+[
+  {
+    "id": "nu-protein-daily-intake",
+    "topic": "nutrition",
+    "title": "Quanta proteína por dia para ganhar músculo",
+    "keywords": [
+      "proteína",
+      "proteína por dia",
+      "quanto de proteína",
+      "gramas por quilo",
+      "ganhar massa",
+      "hipertrofia",
+      "whey",
+      "dieta",
+      "proteína faz mal pro rim",
+      "rim",
+      "protein intake",
+      "daily protein",
+      "muscle gain",
+      "g/kg",
+      "kidney"
+    ],
+    "summary": "A meta-análise de Morton et al. (2018; 49 ensaios, cerca de 1.900 pessoas) mostrou que aumentar a proteína durante o treino de força traz ganhos pequenos, mas reais, de massa livre de gordura (~0,3 kg) e de força (~2,5 kg no 1RM). O benefício para massa magra deixou de crescer por volta de 1,6 g/kg/dia de proteína total, mas o intervalo de confiança foi largo (1,0 a 2,2 g/kg), por isso os próprios autores sugerem ~2,2 g/kg como teto prático para quem quer garantir. A ISSN (2017) recomenda 1,4–2,0 g/kg/dia para a maioria das pessoas que treinam, e a meta-análise de Nunes et al. (2022) confirma efeito pequeno, mais claro com ≥1,6 g/kg em adultos com menos de 65 anos. Em adultos saudáveis, dietas com mais proteína não pioraram a função renal (Devries et al., 2018); isso não vale para quem já tem doença renal. A faixa é bem sustentada; o número exato varia de pessoa para pessoa.",
+    "practice": [
+      "Mire em cerca de 1,6 g de proteína por kg de peso corporal por dia; até ~2,2 g/kg é uma margem razoável para quem quer maximizar ganhos.",
+      "Priorize atingir o total diário com comida; suplementos como o whey são só uma forma prática de completar.",
+      "Proteína não compensa treino ruim: o estímulo do treino de força continua sendo o fator principal.",
+      "Procure um médico ou nutricionista antes de aumentar a proteína se você tem doença renal, diabetes com alteração renal ou outra condição crônica."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Morton RW, Murphy KT, McKellar SR, et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376-384.",
+        "year": 2018,
+        "doi": "10.1136/bjsports-2017-097608"
+      },
+      {
+        "citation": "Jäger R, Kerksick CM, Campbell BI, et al. International Society of Sports Nutrition Position Stand: protein and exercise. J Int Soc Sports Nutr. 2017;14:20.",
+        "year": 2017,
+        "doi": "10.1186/s12970-017-0177-8"
+      },
+      {
+        "citation": "Nunes EA, Colenso-Semple L, McKellar SR, et al. Systematic review and meta-analysis of protein intake to support muscle mass and function in healthy adults. J Cachexia Sarcopenia Muscle. 2022;13(2):795-810.",
+        "year": 2022,
+        "doi": "10.1002/jcsm.12922"
+      },
+      {
+        "citation": "Devries MC, Sithamparapillai A, Brimble KS, et al. Changes in Kidney Function Do Not Differ between Healthy Adults Consuming Higher- Compared with Lower- or Normal-Protein Diets: A Systematic Review and Meta-Analysis. J Nutr. 2018;148(11):1760-1775.",
+        "year": 2018,
+        "doi": "10.1093/jn/nxy197"
+      }
+    ]
+  },
+  {
+    "id": "nu-protein-per-meal-distribution",
+    "topic": "nutrition",
+    "title": "Proteína por refeição e distribuição ao longo do dia",
+    "keywords": [
+      "proteína por refeição",
+      "quantas gramas por refeição",
+      "limite de proteína",
+      "corpo absorve",
+      "distribuição",
+      "refeições",
+      "antes de dormir",
+      "caseína",
+      "protein per meal",
+      "protein distribution",
+      "meal frequency",
+      "pre-sleep protein",
+      "anabolic response"
+    ],
+    "summary": "Por muito tempo se disse que o corpo só aproveita 20–25 g de proteína por refeição. Hoje se sabe que doses maiores não são simplesmente desperdiçadas: em estudo de laboratório, Trommelen et al. (2023) mostraram que 100 g de proteína após um treino de corpo inteiro geraram resposta anabólica maior e mais longa (mais de 12 h) do que 25 g, com impacto desprezível na oxidação de aminoácidos. Mesmo assim, distribuir parece útil: num estudo agudo, 4 doses de 20 g a cada 3 h estimularam mais a síntese de proteína muscular do que 8 doses de 10 g ou 2 de 40 g (Areta et al., 2013). Schoenfeld e Aragon (2018) sugerem ~0,4 g/kg por refeição em pelo menos 4 refeições, chegando a ~0,55 g/kg se a meta diária for 2,2 g/kg. Proteína antes de dormir aumenta a síntese durante a noite (Snijders et al., 2019). Ressalva: quase tudo vem de medidas agudas; o total diário pesa mais do que a distribuição exata.",
+    "practice": [
+      "Divida a proteína do dia em 3 a 5 refeições, com cerca de 0,4 g/kg (em geral 20–40 g) em cada.",
+      "Se numa refeição você comer bem mais do que isso, não há desperdício relevante: o importante é fechar o total do dia.",
+      "Uma refeição ou lanche com proteína antes de dormir é uma boa forma de completar a meta diária."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Trommelen J, van Lieshout GAA, Nyakayiru J, et al. The anabolic response to protein ingestion during recovery from exercise has no upper limit in magnitude and duration in vivo in humans. Cell Rep Med. 2023;4(12):101324.",
+        "year": 2023,
+        "doi": "10.1016/j.xcrm.2023.101324"
+      },
+      {
+        "citation": "Schoenfeld BJ, Aragon AA. How much protein can the body use in a single meal for muscle-building? Implications for daily protein distribution. J Int Soc Sports Nutr. 2018;15:10.",
+        "year": 2018,
+        "doi": "10.1186/s12970-018-0215-1"
+      },
+      {
+        "citation": "Areta JL, Burke LM, Ross ML, et al. Timing and distribution of protein ingestion during prolonged recovery from resistance exercise alters myofibrillar protein synthesis. J Physiol. 2013;591(9):2319-2331.",
+        "year": 2013,
+        "doi": "10.1113/jphysiol.2012.244897"
+      },
+      {
+        "citation": "Snijders T, Trommelen J, Kouw IWK, et al. The Impact of Pre-sleep Protein Ingestion on the Skeletal Muscle Adaptive Response to Exercise in Humans: An Update. Front Nutr. 2019;6:17.",
+        "year": 2019,
+        "doi": "10.3389/fnut.2019.00017"
+      }
+    ]
+  },
+  {
+    "id": "nu-protein-timing-anabolic-window",
+    "topic": "nutrition",
+    "title": "Janela anabólica: precisa tomar whey logo após o treino?",
+    "keywords": [
+      "janela anabólica",
+      "pós-treino",
+      "pos treino",
+      "pré-treino",
+      "whey depois do treino",
+      "horário da proteína",
+      "shake",
+      "anabolic window",
+      "protein timing",
+      "post-workout",
+      "pre-workout",
+      "nutrient timing"
+    ],
+    "summary": "A ideia de que existe uma janela de 30–60 minutos após o treino, fora da qual a proteína não serve, não se sustenta. Na meta-análise de Schoenfeld, Aragon e Krieger (2013), o aparente benefício de consumir proteína perto do treino desapareceu quando se considerou a quantidade total de proteína do dia, que foi o principal preditor de hipertrofia. Num ensaio com homens treinados, 25 g de proteína imediatamente antes ou imediatamente depois do treino produziram ganhos semelhantes de força e massa muscular em 10 semanas (Schoenfeld et al., 2017). A ISSN (Kerksick et al., 2017) considera válido comer proteína antes e/ou depois do treino, mas destaca que bater a meta diária, com doses espaçadas, é a prioridade. Ressalva: o tamanho e o horário da refeição anterior importam; quem treina após muitas horas sem comer se beneficia mais de comer logo depois.",
+    "practice": [
+      "Não se estresse com o relógio: uma refeição com proteína nas horas antes ou depois do treino já basta.",
+      "Se treinar em jejum (por exemplo, cedo e sem café da manhã), faça uma refeição com proteína logo após o treino.",
+      "Priorize bater a meta diária de proteína; o horário exato é detalhe fino."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Schoenfeld BJ, Aragon AA, Krieger JW. The effect of protein timing on muscle strength and hypertrophy: a meta-analysis. J Int Soc Sports Nutr. 2013;10(1):53.",
+        "year": 2013,
+        "doi": "10.1186/1550-2783-10-53"
+      },
+      {
+        "citation": "Aragon AA, Schoenfeld BJ. Nutrient timing revisited: is there a post-exercise anabolic window? J Int Soc Sports Nutr. 2013;10(1):5.",
+        "year": 2013,
+        "doi": "10.1186/1550-2783-10-5"
+      },
+      {
+        "citation": "Schoenfeld BJ, Aragon A, Wilborn C, et al. Pre- versus post-exercise protein intake has similar effects on muscular adaptations. PeerJ. 2017;5:e2825.",
+        "year": 2017,
+        "doi": "10.7717/peerj.2825"
+      },
+      {
+        "citation": "Kerksick CM, Arent S, Schoenfeld BJ, et al. International society of sports nutrition position stand: nutrient timing. J Int Soc Sports Nutr. 2017;14:33.",
+        "year": 2017,
+        "doi": "10.1186/s12970-017-0189-4"
+      }
+    ]
+  },
+  {
+    "id": "nu-protein-energy-deficit",
+    "topic": "nutrition",
+    "title": "Proteína durante o déficit calórico (cutting)",
+    "keywords": [
+      "proteína no cutting",
+      "cutting",
+      "secar",
+      "emagrecer",
+      "dieta para secar",
+      "déficit calórico",
+      "perder gordura sem perder músculo",
+      "manter massa magra",
+      "protein in a deficit",
+      "energy deficit",
+      "fat loss",
+      "lean mass retention",
+      "caloric restriction"
+    ],
+    "summary": "Quando se come menos do que se gasta, o risco de perder massa magra aumenta e a proteína ganha importância. Uma revisão sistemática com atletas treinados e magros (Helms et al., 2014) estimou necessidade de 2,3–3,1 g/kg de massa livre de gordura por dia, maior quanto mais severo o déficit e mais baixo o percentual de gordura. Hector e Phillips (2018) indicam 1,6–2,4 g/kg de peso corporal para atletas em perda de peso, e a ISSN (2017) cita 2,3–3,1 g/kg em fases hipocalóricas de pessoas treinadas. No ensaio de Longland et al. (2016), com déficit de ~40% e treino intenso por 4 semanas, quem consumiu 2,4 g/kg ganhou ~1,2 kg de massa magra e perdeu mais gordura do que quem consumiu 1,2 g/kg. Ressalvas: estudos pequenos e curtos, quase todos com homens jovens; déficits muito agressivos continuam custando músculo.",
+    "practice": [
+      "Em fase de perda de gordura, mantenha a proteína alta: em geral 1,6–2,4 g/kg de peso por dia, mais perto do topo se você já é magro ou se o déficit é grande.",
+      "Mantenha o treino de força pesado durante o déficit; é ele que sinaliza ao corpo para preservar músculo.",
+      "Procure um nutricionista se você tem doença renal, histórico de transtorno alimentar ou se a dieta estiver muito restritiva."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Helms ER, Zinn C, Rowlands DS, et al. A systematic review of dietary protein during caloric restriction in resistance trained lean athletes: a case for higher intakes. Int J Sport Nutr Exerc Metab. 2014;24(2):127-138.",
+        "year": 2014,
+        "doi": "10.1123/ijsnem.2013-0054"
+      },
+      {
+        "citation": "Longland TM, Oikawa SY, Mitchell CJ, et al. Higher compared with lower dietary protein during an energy deficit combined with intense exercise promotes greater lean mass gain and fat mass loss: a randomized trial. Am J Clin Nutr. 2016;103(3):738-746.",
+        "year": 2016,
+        "doi": "10.3945/ajcn.115.119339"
+      },
+      {
+        "citation": "Hector AJ, Phillips SM. Protein Recommendations for Weight Loss in Elite Athletes: A Focus on Body Composition and Performance. Int J Sport Nutr Exerc Metab. 2018;28(2):170-177.",
+        "year": 2018,
+        "doi": "10.1123/ijsnem.2017-0273"
+      },
+      {
+        "citation": "Jäger R, Kerksick CM, Campbell BI, et al. International Society of Sports Nutrition Position Stand: protein and exercise. J Int Soc Sports Nutr. 2017;14:20.",
+        "year": 2017,
+        "doi": "10.1186/s12970-017-0177-8"
+      }
+    ]
+  },
+  {
+    "id": "nu-protein-older-adults",
+    "topic": "populations",
+    "title": "Proteína para adultos mais velhos (60+)",
+    "keywords": [
+      "idoso",
+      "terceira idade",
+      "sarcopenia",
+      "perda de massa muscular",
+      "proteína para idosos",
+      "envelhecimento",
+      "60 anos",
+      "older adults",
+      "elderly",
+      "aging",
+      "protein",
+      "muscle loss"
+    ],
+    "summary": "Com a idade, o músculo responde menos à mesma dose de proteína, e a perda de massa e força (sarcopenia) se acelera. O grupo PROT-AGE (Bauer et al., 2013) recomenda pelo menos 1,0–1,2 g/kg/dia para pessoas acima de 65 anos, ≥1,2 g/kg para quem se exercita e 1,2–1,5 g/kg para quem tem doença aguda ou crônica; a ESPEN (Deutz et al., 2014) recomenda faixa semelhante e reforça que exercício de força e aeróbio deve acompanhar a dieta pelo maior tempo possível. Na meta-análise de Nunes et al. (2022), pessoas com 65 anos ou mais que treinavam força e comiam mais proteína (1,2–1,59 g/kg) ganharam mais massa magra. Já Morton et al. (2018) viram que o efeito extra da suplementação diminui com a idade, o que reforça que o treino é indispensável. Exceção importante: doença renal avançada fora de diálise pode exigir restringir proteína.",
+    "practice": [
+      "Para quem tem 60 anos ou mais, mire em pelo menos 1,0–1,2 g/kg/dia de proteína, e ≥1,2 g/kg se você treina.",
+      "Combine a proteína com treino de força regular: sem o treino, o efeito sobre o músculo é pequeno.",
+      "Procure médico ou nutricionista antes de aumentar a proteína se você tem doença renal crônica ou outras doenças crônicas."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Bauer J, Biolo G, Cederholm T, et al. Evidence-based recommendations for optimal dietary protein intake in older people: a position paper from the PROT-AGE Study Group. J Am Med Dir Assoc. 2013;14(8):542-559.",
+        "year": 2013,
+        "doi": "10.1016/j.jamda.2013.05.021"
+      },
+      {
+        "citation": "Deutz NE, Bauer JM, Barazzoni R, et al. Protein intake and exercise for optimal muscle function with aging: recommendations from the ESPEN Expert Group. Clin Nutr. 2014;33(6):929-936.",
+        "year": 2014,
+        "doi": "10.1016/j.clnu.2014.04.007"
+      },
+      {
+        "citation": "Nunes EA, Colenso-Semple L, McKellar SR, et al. Systematic review and meta-analysis of protein intake to support muscle mass and function in healthy adults. J Cachexia Sarcopenia Muscle. 2022;13(2):795-810.",
+        "year": 2022,
+        "doi": "10.1002/jcsm.12922"
+      },
+      {
+        "citation": "Morton RW, Murphy KT, McKellar SR, et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength in healthy adults. Br J Sports Med. 2018;52(6):376-384.",
+        "year": 2018,
+        "doi": "10.1136/bjsports-2017-097608"
+      }
+    ]
+  },
+  {
+    "id": "nu-protein-sources-plant-animal-whey",
+    "topic": "nutrition",
+    "title": "Fontes de proteína: animal, vegetal e whey",
+    "keywords": [
+      "whey",
+      "whey protein",
+      "proteína vegetal",
+      "proteína animal",
+      "vegano",
+      "vegetariano",
+      "soja",
+      "qual a melhor proteína",
+      "leucina",
+      "plant protein",
+      "animal protein",
+      "vegan",
+      "soy protein",
+      "protein quality"
+    ],
+    "summary": "Proteínas de maior qualidade, ricas em aminoácidos essenciais e leucina (whey, ovos, carnes, laticínios), estimulam um pouco mais a síntese de proteína muscular em medidas agudas. A meta-análise de Morgan et al. (2021) encontrou essa vantagem aguda e um pequeno efeito em força, mas nenhuma diferença no ganho de massa magra com o treino. Na meta-análise de Messina et al. (2018), suplementar soja ou proteína animal (whey, carne, leite) resultou em ganhos semelhantes de força e massa magra. Num estudo brasileiro, veganos e onívoros com ~1,6 g/kg/dia de proteína ganharam massa e força de forma igual em 12 semanas de treino (Hevia-Larraín et al., 2021). A ISSN (2017) trata o suplemento como forma prática de atingir a meta, não como requisito. Ressalvas: os estudos são de curto prazo e com jovens; com proteína vegetal, quantidade suficiente e variedade de fontes importam mais.",
+    "practice": [
+      "Escolha as fontes que você consegue manter: carnes, ovos, laticínios, leguminosas, soja ou whey funcionam quando o total do dia é adequado.",
+      "Em dieta vegetariana ou vegana, varie as fontes (feijões, soja, grãos) e confira se o total diário chega a ~1,6 g/kg.",
+      "Whey é conveniência, não obrigação.",
+      "Procure um nutricionista se tiver alergia ou intolerância alimentar, ou dificuldade de bater a meta com dieta vegana."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Morgan PT, Harris DO, Marshall RN, et al. Protein Source and Quality for Skeletal Muscle Anabolism in Young and Older Adults: A Systematic Review and Meta-Analysis. J Nutr. 2021;151(7):1901-1920.",
+        "year": 2021,
+        "doi": "10.1093/jn/nxab055"
+      },
+      {
+        "citation": "Messina M, Lynch H, Dickinson JM, et al. No Difference Between the Effects of Supplementing With Soy Protein Versus Animal Protein on Gains in Muscle Mass and Strength in Response to Resistance Exercise. Int J Sport Nutr Exerc Metab. 2018;28(6):674-685.",
+        "year": 2018,
+        "doi": "10.1123/ijsnem.2018-0071"
+      },
+      {
+        "citation": "Hevia-Larraín V, Gualano B, Longobardi I, et al. High-Protein Plant-Based Diet Versus a Protein-Matched Omnivorous Diet to Support Resistance Training Adaptations: A Comparison Between Habitual Vegans and Omnivores. Sports Med. 2021;51(6):1317-1330.",
+        "year": 2021,
+        "doi": "10.1007/s40279-021-01434-9"
+      },
+      {
+        "citation": "Jäger R, Kerksick CM, Campbell BI, et al. International Society of Sports Nutrition Position Stand: protein and exercise. J Int Soc Sports Nutr. 2017;14:20.",
+        "year": 2017,
+        "doi": "10.1186/s12970-017-0177-8"
+      }
+    ]
+  },
+  {
+    "id": "nu-energy-surplus-lean-bulk",
+    "topic": "body-composition",
+    "title": "Superávit calórico para ganhar massa (bulking limpo)",
+    "keywords": [
+      "bulking",
+      "bulking limpo",
+      "lean bulk",
+      "ganhar massa",
+      "ganhar peso",
+      "superávit calórico",
+      "engordar",
+      "dieta para ganhar massa",
+      "calorie surplus",
+      "energy surplus",
+      "weight gain rate",
+      "off-season",
+      "hipertrofia"
+    ],
+    "summary": "Comer um pouco acima do gasto ajuda a ganhar músculo, mas o tamanho ideal do superávit não está estabelecido (Slater et al., 2019). Para fisiculturistas naturais, Iraki et al. (2019) sugerem superávit de ~10–20% e ganho de ~0,25–0,5% do peso corporal por semana para iniciantes e intermediários, sendo mais conservador para avançados. Calorias em excesso viram principalmente gordura: em atletas de elite, uma dieta planejada com mais energia aumentou peso e gordura, mas não a massa magra, em comparação com comer à vontade (Garthe et al., 2013); em levantadores treinados, superávits maiores (15% contra 5% ou manutenção) aumentaram sobretudo as dobras cutâneas, com pouca ou nenhuma vantagem em músculo e força (Helms et al., 2023). Ressalvas: estudos pequenos e curtos; iniciantes ganham músculo até sem superávit, e avançados têm margem menor.",
+    "practice": [
+      "Se o objetivo é ganhar massa, busque um superávit pequeno: ganho de ~0,25–0,5% do peso por semana (por exemplo, 0,2–0,4 kg por semana para 80 kg).",
+      "Acompanhe a média semanal do peso; se subir mais rápido do que isso, reduza um pouco as calorias.",
+      "Quanto mais avançado você for, mais lento deve ser o ganho.",
+      "Mantenha a proteína em ~1,6–2,2 g/kg/dia durante o bulking."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Iraki J, Fitschen P, Espinar S, et al. Nutrition Recommendations for Bodybuilders in the Off-Season: A Narrative Review. Sports (Basel). 2019;7(7):154.",
+        "year": 2019,
+        "doi": "10.3390/sports7070154"
+      },
+      {
+        "citation": "Slater GJ, Dieter BP, Marsh DJ, et al. Is an Energy Surplus Required to Maximize Skeletal Muscle Hypertrophy Associated With Resistance Training. Front Nutr. 2019;6:131.",
+        "year": 2019,
+        "doi": "10.3389/fnut.2019.00131"
+      },
+      {
+        "citation": "Garthe I, Raastad T, Refsnes PE, et al. Effect of nutritional intervention on body composition and performance in elite athletes. Eur J Sport Sci. 2013;13(3):295-303.",
+        "year": 2013,
+        "doi": "10.1080/17461391.2011.643923"
+      },
+      {
+        "citation": "Helms ER, Spence AJ, Sousa C, et al. Effect of Small and Large Energy Surpluses on Strength, Muscle, and Skinfold Thickness in Resistance-Trained Individuals: A Parallel Groups Design. Sports Med Open. 2023;9(1):102.",
+        "year": 2023,
+        "doi": "10.1186/s40798-023-00651-y"
+      }
+    ]
+  },
+  {
+    "id": "nu-energy-deficit-fat-loss",
+    "topic": "body-composition",
+    "title": "Déficit calórico: perder gordura sem perder músculo",
+    "keywords": [
+      "cutting",
+      "secar",
+      "emagrecer",
+      "perder gordura",
+      "déficit calórico",
+      "quanto perder por semana",
+      "dieta",
+      "definição",
+      "fat loss",
+      "calorie deficit",
+      "rate of weight loss",
+      "weight loss",
+      "preserve muscle"
+    ],
+    "summary": "Perder gordura exige déficit calórico, mas a velocidade importa para preservar músculo e força. Para fisiculturistas naturais, Helms et al. (2014) recomendam perder ~0,5–1% do peso corporal por semana; revisão posterior prefere ≤0,5% por semana para quem já está muito magro (Roberts et al., 2020). Em atletas de elite que treinavam força, o grupo de perda mais lenta (planejada em ~0,7% por semana) ganhou massa magra e mais força, enquanto o grupo mais rápido (planejado em ~1,4%) não ganhou massa magra (Garthe et al., 2011). Uma meta-análise mostrou que treinar em déficit prejudica o ganho de massa magra, mas não o de força, e que déficits de ~500 kcal/dia ou mais tendem a impedir ganho de massa magra (Murphy e Koehler, 2022). Ressalvas: pessoas com mais gordura toleram déficits maiores; os números vêm de estudos pequenos, em grande parte com atletas.",
+    "practice": [
+      "Mire em perder cerca de 0,5–1% do peso por semana; se você já é magro, prefira o limite inferior.",
+      "Evite déficits grandes (acima de ~500 kcal/dia) se seu objetivo é manter ou ganhar músculo enquanto emagrece.",
+      "Mantenha o treino de força e a proteína alta durante toda a dieta.",
+      "Procure nutricionista ou médico se você tem histórico de transtorno alimentar, diabetes com medicação, está grávida ou amamentando, ou se a perda estiver muito rápida."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Helms ER, Aragon AA, Fitschen PJ. Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation. J Int Soc Sports Nutr. 2014;11:20.",
+        "year": 2014,
+        "doi": "10.1186/1550-2783-11-20"
+      },
+      {
+        "citation": "Garthe I, Raastad T, Refsnes PE, et al. Effect of two different weight-loss rates on body composition and strength and power-related performance in elite athletes. Int J Sport Nutr Exerc Metab. 2011;21(2):97-104.",
+        "year": 2011,
+        "doi": "10.1123/ijsnem.21.2.97"
+      },
+      {
+        "citation": "Murphy C, Koehler K. Energy deficiency impairs resistance training gains in lean mass but not strength: A meta-analysis and meta-regression. Scand J Med Sci Sports. 2022;32(1):125-137.",
+        "year": 2022,
+        "doi": "10.1111/sms.14075"
+      },
+      {
+        "citation": "Roberts BM, Helms ER, Trexler ET, et al. Nutritional Recommendations for Physique Athletes. J Hum Kinet. 2020;71:79-108.",
+        "year": 2020,
+        "doi": "10.2478/hukin-2019-0096"
+      }
+    ]
+  },
+  {
+    "id": "nu-body-recomposition",
+    "topic": "body-composition",
+    "title": "Recomposição corporal: ganhar músculo e perder gordura ao mesmo tempo",
+    "keywords": [
+      "recomposição corporal",
+      "recomp",
+      "ganhar músculo e perder gordura",
+      "ao mesmo tempo",
+      "secar e ganhar massa",
+      "iniciante",
+      "voltar a treinar",
+      "body recomposition",
+      "build muscle lose fat",
+      "detrained"
+    ],
+    "summary": "Ganhar massa magra enquanto se perde gordura é possível, e não só em iniciantes. Uma revisão (Barakat et al., 2020) reuniu evidências de recomposição também em pessoas já treinadas e aponta treino de força progressivo e estratégias nutricionais baseadas em evidência como fatores centrais, além de sono e outros fatores fora do treino. No ensaio de Longland et al. (2016), homens em déficit de ~40% com treino intenso e 2,4 g/kg de proteína ganharam massa magra e perderam gordura em 4 semanas. Em atletas, perder peso devagar (~0,7% por semana) permitiu ganho de massa magra (Garthe et al., 2011). Na revisão de Helms et al. (2014), quem manteve ou ganhou massa magra em déficit tendia a ter mais gordura, déficit menor ou um estímulo de treino novo. Ressalva: em pessoas muito treinadas e magras, a recomposição é lenta e difícil de medir com precisão.",
+    "practice": [
+      "Recomposição é mais provável em iniciantes, em quem está voltando a treinar e em quem tem mais gordura corporal.",
+      "Use um déficit pequeno, proteína alta (os estudos usaram ~2,4 g/kg) e treino de força com progressão de carga ou repetições.",
+      "Avalie por medidas, fotos, força e média de peso, e não só pela balança: o peso pode ficar parado enquanto a composição muda."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Barakat C, Pearson J, Escalante G, et al. Body Recomposition: Can Trained Individuals Build Muscle and Lose Fat at the Same Time? Strength Cond J. 2020;42(5):7-21.",
+        "year": 2020,
+        "doi": "10.1519/SSC.0000000000000584"
+      },
+      {
+        "citation": "Longland TM, Oikawa SY, Mitchell CJ, et al. Higher compared with lower dietary protein during an energy deficit combined with intense exercise promotes greater lean mass gain and fat mass loss: a randomized trial. Am J Clin Nutr. 2016;103(3):738-746.",
+        "year": 2016,
+        "doi": "10.3945/ajcn.115.119339"
+      },
+      {
+        "citation": "Garthe I, Raastad T, Refsnes PE, et al. Effect of two different weight-loss rates on body composition and strength and power-related performance in elite athletes. Int J Sport Nutr Exerc Metab. 2011;21(2):97-104.",
+        "year": 2011,
+        "doi": "10.1123/ijsnem.21.2.97"
+      },
+      {
+        "citation": "Helms ER, Zinn C, Rowlands DS, et al. A systematic review of dietary protein during caloric restriction in resistance trained lean athletes: a case for higher intakes. Int J Sport Nutr Exerc Metab. 2014;24(2):127-138.",
+        "year": 2014,
+        "doi": "10.1123/ijsnem.2013-0054"
+      }
+    ]
+  },
+  {
+    "id": "nu-carbohydrates-training",
+    "topic": "nutrition",
+    "title": "Carboidratos e desempenho na musculação",
+    "keywords": [
+      "carboidrato",
+      "carbo",
+      "low carb",
+      "dieta cetogênica",
+      "glicogênio",
+      "energia para treinar",
+      "comer antes do treino",
+      "carbohydrate",
+      "carbs",
+      "glycogen",
+      "low-carb",
+      "keto",
+      "performance"
+    ],
+    "summary": "Carboidrato é o principal combustível de esforços intensos, mas a musculação típica não esgota o glicogênio como provas longas de endurance. Numa revisão sistemática com 49 estudos (Henselmans et al., 2022), comer mais carboidrato não melhorou o desempenho na maioria dos casos quando a pessoa estava alimentada e fazia até ~10 séries por grupo muscular; os benefícios apareceram sobretudo contra grupos em jejum, em sessões de volume muito alto e em dois treinos no mesmo dia. Escobar et al. (2016) questionam se as recomendações tradicionais de 3–7 g/kg/dia são realmente necessárias para treino de força. Para hipertrofia, Iraki et al. (2019) sugerem pelo menos 3–5 g/kg/dia, e a ISSN (Kerksick et al., 2017) lembra que o glicogênio é mais depletado por treinos de alto volume. Ressalvas: restringir carboidrato pode não prejudicar a musculação, mas treinos longos e esportes de endurance dependem mais dele.",
+    "practice": [
+      "Para a maioria que treina força por menos de uma hora e meia, não é preciso exagerar no carboidrato; preencha as calorias restantes conforme preferência e adesão.",
+      "Se você treina com volume muito alto, duas vezes por dia ou também faz esportes de endurance, priorize mais carboidrato.",
+      "Se render mal treinando em jejum, teste comer algo com carboidrato antes do treino.",
+      "Procure um nutricionista ou médico se você tem diabetes ou usa medicação que afeta a glicose."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Henselmans M, Bjørnsen T, Hedderman R, et al. The Effect of Carbohydrate Intake on Strength and Resistance Training Performance: A Systematic Review. Nutrients. 2022;14(4):856.",
+        "year": 2022,
+        "doi": "10.3390/nu14040856"
+      },
+      {
+        "citation": "Escobar KA, VanDusseldorp TA, Kerksick CM. Carbohydrate intake and resistance-based exercise: are current recommendations reflective of actual need? Br J Nutr. 2016;116(12):2053-2065.",
+        "year": 2016,
+        "doi": "10.1017/S0007114516003949"
+      },
+      {
+        "citation": "Iraki J, Fitschen P, Espinar S, et al. Nutrition Recommendations for Bodybuilders in the Off-Season: A Narrative Review. Sports (Basel). 2019;7(7):154.",
+        "year": 2019,
+        "doi": "10.3390/sports7070154"
+      },
+      {
+        "citation": "Kerksick CM, Arent S, Schoenfeld BJ, et al. International society of sports nutrition position stand: nutrient timing. J Int Soc Sports Nutr. 2017;14:33.",
+        "year": 2017,
+        "doi": "10.1186/s12970-017-0189-4"
+      }
+    ]
+  },
+  {
+    "id": "nu-fasting-fasted-training",
+    "topic": "nutrition",
+    "title": "Jejum intermitente e treino em jejum",
+    "keywords": [
+      "jejum intermitente",
+      "jejum",
+      "16/8",
+      "treino em jejum",
+      "aeróbico em jejum",
+      "cardio em jejum",
+      "janela de alimentação",
+      "emagrecer",
+      "intermittent fasting",
+      "fasted training",
+      "fasted cardio",
+      "time-restricted eating"
+    ],
+    "summary": "O jejum intermitente (como o 16/8) ajuda principalmente por facilitar comer menos, não por um efeito metabólico especial. No ensaio TREAT (Lowe et al., 2020), comer numa janela de 8 h, sem outras mudanças, não emagreceu mais do que fazer três refeições ao dia, e o grupo do jejum perdeu um pouco mais de massa magra dos braços e pernas. Combinado com treino de força, porém, o jejum costuma manter a massa magra e pode reduzir gordura (revisão de Keenan et al., 2020, com 8 estudos). Sobre treinar em jejum: o mesmo aeróbio feito em jejum ou alimentado, com dieta hipocalórica igual, gerou perda de gordura semelhante em 4 semanas (Schoenfeld et al., 2014), e comer antes melhora o desempenho em exercícios aeróbios prolongados (Aird et al., 2018). Ressalva: estudos curtos e pequenos; a escolha depende de preferência e adesão.",
+    "practice": [
+      "Use jejum intermitente só se ele ajudar você a controlar a dieta; ele não é superior a outras formas de déficit.",
+      "Se fizer jejum, mantenha o treino de força e bata a meta de proteína dentro da janela de alimentação.",
+      "Treinar em jejum é opcional: se o desempenho cair ou você passar mal, coma antes.",
+      "Procure um médico antes de fazer jejum se você tem diabetes, usa insulina ou remédios para glicose, está grávida ou amamentando, ou tem histórico de transtorno alimentar."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Lowe DA, Wu N, Rohdin-Bibby L, et al. Effects of Time-Restricted Eating on Weight Loss and Other Metabolic Parameters in Women and Men With Overweight and Obesity: The TREAT Randomized Clinical Trial. JAMA Intern Med. 2020;180(11):1491-1499.",
+        "year": 2020,
+        "doi": "10.1001/jamainternmed.2020.4153"
+      },
+      {
+        "citation": "Keenan S, Cooke MB, Belski R. The Effects of Intermittent Fasting Combined with Resistance Training on Lean Body Mass: A Systematic Review of Human Studies. Nutrients. 2020;12(8):2349.",
+        "year": 2020,
+        "doi": "10.3390/nu12082349"
+      },
+      {
+        "citation": "Schoenfeld BJ, Aragon AA, Wilborn CD, et al. Body composition changes associated with fasted versus non-fasted aerobic exercise. J Int Soc Sports Nutr. 2014;11(1):54.",
+        "year": 2014,
+        "doi": "10.1186/s12970-014-0054-7"
+      },
+      {
+        "citation": "Aird TP, Davies RW, Carson BP. Effects of fasted vs fed-state exercise on performance and post-exercise metabolism: A systematic review and meta-analysis. Scand J Med Sci Sports. 2018;28(5):1476-1493.",
+        "year": 2018,
+        "doi": "10.1111/sms.13054"
+      }
+    ]
+  },
+  {
+    "id": "nu-creatine-efficacy-dose",
+    "topic": "supplements",
+    "title": "Creatina: funciona e como tomar",
+    "keywords": [
+      "creatina",
+      "creatina monohidratada",
+      "como tomar creatina",
+      "dose de creatina",
+      "saturação",
+      "fase de carga",
+      "creatina funciona",
+      "suplemento",
+      "ganhar força",
+      "creatine",
+      "creatine monohydrate",
+      "loading phase"
+    ],
+    "summary": "A creatina monohidratada é o suplemento com melhor evidência para treino de força. Ela aumenta a creatina armazenada no músculo e, com isso, o desempenho em esforços curtos e intensos e as adaptações ao treino (posicionamento da ISSN; Kreider et al., 2017). Em meta-análise, creatina somada ao treino de força aumentou a massa magra em ~1,1 kg a mais que o placebo (Delpino et al., 2022), e outra meta-análise mostrou ganho de força em membros superiores, independente de idade, sexo ou dose (Lanhers et al., 2017). A dose usual é 3–5 g/dia (ou ~0,1 g/kg). A saturação (~20 g/dia em 4 a 5 doses por 5–7 dias) acelera o efeito, mas não é obrigatória: 3 g/dia chegam a saturação parecida em cerca de 4 semanas (Antonio et al., 2021). Ressalvas: há quem responda pouco, e na meta-análise de Delpino o ganho de massa magra em mulheres foi menor e não significativo.",
+    "practice": [
+      "Tome 3–5 g de creatina monohidratada todos os dias; o uso contínuo é o que mantém o músculo saturado.",
+      "A saturação é opcional; se fizer, use ~20 g/dia divididos em 4 doses por 5–7 dias e depois volte a 3–5 g/dia.",
+      "Prefira a forma monohidratada: outras formas são mais caras e não mostraram vantagem.",
+      "Espere um ganho rápido de peso na saturação (em geral 1–3 kg), em grande parte água dentro do músculo."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Kreider RB, Kalman DS, Antonio J, et al. International Society of Sports Nutrition position stand: safety and efficacy of creatine supplementation in exercise, sport, and medicine. J Int Soc Sports Nutr. 2017;14:18.",
+        "year": 2017,
+        "doi": "10.1186/s12970-017-0173-z"
+      },
+      {
+        "citation": "Antonio J, Candow DG, Forbes SC, et al. Common questions and misconceptions about creatine supplementation: what does the scientific evidence really show? J Int Soc Sports Nutr. 2021;18(1):13.",
+        "year": 2021,
+        "doi": "10.1186/s12970-021-00412-w"
+      },
+      {
+        "citation": "Delpino FM, Figueiredo LM, Forbes SC, et al. Influence of age, sex, and type of exercise on the efficacy of creatine supplementation on lean body mass: A systematic review and meta-analysis of randomized clinical trials. Nutrition. 2022;103-104:111791.",
+        "year": 2022,
+        "doi": "10.1016/j.nut.2022.111791"
+      },
+      {
+        "citation": "Lanhers C, Pereira B, Naughton G, et al. Creatine Supplementation and Upper Limb Strength Performance: A Systematic Review and Meta-Analysis. Sports Med. 2017;47(1):163-173.",
+        "year": 2017,
+        "doi": "10.1007/s40279-016-0571-4"
+      }
+    ]
+  },
+  {
+    "id": "nu-creatine-safety-myths",
+    "topic": "supplements",
+    "title": "Creatina faz mal? Rins, calvície e retenção de líquido",
+    "keywords": [
+      "creatina faz mal",
+      "creatina rim",
+      "creatina calvície",
+      "creatina cai cabelo",
+      "creatina incha",
+      "retenção de líquido",
+      "creatinina",
+      "efeitos colaterais",
+      "creatine safety",
+      "creatine kidney",
+      "creatine hair loss",
+      "dht"
+    ],
+    "summary": "Em pessoas saudáveis, a creatina é considerada segura: a ISSN relata uso de até 30 g/dia por 5 anos bem tolerado (Kreider et al., 2017). Rins: não há evidência de dano em pessoas saudáveis nas doses recomendadas, mas a creatina eleva a creatinina no sangue, o que pode falsear exames de função renal; o caso clássico de lesão renal envolvia doença renal prévia, remédios e outros fatores (Antonio et al., 2021). Calvície: o medo vem de um único estudo em que o DHT subiu após a saturação, sem avaliar cabelo (van der Merwe et al., 2009); um ensaio de 12 semanas com 5 g/dia não encontrou diferença em DHT nem em densidade ou espessura dos fios em relação ao placebo (Lak et al., 2025). Retenção de líquido ocorre no início, mas é principalmente dentro do músculo; desidratação e cãibras não foram confirmadas. Ressalvas: o ensaio sobre cabelo é pequeno e curto, e há poucos dados em quem já tem doença renal.",
+    "practice": [
+      "Para adultos saudáveis, 3–5 g/dia de creatina monohidratada é uma prática segura segundo as evidências atuais.",
+      "Avise o médico que você usa creatina antes de exames de sangue, pois ela pode elevar a creatinina sem indicar lesão renal.",
+      "Procure um médico antes de usar se você tem doença renal, diabetes, usa medicamentos que afetam os rins, está grávida ou é adolescente.",
+      "Prefira marcas com controle de qualidade, já que há relatos de contaminantes em alguns produtos."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Kreider RB, Kalman DS, Antonio J, et al. International Society of Sports Nutrition position stand: safety and efficacy of creatine supplementation in exercise, sport, and medicine. J Int Soc Sports Nutr. 2017;14:18.",
+        "year": 2017,
+        "doi": "10.1186/s12970-017-0173-z"
+      },
+      {
+        "citation": "Antonio J, Candow DG, Forbes SC, et al. Common questions and misconceptions about creatine supplementation: what does the scientific evidence really show? J Int Soc Sports Nutr. 2021;18(1):13.",
+        "year": 2021,
+        "doi": "10.1186/s12970-021-00412-w"
+      },
+      {
+        "citation": "Lak M, Forbes SC, Ashtary-Larky D, et al. Does creatine cause hair loss? A 12-week randomized controlled trial. J Int Soc Sports Nutr. 2025;22(sup1):2495229.",
+        "year": 2025,
+        "doi": "10.1080/15502783.2025.2495229"
+      },
+      {
+        "citation": "van der Merwe J, Brooks NE, Myburgh KH. Three weeks of creatine monohydrate supplementation affects dihydrotestosterone to testosterone ratio in college-aged rugby players. Clin J Sport Med. 2009;19(5):399-404.",
+        "year": 2009,
+        "doi": "10.1097/JSM.0b013e3181b8b52f"
+      }
+    ]
+  },
+  {
+    "id": "nu-caffeine",
+    "topic": "supplements",
+    "title": "Cafeína como pré-treino",
+    "keywords": [
+      "cafeína",
+      "café",
+      "pré-treino",
+      "pre treino",
+      "energético",
+      "termogênico",
+      "estimulante",
+      "caffeine",
+      "pre-workout",
+      "energy drink",
+      "mg/kg",
+      "desempenho"
+    ],
+    "summary": "A cafeína é um dos poucos suplementos com efeito consistente sobre o desempenho. O posicionamento da ISSN (Guest et al., 2021) conclui que 3–6 mg/kg de peso, geralmente cerca de 60 minutos antes, trazem benefícios pequenos a moderados em resistência muscular, velocidade de movimento, força, saltos e sprints, com efeito mais consistente no exercício aeróbio; doses de ~2 mg/kg talvez já funcionem, e doses muito altas (~9 mg/kg) aumentam muito os efeitos colaterais sem ser necessárias. Na musculação, a meta-análise de Grgic et al. (2018) encontrou ganhos pequenos de força máxima, sobretudo de membros superiores, e de potência. A resposta varia entre pessoas por genética e pelo hábito de consumo. Ressalvas: os efeitos são pequenos, e a cafeína pode piorar o sono e causar ansiedade em algumas pessoas.",
+    "practice": [
+      "Se quiser usar, comece com dose baixa (~2–3 mg/kg, por exemplo 150–200 mg para 70 kg) cerca de 60 minutos antes do treino.",
+      "Não passe de 6 mg/kg: mais do que isso aumenta efeitos colaterais sem ganho adicional.",
+      "Some toda a cafeína do dia (café, pré-treino, energéticos); pré-treinos comerciais costumam ter doses altas.",
+      "Evite cafeína no fim do dia se ela atrapalhar seu sono.",
+      "Procure um médico antes de usar se você tem hipertensão, arritmia, transtorno de ansiedade, está grávida ou usa medicamentos contínuos."
+    ],
+    "evidence": "strong",
+    "sources": [
+      {
+        "citation": "Guest NS, VanDusseldorp TA, Nelson MT, et al. International society of sports nutrition position stand: caffeine and exercise performance. J Int Soc Sports Nutr. 2021;18(1):1.",
+        "year": 2021,
+        "doi": "10.1186/s12970-020-00383-4"
+      },
+      {
+        "citation": "Grgic J, Trexler ET, Lazinica B, et al. Effects of caffeine intake on muscle strength and power: a systematic review and meta-analysis. J Int Soc Sports Nutr. 2018;15:11.",
+        "year": 2018,
+        "doi": "10.1186/s12970-018-0216-0"
+      }
+    ]
+  },
+  {
+    "id": "nu-beta-alanine",
+    "topic": "supplements",
+    "title": "Beta-alanina: para quem faz sentido",
+    "keywords": [
+      "beta-alanina",
+      "beta alanina",
+      "formigamento",
+      "coceira do pré-treino",
+      "carnosina",
+      "pré-treino",
+      "resistência muscular",
+      "beta-alanine",
+      "carnosine",
+      "paresthesia",
+      "muscular endurance"
+    ],
+    "summary": "A beta-alanina aumenta a carnosina no músculo, que ajuda a tamponar a acidez em esforços intensos. Pelo posicionamento da ISSN (Trexler et al., 2015), 4–6 g/dia por pelo menos 2–4 semanas melhoram o desempenho, principalmente em esforços contínuos de 1 a 4 minutos. A meta-análise de Saunders et al. (2017; 40 estudos) encontrou efeito geral pequeno, mais evidente em tarefas de 30 segundos a 10 minutos. Para séries típicas de musculação, que são mais curtas, o benefício é incerto, e a própria ISSN pede mais pesquisa sobre força. O único efeito colateral relatado é formigamento na pele (parestesia), que diminui ao dividir a dose em porções menores (cerca de 1,6 g) ou usar liberação lenta. Ela funciona por acúmulo ao longo das semanas, não como estimulante na hora do treino.",
+    "practice": [
+      "Considere beta-alanina só se seu treino tem esforços intensos de 1 a 4 minutos (circuitos, séries muito longas, esportes); para musculação tradicional o ganho é incerto.",
+      "Se usar, tome 4–6 g/dia em doses divididas, todos os dias, por pelo menos 4 semanas.",
+      "O formigamento é o efeito colateral esperado e pode ser reduzido com doses menores ou fórmulas de liberação lenta."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Trexler ET, Smith-Ryan AE, Stout JR, et al. International society of sports nutrition position stand: Beta-Alanine. J Int Soc Sports Nutr. 2015;12:30.",
+        "year": 2015,
+        "doi": "10.1186/s12970-015-0090-y"
+      },
+      {
+        "citation": "Saunders B, Elliott-Sale K, Artioli GG, et al. β-alanine supplementation to improve exercise capacity and performance: a systematic review and meta-analysis. Br J Sports Med. 2017;51(8):658-669.",
+        "year": 2017,
+        "doi": "10.1136/bjsports-2016-096396"
+      }
+    ]
+  },
+  {
+    "id": "nu-citrulline-nitrate",
+    "topic": "supplements",
+    "title": "Citrulina e nitrato (beterraba): efeito pequeno e incerto",
+    "keywords": [
+      "citrulina",
+      "citrulina malato",
+      "nitrato",
+      "beterraba",
+      "suco de beterraba",
+      "óxido nítrico",
+      "pump",
+      "vasodilatador",
+      "pré-treino",
+      "citrulline",
+      "citrulline malate",
+      "nitrate",
+      "beetroot juice",
+      "nitric oxide"
+    ],
+    "summary": "Citrulina e nitrato são vendidos para aumentar o óxido nítrico e o pump. Para citrulina, a meta-análise de Trexler et al. (2019; 12 estudos) achou benefício pequeno em força e potência, e em cada estudo isolado o intervalo de confiança incluía zero. Outra meta-análise (Vårvik et al., 2021) viu que 6–8 g de citrulina malato, 40–60 minutos antes, aumentaram as repetições até a falha em ~6%, efeito pequeno e sem significância isolada para membros superiores. O nitrato (por exemplo, suco de beterraba) está entre os poucos suplementos com boa evidência segundo o consenso do COI (Maughan et al., 2018), mas sobretudo para exercícios de resistência aeróbia; na musculação, uma meta-análise com apenas 6 estudos em homens treinados mostrou melhora pequena em repetições e potência média, com grande variabilidade (Tan et al., 2023). Conclusão: efeitos pequenos e opcionais.",
+    "practice": [
+      "Citrulina e nitrato são opcionais; priorize treino, proteína, sono e, se quiser suplementar, creatina e cafeína, que têm evidência mais forte.",
+      "Se quiser testar citrulina malato, as doses estudadas foram 6–8 g cerca de 40–60 minutos antes do treino.",
+      "Nitrato tem evidência mais sólida para esportes de resistência aeróbia do que para musculação.",
+      "Procure um médico antes de usar suplementos se você usa medicamentos contínuos, especialmente para pressão arterial."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Trexler ET, Persky AM, Ryan ED, et al. Acute Effects of Citrulline Supplementation on High-Intensity Strength and Power Performance: A Systematic Review and Meta-Analysis. Sports Med. 2019;49(5):707-718.",
+        "year": 2019,
+        "doi": "10.1007/s40279-019-01091-z"
+      },
+      {
+        "citation": "Vårvik FT, Bjørnsen T, Gonzalez AM. Acute Effect of Citrulline Malate on Repetition Performance During Strength Training: A Systematic Review and Meta-Analysis. Int J Sport Nutr Exerc Metab. 2021;31(4):350-358.",
+        "year": 2021,
+        "doi": "10.1123/ijsnem.2020-0295"
+      },
+      {
+        "citation": "Tan R, Pennell A, Karl ST, et al. Effects of Dietary Nitrate Supplementation on Back Squat and Bench Press Performance: A Systematic Review and Meta-Analysis. Nutrients. 2023;15(11):2493.",
+        "year": 2023,
+        "doi": "10.3390/nu15112493"
+      },
+      {
+        "citation": "Maughan RJ, Burke LM, Dvorak J, et al. IOC consensus statement: dietary supplements and the high-performance athlete. Br J Sports Med. 2018;52(7):439-455.",
+        "year": 2018,
+        "doi": "10.1136/bjsports-2018-099027"
+      }
+    ]
+  },
+  {
+    "id": "nu-bcaa-eaa",
+    "topic": "supplements",
+    "title": "BCAA e aminoácidos essenciais (EAA)",
+    "keywords": [
+      "bcaa",
+      "aminoácidos",
+      "aminoácidos de cadeia ramificada",
+      "leucina",
+      "eaa",
+      "aminoácidos essenciais",
+      "bcaa funciona",
+      "intra-treino",
+      "branched-chain amino acids",
+      "essential amino acids",
+      "leucine",
+      "supplement"
+    ],
+    "summary": "BCAA (leucina, isoleucina e valina) ativam sinais de síntese de proteína muscular, mas sozinhos não fornecem todos os aminoácidos necessários para construir músculo. Wolfe (2017) argumenta que, sem os demais aminoácidos essenciais, o efeito do BCAA isolado é limitado e que a alegação de resposta anabólica relevante não se sustenta. Num estudo, 5,6 g de BCAA após o treino aumentaram a síntese de proteína miofibrilar em 22% em relação ao placebo, uma resposta modesta (Jackman et al., 2017). A revisão de Plotkin et al. (2021) conclui que suplementar leucina ou BCAA não traz benefício adicional de força ou hipertrofia quando a ingestão de proteína é adequada. A ISSN (Kerksick et al., 2017) aponta que cerca de 10 g de aminoácidos essenciais, presentes em 20–40 g de proteína de boa qualidade, estimulam fortemente a síntese, ou seja, uma refeição proteica já cobre isso.",
+    "practice": [
+      "Se você já come proteína suficiente, BCAA é gasto desnecessário.",
+      "Prefira proteína completa (comida ou whey), que já contém BCAA e todos os aminoácidos essenciais.",
+      "Suplemento de EAA não substitui refeições; se cogitar usar por alguma situação específica, converse com um nutricionista."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Wolfe RR. Branched-chain amino acids and muscle protein synthesis in humans: myth or reality? J Int Soc Sports Nutr. 2017;14:30.",
+        "year": 2017,
+        "doi": "10.1186/s12970-017-0184-9"
+      },
+      {
+        "citation": "Jackman SR, Witard OC, Philp A, et al. Branched-Chain Amino Acid Ingestion Stimulates Muscle Myofibrillar Protein Synthesis following Resistance Exercise in Humans. Front Physiol. 2017;8:390.",
+        "year": 2017,
+        "doi": "10.3389/fphys.2017.00390"
+      },
+      {
+        "citation": "Plotkin DL, Delcastillo K, Van Every DW, et al. Isolated Leucine and Branched-Chain Amino Acid Supplementation for Enhancing Muscular Strength and Hypertrophy: A Narrative Review. Int J Sport Nutr Exerc Metab. 2021;31(3):292-301.",
+        "year": 2021,
+        "doi": "10.1123/ijsnem.2020-0356"
+      },
+      {
+        "citation": "Kerksick CM, Arent S, Schoenfeld BJ, et al. International society of sports nutrition position stand: nutrient timing. J Int Soc Sports Nutr. 2017;14:33.",
+        "year": 2017,
+        "doi": "10.1186/s12970-017-0189-4"
+      }
+    ]
+  },
+  {
+    "id": "nu-testosterone-boosters-multivitamins",
+    "topic": "supplements",
+    "title": "Multivitamínicos e boosters de testosterona",
+    "keywords": [
+      "booster de testosterona",
+      "aumentar testosterona",
+      "testosterona natural",
+      "multivitamínico",
+      "polivitamínico",
+      "vitaminas",
+      "suplemento funciona",
+      "contaminação de suplemento",
+      "testosterone booster",
+      "multivitamin",
+      "dietary supplements",
+      "doping"
+    ],
+    "summary": "Os chamados boosters de testosterona prometem muito e entregam pouco. Numa análise de 50 produtos, 90% afirmavam aumentar a testosterona, mas só cerca de um quarto tinha algum dado favorável, cerca de 10% tinham componentes com dados de redução, e 13 produtos ultrapassavam limites seguros de zinco, vitamina B3 ou magnésio (Clemesha et al., 2020). Outra análise dos mais vendidos online encontrou poucos estudos em humanos e nenhuma prova clara de eficácia (Balasubramanian et al., 2019). Sobre multivitamínicos, a força-tarefa americana de prevenção (USPSTF, 2022) concluiu que a evidência é insuficiente para recomendá-los na prevenção de doença cardiovascular e câncer, e recomendou contra betacaroteno e vitamina E para esse fim. O consenso do COI (Maughan et al., 2018) lembra que suplementos podem conter substâncias proibidas e que deficiências devem ser avaliadas antes de suplementar.",
+    "practice": [
+      "Não gaste com boosters de testosterona: não há evidência de que aumentem músculo ou força.",
+      "Multivitamínico não substitui uma dieta variada; faz sentido quando há deficiência ou risco identificado.",
+      "Se suspeitar de testosterona baixa (cansaço, libido baixa) ou de falta de vitaminas, procure um médico para exames em vez de se automedicar.",
+      "Se você compete em esporte com controle antidoping, saiba que suplementos podem estar contaminados com substâncias proibidas."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Clemesha CG, Thaker H, Samplaski MK. 'Testosterone Boosting' Supplements Composition and Claims Are not Supported by the Academic Literature. World J Mens Health. 2020;38(1):115-122.",
+        "year": 2020,
+        "doi": "10.5534/wjmh.190043"
+      },
+      {
+        "citation": "Balasubramanian A, Thirumavalavan N, Srivatsav A, et al. Testosterone Imposters: An Analysis of Popular Online Testosterone Boosting Supplements. J Sex Med. 2019;16(2):203-212.",
+        "year": 2019,
+        "doi": "10.1016/j.jsxm.2018.12.008"
+      },
+      {
+        "citation": "US Preventive Services Task Force, Mangione CM, Barry MJ, et al. Vitamin, Mineral, and Multivitamin Supplementation to Prevent Cardiovascular Disease and Cancer: US Preventive Services Task Force Recommendation Statement. JAMA. 2022;327(23):2326-2333.",
+        "year": 2022,
+        "doi": "10.1001/jama.2022.8970"
+      },
+      {
+        "citation": "Maughan RJ, Burke LM, Dvorak J, et al. IOC consensus statement: dietary supplements and the high-performance athlete. Br J Sports Med. 2018;52(7):439-455.",
+        "year": 2018,
+        "doi": "10.1136/bjsports-2018-099027"
+      }
+    ]
+  },
+  {
+    "id": "nu-alcohol-muscle",
+    "topic": "nutrition",
+    "title": "Álcool e ganho de massa muscular",
+    "keywords": [
+      "álcool",
+      "cerveja",
+      "bebida alcoólica",
+      "beber",
+      "balada",
+      "álcool atrapalha hipertrofia",
+      "ressaca",
+      "recuperação",
+      "alcohol",
+      "beer",
+      "muscle protein synthesis",
+      "recovery"
+    ],
+    "summary": "Beber muito após o treino atrapalha a recuperação muscular. Num estudo controlado, ingerir ~1,5 g/kg de álcool (cerca de 12 doses) após um treino de força combinado com bicicleta reduziu a síntese de proteína miofibrilar em 24% mesmo com 25 g de whey, e em 37% quando o álcool veio com carboidrato em vez de proteína (Parr et al., 2014). Em homens treinados, álcool após o treino de força reduziu a sinalização anabólica (via mTORC1), efeito não observado nas mulheres do estudo (Duplanty et al., 2017). Uma revisão sistemática (Lakićević, 2019) concluiu que o álcool após o treino parece não alterar força, potência ou dor muscular no curto prazo, mas tende a elevar cortisol e reduzir testosterona e síntese proteica. Ressalvas: os estudos usam doses altas e agudas, com poucas pessoas; o efeito de doses baixas e ocasionais é pouco estudado.",
+    "practice": [
+      "Se for beber, evite grandes quantidades, principalmente nas horas após o treino.",
+      "Não conte com a proteína para anular o álcool: mesmo com whey, a síntese proteica caiu.",
+      "O impacto de doses baixas é pouco estudado; os efeitos negativos claros aparecem com consumo alto.",
+      "Procure ajuda médica se tiver dificuldade em controlar o consumo de álcool."
+    ],
+    "evidence": "limited",
+    "sources": [
+      {
+        "citation": "Parr EB, Camera DM, Areta JL, et al. Alcohol Ingestion Impairs Maximal Post-Exercise Rates of Myofibrillar Protein Synthesis following a Single Bout of Concurrent Training. PLoS One. 2014;9(2):e88384.",
+        "year": 2014,
+        "doi": "10.1371/journal.pone.0088384"
+      },
+      {
+        "citation": "Duplanty AA, Budnar RG, Luk HY, et al. Effect of Acute Alcohol Ingestion on Resistance Exercise-Induced mTORC1 Signaling in Human Muscle. J Strength Cond Res. 2017;31(1):54-61.",
+        "year": 2017,
+        "doi": "10.1519/JSC.0000000000001468"
+      },
+      {
+        "citation": "Lakićević N. The Effects of Alcohol Consumption on Recovery Following Resistance Exercise: A Systematic Review. J Funct Morphol Kinesiol. 2019;4(3):41.",
+        "year": 2019,
+        "doi": "10.3390/jfmk4030041"
+      }
+    ]
+  },
+  {
+    "id": "nu-hydration",
+    "topic": "nutrition",
+    "title": "Hidratação e desempenho no treino",
+    "keywords": [
+      "hidratação",
+      "água",
+      "quanto de água beber",
+      "desidratação",
+      "suor",
+      "isotônico",
+      "eletrólitos",
+      "calor",
+      "hydration",
+      "dehydration",
+      "water intake",
+      "sweat rate",
+      "hyponatremia"
+    ],
+    "summary": "Começar o treino bem hidratado e evitar perder muito líquido ajuda o desempenho. O posicionamento do ACSM (Sawka et al., 2007) orienta evitar desidratação acima de ~2% do peso corporal durante o exercício e recomenda planos individualizados, já que a taxa de suor varia muito entre pessoas; ela pode ser estimada pesando-se antes e depois do treino. Para força e potência, uma revisão (Judelson et al., 2007) estimou que a desidratação reduz a força em ~2%, a potência em ~3% e a resistência de alta intensidade em ~10%. A NATA (McDermott et al., 2017) alerta que beber demais também é arriscado, pela possibilidade de hiponatremia. Bebidas com eletrólitos e carboidrato podem ter vantagem sobre a água em algumas situações, como exercícios longos. Ressalva: a necessidade varia com clima, duração do treino e quanto você sua.",
+    "practice": [
+      "Chegue ao treino hidratado: beba líquidos ao longo do dia e nas horas antes de treinar.",
+      "Em treinos longos ou no calor, pese-se antes e depois; a diferença estima quanto suor você precisa repor.",
+      "Não force beber muito além do que perde: excesso de líquido também pode ser perigoso.",
+      "Procure um médico se você tem doença renal ou cardíaca com restrição de líquidos."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Sawka MN, Burke LM, Eichner ER, et al. American College of Sports Medicine position stand. Exercise and fluid replacement. Med Sci Sports Exerc. 2007;39(2):377-390.",
+        "year": 2007,
+        "doi": "10.1249/mss.0b013e31802ca597"
+      },
+      {
+        "citation": "Judelson DA, Maresh CM, Anderson JM, et al. Hydration and muscular performance: does fluid balance affect strength, power and high-intensity endurance? Sports Med. 2007;37(10):907-921.",
+        "year": 2007,
+        "doi": "10.2165/00007256-200737100-00006"
+      },
+      {
+        "citation": "McDermott BP, Anderson SA, Armstrong LE, et al. National Athletic Trainers' Association Position Statement: Fluid Replacement for the Physically Active. J Athl Train. 2017;52(9):877-895.",
+        "year": 2017,
+        "doi": "10.4085/1062-6050-52.9.02"
+      }
+    ]
+  },
+  {
+    "id": "nu-sleep-appetite",
+    "topic": "body-composition",
+    "title": "Sono, fome e perda de gordura",
+    "keywords": [
+      "sono",
+      "dormir pouco",
+      "dormir mal",
+      "fome",
+      "apetite",
+      "insônia",
+      "sono e emagrecimento",
+      "leptina",
+      "grelina",
+      "sleep",
+      "sleep deprivation",
+      "appetite",
+      "hunger",
+      "fat loss"
+    ],
+    "summary": "Dormir pouco parece dificultar o controle do peso. Numa meta-análise de estudos de intervenção (Al Khatib et al., 2017), a restrição parcial de sono aumentou a ingestão em ~385 kcal/dia, sem aumentar o gasto energético, criando saldo positivo de energia. Em homens jovens saudáveis, duas noites de sono curto reduziram a leptina (−18%), elevaram a grelina (+28%) e aumentaram fome e apetite, sobretudo por alimentos calóricos ricos em carboidrato (Spiegel et al., 2004). Durante 14 dias de dieta, ter 5,5 h de sono em vez de 8,5 h reduziu em 55% a parte do peso perdida como gordura e aumentou em 60% a perda de massa livre de gordura (Nedeltcheva et al., 2010). Ressalvas: estudos pequenos, curtos e em laboratório; não está claro quanto disso se mantém no longo prazo.",
+    "practice": [
+      "Trate o sono como parte da dieta: noites curtas tendem a aumentar fome e consumo.",
+      "Em fase de perda de gordura, mantenha horários regulares e tempo de sono suficiente para acordar descansado.",
+      "Procure um médico se tiver insônia persistente, ronco forte, pausas na respiração ou sonolência diurna excessiva."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Al Khatib HK, Harding SV, Darzi J, et al. The effects of partial sleep deprivation on energy balance: a systematic review and meta-analysis. Eur J Clin Nutr. 2017;71(5):614-624.",
+        "year": 2017,
+        "doi": "10.1038/ejcn.2016.201"
+      },
+      {
+        "citation": "Spiegel K, Tasali E, Penev P, et al. Brief communication: Sleep curtailment in healthy young men is associated with decreased leptin levels, elevated ghrelin levels, and increased hunger and appetite. Ann Intern Med. 2004;141(11):846-850.",
+        "year": 2004,
+        "doi": "10.7326/0003-4819-141-11-200412070-00008"
+      },
+      {
+        "citation": "Nedeltcheva AV, Kilkus JM, Imperial J, et al. Insufficient sleep undermines dietary efforts to reduce adiposity. Ann Intern Med. 2010;153(7):435-441.",
+        "year": 2010,
+        "doi": "10.7326/0003-4819-153-7-201010050-00006"
+      }
+    ]
+  },
+  {
+    "id": "nu-anabolic-steroids-health-risks",
+    "topic": "health",
+    "title": "Esteroides anabolizantes: riscos à saúde",
+    "keywords": [
+      "anabolizante",
+      "esteroides",
+      "bomba",
+      "ciclo",
+      "testosterona injetável",
+      "deca",
+      "trembolona",
+      "oxandrolona",
+      "anabolic steroids",
+      "aas",
+      "steroids",
+      "doping",
+      "riscos",
+      "efeitos colaterais"
+    ],
+    "summary": "Este conteúdo trata apenas dos riscos; não há orientação de uso. Segundo declaração científica da Endocrine Society (Pope et al., 2014), a maioria dos usuários de anabolizantes não é atleta de elite, e sim praticante de musculação, muitas vezes com doses bem acima das fisiológicas e combinando substâncias. O uso está associado a maior risco de morte e a problemas cardiovasculares, psiquiátricos, metabólicos, hormonais (incluindo síndrome de abstinência ao parar), hepáticos, renais e infecciosos. Em levantadores com 2 anos ou mais de uso, a função do coração estava reduzida e havia mais placa nas coronárias, em proporção ao tempo de uso acumulado (Baggish et al., 2017). Numa coorte dinamarquesa, usuários tiveram mortalidade cerca de 3 vezes maior e mais internações; acne, ginecomastia e disfunção erétil afetaram mais de 10% deles (Horwitz et al., 2019). Ressalva: os dados são observacionais, mas consistentes entre estudos.",
+    "practice": [
+      "O coach não orienta uso de anabolizantes: os riscos à saúde são sérios e podem persistir depois de parar.",
+      "Se você usa ou já usou, procure um médico (endocrinologista ou cardiologista) para avaliação e acompanhamento.",
+      "Dor no peito, falta de ar, palpitações ou alterações fortes de humor exigem atendimento médico imediato.",
+      "Ganhos naturais vêm de treino consistente, proteína adequada, sono e tempo."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Pope HG Jr, Wood RI, Rogol A, et al. Adverse health consequences of performance-enhancing drugs: an Endocrine Society scientific statement. Endocr Rev. 2014;35(3):341-375.",
+        "year": 2014,
+        "doi": "10.1210/er.2013-1058"
+      },
+      {
+        "citation": "Baggish AL, Weiner RB, Kanayama G, et al. Cardiovascular Toxicity of Illicit Anabolic-Androgenic Steroid Use. Circulation. 2017;135(21):1991-2002.",
+        "year": 2017,
+        "doi": "10.1161/CIRCULATIONAHA.116.026945"
+      },
+      {
+        "citation": "Horwitz H, Andersen JT, Dalhoff KP. Health consequences of androgenic anabolic steroid use. J Intern Med. 2019;285(3):333-340.",
+        "year": 2019,
+        "doi": "10.1111/joim.12850"
+      }
+    ]
+  },
+  {
+    "id": "nu-measuring-progress",
+    "topic": "body-composition",
+    "title": "Como medir o progresso: balança, bioimpedância e medidas",
+    "keywords": [
+      "bioimpedância",
+      "balança de bioimpedância",
+      "percentual de gordura",
+      "medir gordura",
+      "fita métrica",
+      "circunferência da cintura",
+      "balança",
+      "pesar",
+      "progresso",
+      "dexa",
+      "body fat",
+      "body composition",
+      "bioimpedance",
+      "bia",
+      "waist circumference",
+      "progress tracking"
+    ],
+    "summary": "Nenhum método acessível mede composição corporal com precisão absoluta, então o que importa é a tendência medida sempre do mesmo jeito. Comida e líquido ingeridos antes da avaliação alteram bastante os resultados de bioimpedância e de modelos que dependem da água corporal, enquanto DXA e pletismografia toleram melhor pequenas refeições (Kerr et al., 2017). As diretrizes da ESPEN (Kyle et al., 2004) indicam que a bioimpedância funciona razoavelmente em pessoas saudáveis com hidratação estável e equação validada, mas o acompanhamento ao longo do tempo deve ser interpretado com cautela. Mesmo o DXA exige padronização (jejum, repouso, roupa mínima, mesmo posicionamento) para detectar mudanças pequenas (Nana et al., 2015). A circunferência da cintura é uma medida simples que acrescenta informação sobre risco à saúde além do IMC (Ross et al., 2020). Ressalva: peso e bioimpedância oscilam com comida, líquido e hidratação, não só com gordura.",
+    "practice": [
+      "Pese-se nas mesmas condições (ao acordar, depois de ir ao banheiro, antes de comer) e acompanhe a média semanal, não o número de um dia.",
+      "Se usar bioimpedância, faça sempre no mesmo aparelho, horário e estado (em jejum, hidratado, sem ter treinado) e olhe a tendência, não o percentual exato.",
+      "Some medidas de cintura e outras circunferências, fotos padronizadas e a evolução das cargas no treino.",
+      "Procure ajuda profissional se medir o corpo estiver gerando ansiedade, compulsão ou restrição alimentar."
+    ],
+    "evidence": "moderate",
+    "sources": [
+      {
+        "citation": "Kerr A, Slater GJ, Byrne N. Impact of food and fluid intake on technical and biological measurement error in body composition assessment methods in athletes. Br J Nutr. 2017;117(4):591-601.",
+        "year": 2017,
+        "doi": "10.1017/S0007114517000551"
+      },
+      {
+        "citation": "Kyle UG, Bosaeus I, De Lorenzo AD, et al. Bioelectrical impedance analysis--part II: utilization in clinical practice. Clin Nutr. 2004;23(6):1430-1453.",
+        "year": 2004,
+        "doi": "10.1016/j.clnu.2004.09.012"
+      },
+      {
+        "citation": "Nana A, Slater GJ, Stewart AD, et al. Methodology review: using dual-energy X-ray absorptiometry (DXA) for the assessment of body composition in athletes and active people. Int J Sport Nutr Exerc Metab. 2015;25(2):198-215.",
+        "year": 2015,
+        "doi": "10.1123/ijsnem.2013-0228"
+      },
+      {
+        "citation": "Ross R, Neeland IJ, Yamashita S, et al. Waist circumference as a vital sign in clinical practice: a Consensus Statement from the IAS and ICCR Working Group on Visceral Obesity. Nat Rev Endocrinol. 2020;16(3):177-189.",
+        "year": 2020,
+        "doi": "10.1038/s41574-019-0310-7"
+      }
+    ]
+  }
+]

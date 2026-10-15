@@ -32,6 +32,18 @@ describe('chat system prompt', () => {
     expect(CHAT_SYSTEM_PROMPT).toMatch(/lasting change to their saved program/i);
   });
 
+  // The coach answered "que ia você é?" with a canned English reply and used to
+  // call itself GymCoach (the upstream name). It must present itself as GYM
+  // Peg's AI coach and ground science on the curated knowledge cards.
+  it('presents itself as GYM Peg and grounds science on the knowledge cards', () => {
+    expect(CHAT_SYSTEM_PROMPT).toMatch(/AI coach of GYM Peg/);
+    expect(CHAT_SYSTEM_PROMPT).not.toMatch(/GymCoach/);
+    expect(CHAT_SYSTEM_PROMPT).toMatch(/About this assistant/);
+    expect(CHAT_SYSTEM_PROMPT).toMatch(/Knowledge cards/);
+    expect(CHAT_SYSTEM_PROMPT).toMatch(/never recompute or invent it/i);
+    expect(CHAT_SYSTEM_PROMPT).toMatch(/trainingHistory/);
+  });
+
   it('defines no structured output contract (free-form text only)', () => {
     expect(CHAT_SYSTEM_PROMPT).not.toContain('<adjustments>');
     expect(CHAT_SYSTEM_PROMPT).not.toMatch(/JSON object/i);
