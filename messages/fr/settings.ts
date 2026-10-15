@@ -180,6 +180,10 @@ export const settings = {
     signedOut:
       '{count, plural, =0 {Aucun autre appareil n’était connecté.} one {# appareil déconnecté.} other {# appareils déconnectés.}}',
   },
+  admin: {
+    title: 'Administration',
+    description: 'Comptes et mots de passe',
+  },
   privacy: {
     title: 'Données et confidentialité',
     exportTitle: 'Télécharger vos données',

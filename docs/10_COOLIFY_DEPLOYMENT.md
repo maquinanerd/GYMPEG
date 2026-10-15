@@ -118,6 +118,22 @@ Deploy. Ao subir, acessar `/signup` e criar a conta com um e-mail listado em `SI
 
 > Em produção o cadastro vem fechado por padrão (`allowlist`): só os e-mails listados conseguem criar conta. Outros recebem "cadastro apenas por convite", sem revelar se o e-mail já existe.
 
+### Administrador
+
+Um admin define uma senha nova para outra conta em **Configurações → Administração** (`/admin`). A conta sai de todos os dispositivos, os links de reset pendentes deixam de valer e a troca fica registrada em `AuditLog` (quem, qual conta, quando; nunca a senha). A própria senha do admin continua sendo trocada em Configurações, com a senha atual.
+
+O papel não vem do cadastro nem de variável de ambiente: é concedido à mão no banco, porque o cadastro não verifica a posse do e-mail. Em **gympeg-postgres → Terminal**:
+
+```
+psql -U gympeg -d gympeg
+```
+
+```sql
+UPDATE "User" SET role = 'ADMIN' WHERE email = 'seu@email.com';
+```
+
+Deve responder `UPDATE 1`. Para tirar o papel, `SET role = 'USER'`; vale na próxima requisição, sem novo login.
+
 ## 5. Operação
 
 - Logs e status: pelo Coolify ou pelo MCP (`list_deployments`, `get_deployment`).

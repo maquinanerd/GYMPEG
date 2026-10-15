@@ -1,5 +1,7 @@
-import { GearIcon } from '@/components/ui/icon';
+import Link from 'next/link';
+import { CaretRightIcon, GearIcon, ShieldCheckIcon } from '@/components/ui/icon';
 import { getTranslations } from 'next-intl/server';
+import { IconCircle, ListRow } from '@/components/ui/list-row';
 import { requireSession } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -35,6 +37,7 @@ export default async function SettingsPage() {
         activeGymId: true,
         aiConsentAt: true,
         aiConsentVersion: true,
+        role: true,
       },
     }),
     db.gym.findMany({
@@ -88,6 +91,25 @@ export default async function SettingsPage() {
             <LogoutButton />
           </CardContent>
         </Card>
+
+        {user?.role === 'ADMIN' && (
+          <Card>
+            <CardContent className="py-1">
+              <Link href="/admin" className="block">
+                <ListRow
+                  leading={
+                    <IconCircle>
+                      <ShieldCheckIcon />
+                    </IconCircle>
+                  }
+                  title={t('admin.title')}
+                  subtitle={t('admin.description')}
+                  trailing={<CaretRightIcon className="size-5 text-muted-foreground" aria-hidden />}
+                />
+              </Link>
+            </CardContent>
+          </Card>
+        )}
 
         <SecuritySection otherSessions={otherSessions} />
 

@@ -1,3 +1,4 @@
+import { admin } from './admin';
 import { ai } from './ai';
 import { auth } from './auth';
 import { common } from './common';
@@ -14,6 +15,7 @@ import { session } from './session';
 import { settings } from './settings';
 
 const messages = {
+  admin,
   ai,
   auth,
   common,
