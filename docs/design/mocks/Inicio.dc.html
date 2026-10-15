@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,400..700&display=swap" rel="stylesheet"><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script><style>html,body{margin:0;background:#F9F9F9}a{color:#354119}a:hover{color:#111111}button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}:focus-visible{outline:2px solid #111111;outline-offset:2px}</style></helmet>
+<div style="width:100%;max-width:430px;margin:0 auto;height:844px;position:relative;background:#F9F9F9;font-family:Archivo, sans-serif;color:#111111;overflow:hidden;display:flex;flex-direction:column">
+  <dc-import name="StatusBar" hint-size="100%,54px"></dc-import>
+  <main style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding-bottom:28px">
+    <header style="padding:6px 20px 18px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span style="font-size:14px;font-weight:500;color:#646464">quinta, 15 de outubro</span>
+        <h1 style="margin:0;font-size:28px;font-weight:600;letter-spacing:-0.02em">Bom dia, Rafa</h1>
+      </div>
+      <span role="status" style="height:28px;padding:0 10px;border-radius:4px;background:{{ sync.bg }};color:{{ sync.c }};display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600"><i class="{{ sync.i }}" style="font-size:14px"></i>{{ sync.l }}</span>
+    </header>
+
+    <section aria-labelledby="hoje" style="background:#CCFF00;padding:20px 20px 14px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:14px;font-weight:600;color:#354119">{{ v.kicker }}</span>
+          <h2 id="hoje" style="margin:0;font-size:34px;font-weight:600;line-height:1.02;letter-spacing:-0.025em">Treino B<br>Inferiores</h2>
+        </div>
+        <dc-import name="MuscleMap" on="quads,hams,glutes,calves" theme="lime" width="{{ 92 }}" hint-size="92px,89px"></dc-import>
+      </div>
+      <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column">
+        <sc-for list="{{ today }}" as="e" hint-placeholder-count="5">
+          <li style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-top:1px solid rgba(17,17,17,0.14);font-size:16px;font-weight:500"><span>{{ e.name }}</span><span style="font-family:Archivo, sans-serif;font-stretch:125%;font-weight:600;font-variant-numeric:tabular-nums;font-size:14px;white-space:nowrap">{{ e.sets }}</span></li>
+        </sc-for>
+      </ol>
+      <button style="height:56px;border-radius:12px;background:#111111;color:#FFFFFF;font-size:17px;font-weight:600">{{ v.cta }}</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px;font-weight:500;color:#354119;min-height:28px"><span>{{ v.foot }}</span><a href="#" style="color:#111111;font-weight:600">Trocar treino</a></div>
+    </section>
+
+    <section aria-labelledby="semana" style="padding:28px 20px 0;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><h2 id="semana" style="margin:0;font-size:20px;font-weight:600">Esta semana</h2><span style="font-size:14px;font-weight:500;color:#646464">12 a 18 out</span></div>
+      <ol style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px">
+        <sc-for list="{{ days }}" as="d" hint-placeholder-count="7">
+          <li aria-label="{{ d.aria }}" style="display:flex;flex-direction:column;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:#646464">{{ d.l }}</span><span style="width:100%;height:38px;border-radius:6px;background:{{ d.bg }};border:{{ d.border }};box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;font-size:14px;color:{{ d.c }}">{{ d.n }}</span></li>
+        </sc-for>
+      </ol>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;padding-top:6px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:Archivo, sans-serif;font-stretch:125%;font-weight:600;font-variant-numeric:tabular-nums;font-size:28px;line-height:1">2</span><span style="font-size:14px;font-weight:500;color:#646464">de 4 treinos</span></div>
+          <span style="height:4px;border-radius:2px;background:#E9E9E9;display:flex"><span style="width:50%;background:#111111;border-radius:2px"></span></span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:Archivo, sans-serif;font-stretch:125%;font-weight:600;font-variant-numeric:tabular-nums;font-size:28px;line-height:1">33</span><span style="font-size:14px;font-weight:500;color:#646464">de 66 séries</span></div>
+          <span style="height:4px;border-radius:2px;background:#E9E9E9;display:flex"><span style="width:50%;background:#111111;border-radius:2px"></span></span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="atencao" style="margin:28px 20px 0;padding-top:20px;border-top:1px solid #E9E9E9;display:flex;flex-direction:column;gap:8px">
+      <span style="align-self:flex-start;height:24px;padding:0 8px;border-radius:4px;background:#FF9F0A;font-size:12px;font-weight:600;display:flex;align-items:center">Estagnado há 4 treinos</span>
+      <h2 id="atencao" style="margin:0;font-size:17px;font-weight:600">Desenvolvimento com halteres</h2>
+      <p style="margin:0;font-size:15px;font-weight:500;color:#646464;line-height:1.45;text-wrap:pretty">O 1RM estimado está em 31 kg desde 17/09. Na próxima sessão a sugestão mantém 24 kg e pede uma repetição a mais por série.</p>
+    </section>
+
+    <section aria-labelledby="recordes" style="margin:28px 20px 0;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px"><h2 id="recordes" style="margin:0;font-size:20px;font-weight:600">Recordes recentes</h2><a href="#" style="font-size:14px;font-weight:600">Ver todos</a></div>
+      <ul style="list-style:none;margin:0;padding:0">
+        <sc-for list="{{ prs }}" as="p" hint-placeholder-count="3">
+          <li style="display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:14px 0;border-top:1px solid #E9E9E9">
+            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:600">{{ p.name }}</span><span style="font-size:13px;font-weight:500;color:#646464">{{ p.meta }}</span></div>
+            <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14px;font-weight:500;color:#646464">{{ p.before }}</span><span style="font-family:Archivo, sans-serif;font-stretch:125%;font-weight:600;font-variant-numeric:tabular-nums;font-size:16px;background:#FFD509;padding:3px 6px;border-radius:3px">{{ p.after }}</span></div>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+
+    <section aria-labelledby="peso" style="margin:16px 20px 0;padding-top:20px;border-top:1px solid #E9E9E9;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:16px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <h2 id="peso" style="margin:0;font-size:14px;font-weight:600;color:#646464">Peso</h2>
+        <div style="display:flex;align-items:baseline;gap:4px"><span style="font-family:Archivo, sans-serif;font-stretch:125%;font-weight:600;font-variant-numeric:tabular-nums;font-size:28px;line-height:1">78,0</span><span style="font-size:14px;font-weight:500;color:#646464">kg</span></div>
+        <span style="font-size:13px;font-weight:500;color:#646464">média de 7 dias 78,1 · −0,1 kg por semana</span>
+      </div>
+      <svg width="112" height="40" viewBox="0 0 112 40" aria-hidden="true"><polyline points="{{ spark }}" fill="none" stroke="#111111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline><circle cx="110" cy="{{ sparkEnd }}" r="3" fill="#111111"></circle></svg>
+    </section>
+  </main>
+  <dc-import name="TabBar" active="inicio" hint-size="100%,89px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844},&quot;variant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;proximo&quot;,&quot;andamento&quot;],&quot;default&quot;:&quot;proximo&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;sync&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;sincronizado&quot;,&quot;pendente&quot;,&quot;offline&quot;],&quot;default&quot;:&quot;sincronizado&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const S = {
+      sincronizado: { bg:'#F0F0F0', c:'#646464', i:'ph-bold ph-cloud-check', l:'Salvo' },
+      pendente: { bg:'#FF9F0A', c:'#111111', i:'ph-bold ph-cloud-arrow-up', l:'3 a enviar' },
+      offline: { bg:'#F0F0F0', c:'#646464', i:'ph-bold ph-cloud-slash', l:'Sem conexão' }
+    };
+    const andamento = this.props.variant === 'andamento';
+    const v = andamento
+      ? { kicker:'Em andamento · 24 min', cta:'Retomar treino', foot:'6 de 17 séries registradas' }
+      : { kicker:'Hoje · semana 3 de 5', cta:'Iniciar treino', foot:'Agendado para hoje · ~60 min' };
+    const today = [['Agachamento livre','4 × 5‑8'],['Leg press 45°','3 × 10‑12'],['Mesa flexora','3 × 10‑12'],['Cadeira extensora','3 × 12‑15'],['Panturrilha em pé','4 × 10‑15']].map(([name, sets]) => ({ name, sets }));
+    const raw = [['seg','12','done'],['ter','13','done'],['qua','14','rest'],['qui','15','today'],['sex','16','plan'],['sáb','17','rest'],['dom','18','rest']];
+    const days = raw.map(([l, n, s]) => ({ l, n,
+      bg: s === 'done' ? '#111111' : s === 'today' ? '#CCFF00' : 'transparent',
+      c: s === 'done' ? '#FFFFFF' : s === 'rest' ? '#8D8D8D' : '#111111',
+      border: s === 'plan' ? '1.5px dashed #8D8D8D' : s === 'today' ? '1.5px solid #111111' : '1.5px solid transparent',
+      aria: `${l} ${n}: ${{ done:'treinou', today:'hoje, planejado', plan:'planejado', rest:'descanso' }[s]}` }));
+    const prs = [
+      { name:'Supino reto com barra', meta:'1RM estimado · 02/10', before:'91 kg', after:'94 kg' },
+      { name:'Agachamento livre', meta:'100 kg · 06/10', before:'× 5', after:'× 6' },
+      { name:'Volume semanal', meta:'semana de 28/09', before:'17.960', after:'18.420 kg' }
+    ];
+    const w = [78.4,78.5,78.3,78.4,78.2,78.3,78.1,78.2,78.0,78.1,78.0];
+    const y = x => (4 + (78.6 - x) / 0.7 * 32).toFixed(1);
+    const spark = w.map((x, i) => `${(2 + i * 10.8).toFixed(1)},${y(x)}`).join(' ');
+    return {  sync: S[this.props.sync] || S.sincronizado, v, today, days, prs, spark, sparkEnd: y(78.0) };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,400..700&display=swap" rel="stylesheet"><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script><style>html,body{margin:0;background:#F9F9F9}a{color:#354119}a:hover{color:#111111}button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}:focus-visible{outline:2px solid #111111;outline-offset:2px}</style></helmet>
+<div style="width:100%;max-width:430px;margin:0 auto;height:844px;position:relative;background:#F9F9F9;font-family:Archivo, sans-serif;color:#111111;overflow:hidden;display:flex;flex-direction:column">
+  <dc-import name="StatusBar" hint-size="100%,54px"></dc-import>
+  <header style="flex:none;padding:0 8px 0 8px;display:flex;align-items:center;gap:4px">
+    <button aria-label="Minimizar treino" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:22px"><i class="ph-bold ph-caret-down"></i></button>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+      <span style="font-size:17px;font-weight:600">Treino A — Superiores</span>
+      <span style="font-size:13px;font-weight:500;color:#646464;font-variant-numeric:tabular-nums">18:24 · exercício 1 de 6</span>
+    </div>
+    <span role="status" aria-label="{{ sync.l }}" style="width:28px;height:28px;border-radius:4px;background:{{ sync.bg }};color:{{ sync.c }};display:flex;align-items:center;justify-content:center;font-size:15px"><i class="{{ sync.i }}"></i></span>
+    <button aria-label="Perguntar ao coach sobre este treino" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:22px"><i class="ph ph-chat-circle-text"></i></button>
+    <button aria-label="Mais opções do treino" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:22px"><i class="ph-bold ph-dots-three-vertical"></i></button>
+  </header>
+  <div aria-hidden="true" style="flex:none;display:flex;gap:3px;padding:6px 20px 0">
+    <span style="flex:1;height:3px;border-radius:2px;background:#111111"></span><span style="flex:1;height:3px;border-radius:2px;background:#E9E9E9"></span><span style="flex:1;height:3px;border-radius:2px;background:#E9E9E9"></span><span style="flex:1;height:3px;border-radius:2px;background:#E9E9E9"></span><span style="flex:1;height:3px;border-radius:2px;background:#E9E9E9"></span><span style="flex:1;height:3px;border-radius:2px;background:#E9E9E9"></span>
+  </div>
+  <nav aria-label="Exercícios do treino" style="flex:none;display:flex;gap:20px;overflow-x:auto;scrollbar-width:none;padding:0 20px;border-bottom:1px solid #E9E9E9">
+    <sc-for list="{{ strip }}" as="x" hint-placeholder-count="5">
+      <button aria-current="{{ x.current }}" style="flex:none;height:48px;display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:14px;font-weight:{{ x.w }};color:{{ x.c }};border-bottom:2px solid {{ x.line }};margin-bottom:-1px"><span style="font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;font-size:13px">{{ x.n }}</span>{{ x.l }}</button>
+    </sc-for>
+  </nav>
+
+  <main style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:20px 20px 24px;display:flex;flex-direction:column;gap:16px">
+    <figure style="margin:0;position:relative;border-radius:12px;overflow:hidden;background:#E9E9E9;aspect-ratio:3 / 2;flex:none">
+      <img src="{{ frameSrc }}" alt="{{ frameAlt }}" style="width:100%;height:100%;object-fit:cover;display:block">
+      <button aria-label="Ampliar execução" onClick="{{ openViewer }}" style="position:absolute;inset:0;cursor:zoom-in"></button>
+      <span style="position:absolute;left:10px;top:10px;height:24px;padding:0 8px;border-radius:4px;background:#CCFF00;font-size:12px;font-weight:600;display:flex;align-items:center">{{ frameLabel }}</span>
+      <div style="position:absolute;right:8px;bottom:8px;display:flex;gap:6px">
+        <button aria-label="{{ playAria }}" onClick="{{ togglePlay }}" style="width:44px;height:44px;border-radius:8px;background:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="{{ playIcon }}"></i></button>
+        <button aria-label="Ampliar execução" onClick="{{ openViewer }}" style="width:44px;height:44px;border-radius:8px;background:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ph-bold ph-arrows-out"></i></button>
+      </div>
+    </figure>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <h1 style="margin:0;font-size:28px;font-weight:600;line-height:1.08;letter-spacing:-0.02em">Supino reto com barra</h1>
+      <span style="font-size:15px;font-weight:500;color:#646464">3 × 6‑8 · RIR 2 · descanso 3 min</span>
+      <span style="font-size:14px;font-weight:500;color:#646464">Último, 02/10: <span style="font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;color:#111111;font-variant-numeric:tabular-nums">80 × 10 · 9 · 8</span></span>
+    </div>
+    <div style="background:#EAFCC8;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:14px;font-weight:600;color:#354119">Sugestão</span><span style="font-family:Archivo, sans-serif;font-stretch:125%;font-weight:600;font-variant-numeric:tabular-nums;font-size:22px">82,5 kg</span><span style="font-size:14px;font-weight:600;color:#354119">+2,5</span></div>
+      <p style="margin:0;font-size:14px;font-weight:500;color:#354119;line-height:1.4;text-wrap:pretty">Você fez 8 ou mais repetições nas três séries do último treino, o topo da faixa. A carga sobe e a meta volta para 6‑8.</p>
+      <a href="#" style="font-size:14px;font-weight:600;color:#111111;padding-top:4px">Como foi calculado</a>
+    </div>
+
+    <table style="width:calc(100% + 24px);margin:0 -12px;border-collapse:collapse">
+      <thead><tr style="height:32px;font-size:12px;font-weight:600;color:#646464;text-align:center"><th scope="col" style="width:44px;font-weight:600">Série</th><th scope="col" style="font-weight:600">kg</th><th scope="col" style="font-weight:600">reps</th><th scope="col" style="font-weight:600">RIR</th><th scope="col" style="width:76px"><span style="position:absolute;width:1px;height:1px;overflow:hidden">Feito</span></th></tr></thead>
+      <tbody>
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+          <tr style="height:{{ r.h }};background:{{ r.rowBg }};border-top:1px solid #E9E9E9">
+            <td style="text-align:center;padding-left:8px"><span style="display:inline-flex;flex-direction:column;align-items:center;gap:3px"><span style="min-width:24px;height:24px;padding:0 4px;border-radius:4px;background:{{ r.tagBg }};display:inline-flex;align-items:center;justify-content:center;font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;font-size:13px">{{ r.label }}</span><sc-if value="{{ r.pr }}" hint-placeholder-val="{{ false }}"><span style="font-size:10px;font-weight:700;background:#FFD509;padding:1px 4px;border-radius:3px">PR</span></sc-if></span></td>
+            <td style="padding:0 4px"><button aria-label="Carga" style="width:100%;height:48px;border-radius:8px;background:{{ r.cellBg }};border:{{ r.cellBorder }};box-sizing:border-box;font-family:Archivo, sans-serif;font-stretch:118%;font-weight:600;font-variant-numeric:tabular-nums;font-size:22px;color:{{ r.numC }}">{{ r.kg }}</button></td>
+            <td style="padding:0 4px"><button aria-label="Repetições" style="width:100%;height:48px;border-radius:8px;background:{{ r.cellBg }};border:{{ r.cellBorder }};box-sizing:border-box;font-family:Archivo, sans-serif;font-stretch:118%;font-weight:600;font-variant-numeric:tabular-nums;font-size:22px;color:{{ r.numC }}">{{ r.reps }}</button></td>
+            <td style="padding:0 4px"><button aria-label="RIR" style="width:100%;height:48px;border-radius:8px;background:{{ r.cellBg }};border:{{ r.cellBorder }};box-sizing:border-box;font-family:Archivo, sans-serif;font-stretch:118%;font-weight:600;font-variant-numeric:tabular-nums;font-size:22px;color:{{ r.numC }}">{{ r.rir }}</button></td>
+            <td style="padding:0 8px 0 4px"><button aria-label="{{ r.aria }}" aria-pressed="{{ r.done }}" onClick="{{ r.toggle }}" style="width:64px;height:64px;border-radius:50%;background:{{ r.btnBg }};border:{{ r.btnBorder }};box-sizing:border-box;color:{{ r.btnIcon }};display:flex;align-items:center;justify-content:center;font-size:26px"><i class="ph-bold ph-check"></i></button></td>
+          </tr>
+        </sc-for>
+      </tbody>
+    </table>
+    <button style="height:48px;margin-top:-8px;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600"><i class="ph-bold ph-plus"></i>Adicionar série</button>
+    <div style="border-top:1px solid #E9E9E9;padding-top:14px;display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+      <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:500;color:#646464">A seguir</span><span style="font-size:16px;font-weight:600">Remada curvada</span></div>
+      <span style="font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;font-size:14px">3 × 8‑10</span>
+    </div>
+  </main>
+
+  <footer style="flex:none;padding:12px 20px 34px;border-top:1px solid #E9E9E9;background:#FFFFFF;display:flex;gap:10px;position:relative">
+    <button aria-label="Exercício anterior" style="width:64px;height:64px;flex:none;border-radius:12px;border:1px solid #CECECE;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:22px"><i class="ph-bold ph-caret-left"></i></button>
+    <button onClick="{{ register }}" style="flex:1;height:64px;border-radius:12px;background:#CCFF00;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px"><span style="font-size:17px;font-weight:600">{{ cta }}</span><span style="font-size:13px;font-weight:600;color:#354119;font-variant-numeric:tabular-nums">{{ ctaSub }}</span></button>
+    <button aria-label="Próximo exercício" style="width:64px;height:64px;flex:none;border-radius:12px;border:1px solid #CECECE;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:22px"><i class="ph-bold ph-caret-right"></i></button>
+    <span style="position:absolute;left:50%;bottom:8px;width:134px;height:5px;margin-left:-67px;border-radius:3px;background:#111111"></span>
+  </footer>
+  <sc-if value="{{ viewer }}" hint-placeholder-val="{{ false }}">
+    <div role="dialog" aria-modal="true" aria-labelledby="vw-title" style="position:absolute;inset:0;background:#FFFFFF;display:flex;flex-direction:column;z-index:5">
+      <dc-import name="StatusBar" hint-size="100%,54px"></dc-import>
+      <header style="padding:0 8px 0 20px;display:flex;align-items:center;gap:8px">
+        <div style="flex:1;display:flex;flex-direction:column"><h2 id="vw-title" style="margin:0;font-size:20px;font-weight:600">Supino reto com barra</h2><span style="font-size:13px;font-weight:500;color:#646464">Início e fim do movimento</span></div>
+        <button aria-label="Fechar" onClick="{{ closeViewer }}" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:22px"><i class="ph-bold ph-x"></i></button>
+      </header>
+      <div style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:12px 0 24px;display:flex;flex-direction:column;gap:18px">
+        <figure style="margin:0;position:relative;background:#E9E9E9;aspect-ratio:3 / 2">
+          <img src="{{ frameSrc }}" alt="{{ frameAlt }}" style="width:100%;height:100%;object-fit:contain;display:block">
+          <span style="position:absolute;left:12px;top:12px;height:26px;padding:0 9px;border-radius:4px;background:#CCFF00;font-size:13px;font-weight:600;display:flex;align-items:center">{{ frameLabel }}</span>
+        </figure>
+        <div style="display:flex;justify-content:center;gap:10px">
+          <button aria-label="Início do movimento" onClick="{{ showStart }}" style="width:64px;height:64px;border-radius:12px;border:1px solid #CECECE;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:24px"><i class="ph-bold ph-skip-back"></i></button>
+          <button aria-label="{{ playAria }}" onClick="{{ togglePlay }}" style="width:64px;height:64px;border-radius:12px;border:1px solid #CECECE;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:24px"><i class="{{ playIcon }}"></i></button>
+          <button aria-label="Fim do movimento" onClick="{{ showEnd }}" style="width:64px;height:64px;border-radius:12px;border:1px solid #CECECE;box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-size:24px"><i class="ph-bold ph-skip-forward"></i></button>
+        </div>
+        <div style="padding:0 20px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+            <button onClick="{{ showStart }}" aria-pressed="{{ isStart }}" style="display:flex;flex-direction:column;gap:6px;text-align:left"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Bench_Press_-_Medium_Grip/0.jpg" alt="" style="width:100%;aspect-ratio:3 / 2;object-fit:cover;border-radius:8px;outline:{{ startRing }};outline-offset:2px;display:block"><span style="font-size:13px;font-weight:600">Início</span></button>
+            <button onClick="{{ showEnd }}" aria-pressed="{{ isEnd }}" style="display:flex;flex-direction:column;gap:6px;text-align:left"><img src="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Bench_Press_-_Medium_Grip/1.jpg" alt="" style="width:100%;aspect-ratio:3 / 2;object-fit:cover;border-radius:8px;outline:{{ endRing }};outline-offset:2px;display:block"><span style="font-size:13px;font-weight:600">Fim</span></button>
+          </div>
+          <div style="border-top:1px solid #E9E9E9;padding-top:14px;display:flex;flex-direction:column;gap:4px"><span style="font-size:14px;font-weight:600">Equipamento</span><span style="font-size:15px;font-weight:500;line-height:1.45">Barra, anilhas e banco reto. Barra apoiada no rack na altura dos braços estendidos.</span></div>
+          <p style="margin:0;font-size:12px;font-weight:500;color:#646464;line-height:1.45">Referência visual, não substitui orientação profissional. Pare se o movimento causar dor aguda. Fonte: <a href="https://github.com/yuhonas/free-exercise-db" style="color:#111111">free-exercise-db</a> · Unlicense</p>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844},&quot;sync&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;sincronizado&quot;,&quot;pendente&quot;,&quot;offline&quot;],&quot;default&quot;:&quot;sincronizado&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { done: [true, true, true, true, false, false], frame: 0, playing: !(typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches), viewer: false };
+  componentDidMount() { this.t = setInterval(() => { if (this.state.playing) this.setState(s => ({ frame: 1 - s.frame })); }, 1500); }
+  componentWillUnmount() { clearInterval(this.t); }
+  toggle(i) { this.setState(s => { const d = [...s.done]; d[i] = !d[i]; return { done: d }; }); }
+  renderVals() {
+    const S = {
+      sincronizado: { bg:'#F0F0F0', c:'#646464', i:'ph-bold ph-cloud-check', l:'Salvo' },
+      pendente: { bg:'#FF9F0A', c:'#111111', i:'ph-bold ph-cloud-arrow-up', l:'3 itens a enviar' },
+      offline: { bg:'#F0F0F0', c:'#646464', i:'ph-bold ph-cloud-slash', l:'Sem conexão' }
+    };
+    const strip = [['1','Supino reto'],['2','Remada curvada'],['3','Desenvolvimento'],['4','Puxada frontal'],['A1·A2','Tríceps + rosca']]
+      .map(([n, l], i) => ({ n, l, current: i === 0 ? 'step' : undefined, w: i === 0 ? 600 : 500, c: i === 0 ? '#111111' : '#646464', line: i === 0 ? '#111111' : 'transparent' }));
+    const base = [['Aq','20','10','–',1],['Aq','40','5','–',1],['Aq','60','3','–',1],['1','82,5','8','2',0],['2','82,5','7','2',0],['3','82,5','7','2',0]];
+    const cur = this.state.done.indexOf(false);
+    const rows = base.map(([label, kg, reps, rir, warm], i) => {
+      const d = this.state.done[i], c = i === cur;
+      return { label, kg, reps, rir, pr: d && i === 3, done: d ? 'true' : 'false',
+        h: warm ? '64px' : '76px', rowBg: c ? '#EAFCC8' : 'transparent', tagBg: warm ? '#FF9459' : 'transparent',
+        cellBg: c ? '#FFFFFF' : 'transparent', cellBorder: c ? '1px solid #CECECE' : '1px solid transparent', numC: d || c ? '#111111' : '#646464',
+        btnBg: d ? '#CCFF00' : '#FFFFFF', btnBorder: d ? '1.5px solid #CCFF00' : '1.5px solid #CECECE', btnIcon: d ? '#111111' : '#CECECE',
+        aria: (warm ? 'Aquecimento ' : 'Série ' + label) + (d ? ' feita' : ' pendente'), toggle: () => this.toggle(i) };
+    });
+    const r = base[cur];
+    const f = this.state.frame, p = this.state.playing;
+    const media = { frameSrc: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Bench_Press_-_Medium_Grip/' + f + '.jpg', frameAlt: f ? 'Supino reto: barra próxima ao peito' : 'Supino reto: braços estendidos, barra acima do peito', frameLabel: f ? 'Fim' : 'Início',
+      playIcon: p ? 'ph-fill ph-pause' : 'ph-fill ph-play', playAria: p ? 'Pausar alternância' : 'Alternar quadros', viewer: this.state.viewer, isStart: f ? 'false' : 'true', isEnd: f ? 'true' : 'false',
+      startRing: f ? '2px solid transparent' : '2px solid #111111', endRing: f ? '2px solid #111111' : '2px solid transparent',
+      togglePlay: () => this.setState(s => ({ playing: !s.playing })), openViewer: () => this.setState({ viewer: true }), closeViewer: () => this.setState({ viewer: false }),
+      showStart: () => this.setState({ frame: 0, playing: false }), showEnd: () => this.setState({ frame: 1, playing: false }) };
+    return {  ...media, sync: S[this.props.sync] || S.sincronizado, strip, rows,
+      cta: r ? (r[4] ? 'Registrar aquecimento' : `Registrar série ${r[0]}`) : 'Próximo exercício',
+      ctaSub: r ? `${r[1]} kg × ${r[2]}` : 'Remada curvada',
+      register: () => { if (cur >= 0) this.toggle(cur); } };
+  }
+}
+</script>
+</body>
+</html>

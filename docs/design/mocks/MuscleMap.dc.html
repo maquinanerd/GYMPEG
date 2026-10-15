@@ -26,17 +26,22 @@
   <rect x="82.5" y="86" width="6" height="24" rx="3" fill="{{ f.calves }}"></rect><rect x="91.5" y="86" width="6" height="24" rx="3" fill="{{ f.calves }}"></rect>
 </svg>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:140,&quot;height&quot;:140},&quot;on&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;quads,hams,glutes,calves&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'dark'&quot;},&quot;width&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:120,&quot;tsType&quot;:&quot;number&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:140,&quot;height&quot;:140},&quot;on&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;quads,hams,glutes,calves&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;levels&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;lime&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;width&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:120,&quot;tsType&quot;:&quot;number&quot;}}">
 class Component extends DCLogic {
   renderVals() {
-    const light = this.props.theme !== 'dark';
-    const off = light ? '#E9E9E9' : '#2A2A2A', on = light ? '#B9EA00' : '#CCFF00';
-    const act = (this.props.on ?? 'quads,hams,glutes,calves').split(',').map(s => s.trim());
+    const t = this.props.theme ?? 'light';
+    const off = t === 'lime' ? 'rgba(17,17,17,0.13)' : t === 'dark' ? '#2A2A2A' : '#E9E9E9';
+    const on = t === 'lime' ? '#111111' : t === 'dark' ? '#CCFF00' : '#B9EA00';
+    const heat = t === 'dark' ? ['#2A2A2A','#425212','#CCFF00','#FF9F0A'] : ['#E9E9E9','#D0EE8D','#B9EA00','#FF9F0A'];
     const names = { chest:'peitoral', shoulders:'ombros', abs:'abdômen', biceps:'bíceps', triceps:'tríceps', forearms:'antebraços', quads:'quadríceps', calves:'panturrilhas', back:'costas', glutes:'glúteos', hams:'posteriores' };
-    const f = { base: off };
-    Object.keys(names).forEach(k => { f[k] = act.includes(k) ? on : off; });
+    const lv = {};
+    (this.props.levels || '').split(',').forEach(p => { const [k, v] = p.split(':'); if (k && v) lv[k.trim()] = +v; });
+    const hasLv = Object.keys(lv).length > 0;
+    const act = hasLv ? Object.keys(lv).filter(k => lv[k] > 0) : (this.props.on ?? 'quads,hams,glutes,calves').split(',').map(s => s.trim());
+    const f = { base: hasLv ? heat[0] : off };
+    Object.keys(names).forEach(k => { f[k] = hasLv ? heat[lv[k] ?? 0] : (act.includes(k) ? on : off); });
     const w = this.props.width ?? 120;
-    return { f, w, h: Math.round(w * 116 / 120), label: 'Músculos do treino: ' + act.map(k => names[k]).filter(Boolean).join(', ') };
+    return { f, w, h: Math.round(w * 116 / 120), label: 'Músculos: ' + act.map(k => names[k]).filter(Boolean).join(', ') };
   }
 }
 </script>

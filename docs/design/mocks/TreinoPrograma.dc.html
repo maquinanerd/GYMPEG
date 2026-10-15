@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,400..700&display=swap" rel="stylesheet"><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script><style>html,body{margin:0;background:#F9F9F9}a{color:#354119}a:hover{color:#111111}button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}:focus-visible{outline:2px solid #111111;outline-offset:2px}</style></helmet>
+<div style="width:100%;max-width:430px;margin:0 auto;height:844px;position:relative;background:#F9F9F9;font-family:Archivo, sans-serif;color:#111111;overflow:hidden;display:flex;flex-direction:column">
+  <dc-import name="StatusBar" hint-size="100%,54px"></dc-import>
+  <header style="flex:none;padding:0 8px;display:flex;align-items:center;gap:4px">
+    <button aria-label="Voltar" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:22px"><i class="ph-bold ph-caret-left"></i></button>
+    <span style="flex:1;font-size:14px;font-weight:500;color:#646464">Hipertrofia — Fase 1</span>
+    <button aria-label="Imprimir ficha" style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:21px"><i class="ph ph-printer"></i></button>
+    <button aria-label="Editar treino" style="height:48px;padding:0 12px;font-size:15px;font-weight:600">Editar</button>
+  </header>
+  <main style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:8px 20px 24px;display:flex;flex-direction:column;gap:22px">
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:end">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <h1 style="margin:0;font-size:32px;font-weight:600;line-height:1.02;letter-spacing:-0.025em">Treino A<br>Superiores</h1>
+        <span style="font-size:14px;font-weight:500;color:#646464">segunda · 6 exercícios · 16 séries · ~60 min</span>
+      </div>
+      <dc-import name="MuscleMap" on="chest,back,shoulders,triceps,biceps" width="{{ 104 }}" hint-size="104px,101px"></dc-import>
+    </div>
+    <p style="margin:0;font-size:15px;font-weight:500;line-height:1.5;color:#111111;text-wrap:pretty;padding:14px 0;border-top:1px solid #E9E9E9;border-bottom:1px solid #E9E9E9">Pausa de 1 s no peito no supino. Na remada, tronco a 45° e sem embalo. Se o rack estiver ocupado, troque por supino com halteres só neste treino.</p>
+    <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column">
+      <sc-for list="{{ ex }}" as="e" hint-placeholder-count="6">
+        <li style="display:grid;grid-template-columns:32px 64px minmax(0,1fr);gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid #E9E9E9">
+          <span style="font-family:Archivo, sans-serif;font-stretch:118%;font-weight:600;font-size:17px;color:{{ e.nc }};padding-top:2px">{{ e.n }}</span>
+          <img src="{{ e.img }}" alt="" loading="lazy" style="width:64px;height:64px;border-radius:8px;object-fit:cover;background:#E9E9E9;display:block">
+          <span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:16px;font-weight:600">{{ e.name }}</span><span style="font-family:Archivo, sans-serif;font-stretch:108%;font-weight:500;font-variant-numeric:tabular-nums;font-size:14px;color:#646464">{{ e.rx }}</span><sc-if value="{{ e.note }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:500;color:#646464">{{ e.note }}</span></sc-if></span>
+        </li>
+      </sc-for>
+    </ol>
+    <a href="#" style="font-size:14px;font-weight:600">Ver versões deste programa</a>
+  </main>
+  <footer style="flex:none;padding:12px 20px 34px;border-top:1px solid #E9E9E9;background:#FFFFFF;position:relative">
+    <button style="width:100%;height:56px;border-radius:12px;background:#CCFF00;font-size:17px;font-weight:600">Iniciar treino</button>
+    <span style="position:absolute;left:50%;bottom:8px;width:134px;height:5px;margin-left:-67px;border-radius:3px;background:#111111"></span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+class Component extends DCLogic {
+  renderVals() {
+    const ex = [
+      ['1','Supino reto com barra','3 × 6‑8 · RIR 2 · 3 min',''],
+      ['2','Remada curvada','3 × 8‑10 · RIR 2 · 2 min',''],
+      ['3','Desenvolvimento com halteres','3 × 8‑12 · RIR 2 · 2 min','Academia do bairro: 24 kg. Condomínio: halteres até 24 kg.'],
+      ['4','Puxada frontal','3 × 10‑12 · RIR 1 · 90 s',''],
+      ['A1','Tríceps na polia','2 × 12‑15 · RIR 1 · sem descanso','Superset com A2'],
+      ['A2','Rosca direta','2 × 12‑15 · RIR 1 · 90 s','Descanso depois de A2']
+    ].map(([n, name, rx, note], i) => ({ n, name, rx, note, img: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/' + ['Barbell_Bench_Press_-_Medium_Grip','Bent_Over_Barbell_Row','Dumbbell_Shoulder_Press','Wide-Grip_Lat_Pulldown','Triceps_Pushdown','Barbell_Curl'][i] + '/0.jpg', nc: n.startsWith('A') ? '#637F00' : '#111111' }));
+    return { ex };
+  }
+}
+</script>
+</body>
+</html>

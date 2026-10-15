@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,400..700&display=swap" rel="stylesheet"><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script><style>html,body{margin:0;background:#F9F9F9}a{color:#354119}a:hover{color:#111111}button,textarea{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}:focus-visible{outline:2px solid #111111;outline-offset:2px}</style></helmet>
+<div style="width:100%;max-width:430px;margin:0 auto;height:844px;position:relative;background:#F9F9F9;font-family:Archivo, sans-serif;color:#111111;overflow:hidden;display:flex;flex-direction:column">
+  <dc-import name="StatusBar" hint-size="100%,54px"></dc-import>
+  <header style="flex:none;padding:6px 20px 8px;display:flex;flex-direction:column;gap:2px"><h1 style="margin:0;font-size:32px;font-weight:600;letter-spacing:-0.02em">Coach</h1><span style="font-size:13px;font-weight:500;color:#646464">Texto em itálico é escrito pela IA. Números vêm do app.</span></header>
+  <div role="tablist" style="flex:none;display:flex;gap:24px;padding:0 20px;border-bottom:1px solid #E9E9E9">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="2"><button role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="height:44px;font-size:16px;font-weight:{{ t.w }};color:{{ t.c }};border-bottom:2px solid {{ t.line }};margin-bottom:-1px">{{ t.l }}</button></sc-for>
+  </div>
+
+  <sc-if value="{{ isChat }}" hint-placeholder-val="{{ true }}">
+    <main style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:18px 20px 12px;display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;flex-direction:column;gap:4px;max-width:92%">
+        <span style="font-size:12px;font-weight:600;color:#637F00">Coach</span>
+        <p style="margin:0;font-size:16px;font-weight:500;font-style:italic;line-height:1.45;text-wrap:pretty">Olá, Rafa. O desenvolvimento com halteres está parado em 31 kg de 1RM estimado há 4 treinos. Quer que eu proponha um ajuste?</p>
+      </div>
+      <p style="margin:0;align-self:flex-end;max-width:80%;background:#111111;color:#FFFFFF;border-radius:12px 12px 4px 12px;padding:10px 14px;font-size:16px;font-weight:500;line-height:1.4">Pode sugerir. Meu ombro direito incomoda um pouco nas últimas repetições.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:96%">
+        <span style="font-size:12px;font-weight:600;color:#637F00">Coach</span>
+        <p style="margin:0;font-size:16px;font-weight:500;font-style:italic;line-height:1.45;text-wrap:pretty">Com o incômodo, eu baixaria a carga e subiria a faixa de repetições por duas semanas. Não é orientação médica: se a dor aumentar, procure um profissional.</p>
+        <div style="background:#FFFFFF;border:1px solid #E9E9E9;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:13px;font-weight:600;color:#646464">Ajuste proposto · Treino A</span>
+          <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:600">Desenvolvimento com halteres</span><span style="font-family:Archivo, sans-serif;font-stretch:108%;font-weight:600;font-variant-numeric:tabular-nums;font-size:14px"><span style="color:#646464;text-decoration:line-through">3 × 8‑12 · 24 kg</span>  →  3 × 12‑15 · 20 kg</span></div>
+          <span style="font-size:13px;font-weight:500;color:#646464">Nada muda até você revisar e confirmar.</span>
+          <button style="align-self:flex-start;height:44px;padding:0 16px;border-radius:8px;border:1px solid #111111;font-size:15px;font-weight:600">Revisar ajuste</button>
+        </div>
+      </div>
+    </main>
+    <div style="flex:none;padding:8px 20px 12px;border-top:1px solid #E9E9E9;background:#FFFFFF;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px">
+        <button style="flex:none;height:36px;padding:0 12px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:500">Como saio do platô no supino?</button>
+        <button style="flex:none;height:36px;padding:0 12px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:500">Devo fazer descarga?</button>
+        <button style="flex:none;height:36px;padding:0 12px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:500">Trocar exercício por dor</button>
+      </div>
+      <span style="align-self:flex-start;height:26px;padding:0 8px;border-radius:4px;background:#F0F0F0;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600"><i class="ph-bold ph-paperclip"></i>Treino A em andamento anexado</span>
+      <div style="display:flex;gap:8px;align-items:flex-end">
+        <label style="flex:1;min-height:48px;border-radius:12px;border:1px solid #CECECE;box-sizing:border-box;display:flex;align-items:center;padding:0 14px"><span style="position:absolute;width:1px;height:1px;overflow:hidden">Mensagem para o coach</span><textarea rows="1" placeholder="Pergunte ao seu coach…" style="flex:1;font-size:16px;font-weight:500;resize:none;cursor:text;padding:12px 0"></textarea></label>
+        <button aria-label="Enviar" style="width:48px;height:48px;border-radius:12px;background:#111111;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ph-fill ph-paper-plane-right"></i></button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isAnalises }}" hint-placeholder-val="{{ false }}">
+    <main style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:18px 20px 28px;display:flex;flex-direction:column;gap:26px">
+      <section aria-labelledby="vê" style="display:flex;flex-direction:column">
+        <h2 id="vê" style="margin:0 0 4px;font-size:17px;font-weight:600">O que o coach recebe</h2>
+        <p style="margin:0 0 10px;font-size:13px;font-weight:500;color:#646464;line-height:1.4">Um resumo calculado pelo app. Fotos, medidas e e-mail não são enviados.</p>
+        <sc-for list="{{ ctx }}" as="c" hint-placeholder-count="5">
+          <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #E9E9E9;font-size:15px;font-weight:500"><span>{{ c.l }}</span><span style="font-weight:600;text-align:right">{{ c.v }}</span></div>
+        </sc-for>
+      </section>
+      <section style="display:flex;flex-direction:column;gap:8px">
+        <label for="recado" style="font-size:17px;font-weight:600">Recado para o coach</label>
+        <textarea id="recado" rows="2" placeholder="Ex.: viajo de 20 a 24/10, só halteres no hotel" style="width:100%;box-sizing:border-box;border:1px solid #CECECE;border-radius:12px;background:#FFFFFF;padding:12px 14px;font-size:16px;font-weight:500;resize:none;cursor:text"></textarea>
+      </section>
+      <section aria-labelledby="an" style="display:flex;flex-direction:column">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:6px"><h2 id="an" style="margin:0;font-size:17px;font-weight:600">Análises semanais</h2><button style="height:40px;padding:0 12px;border-radius:8px;background:#111111;color:#FFFFFF;font-size:14px;font-weight:600">Gerar agora</button></div>
+        <sc-for list="{{ analyses }}" as="a" hint-placeholder-count="3">
+          <a href="#" style="display:flex;flex-direction:column;gap:4px;padding:14px 0;border-top:1px solid #E9E9E9;text-decoration:none;color:#111111"><span style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:16px;font-weight:600">{{ a.t }}</span><span style="font-size:13px;font-weight:500;color:#646464">{{ a.d }}</span></span><span style="font-size:14px;font-weight:500;font-style:italic;color:#646464;line-height:1.4">{{ a.p }}</span><sc-if value="{{ a.adj }}" hint-placeholder-val="{{ false }}"><span style="align-self:flex-start;margin-top:4px;height:22px;padding:0 7px;border-radius:4px;background:#CCFF00;font-size:12px;font-weight:600;display:flex;align-items:center">{{ a.adj }}</span></sc-if></a>
+        </sc-for>
+      </section>
+    </main>
+  </sc-if>
+  <dc-import name="TabBar" active="coach" hint-size="100%,89px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844},&quot;tab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;conversa&quot;,&quot;analises&quot;],&quot;default&quot;:&quot;conversa&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { tab: null };
+  renderVals() {
+    const tab = this.state.tab ?? this.props.tab ?? 'conversa';
+    const tabs = [['conversa','Conversa'],['analises','Análises']].map(([k, l]) => { const on = k === tab; return { l, sel: on ? 'true' : 'false', w: on ? 600 : 500, c: on ? '#111111' : '#646464', line: on ? '#111111' : 'transparent', pick: () => this.setState({ tab: k }) }; });
+    return { tabs, isChat: tab === 'conversa', isAnalises: tab === 'analises',
+      ctx: [['Histórico','8 semanas, 31 treinos'],['Metas','supino 100 kg · peso 76 kg'],['Estagnados','desenvolvimento com halteres'],['Ciclo','semana 3 de 5, descarga na 5ª'],['Prontidão média','3,4 de 5 · sono 4 de 5']].map(([l, v]) => ({ l, v })),
+      analyses: [
+        { t:'Semana de 05/10', d:'seg., 12/10', p:'Semana completa e volume estável. O ombro direito apareceu em duas observações; vale acompanhar.', adj:'2 ajustes sugeridos' },
+        { t:'Semana de 28/09', d:'seg., 05/10', p:'Recorde de volume semanal. A remada passou do máximo de séries para costas.', adj:'' },
+        { t:'Semana de 21/09', d:'seg., 28/09', p:'Um treino perdido na sexta. Nada a mudar no plano.', adj:'' }
+      ] };
+  }
+}
+</script>
+</body>
+</html>

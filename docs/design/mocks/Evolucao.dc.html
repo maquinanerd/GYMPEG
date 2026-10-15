@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,400..700&display=swap" rel="stylesheet"><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script><style>html,body{margin:0;background:#F9F9F9}a{color:#354119}a:hover{color:#111111}button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}:focus-visible{outline:2px solid #111111;outline-offset:2px}</style></helmet>
+<div style="width:100%;max-width:430px;margin:0 auto;height:844px;position:relative;background:#F9F9F9;font-family:Archivo, sans-serif;color:#111111;overflow:hidden;display:flex;flex-direction:column">
+  <dc-import name="StatusBar" hint-size="100%,54px"></dc-import>
+  <header style="flex:none;padding:6px 20px 8px"><h1 style="margin:0;font-size:32px;font-weight:600;letter-spacing:-0.02em">Evolução</h1></header>
+  <div role="tablist" style="flex:none;display:flex;gap:22px;padding:0 20px;border-bottom:1px solid #E9E9E9">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="height:44px;font-size:16px;font-weight:{{ t.w }};color:{{ t.c }};border-bottom:2px solid {{ t.line }};margin-bottom:-1px">{{ t.l }}</button></sc-for>
+  </div>
+  <main style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:18px 20px 28px">
+
+    <sc-if value="{{ isSemana }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:26px">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:14px;font-weight:500;color:#646464">Últimos 7 dias · 09 a 15 out</span>
+          <dl style="margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+            <div><dt style="font-size:13px;font-weight:500;color:#646464">Treinos</dt><dd style="margin:2px 0 0;font-family:Archivo, sans-serif;font-stretch:118%;font-weight:600;font-variant-numeric:tabular-nums;font-size:26px">4</dd></div>
+            <div><dt style="font-size:13px;font-weight:500;color:#646464">Tempo</dt><dd style="margin:2px 0 0;font-family:Archivo, sans-serif;font-stretch:118%;font-weight:600;font-variant-numeric:tabular-nums;font-size:26px">3h 41</dd></div>
+            <div><dt style="font-size:13px;font-weight:500;color:#646464">Séries</dt><dd style="margin:2px 0 0;font-family:Archivo, sans-serif;font-stretch:118%;font-weight:600;font-variant-numeric:tabular-nums;font-size:26px">66</dd></div>
+          </dl>
+        </div>
+        <section aria-labelledby="spm" style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px"><h2 id="spm" style="margin:0;font-size:20px;font-weight:600">Séries por músculo</h2><span style="font-size:12px;font-weight:500;color:#646464">tracejado = faixa MEV–MRV</span></div>
+          <sc-for list="{{ muscles }}" as="m" hint-placeholder-count="9">
+            <div style="display:grid;grid-template-columns:92px minmax(0,1fr) 72px;align-items:center;gap:10px;min-height:34px">
+              <span style="font-size:14px;font-weight:600">{{ m.l }}</span>
+              <span style="position:relative;height:12px;background:#F0F0F0;border-radius:2px">
+                <span style="position:absolute;top:-3px;bottom:-3px;left:{{ m.bandL }};width:{{ m.bandW }};border:1.5px dashed #8D8D8D;border-radius:3px;box-sizing:border-box"></span>
+                <span style="position:absolute;top:0;bottom:0;left:0;width:{{ m.w }};background:{{ m.bg }};border-radius:2px"></span>
+              </span>
+              <span style="display:flex;flex-direction:column;align-items:flex-end;line-height:1.1"><span style="font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;font-size:14px">{{ m.v }}</span><span style="font-size:11px;font-weight:600;color:{{ m.sc }}">{{ m.s }}</span></span>
+            </div>
+          </sc-for>
+        </section>
+        <section aria-labelledby="mapa" style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;padding-top:18px;border-top:1px solid #E9E9E9">
+          <dc-import name="MuscleMap" levels="chest:2,back:3,shoulders:2,biceps:1,triceps:1,quads:2,hams:2,glutes:2,calves:2,abs:0,forearms:0" width="{{ 180 }}" hint-size="180px,174px"></dc-import>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <h2 id="mapa" style="margin:0;font-size:17px;font-weight:600">Mapa da semana</h2>
+            <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:500">
+              <li style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:#E9E9E9"></span>Não treinado</li>
+              <li style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:#D0EE8D"></span>Abaixo do mínimo</li>
+              <li style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:#B9EA00"></span>Na faixa</li>
+              <li style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:#FF9F0A"></span>Acima do máximo</li>
+            </ul>
+          </div>
+        </section>
+        <section aria-labelledby="rel" style="display:flex;flex-direction:column;gap:10px;padding-top:18px;border-top:1px solid #E9E9E9">
+          <h2 id="rel" style="margin:0;font-size:17px;font-weight:600">Relatório da semana</h2>
+          <p style="margin:0;font-size:15px;font-weight:500;line-height:1.5;text-wrap:pretty">4 de 4 treinos feitos. Volume total de 37.690 kg, 4% acima da semana anterior. Costas passaram do máximo (23 séries). Bíceps e tríceps ficaram abaixo do mínimo.</p>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <span style="font-size:12px;font-weight:600;color:#637F00">Comentário do coach</span>
+            <p style="margin:0;font-size:15px;font-weight:500;font-style:italic;line-height:1.5;text-wrap:pretty">As costas recebem séries indiretas da remada e da puxada. Se o ombro direito continuar incomodando, tirar uma série de remada é o ajuste mais simples.</p>
+          </div>
+        </section>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTreino }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px">
+          <button style="flex:none;height:40px;padding:0 14px;border-radius:8px;background:#111111;color:#FFFFFF;font-size:14px;font-weight:600">Supino reto</button>
+          <button style="flex:none;height:40px;padding:0 14px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:600">Agachamento</button>
+          <button style="flex:none;height:40px;padding:0 14px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:600">Remada curvada</button>
+          <button style="flex:none;height:40px;padding:0 14px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:600">Desenvolvimento</button>
+        </div>
+        <section style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end">
+            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:500;color:#646464">1RM estimado</span><span style="font-family:Archivo, sans-serif;font-stretch:125%;font-weight:600;font-variant-numeric:tabular-nums;font-size:36px;line-height:1">94 kg</span></div>
+            <span style="font-size:14px;font-weight:600;color:#637F00">+8 kg em 8 treinos</span>
+          </div>
+          <svg viewBox="0 0 350 150" style="width:100%;height:auto;display:block" role="img" aria-label="1RM estimado do supino: de 86 kg em 31/08 para 94 kg em 02/10">
+            <line x1="0" y1="20" x2="350" y2="20" stroke="#E9E9E9"></line><line x1="0" y1="70" x2="350" y2="70" stroke="#E9E9E9"></line><line x1="0" y1="120" x2="350" y2="120" stroke="#E9E9E9"></line>
+            <text x="350" y="16" text-anchor="end" font-size="11" fill="#646464" font-family="Archivo">95</text><text x="350" y="66" text-anchor="end" font-size="11" fill="#646464" font-family="Archivo">90</text><text x="350" y="116" text-anchor="end" font-size="11" fill="#646464" font-family="Archivo">85</text>
+            <polyline points="{{ orm }}" fill="none" stroke="#111111" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+            <circle cx="{{ ormX }}" cy="{{ ormY }}" r="6" fill="#FFD509" stroke="#111111" stroke-width="2"></circle>
+            <text x="0" y="144" font-size="11" fill="#646464" font-family="Archivo">31/08</text><text x="300" y="144" text-anchor="end" font-size="11" fill="#646464" font-family="Archivo">02/10</text>
+          </svg>
+          <span style="font-size:14px;font-weight:500;color:#646464">Carga máxima: <span style="font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;color:#111111">82,5 kg × 8</span> em 15/10</span>
+        </section>
+        <section style="display:flex;flex-direction:column;gap:8px;padding-top:18px;border-top:1px solid #E9E9E9">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><h2 style="margin:0;font-size:17px;font-weight:600">Meta: supino 100 kg</h2><span style="font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;font-size:14px">94%</span></div>
+          <span style="height:6px;border-radius:3px;background:#E9E9E9;display:flex"><span style="width:94%;background:#111111;border-radius:3px"></span></span>
+          <span style="font-size:13px;font-weight:500;color:#646464">Faltam 6 kg no 1RM estimado. Prazo que você definiu: 12/2026.</span>
+        </section>
+        <section style="display:flex;flex-direction:column;gap:8px;padding-top:18px;border-top:1px solid #E9E9E9">
+          <span style="align-self:flex-start;height:24px;padding:0 8px;border-radius:4px;background:#FF9F0A;font-size:12px;font-weight:600;display:flex;align-items:center">Estagnado</span>
+          <h2 style="margin:0;font-size:17px;font-weight:600">Desenvolvimento com halteres</h2>
+          <p style="margin:0;font-size:14px;font-weight:500;color:#646464;line-height:1.45">1RM estimado em 31 kg nos últimos 4 treinos.</p>
+        </section>
+        <section style="background:#C99EFE;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:13px;font-weight:600">Descarga na semana 5</span>
+          <p style="margin:0;font-size:15px;font-weight:500;line-height:1.4">A partir de 26/10, o volume cai para 60% e a carga se mantém. Os recordes não são contados nessa semana.</p>
+        </section>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isCorpo }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:24px">
+        <section style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end">
+            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:500;color:#646464">Peso · média de 7 dias 78,1</span><span style="font-family:Archivo, sans-serif;font-stretch:125%;font-weight:600;font-variant-numeric:tabular-nums;font-size:36px;line-height:1">78,0 kg</span></div>
+            <button style="height:40px;padding:0 12px;border-radius:8px;background:#111111;color:#FFFFFF;font-size:14px;font-weight:600">Registrar</button>
+          </div>
+          <dl style="margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+            <div><dt style="font-size:12px;font-weight:500;color:#646464">7 dias</dt><dd style="margin:2px 0 0;font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;font-size:15px">−0,2</dd></div>
+            <div><dt style="font-size:12px;font-weight:500;color:#646464">30 dias</dt><dd style="margin:2px 0 0;font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;font-size:15px">−0,4</dd></div>
+            <div><dt style="font-size:12px;font-weight:500;color:#646464">90 dias</dt><dd style="margin:2px 0 0;font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;font-size:15px">−1,6</dd></div>
+            <div><dt style="font-size:12px;font-weight:500;color:#646464">ritmo</dt><dd style="margin:2px 0 0;font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;font-size:15px">−0,1/sem</dd></div>
+          </dl>
+          <svg viewBox="0 0 350 110" style="width:100%;height:auto;display:block" role="img" aria-label="Peso nos últimos 30 dias: de 78,4 para 78,0 kg">
+            <line x1="0" y1="10" x2="350" y2="10" stroke="#E9E9E9"></line><line x1="0" y1="95" x2="350" y2="95" stroke="#E9E9E9"></line>
+            <polyline points="{{ wpts }}" fill="none" stroke="#CECECE" stroke-width="1.5" stroke-linejoin="round"></polyline>
+            <polyline points="{{ wavg }}" fill="none" stroke="#111111" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+          </svg>
+        </section>
+        <section style="display:flex;flex-direction:column;gap:10px;padding-top:18px;border-top:1px solid #E9E9E9">
+          <h2 style="margin:0;font-size:17px;font-weight:600">Caminho até a meta</h2>
+          <div style="position:relative;height:8px;border-radius:4px;background:#E9E9E9"><span style="position:absolute;left:0;top:0;bottom:0;width:52%;background:#111111;border-radius:4px"></span><span style="position:absolute;left:52%;top:-6px;width:4px;height:20px;margin-left:-2px;background:#111111;border-radius:2px"></span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500;color:#646464"><span>início 80,2</span><span style="color:#111111;font-weight:600">atual 78,0</span><span>meta 76,0</span></div>
+        </section>
+        <section style="display:flex;flex-direction:column;padding-top:18px;border-top:1px solid #E9E9E9">
+          <h2 style="margin:0 0 6px;font-size:17px;font-weight:600">Medidas · 01/10</h2>
+          <sc-for list="{{ medidas }}" as="m" hint-placeholder-count="5">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;border-top:1px solid #E9E9E9"><span style="font-size:15px;font-weight:500">{{ m.l }}</span><span style="display:flex;gap:10px;align-items:baseline"><span style="font-size:13px;font-weight:500;color:#646464">{{ m.d }}</span><span style="font-family:Archivo, sans-serif;font-stretch:112%;font-weight:600;font-size:15px">{{ m.v }}</span></span></div>
+          </sc-for>
+          <span style="font-size:12px;font-weight:500;color:#646464;padding-top:6px">Gordura corporal calculada pela fórmula da Marinha dos EUA. É uma estimativa, não uma medição.</span>
+        </section>
+        <section style="display:flex;flex-direction:column;gap:10px;padding-top:18px;border-top:1px solid #E9E9E9">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><h2 style="margin:0;font-size:17px;font-weight:600">Fotos de progresso</h2><span style="font-size:12px;font-weight:500;color:#646464">só você vê</span></div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+            <span style="aspect-ratio:3 / 4;border-radius:8px;background:#E9E9E9;display:flex;align-items:flex-end;padding:8px;box-sizing:border-box;font-size:12px;font-weight:600">01/08</span>
+            <span style="aspect-ratio:3 / 4;border-radius:8px;background:#E9E9E9;display:flex;align-items:flex-end;padding:8px;box-sizing:border-box;font-size:12px;font-weight:600">01/09</span>
+            <button style="aspect-ratio:3 / 4;border-radius:8px;border:1.5px dashed #8D8D8D;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px;font-weight:600"><i class="ph-bold ph-plus" style="font-size:18px"></i>Adicionar</button>
+          </div>
+        </section>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isRecordes }}" hint-placeholder-val="{{ false }}">
+      <ul style="list-style:none;margin:0;padding:0">
+        <sc-for list="{{ records }}" as="r" hint-placeholder-count="6">
+          <li style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid #E9E9E9"><span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:600">{{ r.n }}</span><span style="font-size:13px;font-weight:500;color:#646464">{{ r.m }}</span></span><span style="font-family:Archivo, sans-serif;font-stretch:118%;font-weight:600;font-size:16px;background:{{ r.bg }};padding:3px 6px;border-radius:3px">{{ r.v }}</span></li>
+        </sc-for>
+      </ul>
+    </sc-if>
+  </main>
+  <dc-import name="TabBar" active="evolucao" hint-size="100%,89px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844},&quot;tab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;semana&quot;,&quot;treino&quot;,&quot;corpo&quot;,&quot;recordes&quot;],&quot;default&quot;:&quot;semana&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { tab: null };
+  renderVals() {
+    const tab = this.state.tab ?? this.props.tab ?? 'semana';
+    const tabs = [['semana','Semana'],['treino','Treino'],['corpo','Corpo'],['recordes','Recordes']].map(([k, l]) => { const on = k === tab; return { l, sel: on ? 'true' : 'false', w: on ? 600 : 500, c: on ? '#111111' : '#646464', line: on ? '#111111' : 'transparent', pick: () => this.setState({ tab: k }) }; });
+    const MAX = 26, pct = x => (x / MAX * 100).toFixed(1) + '%';
+    const muscles = [['Peitoral',12,8,22],['Costas',23,10,22],['Ombros',10,8,22],['Bíceps',4,8,20],['Tríceps',4,6,18],['Quadríceps',11,8,18],['Posteriores',6,6,16],['Glúteos',7,4,16],['Panturrilhas',8,8,16]].map(([l, v, mev, mrv]) => {
+      const st = v < mev ? 1 : v > mrv ? 3 : 2;
+      return { l, v: `${v} séries`, w: pct(Math.min(v, MAX)), bandL: pct(mev), bandW: pct(mrv - mev), bg: ['','#D0EE8D','#B9EA00','#FF9F0A'][st], s: ['','abaixo','na faixa','acima'][st], sc: st === 3 ? '#9A5A00' : st === 1 ? '#646464' : '#637F00' };
+    });
+    const o = [86,87,88,88,89,91,91,94], ox = i => (i * 300 / 7).toFixed(1), oy = v => (20 + (95 - v) * 10).toFixed(1);
+    const w = [78.4,78.6,78.3,78.5,78.2,78.4,78.3,78.1,78.4,78.2,78.0,78.3,78.1,78.2,78.0];
+    const avg = w.map((_, i) => { const s = w.slice(Math.max(0, i - 3), i + 1); return s.reduce((a, b) => a + b, 0) / s.length; });
+    const wx = i => (i * 350 / (w.length - 1)).toFixed(1), wy = v => (10 + (78.7 - v) / 0.8 * 85).toFixed(1);
+    return { tabs, isSemana: tab === 'semana', isTreino: tab === 'treino', isCorpo: tab === 'corpo', isRecordes: tab === 'recordes', muscles,
+      orm: o.map((v, i) => `${ox(i)},${oy(v)}`).join(' '), ormX: ox(7), ormY: oy(94),
+      wpts: w.map((v, i) => `${wx(i)},${wy(v)}`).join(' '), wavg: avg.map((v, i) => `${wx(i)},${wy(v)}`).join(' '),
+      medidas: [['Cintura','82,0 cm','−1,5'],['Peito','101,0 cm','+0,5'],['Braço','36,5 cm','+0,5'],['Coxa','58,0 cm','='],['Gordura estimada','16%','−1']].map(([l, v, d]) => ({ l, v, d })),
+      records: [['Supino reto com barra','1RM estimado · 02/10','94 kg',1],['Agachamento livre','100 kg × 6 · 06/10','100 × 6',1],['Volume semanal','semana de 28/09','18.420 kg',1],['Puxada frontal','65 kg × 12 · 15/10','65 × 12',0],['Remada curvada','1RM estimado · 22/09','93 kg',0],['Leg press 45°','200 kg × 10 · 29/09','200 × 10',0]].map(([n, m, v, recent]) => ({ n, m, v, bg: recent ? '#FFD509' : '#F0F0F0' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

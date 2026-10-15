@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,400..700&display=swap" rel="stylesheet"><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script><style>html,body{margin:0;background:#F9F9F9}a{color:#354119}a:hover{color:#111111}button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}:focus-visible{outline:2px solid #111111;outline-offset:2px}</style></helmet>
+<div style="width:100%;max-width:430px;margin:0 auto;height:844px;position:relative;background:#F9F9F9;font-family:Archivo, sans-serif;color:#111111;overflow:hidden;display:flex;flex-direction:column">
+  <dc-import name="StatusBar" hint-size="100%,54px"></dc-import>
+  <header style="flex:none;padding:6px 20px 8px;display:flex;justify-content:space-between;align-items:center"><h1 style="margin:0;font-size:32px;font-weight:600;letter-spacing:-0.02em">Treinos</h1><button style="height:40px;padding:0 14px;border-radius:8px;background:#111111;color:#FFFFFF;font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px"><i class="ph-bold ph-plus"></i>Novo programa</button></header>
+  <div role="tablist" style="flex:none;display:flex;gap:24px;padding:0 20px;border-bottom:1px solid #E9E9E9">
+    <a role="tab" aria-selected="true" href="#" style="height:44px;display:flex;align-items:center;font-size:16px;font-weight:600;color:#111111;border-bottom:2px solid #111111;margin-bottom:-1px;text-decoration:none">Programas</a>
+    <a role="tab" aria-selected="false" href="#" style="height:44px;display:flex;align-items:center;font-size:16px;font-weight:500;color:#646464;border-bottom:2px solid transparent;margin-bottom:-1px;text-decoration:none">Histórico</a>
+    <a role="tab" aria-selected="false" href="#" style="height:44px;display:flex;align-items:center;font-size:16px;font-weight:500;color:#646464;border-bottom:2px solid transparent;margin-bottom:-1px;text-decoration:none">Exercícios</a>
+  </div>
+  <main style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:20px 20px 28px;display:flex;flex-direction:column;gap:28px">
+    <section aria-labelledby="ativo" style="background:#FFFFFF;border-radius:16px;padding:18px 16px 6px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="align-self:flex-start;height:22px;padding:0 7px;border-radius:4px;background:#CCFF00;font-size:12px;font-weight:600;display:flex;align-items:center">Ativo</span>
+          <h2 id="ativo" style="margin:4px 0 0;font-size:22px;font-weight:600;letter-spacing:-0.01em">Hipertrofia — Fase 1</h2>
+          <span style="font-size:14px;font-weight:500;color:#646464">Upper/Lower · 4x por semana · por dia da semana</span>
+        </div>
+        <button aria-label="Opções do programa" style="width:44px;height:44px;margin:-6px -8px 0 0;display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ph-bold ph-dots-three-vertical"></i></button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px">
+          <span style="height:8px;border-radius:2px;background:#111111"></span><span style="height:8px;border-radius:2px;background:#111111"></span><span style="height:8px;border-radius:2px;background:#CCFF00;box-shadow:inset 0 0 0 1.5px #111111"></span><span style="height:8px;border-radius:2px;background:#E9E9E9"></span><span style="height:8px;border-radius:2px;background:#C99EFE"></span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;font-size:12px;font-weight:500;color:#646464"><span>sem. 1</span><span>sem. 2</span><span style="color:#111111;font-weight:600">sem. 3</span><span>sem. 4</span><span>descarga</span></div>
+      </div>
+      <ol style="list-style:none;margin:0;padding:0">
+        <sc-for list="{{ treinos }}" as="t" hint-placeholder-count="4">
+          <li style="border-top:1px solid #E9E9E9"><a href="#" style="min-height:56px;display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:8px;text-decoration:none;color:#111111"><span style="font-size:13px;font-weight:600;color:#646464">{{ t.day }}</span><span style="font-size:16px;font-weight:600">{{ t.name }}</span><span style="font-size:13px;font-weight:500;color:#646464">{{ t.meta }}</span></a></li>
+        </sc-for>
+      </ol>
+    </section>
+    <section aria-labelledby="outros" style="display:flex;flex-direction:column">
+      <h2 id="outros" style="margin:0 0 6px;font-size:20px;font-weight:600">Outros programas</h2>
+      <ul style="list-style:none;margin:0;padding:0">
+        <sc-for list="{{ outros }}" as="o" hint-placeholder-count="3">
+          <li style="border-top:1px solid #E9E9E9"><a href="#" style="min-height:64px;padding:12px 0;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;text-decoration:none;color:#111111"><span style="display:flex;flex-direction:column;gap:3px"><span style="font-size:16px;font-weight:600">{{ o.name }}</span><span style="font-size:13px;font-weight:500;color:#646464;font-style:{{ o.style }}">{{ o.meta }}</span></span><span style="height:22px;padding:0 7px;border-radius:4px;background:#F0F0F0;font-size:12px;font-weight:600;display:flex;align-items:center">{{ o.tag }}</span></a></li>
+        </sc-for>
+      </ul>
+    </section>
+    <section aria-labelledby="modelos" style="display:flex;flex-direction:column;gap:10px">
+      <h2 id="modelos" style="margin:0;font-size:20px;font-weight:600">Começar de um modelo</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ modelos }}" as="m" hint-placeholder-count="5"><button style="height:40px;padding:0 14px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:600">{{ m }}</button></sc-for>
+      </div>
+      <a href="#" style="font-size:14px;font-weight:600;padding-top:4px">Pedir um rascunho ao coach</a>
+    </section>
+  </main>
+  <dc-import name="TabBar" active="treinos" hint-size="100%,89px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      treinos: [['seg','A — Superiores','6 ex. · 16 séries'],['ter','B — Inferiores','5 ex. · 17 séries'],['qui','C — Superiores','6 ex. · 16 séries'],['sex','D — Inferiores','5 ex. · 17 séries']].map(([day, name, meta]) => ({ day, name: 'Treino ' + name, meta })),
+      outros: [
+        { name:'Força 5/3/1', meta:'Wendler · 4 treinos · ciclos de 4 semanas', tag:'Modelo', style:'normal' },
+        { name:'Retorno pós-viagem', meta:'Rascunho do coach, aguardando sua revisão', tag:'Rascunho', style:'italic' },
+        { name:'Full body 3x', meta:'usado de 03/2026 a 07/2026', tag:'Arquivado', style:'normal' }
+      ],
+      modelos: ['5/3/1','GZCLP','nSuns','PPL','Upper/Lower']
+    };
+  }
+}
+</script>
+</body>
+</html>
