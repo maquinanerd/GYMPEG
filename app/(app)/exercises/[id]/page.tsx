@@ -1,13 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import {
-  CaretLeftIcon,
-  BarbellIcon,
-  ClockCounterClockwiseIcon,
-  ListNumbersIcon,
-  TrendUpIcon,
-  WarningIcon,
-} from '@/components/ui/icon';
+import { CaretLeftIcon } from '@/components/ui/icon';
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
@@ -18,13 +11,15 @@ import {
   muscleGroupMessageKeys,
 } from '@/i18n/enum-keys';
 import { estimate1RM } from '@/lib/stats';
-import { formatWeight } from '@/lib/units';
+import { formatWeight, unitLabel } from '@/lib/units';
 import { ExerciseMediaDialog } from '@/components/exercises/exercise-media-dialog';
 import { ExerciseBodyMap } from '@/components/exercises/exercise-body-map';
+import { ExerciseOwnerActions } from '@/components/exercises/exercise-owner-actions';
 import { exerciseMuscleMap } from '@/lib/muscle-map';
 import { muscleContributions } from '@/lib/training-engine/volume';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { IconButton } from '@/components/ui/button';
+import { Num } from '@/components/ui/num';
+import { Section, textLinkClass } from '@/components/ui/section';
 import { safeSessionReturnPath } from '@/lib/session-exercise-navigation';
 import { usableExerciseWhere } from '@/lib/catalog/access';
 
@@ -87,73 +82,82 @@ export default async function ExerciseDetailPage({ params, searchParams }: Props
     .sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime())
     .slice(0, 12);
 
-  return (
-    <main className="flex-1 px-4 py-6">
-      <div className="mx-auto flex max-w-3xl flex-col gap-6">
-        <Button asChild variant="ghost" size="sm" className="self-start">
-          <Link href={returnTo ?? '/exercises'}>
-            <CaretLeftIcon className="size-4" />
-            <span className="ml-1">{t(returnTo ? 'backToSession' : 'back')}</span>
-          </Link>
-        </Button>
+  const muscleLabel = exerciseT(`muscleGroups.${muscleGroupMessageKeys[exercise.muscleGroup]}`);
+  const equipmentLabel = exerciseT(
+    `equipmentTypes.${equipmentTypeMessageKeys[exercise.equipmentType]}`,
+  );
+  const categoryLabel = exerciseT(`categories.${exerciseCategoryMessageKeys[exercise.category]}`);
+  // The plain row for the edit dialog (a client component): no relations.
+  const { muscles: _muscles, sets: _sets, ...plainExercise } = exercise;
+  const isOwn = exercise.userId === auth.userId;
 
-        <header className="space-y-3">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h1 className="text-2xl font-bold">{displayName}</h1>
-              {displayName !== exercise.name && (
-                <p className="text-sm text-muted-foreground">{exercise.name}</p>
-              )}
-            </div>
+  const facts: { label: string; value: React.ReactNode }[] = [
+    { label: t('muscle'), value: muscleLabel },
+    ...(primaryMuscles.length > 0
+      ? [{ label: t('primaryMuscles'), value: primaryMuscles.join(', ') }]
+      : []),
+    ...(secondaryMuscles.length > 0
+      ? [{ label: t('secondaryMuscles'), value: secondaryMuscles.join(', ') }]
+      : []),
+    { label: t('equipment'), value: equipmentLabel },
+    {
+      label: t('defaultRest'),
+      value: (
+        <Num stretch={112}>
+          {exercise.defaultRestSec} {t('seconds')}
+        </Num>
+      ),
+    },
+  ];
+
+  return (
+    <main className="mx-auto w-full max-w-2xl flex-1">
+      <header className="flex items-center gap-1 px-2 pt-2">
+        <IconButton asChild aria-label={t(returnTo ? 'backToSession' : 'back')}>
+          <Link href={returnTo ?? '/exercises'}>
+            <CaretLeftIcon />
+          </Link>
+        </IconButton>
+        <span className="min-w-0 flex-1 truncate text-caption text-muted-foreground">
+          {muscleLabel}
+        </span>
+      </header>
+
+      <div className="flex flex-col gap-7 px-5 pb-8 pt-2">
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1.5">
+            <h1 className="text-balance text-[2rem] font-semibold leading-[1.05] tracking-[-0.025em]">
+              {displayName}
+            </h1>
+            {displayName !== exercise.name && (
+              <p className="text-caption text-muted-foreground">{exercise.name}</p>
+            )}
+            <p className="text-caption text-muted-foreground">
+              {[muscleLabel, equipmentLabel, categoryLabel].join(' · ')}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
             <ExerciseMediaDialog
               exerciseName={exercise.name}
               displayName={displayName}
               equipmentType={exercise.equipmentType}
             />
+            {isOwn && <ExerciseOwnerActions exercise={plainExercise} displayName={displayName} />}
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Badge>
-              {exerciseT(`muscleGroups.${muscleGroupMessageKeys[exercise.muscleGroup]}`)}
-            </Badge>
-            <Badge variant="secondary">
-              {exerciseT(`categories.${exerciseCategoryMessageKeys[exercise.category]}`)}
-            </Badge>
-            <Badge variant="outline">
-              {exerciseT(`equipmentTypes.${equipmentTypeMessageKeys[exercise.equipmentType]}`)}
-            </Badge>
-          </div>
-        </header>
+        </div>
 
-        <section className="space-y-3 border-t border-border pt-5">
-          <h2 className="flex items-center gap-2 text-base font-semibold">
-            <BarbellIcon className="size-4" />
-            {t('information')}
-          </h2>
-          <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm sm:grid-cols-3">
-            <div>
-              <dt className="text-xs text-muted-foreground">{t('muscle')}</dt>
-              <dd className="font-medium">
-                {exerciseT(`muscleGroups.${muscleGroupMessageKeys[exercise.muscleGroup]}`)}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs text-muted-foreground">{t('equipment')}</dt>
-              <dd className="font-medium">
-                {exerciseT(`equipmentTypes.${equipmentTypeMessageKeys[exercise.equipmentType]}`)}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs text-muted-foreground">{t('defaultRest')}</dt>
-              <dd className="font-medium">
-                {exercise.defaultRestSec} {t('seconds')}
-              </dd>
-            </div>
+        <Section title={t('information')} divider>
+          <dl className="flex flex-col">
+            {facts.map((fact) => (
+              <div
+                key={fact.label}
+                className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 border-t border-border py-3 first:border-t-0 first:pt-0"
+              >
+                <dt className="text-caption text-muted-foreground">{fact.label}</dt>
+                <dd className="text-right text-body font-semibold">{fact.value}</dd>
+              </div>
+            ))}
           </dl>
-          {exercise.notes && (
-            <p className="whitespace-pre-line rounded-md bg-muted/40 p-3 text-sm text-muted-foreground">
-              {exercise.notes}
-            </p>
-          )}
           <ExerciseBodyMap
             regions={exerciseMuscleMap(
               muscleContributions({
@@ -162,117 +166,124 @@ export default async function ExerciseDetailPage({ params, searchParams }: Props
               }),
             )}
           />
-          {primaryMuscles.length > 0 && (
-            <dl className="grid gap-x-4 gap-y-3 text-sm sm:grid-cols-2">
-              <div>
-                <dt className="text-xs text-muted-foreground">{t('primaryMuscles')}</dt>
-                <dd className="font-medium">{primaryMuscles.join(', ')}</dd>
-              </div>
-              {secondaryMuscles.length > 0 && (
-                <div>
-                  <dt className="text-xs text-muted-foreground">{t('secondaryMuscles')}</dt>
-                  <dd className="font-medium">{secondaryMuscles.join(', ')}</dd>
-                </div>
-              )}
-            </dl>
+          {exercise.notes && (
+            <p className="whitespace-pre-line border-y border-border py-3.5 text-[0.9375rem] leading-normal text-pretty">
+              {exercise.notes}
+            </p>
           )}
-        </section>
+        </Section>
 
         {exercise.instructionsPtBr.length > 0 && (
-          <section className="space-y-3 border-t border-border pt-5" lang="pt-BR">
-            <h2 className="flex items-center gap-2 text-base font-semibold">
-              <ListNumbersIcon className="size-4" />
-              {t('howTo')}
-            </h2>
-            <ol className="list-decimal space-y-2 pl-5 text-sm">
+          <Section title={t('howTo')} divider lang="pt-BR">
+            <ol className="flex list-decimal flex-col gap-2 pl-5 text-body marker:font-semibold marker:text-muted-foreground">
               {exercise.instructionsPtBr.map((step) => (
-                <li key={step}>{step}</li>
+                <li key={step} className="pl-1 text-pretty">
+                  {step}
+                </li>
               ))}
             </ol>
             {exercise.commonMistakesPtBr.length > 0 && (
-              <div className="space-y-2 rounded-md bg-muted/40 p-3">
-                <h3 className="flex items-center gap-2 text-sm font-medium">
-                  <WarningIcon className="size-4" />
-                  {t('commonMistakes')}
-                </h3>
-                <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+              <div className="flex flex-col gap-2 pt-2">
+                <h3 className="text-subtitle">{t('commonMistakes')}</h3>
+                <ul className="flex list-disc flex-col gap-1.5 pl-5 text-caption text-muted-foreground">
                   {exercise.commonMistakesPtBr.map((mistake) => (
-                    <li key={mistake}>{mistake}</li>
+                    <li key={mistake} className="text-pretty">
+                      {mistake}
+                    </li>
                   ))}
                 </ul>
               </div>
             )}
-          </section>
+          </Section>
         )}
 
-        <section className="space-y-3 border-t border-border pt-5">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="flex items-center gap-2 text-base font-semibold">
-              <ClockCounterClockwiseIcon className="size-4" />
-              {t('history')}
-            </h2>
-            <Button asChild variant="outline" size="sm">
-              <Link href={`/progress?exerciseId=${exercise.id}`}>
-                <TrendUpIcon className="size-4" />
-                <span className="ml-2">{t('openChart')}</span>
-              </Link>
-            </Button>
-          </div>
-
+        <Section
+          title={t('history')}
+          divider
+          action={
+            <Link href={`/progress?exerciseId=${exercise.id}`} className={textLinkClass}>
+              {t('openChart')}
+            </Link>
+          }
+        >
           {recentSessions.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t('noHistory')}</p>
+            <p className="text-caption text-muted-foreground">{t('noHistory')}</p>
           ) : (
-            <div className="divide-y divide-border overflow-hidden rounded-md border border-border">
-              {recentSessions.map((session) => (
-                <Link
-                  key={session.id}
-                  href={`/history/${session.id}`}
-                  className="block px-3 py-3 transition-colors hover:bg-muted/40"
-                >
-                  <div className="mb-2 flex items-center justify-between gap-2">
-                    <span className="text-sm font-medium">
-                      {format.dateTime(session.startedAt, {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    </span>
-                    <span className="text-xs text-muted-foreground">{t('openSession')}</span>
-                  </div>
-                  <div className="grid grid-cols-4 gap-2 text-center text-xs tabular-nums text-muted-foreground">
-                    <span>#</span>
-                    <span>{unit}</span>
-                    <span>REPS</span>
-                    <span>1RM</span>
-                    {session.sets
-                      .sort((a, b) => a.setNumber - b.setNumber)
-                      .map((set) => (
-                        <div key={set.id} className="contents text-foreground">
-                          <span>{set.setNumber}</span>
-                          <span>
-                            {formatWeight(set.weight, unit, {
-                              decimals: 2,
-                              group: false,
-                              locale,
-                              withUnit: false,
-                            })}
-                          </span>
-                          <span>{set.reps}</span>
-                          <span>
-                            {formatWeight(estimate1RM(set.weight, set.reps), unit, {
-                              decimals: 1,
-                              group: false,
-                              locale,
-                            })}
-                          </span>
-                        </div>
-                      ))}
-                  </div>
-                </Link>
-              ))}
-            </div>
+            <ul className="flex flex-col gap-5">
+              {recentSessions.map((session) => {
+                const date = format.dateTime(session.startedAt, {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                });
+                return (
+                  <li key={session.id} className="flex flex-col gap-1 border-t border-border pt-3">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <Num stretch={112} className="text-caption">
+                        {date}
+                      </Num>
+                      <Link href={`/history/${session.id}`} className={textLinkClass}>
+                        {t('openSession')}
+                      </Link>
+                    </div>
+                    <table className="w-full border-collapse text-caption">
+                      <caption className="sr-only">{date}</caption>
+                      <thead>
+                        <tr className="text-small text-muted-foreground">
+                          <th scope="col" className="py-1.5 text-left font-semibold">
+                            {t('set')}
+                          </th>
+                          <th scope="col" className="py-1.5 text-right font-semibold">
+                            {unitLabel(unit)}
+                          </th>
+                          <th scope="col" className="py-1.5 text-right font-semibold">
+                            {t('reps')}
+                          </th>
+                          <th scope="col" className="py-1.5 text-right font-semibold">
+                            {t('estimatedMax')}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[...session.sets]
+                          .sort((a, b) => a.setNumber - b.setNumber)
+                          .map((set) => (
+                            <tr key={set.id} className="border-t border-border">
+                              <td className="py-2">
+                                <Num stretch={112}>{set.setNumber}</Num>
+                              </td>
+                              <td className="py-2 text-right">
+                                <Num stretch={112}>
+                                  {formatWeight(set.weight, unit, {
+                                    decimals: 2,
+                                    group: false,
+                                    locale,
+                                    withUnit: false,
+                                  })}
+                                </Num>
+                              </td>
+                              <td className="py-2 text-right">
+                                <Num stretch={112}>{set.reps}</Num>
+                              </td>
+                              <td className="py-2 text-right">
+                                <Num stretch={112} className="text-muted-foreground">
+                                  {formatWeight(estimate1RM(set.weight, set.reps), unit, {
+                                    decimals: 1,
+                                    group: false,
+                                    locale,
+                                  })}
+                                </Num>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </li>
+                );
+              })}
+            </ul>
           )}
-        </section>
+        </Section>
       </div>
     </main>
   );

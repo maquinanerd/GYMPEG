@@ -184,7 +184,7 @@ export function ProgramExerciseFormDialog(props: Props) {
               </SelectContent>
             </Select>
             {form.formState.errors.exerciseId && (
-              <p className="text-sm text-destructive">{form.formState.errors.exerciseId.message}</p>
+              <p className="text-caption text-destructive-text">{form.formState.errors.exerciseId.message}</p>
             )}
           </div>
 
@@ -236,7 +236,7 @@ export function ProgramExerciseFormDialog(props: Props) {
                 {...form.register('targetRepsMax')}
               />
               {form.formState.errors.targetRepsMax && (
-                <p className="text-sm text-destructive">
+                <p className="text-caption text-destructive-text">
                   {form.formState.errors.targetRepsMax.message}
                 </p>
               )}
@@ -277,7 +277,7 @@ export function ProgramExerciseFormDialog(props: Props) {
                 <SelectItem value="PRESERVE_REPS">{t('preserveReps')}</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-small text-muted-foreground">
               {form.watch('autoregulationMode') === 'PRESERVE_REPS'
                 ? t('preserveRepsHelp')
                 : t('preserveRirHelp')}

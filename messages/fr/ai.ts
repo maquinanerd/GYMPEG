@@ -38,6 +38,8 @@ export const ai = {
       validating: 'Vérification du volume, de la durée et des limites...',
     },
     disabled: 'La planification par IA est désactivée sur ce serveur.',
+    offline:
+      'La planification par IA a besoin d’une connexion. Vos programmes et séances fonctionnent toujours hors ligne.',
     error: 'Impossible de générer un programme. Réessayez.',
   },
   preview: {

@@ -74,6 +74,53 @@ export const programs = {
   templateCreated: 'Programme créé depuis le modèle.',
   templateUse: 'Utiliser ce modèle',
   dayCount: '{count, plural, one {# jour} other {# jours}}',
+  // The Programas tab (design v2).
+  list: {
+    emptyTitle: 'Aucun programme pour l’instant',
+    emptyDescription:
+      'Construisez le vôtre, partez d’un modèle éprouvé ou demandez un brouillon au coach.',
+    workoutsOf: 'Séances de {name}',
+    workoutMeta: '{exercises} ex. · {sets, plural, one {# série} other {# séries}}',
+    workoutCount: '{count, plural, =0 {aucune séance} one {# séance} other {# séances}}',
+    scheduleShort: {
+      ROTATION: 'en séquence',
+      FIXED_DAYS: 'par jour de la semaine',
+    },
+    weekShort: 'sem. {week}',
+    deload: 'décharge',
+    others: 'Autres programmes',
+    otherMeta:
+      '{phase} · {workouts, plural, =0 {aucune séance} one {# séance} other {# séances}} · {logged, plural, =0 {jamais enregistré} one {# séance enregistrée} other {# séances enregistrées}}',
+    origin: {
+      TEMPLATE: 'Modèle',
+      AI_GENERATED: 'IA',
+    },
+    fromTemplate: 'Partir d’un modèle',
+    allTemplates: 'Voir tous les modèles',
+    askCoach: 'Demander un brouillon au coach',
+    templateShort: {
+      fiveThreeOneBbb: '5/3/1',
+      gzclp: 'GZCLP',
+      nsuns: 'nSuns',
+      ppl: 'PPL',
+      upperLower: 'Haut/Bas',
+    },
+    loading: 'Chargement des programmes',
+  },
+  // A program and one of its workouts (design v2 "Treino do programa").
+  detail: {
+    back: 'Retour aux programmes',
+    workouts: 'Séances',
+    minutes: '~{minutes} min',
+    prescription: '{sets} × {reps} · RIR {rir} · {rest}',
+    restSeconds: '{seconds} s',
+    restMinutes: '{minutes} min',
+    supersetPrefix: 'Superset',
+    startWorkout: 'Démarrer la séance',
+    about: 'À propos du programme',
+    printWorkout: 'Imprimer cette séance',
+    loading: 'Chargement du programme',
+  },
   workout: {
     actions: 'Actions de la séance',
     edit: 'Modifier la séance',
@@ -165,8 +212,8 @@ export const programs = {
     title: 'Historique des versions',
     description:
       'Chaque modification de ce programme est conservée. Comparez les versions et revenez à une ancienne à tout moment.',
-    show: 'Voir l’historique',
-    hide: 'Masquer l’historique',
+    show: 'Voir les versions de ce programme',
+    hide: 'Masquer les versions',
     loading: 'Chargement...',
     loadError: 'Impossible de charger l’historique.',
     version: 'Version {version}',

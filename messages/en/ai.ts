@@ -35,6 +35,7 @@ export const ai = {
       validating: 'Checking volume, time and limits...',
     },
     disabled: 'AI planning is turned off on this server.',
+    offline: 'Planning with AI needs a connection. Your programs and workouts still work offline.',
     error: 'Could not generate a plan. Try again.',
   },
   preview: {

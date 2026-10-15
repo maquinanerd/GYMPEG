@@ -5,6 +5,8 @@ export const history = {
   emptyDescription:
     'Finish your first workout and it will appear here with volume, sets and duration.',
   firstSession: 'Log your first session',
+  startWorkout: 'Start a workout',
+  loading: 'Loading the history',
   freeSession: 'Free session',
   cardio: 'Cardio',
   volumeShort: '{weight} vol.',
@@ -21,6 +23,7 @@ export const history = {
     allMuscles: 'All muscles',
     clear: 'Clear',
     csvTitle: 'Download the CSV of sets for the active filters',
+    toggle: 'Filters',
   },
   calendar: {
     previousMonth: 'Previous month',
@@ -28,6 +31,15 @@ export const history = {
     today: 'Today',
     workoutCount: '{count, plural, one {# workout} other {# workouts}}',
     noSessions: 'No completed workouts on this date.',
+    noSessionsMonth: 'No finished workout this month.',
+    monthSessions: 'Sessions in {month}',
+    wholeMonth: 'See the whole month',
+    missed: 'planned, not done',
+    legend: {
+      done: 'trained',
+      missed: 'planned, not done',
+      today: 'today',
+    },
   },
   detail: {
     downloadTcx: 'Download .tcx',
@@ -56,6 +68,13 @@ export const history = {
     heartRateChart: 'Heart rate over time',
     heartRate: 'HR',
     chartMinutes: '{value} min',
+    back: 'Back to history',
+    record: 'Personal record',
+    decouplingTitle: 'Aerobic decoupling',
+    decouplingHeld:
+      'Lower is better - your pace per heartbeat held steady over the second half of this activity.',
+    decouplingFaded:
+      'Lower is better - your pace per heartbeat faded over the second half of this activity.',
   },
   copy: {
     button: 'Copy as text',

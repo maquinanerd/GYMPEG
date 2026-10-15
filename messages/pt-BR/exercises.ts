@@ -33,6 +33,28 @@ export const exercises = {
   deleteDescription:
     '{name} será removido do catálogo. Não é possível excluí-lo enquanto estiver em uso em um programa ou no histórico de treinos.',
   deleting: 'Excluindo...',
+  // The Exercícios tab (design v2).
+  list: {
+    searchPlaceholder: 'Buscar: supino, remada, agachamento…',
+    filters: 'Filtrar por músculo',
+    chips: {
+      all: 'Todos',
+      chest: 'Peito',
+      back: 'Costas',
+      legs: 'Pernas',
+      shoulders: 'Ombros',
+      arms: 'Braços',
+      available: 'Só o que tenho',
+    },
+    count:
+      '{count, plural, =0 {Nenhum exercício} one {# exercício} other {# exercícios}} · ordem alfabética',
+    countFiltered:
+      '{count, plural, =0 {Nenhum exercício} one {# exercício} other {# exercícios}} · {filter}',
+    create: 'Novo exercício',
+    noFilterMatch: 'Nenhum exercício neste filtro.',
+    showAll: 'Ver todos',
+    loading: 'Carregando os exercícios',
+  },
   media: {
     button: 'Execução',
     open: 'Ver a execução de {name}',
@@ -79,6 +101,10 @@ export const exercises = {
     openChart: 'Gráfico de evolução',
     noHistory: 'Nenhuma série concluída para este exercício ainda.',
     openSession: 'Abrir treino',
+    set: 'Série',
+    estimatedMax: '1RM est.',
+    reps: 'Reps',
+    loading: 'Carregando o exercício',
   },
   muscleGroups: {
     chest: 'Peito',

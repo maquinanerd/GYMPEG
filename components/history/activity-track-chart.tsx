@@ -32,7 +32,7 @@ export function ActivityTrackChart({ track }: { track: TrackPoint[] }) {
 
   return (
     <div className="mt-3">
-      <p className="mb-1 text-xs font-medium text-muted-foreground">{t('heartRateChart')}</p>
+      <p className="mb-1 text-small font-semibold text-muted-foreground">{t('heartRateChart')}</p>
       <div className="h-40 w-full" data-testid="activity-track-chart">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: -12 }}>
@@ -62,7 +62,7 @@ export function ActivityTrackChart({ track }: { track: TrackPoint[] }) {
             <Line
               type="monotone"
               dataKey="hr"
-              stroke="hsl(var(--primary))"
+              stroke="hsl(var(--ink))"
               dot={false}
               strokeWidth={2}
               isAnimationActive={false}

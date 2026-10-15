@@ -108,7 +108,7 @@ export function WorkoutFormDialog(props: Props) {
             <Label htmlFor="name">{common('fields.name')}</Label>
             <Input id="name" placeholder={t('namePlaceholder')} {...form.register('name')} />
             {form.formState.errors.name && (
-              <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
+              <p className="text-caption text-destructive-text">{form.formState.errors.name.message}</p>
             )}
           </div>
 

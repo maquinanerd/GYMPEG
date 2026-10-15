@@ -73,6 +73,55 @@ export const programs = {
   templateCreated: 'Программа создана из шаблона.',
   templateUse: 'Использовать шаблон',
   dayCount: '{count, plural, one {# день} few {# дня} many {# дней} other {# дня}}',
+  // The Programas tab (design v2).
+  list: {
+    emptyTitle: 'Программ пока нет',
+    emptyDescription:
+      'Составьте свою, начните с проверенного шаблона или попросите тренера подготовить черновик.',
+    workoutsOf: 'Тренировки программы {name}',
+    workoutMeta:
+      '{exercises} упр. · {sets, plural, one {# подход} few {# подхода} many {# подходов} other {# подхода}}',
+    workoutCount:
+      '{count, plural, =0 {нет тренировок} one {# тренировка} few {# тренировки} many {# тренировок} other {# тренировки}}',
+    scheduleShort: {
+      ROTATION: 'по очереди',
+      FIXED_DAYS: 'по дням недели',
+    },
+    weekShort: 'нед. {week}',
+    deload: 'разгрузка',
+    others: 'Другие программы',
+    otherMeta:
+      '{phase} · {workouts, plural, =0 {нет тренировок} one {# тренировка} few {# тренировки} many {# тренировок} other {# тренировки}} · {logged, plural, =0 {ещё не выполнялась} one {# выполненная тренировка} few {# выполненные тренировки} many {# выполненных тренировок} other {# выполненной тренировки}}',
+    origin: {
+      TEMPLATE: 'Шаблон',
+      AI_GENERATED: 'ИИ',
+    },
+    fromTemplate: 'Начать с шаблона',
+    allTemplates: 'Все шаблоны',
+    askCoach: 'Попросить черновик у тренера',
+    templateShort: {
+      fiveThreeOneBbb: '5/3/1',
+      gzclp: 'GZCLP',
+      nsuns: 'nSuns',
+      ppl: 'PPL',
+      upperLower: 'Верх/Низ',
+    },
+    loading: 'Загрузка программ',
+  },
+  // A program and one of its workouts (design v2 "Treino do programa").
+  detail: {
+    back: 'Назад к программам',
+    workouts: 'Тренировки',
+    minutes: '~{minutes} мин',
+    prescription: '{sets} × {reps} · RIR {rir} · {rest}',
+    restSeconds: '{seconds} с',
+    restMinutes: '{minutes} мин',
+    supersetPrefix: 'Суперсет',
+    startWorkout: 'Начать тренировку',
+    about: 'О программе',
+    printWorkout: 'Распечатать эту тренировку',
+    loading: 'Загрузка программы',
+  },
   workout: {
     actions: 'Действия с тренировкой',
     edit: 'Изменить тренировку',
@@ -163,8 +212,8 @@ export const programs = {
     title: 'История версий',
     description:
       'Каждое изменение программы сохраняется. Сравнивайте версии и возвращайте старую в любой момент.',
-    show: 'Показать историю',
-    hide: 'Скрыть историю',
+    show: 'Версии этой программы',
+    hide: 'Скрыть версии',
     loading: 'Загрузка...',
     loadError: 'Не удалось загрузить историю.',
     version: 'Версия {version}',

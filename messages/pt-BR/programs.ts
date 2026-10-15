@@ -74,6 +74,53 @@ export const programs = {
   templateCreated: 'Programa criado a partir do modelo.',
   templateUse: 'Usar este modelo',
   dayCount: '{count, plural, one {# dia} other {# dias}}',
+  // The Programas tab (design v2).
+  list: {
+    emptyTitle: 'Nenhum programa ainda',
+    emptyDescription:
+      'Monte o seu, comece de um modelo consagrado ou peça um rascunho ao coach.',
+    workoutsOf: 'Treinos de {name}',
+    workoutMeta: '{exercises} ex. · {sets, plural, one {# série} other {# séries}}',
+    workoutCount: '{count, plural, =0 {nenhum treino} one {# treino} other {# treinos}}',
+    scheduleShort: {
+      ROTATION: 'em sequência',
+      FIXED_DAYS: 'por dia da semana',
+    },
+    weekShort: 'sem. {week}',
+    deload: 'descarga',
+    others: 'Outros programas',
+    otherMeta:
+      '{phase} · {workouts, plural, =0 {nenhum treino} one {# treino} other {# treinos}} · {logged, plural, =0 {nunca registrado} one {# treino registrado} other {# treinos registrados}}',
+    origin: {
+      TEMPLATE: 'Modelo',
+      AI_GENERATED: 'IA',
+    },
+    fromTemplate: 'Começar de um modelo',
+    allTemplates: 'Ver todos os modelos',
+    askCoach: 'Pedir um rascunho ao coach',
+    templateShort: {
+      fiveThreeOneBbb: '5/3/1',
+      gzclp: 'GZCLP',
+      nsuns: 'nSuns',
+      ppl: 'PPL',
+      upperLower: 'Upper/Lower',
+    },
+    loading: 'Carregando os programas',
+  },
+  // A program and one of its workouts (design v2 "Treino do programa").
+  detail: {
+    back: 'Voltar aos programas',
+    workouts: 'Treinos',
+    minutes: '~{minutes} min',
+    prescription: '{sets} × {reps} · RIR {rir} · {rest}',
+    restSeconds: '{seconds} s',
+    restMinutes: '{minutes} min',
+    supersetPrefix: 'Superset',
+    startWorkout: 'Iniciar treino',
+    about: 'Sobre o programa',
+    printWorkout: 'Imprimir este treino',
+    loading: 'Carregando o programa',
+  },
   workout: {
     actions: 'Ações do treino',
     edit: 'Editar treino',
@@ -165,8 +212,8 @@ export const programs = {
     title: 'Histórico de versões',
     description:
       'Toda mudança neste programa fica guardada. Compare versões e volte para uma anterior quando quiser.',
-    show: 'Ver histórico',
-    hide: 'Ocultar histórico',
+    show: 'Ver versões deste programa',
+    hide: 'Ocultar versões',
     loading: 'Carregando...',
     loadError: 'Não foi possível carregar o histórico.',
     version: 'Versão {version}',

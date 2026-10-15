@@ -106,7 +106,7 @@ describe('ProgramHistory', () => {
     render(<ProgramHistory programId="program-1" />);
 
     expect(fetchMock).not.toHaveBeenCalled();
-    await user.click(screen.getByRole('button', { name: 'Show history' }));
+    await user.click(screen.getByRole('button', { name: 'See versions of this program' }));
 
     const current = await screen.findByTestId('program-version-3');
     expect(current).toHaveTextContent('Version 3');
@@ -120,7 +120,7 @@ describe('ProgramHistory', () => {
     const user = userEvent.setup();
     const fetchMock = stubApi(defaultApi);
     render(<ProgramHistory programId="program-1" />);
-    await user.click(screen.getByRole('button', { name: 'Show history' }));
+    await user.click(screen.getByRole('button', { name: 'See versions of this program' }));
 
     const v2 = await screen.findByTestId('program-version-2');
     await user.click(within(v2).getByRole('button', { name: 'Details' }));
@@ -146,7 +146,7 @@ describe('ProgramHistory', () => {
         : defaultApi(url),
     );
     render(<ProgramHistory programId="program-1" />);
-    await user.click(screen.getByRole('button', { name: 'Show history' }));
+    await user.click(screen.getByRole('button', { name: 'See versions of this program' }));
 
     const current = await screen.findByTestId('program-version-3');
     await user.click(within(current).getByRole('button', { name: 'Details' }));
@@ -163,7 +163,7 @@ describe('ProgramHistory', () => {
         : defaultApi(url, init),
     );
     render(<ProgramHistory programId="program-1" />);
-    await user.click(screen.getByRole('button', { name: 'Show history' }));
+    await user.click(screen.getByRole('button', { name: 'See versions of this program' }));
     const v2 = await screen.findByTestId('program-version-2');
     await user.click(within(v2).getByRole('button', { name: 'Details' }));
     await user.click(await within(v2).findByRole('button', { name: 'Restore this version' }));

@@ -29,6 +29,27 @@ export const exercises = {
   deleteDescription:
     '{name} will be removed from the catalog. It cannot be deleted while used in a program or training history.',
   deleting: 'Deleting...',
+  // The Exercícios tab (design v2).
+  list: {
+    searchPlaceholder: 'Search: bench, row, squat…',
+    filters: 'Filter by muscle',
+    chips: {
+      all: 'All',
+      chest: 'Chest',
+      back: 'Back',
+      legs: 'Legs',
+      shoulders: 'Shoulders',
+      arms: 'Arms',
+      available: 'Only what I have',
+    },
+    count: '{count, plural, =0 {No exercises} one {# exercise} other {# exercises}} · A to Z',
+    countFiltered:
+      '{count, plural, =0 {No exercises} one {# exercise} other {# exercises}} · {filter}',
+    create: 'New exercise',
+    noFilterMatch: 'No exercise in this filter.',
+    showAll: 'Show all',
+    loading: 'Loading exercises',
+  },
   media: {
     button: 'Technique',
     open: 'View technique for {name}',
@@ -75,6 +96,10 @@ export const exercises = {
     openChart: 'Progress chart',
     noHistory: 'No completed sets for this exercise yet.',
     openSession: 'Open workout',
+    set: 'Set',
+    estimatedMax: 'Est. 1RM',
+    reps: 'Reps',
+    loading: 'Loading the exercise',
   },
   muscleGroups: {
     chest: 'Chest',

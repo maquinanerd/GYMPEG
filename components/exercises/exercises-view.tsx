@@ -1,186 +1,196 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { PlusIcon, PencilSimpleIcon, MagnifyingGlassIcon } from '@/components/ui/icon';
+import { useLocale, useTranslations } from 'next-intl';
+import { MagnifyingGlassIcon, PlusIcon } from '@/components/ui/icon';
 import type { Exercise, MuscleGroup } from '@/lib/prisma-client';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChipRow, FilterChip } from '@/components/ui/chip';
+import { ListRow } from '@/components/ui/list-row';
+import { textLinkClass } from '@/components/ui/section';
 import { ExerciseFormDialog } from '@/components/exercises/exercise-form-dialog';
-import { ExerciseMediaDialog } from '@/components/exercises/exercise-media-dialog';
-import { DeleteExerciseButton } from '@/components/exercises/delete-exercise-button';
+import { ExerciseThumb } from '@/components/exercises/exercise-thumb';
 import { useExerciseName } from '@/components/shared/use-exercise-name';
-import {
-  equipmentTypeMessageKeys,
-  exerciseCategoryMessageKeys,
-  muscleGroupMessageKeys,
-} from '@/i18n/enum-keys';
+import { equipmentTypeMessageKeys, muscleGroupMessageKeys } from '@/i18n/enum-keys';
 import { matchesExerciseQuery } from '@/lib/catalog/search-index';
+import { exerciseFitsEquipment } from '@/lib/ai/workout-plan';
+
+// The muscle chips of the catalog: each one gathers the groups a lifter
+// thinks of under that word. Abs and unclassified exercises only show under
+// "Todos".
+const MUSCLE_CHIPS = {
+  chest: ['CHEST'],
+  back: ['BACK_WIDTH', 'BACK_THICKNESS', 'LOWER_BACK'],
+  legs: ['QUADS', 'HAMSTRINGS', 'GLUTES', 'CALVES'],
+  shoulders: ['SHOULDERS_FRONT', 'SHOULDERS_LATERAL', 'SHOULDERS_REAR'],
+  arms: ['BICEPS', 'TRICEPS', 'FOREARMS'],
+} as const satisfies Record<string, readonly MuscleGroup[]>;
+
+type ChipKey = 'all' | keyof typeof MUSCLE_CHIPS | 'available';
 
 interface ExercisesViewProps {
   exercises: Exercise[];
+  // Equipment of the lifter's active gym; "Só o que tenho" shows only when the
+  // gym lists some (an empty list rules nothing out).
+  availableEquipment?: string[] | null;
 }
 
-export function ExercisesView({ exercises }: ExercisesViewProps) {
+export function ExercisesView({ exercises, availableEquipment = null }: ExercisesViewProps) {
   const t = useTranslations('exercises');
-  const common = useTranslations('common');
+  const locale = useLocale();
   const exerciseName = useExerciseName();
   const [createOpen, setCreateOpen] = useState(false);
-  const [editing, setEditing] = useState<Exercise | null>(null);
   const [query, setQuery] = useState('');
+  const [chip, setChip] = useState<ChipKey>('all');
+
+  const canFilterByGym = availableEquipment != null && availableEquipment.length > 0;
+  const chips: ChipKey[] = [
+    'all',
+    ...(Object.keys(MUSCLE_CHIPS) as (keyof typeof MUSCLE_CHIPS)[]),
+    ...(canFilterByGym ? (['available'] as const) : []),
+  ];
+
+  // Alphabetical by the name the lifter reads.
+  const sorted = useMemo(() => {
+    const collator = new Intl.Collator(locale, { sensitivity: 'base' });
+    return [...exercises].sort((a, b) => collator.compare(exerciseName(a.name), exerciseName(b.name)));
+  }, [exerciseName, exercises, locale]);
 
   // Accent- and case-insensitive match on the name, the displayed (pt-BR)
-  // name and the catalog search terms ("puxada", "pulley"). The query only
-  // narrows the already-loaded list (no API call); an empty query shows
-  // everything.
+  // name and the catalog search terms ("puxada", "pulley"), then the chip.
+  // Both only narrow the already-loaded list (no API call).
   const filtered = useMemo(() => {
-    if (!query.trim()) return exercises;
-    return exercises.filter((ex) => matchesExerciseQuery(ex.name, exerciseName(ex.name), query));
-  }, [exerciseName, exercises, query]);
+    const trimmed = query.trim();
+    return sorted.filter((ex) => {
+      if (trimmed && !matchesExerciseQuery(ex.name, exerciseName(ex.name), trimmed)) return false;
+      if (chip === 'all') return true;
+      if (chip === 'available') {
+        return exerciseFitsEquipment(ex.equipmentTags ?? [], availableEquipment ?? []);
+      }
+      return (MUSCLE_CHIPS[chip] as readonly MuscleGroup[]).includes(ex.muscleGroup);
+    });
+  }, [availableEquipment, chip, exerciseName, query, sorted]);
 
-  const grouped = useMemo(() => groupByMuscle(filtered), [filtered]);
+  const createDialog = (
+    <ExerciseFormDialog open={createOpen} onOpenChange={setCreateOpen} mode="create" />
+  );
+
+  if (exercises.length === 0) {
+    return (
+      <div className="flex flex-col items-start gap-3 px-5 py-6">
+        <div className="flex flex-col gap-1">
+          <p className="text-subtitle">{t('emptyTitle')}</p>
+          <p className="max-w-prose text-caption text-muted-foreground">{t('emptyDescription')}</p>
+        </div>
+        <Button variant="ink" size="sm" className="mt-1" onClick={() => setCreateOpen(true)}>
+          <PlusIcon weight="bold" />
+          {t('list.create')}
+        </Button>
+        {createDialog}
+      </div>
+    );
+  }
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
-          <p className="text-sm text-muted-foreground">
-            {t('savedCount', { count: exercises.length })}
-          </p>
-        </div>
-        <Button onClick={() => setCreateOpen(true)} className="min-h-tap">
-          <PlusIcon className="size-4" />
-          <span className="ml-2">{common('actions.add')}</span>
-        </Button>
-      </div>
-
-      {exercises.length > 0 && (
-        <div className="relative">
-          <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
+    <div className="flex flex-col">
+      <div className="flex flex-col gap-3 px-5 pt-4">
+        <label className="flex h-12 items-center gap-2.5 rounded-md border border-input bg-card px-3.5 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background">
+          <MagnifyingGlassIcon weight="bold" className="size-[18px] shrink-0 text-muted-foreground" />
+          <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={t('search')}
+            placeholder={t('list.searchPlaceholder')}
             aria-label={t('search')}
-            className="pl-9"
+            className="h-full min-w-0 flex-1 bg-transparent text-body font-medium placeholder:text-muted-foreground focus:outline-none"
           />
-        </div>
-      )}
+        </label>
 
-      {exercises.length === 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('emptyTitle')}</CardTitle>
-            <CardDescription>{t('emptyDescription')}</CardDescription>
-          </CardHeader>
-        </Card>
-      ) : filtered.length === 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('noMatchTitle')}</CardTitle>
-            <CardDescription>{t('noMatchDescription', { query: query.trim() })}</CardDescription>
-          </CardHeader>
-        </Card>
-      ) : (
-        <div className="flex flex-col gap-6">
-          {Object.entries(grouped).map(([group, list]) => (
-            <section key={group} className="flex flex-col gap-2">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-                {t(`muscleGroups.${muscleGroupMessageKeys[group as MuscleGroup]}`)}
-              </h2>
-              <div className="flex flex-col gap-2">
-                {list.map((ex) => (
-                  <ExerciseRow key={ex.id} exercise={ex} onEdit={() => setEditing(ex)} />
-                ))}
-              </div>
-            </section>
+        <ChipRow role="group" aria-label={t('list.filters')}>
+          {chips.map((key) => (
+            <FilterChip key={key} selected={chip === key} onClick={() => setChip(key)}>
+              {t(`list.chips.${key}`)}
+            </FilterChip>
           ))}
+        </ChipRow>
+
+        <div className="flex min-h-touch items-center justify-between gap-3">
+          <p className="text-[0.8125rem] font-medium text-muted-foreground" aria-live="polite">
+            {chip === 'all'
+              ? t('list.count', { count: filtered.length })
+              : t('list.countFiltered', {
+                  count: filtered.length,
+                  filter: t(`list.chips.${chip}`),
+                })}
+          </p>
+          <button
+            type="button"
+            onClick={() => setCreateOpen(true)}
+            className={`${textLinkClass} -mr-2 flex min-h-touch items-center gap-1 px-2`}
+          >
+            <PlusIcon weight="bold" className="size-3.5" />
+            {t('list.create')}
+          </button>
         </div>
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="flex flex-col items-start gap-3 px-5 py-6">
+          {query.trim() ? (
+            <div className="flex flex-col gap-1">
+              <p className="text-subtitle">{t('noMatchTitle')}</p>
+              <p className="max-w-prose text-caption text-muted-foreground">
+                {t('noMatchDescription', { query: query.trim() })}
+              </p>
+            </div>
+          ) : (
+            <p className="text-subtitle">{t('list.noFilterMatch')}</p>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setQuery('');
+              setChip('all');
+            }}
+          >
+            {t('list.showAll')}
+          </Button>
+        </div>
+      ) : (
+        <ul className="px-5 pb-7 pt-1.5">
+          {filtered.map((ex) => (
+            <ExerciseRow key={ex.id} exercise={ex} />
+          ))}
+        </ul>
       )}
 
-      <ExerciseFormDialog open={createOpen} onOpenChange={setCreateOpen} mode="create" />
-      <ExerciseFormDialog
-        open={editing !== null}
-        onOpenChange={(open) => {
-          if (!open) setEditing(null);
-        }}
-        mode="edit"
-        exercise={editing ?? undefined}
-      />
+      {createDialog}
     </div>
   );
 }
 
-function ExerciseRow({ exercise, onEdit }: { exercise: Exercise; onEdit: () => void }) {
+function ExerciseRow({ exercise }: { exercise: Exercise }) {
   const t = useTranslations('exercises');
   const exerciseName = useExerciseName();
   const displayName = exerciseName(exercise.name);
 
-  // Mobile-first card (issue #330). Every tap target is 64px (the `tap` token),
-  // so three of them in a trailing column would leave the name ~150px at 400px
-  // wide and truncate it first. Instead: a fixed 64px technique slot leads the
-  // row, the name takes the remaining width and may wrap to two lines, the
-  // equipment label is compact plain text, and edit/delete sit on their own
-  // full-width row below (inline again from `sm`).
+  // 68px row: the 52px picture, the name (up to two lines, never truncated
+  // first) and "muscle · equipment" in the compact equipment form (#330).
   return (
-    <Card>
-      <CardContent className="flex flex-wrap items-start gap-x-3 gap-y-1 p-3 sm:flex-nowrap">
-        <ExerciseMediaDialog
-          exerciseName={exercise.name}
-          displayName={displayName}
-          equipmentType={exercise.equipmentType}
-          compact
-        />
-        <div className="min-w-0 flex-1 basis-40 py-0.5">
-          <p className="line-clamp-2 text-sm font-medium leading-snug">{displayName}</p>
-          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-            <Badge variant="secondary">
-              {t(`categories.${exerciseCategoryMessageKeys[exercise.category]}`)}
-            </Badge>
-            {exercise.userId === null && <Badge variant="outline">{t('catalogBadge')}</Badge>}
-            {/* One non-wrapping unit, so the separator never orphans at a line end. */}
-            <span className="whitespace-nowrap">
-              <span>
-                {t(`equipmentTypesShort.${equipmentTypeMessageKeys[exercise.equipmentType]}`)}
-              </span>
-              <span aria-hidden="true"> &middot; </span>
-              <span>{t('restSeconds', { seconds: exercise.defaultRestSec })}</span>
-            </span>
-          </div>
-          {exercise.notes && (
-            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{exercise.notes}</p>
-          )}
-        </div>
-        {/* Catalog exercises are shared and read-only: only custom ones can be
-            edited or deleted. */}
-        {exercise.userId !== null && (
-          <div className="-mb-2 -mr-2 -mt-4 flex w-full shrink-0 items-center justify-end sm:-mt-2 sm:w-auto">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onEdit}
-              aria-label={t('editTitle')}
-              className="min-h-tap min-w-tap"
-            >
-              <PencilSimpleIcon className="size-4" />
-            </Button>
-            <DeleteExerciseButton exerciseId={exercise.id} exerciseName={displayName} />
-          </div>
-        )}
-      </CardContent>
-    </Card>
+    <ListRow
+      href={`/exercises/${exercise.id}`}
+      leading={<ExerciseThumb name={exercise.name} muscleGroup={exercise.muscleGroup} />}
+      title={<span className="line-clamp-2">{displayName}</span>}
+      meta={
+        <span data-testid="exercise-meta">
+          {t(`muscleGroups.${muscleGroupMessageKeys[exercise.muscleGroup]}`)}
+          {' · '}
+          {t(`equipmentTypesShort.${equipmentTypeMessageKeys[exercise.equipmentType]}`)}
+        </span>
+      }
+      chevron
+      contentClassName="min-h-[4.25rem] py-2.5"
+    />
   );
-}
-
-function groupByMuscle(exercises: Exercise[]): Record<string, Exercise[]> {
-  const out: Record<string, Exercise[]> = {};
-  for (const ex of exercises) {
-    if (!out[ex.muscleGroup]) out[ex.muscleGroup] = [];
-    out[ex.muscleGroup]!.push(ex);
-  }
-  return out;
 }

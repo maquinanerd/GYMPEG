@@ -34,6 +34,28 @@ export const exercises = {
   deleteDescription:
     '{name} sera retiré du catalogue. Il ne peut pas être supprimé tant qu’il est utilisé dans un programme ou dans l’historique.',
   deleting: 'Suppression...',
+  // The Exercícios tab (design v2).
+  list: {
+    searchPlaceholder: 'Rechercher : développé, rowing, squat…',
+    filters: 'Filtrer par muscle',
+    chips: {
+      all: 'Tous',
+      chest: 'Pectoraux',
+      back: 'Dos',
+      legs: 'Jambes',
+      shoulders: 'Épaules',
+      arms: 'Bras',
+      available: 'Seulement mon matériel',
+    },
+    count:
+      '{count, plural, =0 {Aucun exercice} one {# exercice} other {# exercices}} · ordre alphabétique',
+    countFiltered:
+      '{count, plural, =0 {Aucun exercice} one {# exercice} other {# exercices}} · {filter}',
+    create: 'Nouvel exercice',
+    noFilterMatch: 'Aucun exercice dans ce filtre.',
+    showAll: 'Tout voir',
+    loading: 'Chargement des exercices',
+  },
   media: {
     button: 'Technique',
     open: 'Voir la technique pour {name}',
@@ -80,6 +102,10 @@ export const exercises = {
     openChart: 'Graphique de progression',
     noHistory: 'Aucune série terminée pour cet exercice.',
     openSession: 'Ouvrir l’entraînement',
+    set: 'Série',
+    estimatedMax: '1RM est.',
+    reps: 'Reps',
+    loading: 'Chargement de l’exercice',
   },
   muscleGroups: {
     chest: 'Pectoraux',

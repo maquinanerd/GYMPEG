@@ -49,18 +49,18 @@ export function PrintSheet({ programName, workout, labels, exerciseName, breakAf
     >
       <header className="mb-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b-2 border-black pb-2">
         <div>
-          <p className="text-xs uppercase tracking-wide">{programName}</p>
-          <h2 className="text-xl font-bold">{workout.name}</h2>
+          <p className="text-small font-semibold">{programName}</p>
+          <h2 className="text-heading">{workout.name}</h2>
         </div>
-        <p className="text-sm">
+        <p className="text-caption">
           {labels.date}: <span className="inline-block w-32 border-b border-black align-baseline" />
         </p>
       </header>
 
       {sheet.rows.length === 0 ? (
-        <p className="text-sm">{labels.empty}</p>
+        <p className="text-caption">{labels.empty}</p>
       ) : (
-        <table className="w-full table-fixed border-collapse text-xs">
+        <table className="w-full table-fixed border-collapse text-small">
           <thead>
             <tr>
               <th className="w-[26%] border border-black px-1.5 py-1 text-left">
@@ -79,7 +79,7 @@ export function PrintSheet({ programName, workout, labels, exerciseName, breakAf
               <tr key={row.id} className="break-inside-avoid align-top">
                 <td className="border border-black px-1.5 py-1">
                   {row.supersetLabel && (
-                    <span className="mr-1 rounded border border-black px-1 text-[10px] font-semibold">
+                    <span className="mr-1 rounded-xs border border-black px-1 font-num text-[10px] font-semibold stretch-112">
                       {row.supersetLabel}
                     </span>
                   )}
@@ -111,7 +111,7 @@ export function PrintSheet({ programName, workout, labels, exerciseName, breakAf
                             <div
                               key={cell.kind}
                               data-print-cell={cell.kind}
-                              className="flex h-6 items-end px-1 pb-0.5 text-[9px] leading-none text-neutral-600"
+                              className="flex h-6 items-end px-1 pb-0.5 text-[9px] leading-none text-black/60"
                             >
                               {cell.kind === 'weight' && labels.weight}
                               {cell.kind === 'reps' && labels.reps}

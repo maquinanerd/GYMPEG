@@ -68,6 +68,53 @@ export const programs = {
   templateCreated: 'Program created from template.',
   templateUse: 'Use this template',
   dayCount: '{count, plural, one {# day} other {# days}}',
+  // The Programas tab (design v2).
+  list: {
+    emptyTitle: 'No program yet',
+    emptyDescription:
+      'Build your own, start from a proven template or ask the coach for a draft.',
+    workoutsOf: 'Workouts of {name}',
+    workoutMeta: '{exercises} ex. · {sets, plural, one {# set} other {# sets}}',
+    workoutCount: '{count, plural, =0 {no workouts} one {# workout} other {# workouts}}',
+    scheduleShort: {
+      ROTATION: 'in sequence',
+      FIXED_DAYS: 'by weekday',
+    },
+    weekShort: 'wk {week}',
+    deload: 'deload',
+    others: 'Other programs',
+    otherMeta:
+      '{phase} · {workouts, plural, =0 {no workouts} one {# workout} other {# workouts}} · {logged, plural, =0 {never logged} one {# logged session} other {# logged sessions}}',
+    origin: {
+      TEMPLATE: 'Template',
+      AI_GENERATED: 'AI',
+    },
+    fromTemplate: 'Start from a template',
+    allTemplates: 'See all templates',
+    askCoach: 'Ask the coach for a draft',
+    templateShort: {
+      fiveThreeOneBbb: '5/3/1',
+      gzclp: 'GZCLP',
+      nsuns: 'nSuns',
+      ppl: 'PPL',
+      upperLower: 'Upper/Lower',
+    },
+    loading: 'Loading programs',
+  },
+  // A program and one of its workouts (design v2 "Treino do programa").
+  detail: {
+    back: 'Back to programs',
+    workouts: 'Workouts',
+    minutes: '~{minutes} min',
+    prescription: '{sets} × {reps} · RIR {rir} · {rest}',
+    restSeconds: '{seconds} s',
+    restMinutes: '{minutes} min',
+    supersetPrefix: 'Superset',
+    startWorkout: 'Start workout',
+    about: 'About this program',
+    printWorkout: 'Print this workout',
+    loading: 'Loading the program',
+  },
   workout: {
     actions: 'Session actions',
     edit: 'Edit session',
@@ -157,8 +204,8 @@ export const programs = {
     title: 'Version history',
     description:
       'Every change to this program is kept. Compare versions and bring an older one back at any time.',
-    show: 'Show history',
-    hide: 'Hide history',
+    show: 'See versions of this program',
+    hide: 'Hide versions',
     loading: 'Loading...',
     loadError: 'Could not load the history.',
     version: 'Version {version}',

@@ -3,14 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import {
-  CheckIcon,
-  CircleNotchIcon,
-  ArrowsClockwiseIcon,
-  SparkleIcon,
-  TrashIcon,
-  WarningIcon,
-} from '@/components/ui/icon';
+import { CheckIcon, TrashIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import type { MuscleGroup } from '@/lib/prisma-client';
 import {
@@ -21,14 +14,18 @@ import {
   type PlanIssue,
   type PlanValidation,
 } from '@/lib/ai/workout-plan';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button, IconButton } from '@/components/ui/button';
+import { CoachText } from '@/components/ui/coach-text';
 import { Label } from '@/components/ui/label';
+import { Num } from '@/components/ui/num';
+import { OfflineNotice } from '@/components/ui/screen-state';
+import { Tag } from '@/components/ui/tag';
 import { Textarea } from '@/components/ui/textarea';
 import { AiConsentCard } from '@/components/ai/ai-consent-card';
+import { useOnline } from '@/components/auth/use-online';
 import { getExerciseDisplayName } from '@/i18n/exercise-names';
 import { muscleGroupMessageKeys } from '@/i18n/enum-keys';
+import { cn } from '@/lib/utils';
 
 // Same shape as PlannerResult in lib/ai/planner (server only).
 interface PlannerResult {
@@ -58,6 +55,10 @@ function withoutExercise(plan: AiWorkoutPlan, wi: number, ei: number): AiWorkout
   return { ...plan, workouts, daysPerWeek: workouts.length };
 }
 
+// The AI plan flow (addendum 02): GENERATE → schema → domain validation →
+// PREVIEW (edited here, re-validated on every edit) → the lifter confirms →
+// SAVE. What the AI wrote (the rationale, exercise notes) reads in italic;
+// every number shown is the plan's or the validation's, never invented here.
 export function WorkoutPlanner({
   initialConsent,
   consentVersion,
@@ -71,6 +72,7 @@ export function WorkoutPlanner({
   const exerciseT = useTranslations('exercises');
   const locale = useLocale();
   const router = useRouter();
+  const online = useOnline();
   const [consented, setConsented] = useState(initialConsent);
   const [request, setRequest] = useState('');
   const [generating, setGenerating] = useState(false);
@@ -181,7 +183,7 @@ export function WorkoutPlanner({
   }
 
   if (!enabled) {
-    return <p className="text-sm text-muted-foreground">{t('planner.disabled')}</p>;
+    return <p className="text-caption text-muted-foreground">{t('planner.disabled')}</p>;
   }
   if (!consented) {
     return <AiConsentCard version={consentVersion} onAccepted={() => setConsented(true)} />;
@@ -192,228 +194,217 @@ export function WorkoutPlanner({
         (a, b) => b[1] - a[1],
       )
     : [];
+  const warnings = validation
+    ? [
+        ...validation.warnings
+          .filter((w) => w.code !== 'VOLUME_TOO_HIGH' && w.code !== 'MUSCLE_NOT_COVERED')
+          .map((warning, i) => ({ key: `w-${i}`, text: warningText(warning) })),
+        ...weeklySets
+          .filter(([, sets]) => sets > PLAN_LIMITS.weeklySetsPerMuscle)
+          .map(([muscle, sets]) => ({
+            key: `v-${muscle}`,
+            text: t('warnings.VOLUME_TOO_HIGH', { muscle: muscleLabel(muscle), sets }),
+          })),
+        ...validation.analysis.missingMajorGroups.map((group) => ({
+          key: `m-${group}`,
+          text: t('warnings.MUSCLE_NOT_COVERED', { group: t(`majorGroups.${group as 'chest'}`) }),
+        })),
+      ]
+    : [];
 
   return (
-    <div className="flex flex-col gap-6">
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex items-center gap-2">
-            <SparkleIcon className="size-5" />
-            <h2 className="text-base font-semibold">{t('planner.title')}</h2>
-          </div>
-          <p className="text-xs text-muted-foreground">{t('planner.description')}</p>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
-          <div className="space-y-1.5">
-            <Label htmlFor="ai-plan-request" className="text-sm">
-              {t('planner.requestLabel')}
-            </Label>
-            <Textarea
-              id="ai-plan-request"
-              value={request}
-              onChange={(e) => setRequest(e.target.value)}
-              rows={3}
-              maxLength={2000}
-              placeholder={t('planner.requestPlaceholder')}
-            />
-          </div>
-          <div>
-            <Button
-              type="button"
-              onClick={generate}
-              disabled={generating || saving}
-              className="min-h-tap"
-            >
-              {generating ? (
-                <CircleNotchIcon className="size-4 animate-spin" />
-              ) : plan ? (
-                <ArrowsClockwiseIcon className="size-4" />
-              ) : (
-                <SparkleIcon className="size-4" />
-              )}
-              <span className="ml-2">{plan ? t('planner.regenerate') : t('planner.generate')}</span>
-            </Button>
-          </div>
-          {generating && (
-            <ol className="flex flex-col gap-1 text-sm" aria-live="polite">
-              {STEPS.map((name, i) => (
-                <li
-                  key={name}
-                  className={
-                    i < step
-                      ? 'flex items-center gap-2 text-muted-foreground'
-                      : i === step
-                        ? 'flex items-center gap-2 font-medium'
-                        : 'flex items-center gap-2 text-muted-foreground/50'
-                  }
-                >
-                  {i < step ? (
-                    <CheckIcon className="size-4" />
-                  ) : i === step ? (
-                    <CircleNotchIcon className="size-4 animate-spin" />
-                  ) : (
-                    <span className="size-4" />
-                  )}
-                  {t(`planner.steps.${name}`)}
-                </li>
-              ))}
-            </ol>
-          )}
-          {error && <p className="text-sm text-destructive">{error}</p>}
-        </CardContent>
-      </Card>
+    <div className="flex flex-col gap-7">
+      <section aria-labelledby="ai-planner-title" className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <h2 id="ai-planner-title" className="text-heading">
+            {t('planner.title')}
+          </h2>
+          <p className="max-w-prose text-caption text-muted-foreground text-pretty">
+            {t('planner.description')}
+          </p>
+        </div>
+        {!online && <OfflineNotice>{t('planner.offline')}</OfflineNotice>}
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="ai-plan-request">{t('planner.requestLabel')}</Label>
+          <Textarea
+            id="ai-plan-request"
+            value={request}
+            onChange={(e) => setRequest(e.target.value)}
+            rows={3}
+            maxLength={2000}
+            placeholder={t('planner.requestPlaceholder')}
+          />
+        </div>
+        <Button
+          type="button"
+          variant={plan ? 'outline' : 'primary'}
+          onClick={generate}
+          loading={generating}
+          disabled={generating || saving}
+          className="w-full"
+        >
+          {plan ? t('planner.regenerate') : t('planner.generate')}
+        </Button>
+        {generating && (
+          <ol className="flex flex-col gap-1.5 text-caption" aria-live="polite">
+            {STEPS.map((name, i) => (
+              <li
+                key={name}
+                className={cn(
+                  'flex items-center gap-2',
+                  i < step && 'text-muted-foreground',
+                  i === step && 'font-semibold',
+                  i > step && 'text-muted-foreground',
+                )}
+              >
+                {i < step ? (
+                  <CheckIcon className="size-4" />
+                ) : (
+                  <span aria-hidden className="size-4" />
+                )}
+                {t(`planner.steps.${name}`)}
+              </li>
+            ))}
+          </ol>
+        )}
+        {error && (
+          <p role="alert" className="text-caption text-destructive-text">
+            {error}
+          </p>
+        )}
+      </section>
 
       {plan && result && validation && !generating && (
-        <Card>
-          <CardHeader className="pb-3">
-            <h2 className="text-base font-semibold">{plan.title}</h2>
-            <p className="text-xs text-muted-foreground">{t('preview.description')}</p>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-5">
-            {plan.rationale && (
-              <div className="space-y-1">
-                <h3 className="text-sm font-medium">{t('preview.rationale')}</h3>
-                <p className="text-sm text-muted-foreground">{plan.rationale}</p>
-              </div>
-            )}
+        <section
+          aria-labelledby="ai-plan-title"
+          className="flex flex-col gap-5 border-t border-border pt-5"
+        >
+          <div className="flex flex-col gap-1">
+            <h2 id="ai-plan-title" className="text-heading">
+              {plan.title}
+            </h2>
+            <p className="text-caption text-muted-foreground">{t('preview.description')}</p>
+          </div>
 
-            {validation.warnings.length > 0 && (
-              <div className="rounded-md border border-warning/50 bg-warning/10 p-3">
-                <h3 className="mb-1 flex items-center gap-2 text-sm font-medium">
-                  <WarningIcon className="size-4" />
-                  {t('preview.warnings')}
-                </h3>
-                <ul className="list-disc space-y-0.5 pl-5 text-sm">
-                  {validation.warnings
-                    .filter((w) => w.code !== 'VOLUME_TOO_HIGH' && w.code !== 'MUSCLE_NOT_COVERED')
-                    .map((warning, i) => (
-                      <li key={`w-${i}`}>{warningText(warning)}</li>
-                    ))}
-                  {weeklySets
-                    .filter(([, sets]) => sets > PLAN_LIMITS.weeklySetsPerMuscle)
-                    .map(([muscle, sets]) => (
-                      <li key={`v-${muscle}`}>
-                        {t('warnings.VOLUME_TOO_HIGH', { muscle: muscleLabel(muscle), sets })}
-                      </li>
-                    ))}
-                  {validation.analysis.missingMajorGroups.map((group) => (
-                    <li key={`m-${group}`}>
-                      {t('warnings.MUSCLE_NOT_COVERED', {
-                        group: t(`majorGroups.${group as 'chest'}`),
-                      })}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+          {plan.rationale && (
+            <CoachText label={t('preview.rationale')}>{plan.rationale}</CoachText>
+          )}
 
-            {validation.errors.length > 0 && (
-              <p className="text-sm text-destructive">
-                {t('preview.invalid', { reason: validation.errors[0]!.message })}
-              </p>
-            )}
-
-            {plan.workouts.map((workout, wi) => (
-              <section key={wi} className="rounded-lg border p-3">
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <h3 className="font-medium">{workout.name}</h3>
-                  <Badge variant="secondary" className="text-[10px]">
-                    {workout.dayOfWeek
-                      ? t(`weekdays.${WEEKDAYS[workout.dayOfWeek - 1]!}`)
-                      : t('preview.rotation')}
-                  </Badge>
-                  <span className="ml-auto text-xs text-muted-foreground">
-                    {t('preview.minutes', {
-                      minutes: validation.analysis.estimatedMinutes[wi] ?? 0,
-                    })}
-                  </span>
-                </div>
-                <ul className="flex flex-col gap-2">
-                  {workout.exercises.map((exercise, ei) => {
-                    const info = result.exercises[exercise.exerciseId];
-                    return (
-                      <li
-                        key={`${exercise.exerciseId}-${ei}`}
-                        className="flex items-start gap-2 rounded-md bg-muted/40 p-2"
-                      >
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium">
-                            {info ? getExerciseDisplayName(info.name, locale) : exercise.exerciseId}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {[
-                              t('preview.prescription', {
-                                sets: exercise.sets,
-                                min: exercise.repMin,
-                                max: exercise.repMax,
-                              }),
-                              exercise.targetRir != null
-                                ? t('preview.rir', { rir: exercise.targetRir })
-                                : null,
-                              t('preview.rest', { seconds: exercise.restSeconds }),
-                            ]
-                              .filter(Boolean)
-                              .join(' · ')}
-                          </p>
-                          {exercise.notes && (
-                            <p className="mt-0.5 text-xs italic text-muted-foreground">
-                              {exercise.notes}
-                            </p>
-                          )}
-                        </div>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setPlan(withoutExercise(plan, wi, ei))}
-                          aria-label={t('preview.removeExercise')}
-                        >
-                          <TrashIcon className="size-4 text-destructive" />
-                        </Button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-            ))}
-
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium">{t('preview.weeklySets')}</h3>
-              <div className="flex flex-wrap gap-1.5">
-                {weeklySets.map(([muscle, sets]) => (
-                  <Badge key={muscle} variant="outline" className="text-xs">
-                    {muscleLabel(muscle)}: {sets}
-                  </Badge>
+          {warnings.length > 0 && (
+            <div className="flex flex-col gap-1.5 rounded-md bg-muted px-4 py-3">
+              <h3 className="text-caption font-semibold text-warning-text">
+                {t('preview.warnings')}
+              </h3>
+              <ul className="flex list-disc flex-col gap-0.5 pl-5 text-caption">
+                {warnings.map((warning) => (
+                  <li key={warning.key}>{warning.text}</li>
                 ))}
-              </div>
+              </ul>
             </div>
+          )}
 
-            <div className="flex flex-wrap gap-2">
-              <Button
-                type="button"
-                onClick={() => save(true)}
-                disabled={saving || !validation.ok || plan.workouts.length === 0}
-                className="min-h-tap"
-              >
-                {saving ? (
-                  <CircleNotchIcon className="size-4 animate-spin" />
-                ) : (
-                  <CheckIcon className="size-4" />
-                )}
-                <span className="ml-2">{t('preview.saveAndActivate')}</span>
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => save(false)}
-                disabled={saving || !validation.ok || plan.workouts.length === 0}
-                className="min-h-tap"
-              >
-                {t('preview.save')}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+          {validation.errors.length > 0 && (
+            <p role="alert" className="text-caption text-destructive-text">
+              {t('preview.invalid', { reason: validation.errors[0]!.message })}
+            </p>
+          )}
+
+          {plan.workouts.map((workout, wi) => (
+            <section key={wi} className="flex flex-col">
+              <div className="flex flex-wrap items-center gap-2 pb-2">
+                <h3 className="text-subtitle">{workout.name}</h3>
+                <Tag variant="muted">
+                  {workout.dayOfWeek
+                    ? t(`weekdays.${WEEKDAYS[workout.dayOfWeek - 1]!}`)
+                    : t('preview.rotation')}
+                </Tag>
+                <Num stretch={108} className="ml-auto text-caption text-muted-foreground">
+                  {t('preview.minutes', {
+                    minutes: validation.analysis.estimatedMinutes[wi] ?? 0,
+                  })}
+                </Num>
+              </div>
+              <ol>
+                {workout.exercises.map((exercise, ei) => {
+                  const info = result.exercises[exercise.exerciseId];
+                  return (
+                    <li
+                      key={`${exercise.exerciseId}-${ei}`}
+                      className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 border-t border-border py-2.5"
+                    >
+                      <div className="flex min-w-0 flex-col gap-0.5">
+                        <p className="text-body font-semibold">
+                          {info ? getExerciseDisplayName(info.name, locale) : exercise.exerciseId}
+                        </p>
+                        <Num stretch={108} className="text-caption font-medium text-muted-foreground">
+                          {[
+                            t('preview.prescription', {
+                              sets: exercise.sets,
+                              min: exercise.repMin,
+                              max: exercise.repMax,
+                            }),
+                            exercise.targetRir != null
+                              ? t('preview.rir', { rir: exercise.targetRir })
+                              : null,
+                            t('preview.rest', { seconds: exercise.restSeconds }),
+                          ]
+                            .filter(Boolean)
+                            .join(' · ')}
+                        </Num>
+                        {exercise.notes && (
+                          <p className="text-[0.8125rem] font-medium italic text-pretty">
+                            {exercise.notes}
+                          </p>
+                        )}
+                      </div>
+                      <IconButton
+                        type="button"
+                        size="sm"
+                        className="-mr-3 -mt-2 text-destructive-text"
+                        onClick={() => setPlan(withoutExercise(plan, wi, ei))}
+                        aria-label={t('preview.removeExercise')}
+                      >
+                        <TrashIcon />
+                      </IconButton>
+                    </li>
+                  );
+                })}
+              </ol>
+            </section>
+          ))}
+
+          <div className="flex flex-col gap-2 border-t border-border pt-4">
+            <h3 className="text-caption font-semibold">{t('preview.weeklySets')}</h3>
+            <ul className="flex flex-wrap gap-x-4 gap-y-1 font-num text-caption font-semibold tabular-nums stretch-108">
+              {weeklySets.map(([muscle, sets]) => (
+                <li key={muscle}>
+                  {muscleLabel(muscle)}: {sets}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Button
+              type="button"
+              onClick={() => save(true)}
+              loading={saving}
+              disabled={saving || !validation.ok || plan.workouts.length === 0}
+              className="w-full"
+            >
+              {t('preview.saveAndActivate')}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => save(false)}
+              disabled={saving || !validation.ok || plan.workouts.length === 0}
+              className="w-full"
+            >
+              {t('preview.save')}
+            </Button>
+          </div>
+        </section>
       )}
     </div>
   );

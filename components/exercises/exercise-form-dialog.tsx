@@ -114,7 +114,7 @@ export function ExerciseFormDialog({ open, onOpenChange, mode, exercise }: Props
             <Label htmlFor="name">{common('fields.name')}</Label>
             <Input id="name" {...form.register('name')} />
             {form.formState.errors.name && (
-              <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
+              <p className="text-caption text-destructive-text">{form.formState.errors.name.message}</p>
             )}
           </div>
 
@@ -192,16 +192,16 @@ export function ExerciseFormDialog({ open, onOpenChange, mode, exercise }: Props
               {...form.register('defaultRestSec')}
             />
             {form.formState.errors.defaultRestSec && (
-              <p className="text-sm text-destructive">
+              <p className="text-caption text-destructive-text">
                 {form.formState.errors.defaultRestSec.message}
               </p>
             )}
           </div>
 
-          <label className="flex cursor-pointer items-start justify-between gap-3 rounded-md border border-border/40 p-3">
+          <label className="flex cursor-pointer items-start justify-between gap-3 border-y border-border py-3">
             <div className="min-w-0 space-y-0.5">
-              <p className="text-sm font-medium">{t('bodyweight')}</p>
-              <p className="text-xs text-muted-foreground">{t('bodyweightDescription')}</p>
+              <p className="text-caption font-semibold">{t('bodyweight')}</p>
+              <p className="text-small text-muted-foreground">{t('bodyweightDescription')}</p>
             </div>
             <Switch
               checked={form.watch('usesBodyweight')}

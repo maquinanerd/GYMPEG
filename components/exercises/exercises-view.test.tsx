@@ -80,10 +80,57 @@ describe('ExercisesView search (issue #238)', () => {
     render(<ExercisesView exercises={[]} />);
     expect(screen.getByText('No exercises')).toBeInTheDocument();
     expect(screen.queryByLabelText('Search exercises by name')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'New exercise' })).toBeInTheDocument();
   });
 });
 
-describe('ExercisesView catalog card at mobile width (issue #330)', () => {
+describe('ExercisesView muscle chips', () => {
+  it('narrows the list to the chip and counts what is left', async () => {
+    const user = userEvent.setup({ delay: null });
+    render(<ExercisesView exercises={exercises} />);
+    expect(screen.getByText('3 exercises · A to Z')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Legs' }));
+    expect(screen.getByRole('button', { name: 'Legs' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByText('Back Squat')).toBeInTheDocument();
+    expect(screen.getByText('Romanian Deadlift')).toBeInTheDocument();
+    expect(screen.queryByText('Barbell Bench Press')).not.toBeInTheDocument();
+    expect(screen.getByText('2 exercises · Legs')).toBeInTheDocument();
+  });
+
+  it('offers "Only what I have" only when the active gym lists its equipment', async () => {
+    const user = userEvent.setup({ delay: null });
+    const { unmount } = render(<ExercisesView exercises={exercises} />);
+    expect(screen.queryByRole('button', { name: 'Only what I have' })).not.toBeInTheDocument();
+    unmount();
+
+    render(
+      <ExercisesView
+        exercises={[
+          exercise({ id: 'e1', name: 'Barbell Bench Press', equipmentTags: ['barbell', 'bench'] }),
+          exercise({ id: 'e2', name: 'Leg Press', muscleGroup: 'QUADS', equipmentTags: ['leg_press'] }),
+        ]}
+        availableEquipment={['barbell', 'bench']}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: 'Only what I have' }));
+    expect(screen.getByText('Barbell Bench Press')).toBeInTheDocument();
+    expect(screen.queryByText('Leg Press')).not.toBeInTheDocument();
+  });
+
+  it('lists the exercises alphabetically, each linking to its page', () => {
+    render(<ExercisesView exercises={exercises} />);
+    const links = screen.getAllByRole('link');
+    expect(links.map((link) => link.textContent)).toEqual([
+      expect.stringContaining('Back Squat'),
+      expect.stringContaining('Barbell Bench Press'),
+      expect.stringContaining('Romanian Deadlift'),
+    ]);
+    expect(links[0]).toHaveAttribute('href', '/exercises/e2');
+  });
+});
+
+describe('ExercisesView catalog row at mobile width (issue #330)', () => {
   it('renders the full name in a wrapping (not truncating) element', () => {
     render(
       <ExercisesView
@@ -97,14 +144,11 @@ describe('ExercisesView catalog card at mobile width (issue #330)', () => {
 
   it('labels the equipment with the compact form, not the long badge text', () => {
     render(<ExercisesView exercises={[exercise({ id: 'e1', equipmentType: 'OTHER' })]} />);
-    // Equipment and rest form one non-wrapping unit, so the separator cannot orphan.
-    const label = screen.getByText('Any equipment');
-    expect(label.parentElement).toHaveClass('whitespace-nowrap');
-    expect(label.parentElement).toHaveTextContent('Any equipment · rest 120s');
-    expect(screen.queryByText('Other / unrestricted')).not.toBeInTheDocument();
+    expect(screen.getByTestId('exercise-meta')).toHaveTextContent('Chest · Any equipment');
+    expect(screen.queryByText(/Other \/ unrestricted/)).not.toBeInTheDocument();
   });
 
-  it('gives every card the same fixed-size technique slot, with or without media', () => {
+  it('gives every row the same fixed-size picture slot, with or without media', () => {
     render(
       <ExercisesView
         exercises={[
@@ -113,20 +157,14 @@ describe('ExercisesView catalog card at mobile width (issue #330)', () => {
         ]}
       />,
     );
-    const withMedia = screen.getByRole('button', {
-      name: 'View technique for Barbell Bench Press',
-    });
-    const withoutMedia = screen.getByRole('button', {
-      name: 'View technique for Future custom movement',
-    });
-    for (const slot of [withMedia, withoutMedia]) {
-      expect(slot).toHaveClass('size-16');
-      expect(slot).toHaveClass('min-h-tap');
-      expect(slot).toHaveClass('min-w-tap');
+    const [withMedia, withoutMedia] = screen.getAllByTestId('exercise-thumb');
+    for (const slot of [withMedia!, withoutMedia!]) {
+      expect(slot).toHaveClass('size-[52px]');
     }
     // The slot shows the start frame when the catalog knows the exercise and
-    // stays the same size (icon only) when it does not.
-    expect(withMedia.querySelector('img')).not.toBeNull();
-    expect(withoutMedia.querySelector('img')).toBeNull();
+    // the muscle figure (same size) when it does not.
+    expect(withMedia!.querySelector('img')).not.toBeNull();
+    expect(withoutMedia!.querySelector('img')).toBeNull();
+    expect(withoutMedia!.querySelector('svg')).not.toBeNull();
   });
 });

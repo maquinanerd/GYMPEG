@@ -53,7 +53,7 @@ export function ProgramDiffView({ diff }: { diff: ProgramDiff }) {
   const trainingName = useTrainingName();
 
   if (isEmptyDiff(diff)) {
-    return <p className="text-sm text-muted-foreground">{t('noChanges')}</p>;
+    return <p className="text-caption text-muted-foreground">{t('noChanges')}</p>;
   }
 
   function value(field: string, raw: FieldValue): string {
@@ -82,13 +82,13 @@ export function ProgramDiffView({ diff }: { diff: ProgramDiff }) {
   }
 
   return (
-    <ul className="space-y-2 text-sm">
+    <ul className="space-y-2 text-caption">
       {diff.fields.map((change) => (
         <li key={change.field}>{fieldLine(change)}</li>
       ))}
       {diff.workoutsAdded.map((workout) => (
         <li key={`added-${workout.name}`}>
-          <span className="font-medium text-brand">
+          <span className="font-semibold text-brand-strong">
             {t('diff.workoutAdded', { name: trainingName(workout.name) })}
           </span>
           {workout.exercises.length > 0 && (
@@ -100,13 +100,13 @@ export function ProgramDiffView({ diff }: { diff: ProgramDiff }) {
         </li>
       ))}
       {diff.workoutsRemoved.map((name) => (
-        <li key={`removed-${name}`} className="font-medium text-destructive">
+        <li key={`removed-${name}`} className="font-semibold text-destructive-text">
           {t('diff.workoutRemoved', { name: trainingName(name) })}
         </li>
       ))}
       {diff.workoutsChanged.map((workout) => (
         <li key={`changed-${workout.name}`}>
-          <p className="font-medium">
+          <p className="font-semibold">
             {workout.previousName
               ? t('diff.workoutRenamed', {
                   name: trainingName(workout.name),
@@ -119,12 +119,12 @@ export function ProgramDiffView({ diff }: { diff: ProgramDiff }) {
               <li key={change.field}>{fieldLine(change)}</li>
             ))}
             {workout.exercisesAdded.map((name) => (
-              <li key={`added-${name}`} className="text-brand">
+              <li key={`added-${name}`} className="text-brand-strong">
                 {t('diff.exerciseAdded', { name: exerciseName(name) })}
               </li>
             ))}
             {workout.exercisesRemoved.map((name) => (
-              <li key={`removed-${name}`} className="text-destructive">
+              <li key={`removed-${name}`} className="text-destructive-text">
                 {t('diff.exerciseRemoved', { name: exerciseName(name) })}
               </li>
             ))}

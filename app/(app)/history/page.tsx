@@ -1,26 +1,31 @@
 import { getLocale, getTimeZone, getTranslations } from 'next-intl/server';
-import { CalendarDotsIcon } from '@/components/ui/icon';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
 import { EmptyState } from '@/components/ui/empty-state';
 import { applyBodyweight, totalVolume } from '@/lib/stats';
 import { formatWeight } from '@/lib/units';
 import { formatDistance, formatDuration } from '@/lib/cardio';
-import { HistoryFilters } from '@/components/history/history-filters';
+import { HistoryCsvLink, HistoryFilters } from '@/components/history/history-filters';
 import { TrainingHeader } from '@/components/nav/screen-header';
 import {
   HistoryCalendar,
   type HistoryCalendarSession,
+  type HistoryPlannedDays,
 } from '@/components/history/history-calendar';
 import { getExerciseDisplayName } from '@/i18n/exercise-names';
 import { getTrainingDisplayName } from '@/i18n/training-names';
 import {
+  dateKeyInTimeZone,
   formatMonthKey,
   getMonthQueryRange,
   parseMonthKey,
   resolveCalendarTimeZone,
 } from '@/lib/history-calendar';
-import { historySessionWhere, parseHistoryFilters } from '@/lib/history-filters';
+import {
+  hasHistoryFilters,
+  historySessionWhere,
+  parseHistoryFilters,
+} from '@/lib/history-filters';
 
 interface SearchParams {
   programId?: string;
@@ -43,54 +48,60 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
   const monthRange = getMonthQueryRange(month);
   const filters = parseHistoryFilters(searchParams);
 
-  const [sessions, programs, user, totalHistoryCount, gyms, trainedExercises] = await Promise.all([
-    db.session.findMany({
-      where: historySessionWhere(auth.userId, filters, monthRange),
-      orderBy: { startedAt: 'asc' },
-      include: {
-        workout: { select: { name: true } },
-        program: { select: { name: true } },
-        sets: {
-          select: {
-            weight: true,
-            reps: true,
-            isWarmup: true,
-            durationSec: true,
-            distanceM: true,
-            avgHr: true,
-            exercise: { select: { usesBodyweight: true, name: true, category: true } },
+  const [sessions, programs, user, totalHistoryCount, gyms, trainedExercises, activeProgram] =
+    await Promise.all([
+      db.session.findMany({
+        where: historySessionWhere(auth.userId, filters, monthRange),
+        orderBy: { startedAt: 'asc' },
+        include: {
+          workout: { select: { name: true } },
+          program: { select: { name: true } },
+          sets: {
+            select: {
+              weight: true,
+              reps: true,
+              isWarmup: true,
+              durationSec: true,
+              distanceM: true,
+              avgHr: true,
+              exercise: { select: { usesBodyweight: true, name: true, category: true } },
+            },
           },
         },
-      },
-    }),
-    db.program.findMany({
-      where: { userId: auth.userId },
-      orderBy: [{ isActive: 'desc' }, { startDate: 'desc' }],
-      select: { id: true, name: true },
-    }),
-    db.user.findUnique({
-      where: { id: auth.userId },
-      select: { bodyweight: true, unit: true },
-    }),
-    db.session.count({
-      where: { userId: auth.userId, finishedAt: { not: null } },
-    }),
-    db.gym.findMany({
-      where: { userId: auth.userId },
-      orderBy: { name: 'asc' },
-      select: { id: true, name: true },
-    }),
-    // Only exercises (and so muscles) that appear in the finished history.
-    db.exercise.findMany({
-      where: {
-        sets: {
-          some: { isWarmup: false, session: { userId: auth.userId, finishedAt: { not: null } } },
+      }),
+      db.program.findMany({
+        where: { userId: auth.userId },
+        orderBy: [{ isActive: 'desc' }, { startDate: 'desc' }],
+        select: { id: true, name: true },
+      }),
+      db.user.findUnique({
+        where: { id: auth.userId },
+        select: { bodyweight: true, unit: true },
+      }),
+      db.session.count({
+        where: { userId: auth.userId, finishedAt: { not: null } },
+      }),
+      db.gym.findMany({
+        where: { userId: auth.userId },
+        orderBy: { name: 'asc' },
+        select: { id: true, name: true },
+      }),
+      // Only exercises (and so muscles) that appear in the finished history.
+      db.exercise.findMany({
+        where: {
+          sets: {
+            some: { isWarmup: false, session: { userId: auth.userId, finishedAt: { not: null } } },
+          },
         },
-      },
-      orderBy: { name: 'asc' },
-      select: { id: true, name: true, muscleGroup: true },
-    }),
-  ]);
+        orderBy: { name: 'asc' },
+        select: { id: true, name: true, muscleGroup: true },
+      }),
+      // The active program's weekdays mark the planned days that were missed.
+      db.program.findFirst({
+        where: { userId: auth.userId, isActive: true },
+        select: { scheduleMode: true, startDate: true, workouts: { select: { dayOfWeek: true } } },
+      }),
+    ]);
 
   const unit = user?.unit ?? 'KG';
   const calendarSessions: HistoryCalendarSession[] = sessions.map((session) => {
@@ -131,14 +142,10 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
         ? getTrainingDisplayName(session.program.name, locale)
         : null,
       workingSets: working.length,
+      // The list's value column: the tonnage alone ("8.410 kg").
       volumeLabel: isCardio
         ? null
-        : t('volumeShort', {
-            weight: formatWeight(totalVolume(enrichedSets), unit, {
-              decimals: 0,
-              locale,
-            }),
-          }),
+        : formatWeight(totalVolume(enrichedSets), unit, { decimals: 0, locale }),
       durationLabel: !isCardio && durationMin != null ? t('minutes', { count: durationMin }) : null,
       cardioDistanceLabel: isCardio && cardioDistance > 0 ? formatDistance(cardioDistance) : null,
       cardioDurationLabel:
@@ -149,29 +156,34 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
     };
   });
 
+  // Same rule as the home week strip (lib/home-week): only a fixed-days
+  // program has weekdays to miss. Filters hide sessions, so they turn it off.
+  const plannedWeekdays =
+    activeProgram?.scheduleMode === 'FIXED_DAYS'
+      ? [
+          ...new Set(
+            activeProgram.workouts
+              .map((workout) => workout.dayOfWeek)
+              .filter((day): day is number => day != null),
+          ),
+        ]
+      : [];
+  const planned: HistoryPlannedDays | null =
+    activeProgram && plannedWeekdays.length > 0 && !hasHistoryFilters(filters)
+      ? { weekdays: plannedWeekdays, since: dateKeyInTimeZone(activeProgram.startDate, timeZone) }
+      : null;
+
   return (
-    <main className="flex-1">
-      <TrainingHeader />
-      <div className="mx-auto flex max-w-2xl flex-col gap-6 px-5 py-4">
-
-        <HistoryFilters
-          programs={programs}
-          gyms={gyms}
-          exercises={trainedExercises.map((exercise) => ({
-            id: exercise.id,
-            name: getExerciseDisplayName(exercise.name, locale),
-          }))}
-          muscles={[...new Set(trainedExercises.map((exercise) => exercise.muscleGroup))]}
-          filters={filters}
-          selectedMonth={monthKey}
-        />
-
+    <main className="mx-auto w-full max-w-2xl flex-1">
+      <TrainingHeader
+        action={totalHistoryCount > 0 ? <HistoryCsvLink filters={filters} /> : undefined}
+      />
+      <div className="flex flex-col gap-5 px-5 pb-7 pt-4">
         {totalHistoryCount === 0 ? (
           <EmptyState
-            icon={CalendarDotsIcon}
             title={t('emptyTitle')}
             description={t('emptyDescription')}
-            action={{ label: t('firstSession'), href: '/session/new' }}
+            action={{ label: t('startWorkout'), href: '/session/new' }}
           />
         ) : (
           <HistoryCalendar
@@ -180,6 +192,20 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
             sessions={calendarSessions}
             filters={filters}
             timeZone={timeZone}
+            planned={planned}
+            filtersSlot={
+              <HistoryFilters
+                programs={programs}
+                gyms={gyms}
+                exercises={trainedExercises.map((exercise) => ({
+                  id: exercise.id,
+                  name: getExerciseDisplayName(exercise.name, locale),
+                }))}
+                muscles={[...new Set(trainedExercises.map((exercise) => exercise.muscleGroup))]}
+                filters={filters}
+                selectedMonth={monthKey}
+              />
+            }
           />
         )}
       </div>

@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
-import { CircleNotchIcon, TrashIcon } from '@/components/ui/icon';
+import { TrashIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
+import { Button, Spinner } from '@/components/ui/button';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,13 +57,9 @@ export function DeleteSessionButton({ sessionId, workoutName, startedAt }: Props
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-        >
-          <TrashIcon className="size-4" />
-          <span className="ml-1">{t('button')}</span>
+        <Button variant="outline" size="sm" className="text-destructive-text">
+          <TrashIcon />
+          {t('button')}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -78,12 +74,12 @@ export function DeleteSessionButton({ sessionId, workoutName, startedAt }: Props
           <AlertDialogAction
             onClick={handleDelete}
             disabled={pending}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="bg-destructive text-destructive-foreground"
           >
             {pending ? (
               <>
-                <CircleNotchIcon className="size-4 animate-spin" />
-                <span className="ml-2">{t('deleting')}</span>
+                <Spinner />
+                {t('deleting')}
               </>
             ) : (
               t('confirm')

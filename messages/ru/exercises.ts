@@ -32,6 +32,28 @@ export const exercises = {
   deleteDescription:
     '«{name}» будет удалено из каталога. Удаление невозможно, пока упражнение используется в программе или истории тренировок.',
   deleting: 'Удаление...',
+  // The Exercícios tab (design v2).
+  list: {
+    searchPlaceholder: 'Поиск: жим, тяга, присед…',
+    filters: 'Фильтр по мышцам',
+    chips: {
+      all: 'Все',
+      chest: 'Грудь',
+      back: 'Спина',
+      legs: 'Ноги',
+      shoulders: 'Плечи',
+      arms: 'Руки',
+      available: 'Только доступное',
+    },
+    count:
+      '{count, plural, =0 {Нет упражнений} one {# упражнение} few {# упражнения} many {# упражнений} other {# упражнения}} · по алфавиту',
+    countFiltered:
+      '{count, plural, =0 {Нет упражнений} one {# упражнение} few {# упражнения} many {# упражнений} other {# упражнения}} · {filter}',
+    create: 'Новое упражнение',
+    noFilterMatch: 'В этом фильтре упражнений нет.',
+    showAll: 'Показать все',
+    loading: 'Загрузка упражнений',
+  },
   media: {
     button: 'Техника',
     open: 'Посмотреть технику: {name}',
@@ -78,6 +100,10 @@ export const exercises = {
     openChart: 'График прогресса',
     noHistory: 'Для этого упражнения пока нет выполненных подходов.',
     openSession: 'Открыть тренировку',
+    set: 'Подход',
+    estimatedMax: 'Расч. 1ПМ',
+    reps: 'Повторы',
+    loading: 'Загрузка упражнения',
   },
   muscleGroups: {
     chest: 'Грудь',
