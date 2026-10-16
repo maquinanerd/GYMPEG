@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { CircleNotchIcon, FloppyDiskIcon } from '@/components/ui/icon';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import type { EquipmentType, WeightUnit } from '@/lib/prisma-client';
@@ -149,20 +148,25 @@ export function LiveEquipmentWeightEditor({
             aria-invalid={problem != null}
             aria-describedby="live-equipment-weights-help live-equipment-weights-status"
           />
-          <p id="live-equipment-weights-help" className="text-xs text-muted-foreground">
+          <p id="live-equipment-weights-help" className="text-small text-muted-foreground">
             {t('help')}
           </p>
           {/* Only a problem is announced: the preview changes on every keystroke. */}
-          <div id="live-equipment-weights-status" className="min-h-5 text-sm">
-            <p aria-live="polite" className="text-destructive">
+          <div id="live-equipment-weights-status" className="min-h-5 text-caption">
+            <p aria-live="polite" className="text-destructive-text">
               {problem}
             </p>
             {problem == null && preview ? <p className="text-muted-foreground">{preview}</p> : null}
           </div>
         </div>
-        <Button type="button" onClick={save} disabled={saving || !parsed.ok} className="w-full">
-          {saving ? <CircleNotchIcon className="size-4 animate-spin" /> : <FloppyDiskIcon className="size-4" />}
-          <span className="ml-2">{t('save')}</span>
+        <Button
+          type="button"
+          onClick={save}
+          disabled={saving || !parsed.ok}
+          loading={saving}
+          className="w-full"
+        >
+          {t('save')}
         </Button>
       </DialogContent>
     </Dialog>

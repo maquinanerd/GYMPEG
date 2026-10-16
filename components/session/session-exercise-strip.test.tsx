@@ -45,7 +45,7 @@ describe('SessionExerciseStrip', () => {
       />,
     );
 
-    expect(screen.getByRole('group', { name: 'Workout exercises' })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Workout exercises' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '1. Squats · Barbell · Completed' })).toHaveAttribute(
       'aria-current',
       'step',
@@ -53,9 +53,11 @@ describe('SessionExerciseStrip', () => {
 
     const active = screen.getByRole('button', { name: '1. Squats · Barbell · Completed' });
     const inactive = screen.getByRole('button', { name: '2. Custom Rear Delt Raise' });
-    // The current exercise is the lime chip, the others sit on the pill fill.
-    expect(active).toHaveClass('bg-primary', 'h-12');
-    expect(inactive).toHaveClass('bg-pill', 'h-12');
+    // Underlined tabs: the current exercise carries the ink underline, the
+    // others a transparent one, both 48px tall.
+    expect(active).toHaveClass('border-ink', 'h-12');
+    expect(inactive).toHaveClass('border-transparent', 'h-12');
+    expect(inactive).not.toHaveAttribute('aria-current');
 
     fireEvent.click(inactive);
     expect(onSelect).toHaveBeenCalledWith(1);

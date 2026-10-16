@@ -18,7 +18,14 @@ describe('RestEndFlash (issue #393)', () => {
 
     rerender(<RestEndFlash count={1} />);
     const overlay = screen.getByTestId('rest-end-flash');
-    expect(overlay).toHaveClass('rest-end-flash', 'pointer-events-none');
+    // A click-through lime layer over the whole screen, still at rest under
+    // reduced motion (no fade there).
+    expect(REST_END_FLASH_MS).toBe(300);
+    expect(overlay).toHaveClass(
+      'bg-primary',
+      'pointer-events-none',
+      'motion-reduce:transition-none',
+    );
     expect(overlay).toHaveAttribute('aria-hidden', 'true');
 
     act(() => {

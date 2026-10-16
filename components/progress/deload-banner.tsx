@@ -1,12 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useTranslations } from 'next-intl';
-import { BatteryChargingIcon, BatteryLowIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import type { DeloadReason } from '@/lib/deload';
 import { useExerciseName } from '@/components/shared/use-exercise-name';
 
@@ -17,7 +15,7 @@ interface Props {
   deloadUntil: string | null;
 }
 
-// Banner shown on the progress page when recommendDeload fires or a planned
+// Deload note on the Treino tab when recommendDeload fires or a planned
 // deload week is running (issue #112). One tap starts the deload week (the
 // suggestion engine then steps loads down ~10%); while active it shows the end
 // date and lets the user end it early.
@@ -27,6 +25,7 @@ export function DeloadBanner({ reasons, deloadUntil }: Props) {
   const exerciseName = useExerciseName();
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const headingId = useId();
   const active = deloadUntil != null;
 
   if (!active && reasons.length === 0) return null;
@@ -77,58 +76,50 @@ export function DeloadBanner({ reasons, deloadUntil }: Props) {
       month: 'short',
     });
     return (
-      <Card className="border-brand/40 bg-accent">
-        <CardHeader className="pb-3">
-          <div className="flex items-center gap-2">
-            <BatteryChargingIcon className="size-4 text-brand" />
-            <h2 className="text-base font-semibold">{t('activeTitle')}</h2>
-          </div>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3 text-sm">
-          <p className="text-muted-foreground">{t('activeDescription', { date: endDate })}</p>
-          <div>
-            <Button variant="outline" size="sm" onClick={endDeload} disabled={busy}>
-              {t('end')}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <section aria-labelledby={headingId} className={NOTE}>
+        <h2 id={headingId} className="text-[0.8125rem] font-semibold">
+          {t('activeTitle')}
+        </h2>
+        <p className="text-[0.9375rem] font-medium leading-[1.4]">
+          {t('activeDescription', { date: endDate })}
+        </p>
+        <Button variant="ink" size="sm" className="mt-2 self-start" onClick={endDeload} loading={busy}>
+          {t('end')}
+        </Button>
+      </section>
     );
   }
 
   return (
-    <Card className="border-warning/50 bg-warning/10">
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <BatteryLowIcon className="size-4 text-foreground" />
-          <h2 className="text-base font-semibold">{t('dueTitle')}</h2>
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-3 text-sm">
-        <ul className="list-disc space-y-1 pl-5">
-          {reasons.map((reason) => (
-            <li key={reason.kind}>
-              {reason.kind === 'stalled-lifts'
-                ? t('stalledReason', {
-                    count: reason.exerciseNames.length,
-                    names: reason.exerciseNames.map(exerciseName).join(', '),
+    <section aria-labelledby={headingId} className={NOTE}>
+      <h2 id={headingId} className="text-[0.8125rem] font-semibold">
+        {t('dueTitle')}
+      </h2>
+      <ul className="flex flex-col gap-1 text-[0.9375rem] font-medium leading-[1.4]">
+        {reasons.map((reason) => (
+          <li key={reason.kind}>
+            {reason.kind === 'stalled-lifts'
+              ? t('stalledReason', {
+                  count: reason.exerciseNames.length,
+                  names: reason.exerciseNames.map(exerciseName).join(', '),
+                })
+              : reason.kind === 'low-readiness'
+                ? t('readinessReason', {
+                    average: reason.averageReadiness,
+                    checkins: reason.checkins,
                   })
-                : reason.kind === 'low-readiness'
-                  ? t('readinessReason', {
-                      average: reason.averageReadiness,
-                      checkins: reason.checkins,
-                    })
-                  : t('longBlockReason', { weeks: reason.weeks })}
-            </li>
-          ))}
-        </ul>
-        <p className="text-xs text-muted-foreground">{t('dueDescription')}</p>
-        <div>
-          <Button size="sm" onClick={startDeload} disabled={busy}>
-            {t('start')}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+                : t('longBlockReason', { weeks: reason.weeks })}
+          </li>
+        ))}
+      </ul>
+      <p className="text-[0.8125rem] font-medium leading-[1.4]">{t('dueDescription')}</p>
+      <Button variant="ink" size="sm" className="mt-2 self-start" onClick={startDeload} loading={busy}>
+        {t('start')}
+      </Button>
+    </section>
   );
 }
+
+// The deload note: the deload accent as a fill (radius 12) with #111 text.
+const NOTE =
+  'flex flex-col gap-1 rounded-md bg-deload px-4 py-3.5 text-deload-foreground';

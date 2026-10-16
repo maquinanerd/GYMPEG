@@ -33,7 +33,7 @@ test('a lifter can import a GPX activity as a cardio session', async ({ page }) 
   });
   expect(registerRes.ok()).toBeTruthy();
 
-  await page.goto('/settings');
+  await page.goto('/settings/import');
   await expect(page.getByText('Import from Strong')).toBeVisible();
 
   // Switch the source to GPX: the copy flips to the cardio activity import.
@@ -70,6 +70,9 @@ test('a lifter can import a GPX activity as a cardio session', async ({ page }) 
 
   // The session detail shows the cardio set with its average heart rate, plus
   // the heart-rate-over-time chart built from the trackpoints (issue #259).
+  // The calendar first rewrites the URL with the browser time zone; a click
+  // before that lands would be cancelled by the rewrite.
+  await expect(page).toHaveURL(/[?&]tz=/);
   await page.getByRole('link', { name: /Running/ }).click();
   await expect(page.getByRole('heading', { name: 'Running' })).toBeVisible();
   await expect(page.getByText('155 bpm')).toBeVisible();

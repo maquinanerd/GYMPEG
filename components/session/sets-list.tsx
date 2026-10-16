@@ -1,21 +1,15 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import {
-  CheckIcon,
-  CircleIcon,
-  RadioButtonIcon,
-  CloudSlashIcon,
-  CircleNotchIcon,
-  TrashIcon,
-  TrophyIcon,
-} from '@/components/ui/icon';
+import { CloudArrowUpIcon, CloudSlashIcon, TrashIcon } from '@/components/ui/icon';
 import type { Exercise, ProgramExercise } from '@/lib/prisma-client';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { IconButton } from '@/components/ui/button';
+import { Num } from '@/components/ui/num';
+import { Tag } from '@/components/ui/tag';
 import type { PendingSet } from '@/lib/indexeddb';
 import { detectPRs, type PRType } from '@/lib/records';
 import { formatCardioSet } from '@/lib/cardio';
+import { cn } from '@/lib/utils';
 
 interface Props {
   programExercise: ProgramExercise & { exercise: Exercise };
@@ -33,6 +27,10 @@ interface Props {
 const PR_LABEL_KEYS = { weight: 'weightPr', e1rm: 'oneRmPr' } as const;
 const PR_TITLE_KEYS = { weight: 'weightPrTitle', e1rm: 'oneRmPrTitle' } as const;
 
+// The logged sets of a cardio exercise (and the ones still to do) as a list
+// on hairlines: set number, the duration/distance in the number style, a
+// sync mark while it is not on the server yet and the delete button. The
+// current set is the lit row.
 export function SetsList({ programExercise, sets, isInputActive, onDeleteSet, priorSets }: Props) {
   const t = useTranslations('session.setsList');
   const completedNonWarmup = sets.filter((s) => !s.isWarmup);
@@ -54,21 +52,33 @@ export function SetsList({ programExercise, sets, isInputActive, onDeleteSet, pr
   }
 
   return (
-    <div className="rounded-lg border border-border">
-      {sets.map((s, i) => (
-        <RowDone key={s.localId} set={s} prs={prsFor(s, i)} onDelete={() => onDeleteSet(s)} />
-      ))}
+    <div className="flex flex-col">
+      <ol className="border-b border-border">
+        {sets.map((s, i) => (
+          <RowDone key={s.localId} set={s} prs={prsFor(s, i)} onDelete={() => onDeleteSet(s)} />
+        ))}
 
-      {Array.from({ length: totalRows - sets.length }, (_, i) => {
-        const setNum = completedNonWarmup.length + 1 + i;
-        const isCurrent = i === 0 && isInputActive;
-        return <RowUpcoming key={`upcoming-${setNum}`} setNumber={setNum} isCurrent={isCurrent} />;
-      })}
+        {Array.from({ length: totalRows - sets.length }, (_, i) => {
+          const setNum = completedNonWarmup.length + 1 + i;
+          const isCurrent = i === 0 && isInputActive;
+          return (
+            <li
+              key={`upcoming-${setNum}`}
+              className={cn(
+                'flex min-h-14 items-center gap-3 border-t border-border px-3 text-caption',
+                isCurrent ? 'bg-row-current font-semibold' : 'text-muted-foreground',
+              )}
+            >
+              {isCurrent ? t('current', { number: setNum }) : t('upcoming', { number: setNum })}
+            </li>
+          );
+        })}
+      </ol>
 
       {!isInputActive && completedNonWarmup.length === 0 && sets.length === 0 && (
-        <div className="px-3 py-2 text-xs text-muted-foreground">
+        <p className="px-3 py-2 text-small text-muted-foreground">
           {t('noneDuringRest', { number: currentSetNumber })}
-        </div>
+        </p>
       )}
     </div>
   );
@@ -80,15 +90,14 @@ function RowDone({ set, prs, onDelete }: { set: PendingSet; prs: PRType[]; onDel
   // Cardio sets (issue #133) render as duration/distance, never weight x reps.
   const isCardio = set.durationSec != null;
   return (
-    <div className="flex items-center justify-between gap-2 border-b border-border px-3 py-2 last:border-b-0">
-      <div className="flex min-w-0 items-center gap-2">
-        <SyncIcon status={set.status} />
-        <span className="text-sm font-medium">
+    <li className="flex min-h-16 items-center justify-between gap-2 border-t border-border pl-3">
+      <div className="flex min-w-0 flex-wrap items-center gap-x-2.5 gap-y-1">
+        <span className="text-caption font-semibold">
           {t('set', { number: set.setNumber })}
           {set.isWarmup ? t('warmup') : ''}
           {set.isDropSet ? t('drop') : ''}
         </span>
-        <span className="truncate text-sm text-muted-foreground">
+        <Num stretch={112} className="text-body">
           {isCardio ? (
             formatCardioSet(set.durationSec!, set.distanceM)
           ) : (
@@ -97,58 +106,33 @@ function RowDone({ set, prs, onDelete }: { set: PendingSet; prs: PRType[]; onDel
               {set.rir != null && ` · RIR ${set.rir}`}
             </>
           )}
-        </span>
+        </Num>
         {prs.map((pr) => (
-          <Badge key={pr} className="gap-1 text-xs" title={t(PR_TITLE_KEYS[pr])}>
-            <TrophyIcon className="size-3" />
+          <Tag key={pr} variant="pr" title={t(PR_TITLE_KEYS[pr])}>
             {t(PR_LABEL_KEYS[pr])}
-          </Badge>
+          </Tag>
         ))}
-        {set.notes && (
-          <Badge variant="secondary" className="text-xs">
-            {t('note')}
-          </Badge>
-        )}
+        {set.notes && <Tag variant="muted">{t('note')}</Tag>}
+        <SyncMark status={set.status} />
       </div>
-      <Button
-        variant="ghost"
-        size="icon"
+      <IconButton
+        size="session"
         onClick={onDelete}
         aria-label={t('delete')}
-        className="size-8 text-muted-foreground hover:text-destructive"
+        title={t('delete')}
+        className="text-muted-foreground hover:text-destructive-text"
       >
-        <TrashIcon className="size-3.5" />
-      </Button>
-    </div>
+        <TrashIcon />
+      </IconButton>
+    </li>
   );
 }
 
-function SyncIcon({ status }: { status: PendingSet['status'] }) {
-  if (status === 'synced') return <CheckIcon className="size-4 flex-shrink-0 text-brand" />;
-  if (status === 'syncing')
-    return <CircleNotchIcon className="size-4 flex-shrink-0 animate-spin text-muted-foreground" />;
-  if (status === 'failed') return <CloudSlashIcon className="size-4 flex-shrink-0 text-destructive" />;
-  // 'pending'
-  return <CloudSlashIcon className="size-4 flex-shrink-0 text-muted-foreground" />;
-}
-
-function RowUpcoming({ setNumber, isCurrent }: { setNumber: number; isCurrent: boolean }) {
-  const t = useTranslations('session.setsList');
-
-  return (
-    <div
-      className={`flex items-center gap-2 border-b border-border px-3 py-2 last:border-b-0 ${
-        isCurrent ? 'bg-accent' : ''
-      }`}
-    >
-      {isCurrent ? (
-        <RadioButtonIcon className="size-4 flex-shrink-0 text-brand" />
-      ) : (
-        <CircleIcon className="size-4 flex-shrink-0 text-muted-foreground" />
-      )}
-      <span className={`text-sm ${isCurrent ? 'font-medium' : 'text-muted-foreground'}`}>
-        {isCurrent ? t('current', { number: setNumber }) : t('upcoming', { number: setNumber })}
-      </span>
-    </div>
-  );
+// Only a set that is not on the server yet carries a mark: waiting (pending,
+// syncing) or refused (failed). A synced set needs none.
+function SyncMark({ status }: { status: PendingSet['status'] }) {
+  if (status === 'synced') return null;
+  if (status === 'failed')
+    return <CloudSlashIcon weight="bold" className="size-4 shrink-0 text-destructive-text" />;
+  return <CloudArrowUpIcon weight="bold" className="size-4 shrink-0 text-muted-foreground" />;
 }

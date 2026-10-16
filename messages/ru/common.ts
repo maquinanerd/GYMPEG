@@ -92,8 +92,14 @@ export const common = {
     syncing: 'Синхронизация: {count}...',
     pending:
       'Нет сети · {count, plural, one {# ожидает} few {# ожидают} many {# ожидают} other {# ожидают}}',
+    savedShort: 'Сохранено',
+    toSendShort: 'К отправке: {count}',
+    offlineShort: 'Нет связи',
+    trainAnyway: 'Можно тренироваться как обычно. Всё сохраняется на этом устройстве.',
   },
   errors: {
     generic: 'Что-то пошло не так. Попробуйте ещё раз.',
+    loadFailed: 'Не удалось загрузить этот экран.',
+    tryAgain: 'Попробовать снова',
   },
 } satisfies MessageShape<typeof english>;

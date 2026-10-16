@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,400..700&display=swap" rel="stylesheet"><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script><style>html,body{margin:0;background:#F9F9F9}a{color:#354119}a:hover{color:#111111}button,input{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}:focus-visible{outline:2px solid #111111;outline-offset:2px}</style></helmet>
+<div style="width:100%;max-width:430px;margin:0 auto;height:844px;position:relative;background:#F9F9F9;font-family:Archivo, sans-serif;color:#111111;overflow:hidden;display:flex;flex-direction:column">
+  <dc-import name="StatusBar" hint-size="100%,54px"></dc-import>
+  <header style="flex:none;padding:6px 20px 8px"><h1 style="margin:0;font-size:32px;font-weight:600;letter-spacing:-0.02em">Treinos</h1></header>
+  <div role="tablist" style="flex:none;display:flex;gap:24px;padding:0 20px;border-bottom:1px solid #E9E9E9">
+    <a role="tab" aria-selected="false" href="#" style="height:44px;display:flex;align-items:center;font-size:16px;font-weight:500;color:#646464;border-bottom:2px solid transparent;margin-bottom:-1px;text-decoration:none">Programas</a>
+    <a role="tab" aria-selected="false" href="#" style="height:44px;display:flex;align-items:center;font-size:16px;font-weight:500;color:#646464;border-bottom:2px solid transparent;margin-bottom:-1px;text-decoration:none">Histórico</a>
+    <a role="tab" aria-selected="true" href="#" style="height:44px;display:flex;align-items:center;font-size:16px;font-weight:600;color:#111111;border-bottom:2px solid #111111;margin-bottom:-1px;text-decoration:none">Exercícios</a>
+  </div>
+  <div style="flex:none;padding:16px 20px 0;display:flex;flex-direction:column;gap:12px">
+    <label style="height:48px;border-radius:12px;background:#FFFFFF;border:1px solid #CECECE;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 14px"><i class="ph-bold ph-magnifying-glass" style="font-size:18px;color:#646464"></i><input type="search" placeholder="Buscar: supino, remada, agachamento…" style="flex:1;min-width:0;font-size:16px;font-weight:500;cursor:text"></label>
+    <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px">
+      <sc-for list="{{ chips }}" as="c" hint-placeholder-count="7"><button aria-pressed="{{ c.p }}" onClick="{{ c.pick }}" style="flex:none;height:40px;padding:0 14px;border-radius:8px;background:{{ c.bg }};color:{{ c.c }};border:{{ c.b }};box-sizing:border-box;font-size:14px;font-weight:600">{{ c.l }}</button></sc-for>
+    </div>
+    <span style="font-size:13px;font-weight:500;color:#646464">{{ count }}</span>
+  </div>
+  <main style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:6px 20px 28px">
+    <ul style="list-style:none;margin:0;padding:0">
+      <sc-for list="{{ list }}" as="e" hint-placeholder-count="8">
+        <li style="border-top:1px solid #E9E9E9"><a href="#" style="min-height:68px;padding:10px 0;box-sizing:border-box;display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;align-items:center;text-decoration:none;color:#111111">
+          <img src="{{ e.img }}" alt="" loading="lazy" style="width:52px;height:52px;border-radius:8px;object-fit:cover;background:#E9E9E9;display:block">
+          <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;font-weight:600">{{ e.name }}</span><span style="font-size:13px;font-weight:500;color:#646464">{{ e.meta }}</span></span>
+          <i class="ph-bold ph-caret-right" style="font-size:16px;color:#8D8D8D"></i>
+        </a></li>
+      </sc-for>
+    </ul>
+  </main>
+  <dc-import name="TabBar" active="treinos" hint-size="100%,89px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+class Component extends DCLogic {
+  state = { f: 'Todos' };
+  renderVals() {
+    const all = [
+      ['Agachamento livre','quads,glutes','Quadríceps, glúteos · barra','Pernas'],
+      ['Cadeira extensora','quads','Quadríceps · máquina','Pernas'],
+      ['Crucifixo com halteres','chest','Peitoral · halteres, banco','Peito'],
+      ['Desenvolvimento com halteres','shoulders,triceps','Ombros, tríceps · halteres','Ombros'],
+      ['Elevação lateral','shoulders','Ombros · halteres','Ombros'],
+      ['Leg press 45°','quads,glutes','Quadríceps, glúteos · máquina','Pernas'],
+      ['Mesa flexora','hams','Posteriores · máquina','Pernas'],
+      ['Puxada frontal','back,biceps','Costas, bíceps · polia','Costas'],
+      ['Remada curvada','back,biceps','Costas · barra','Costas'],
+      ['Rosca direta','biceps','Bíceps · barra','Braços'],
+      ['Supino reto com barra','chest,triceps,shoulders','Peitoral, tríceps · barra, banco','Peito'],
+      ['Tríceps na polia','triceps','Tríceps · polia','Braços']
+    ];
+    const f = this.state.f;
+    const list = all.filter(x => f === 'Todos' || x[3] === f).map(([name, m, meta]) => ({ name, m, meta, img: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/' + ({ 'Agachamento livre':'Barbell_Full_Squat','Cadeira extensora':'Leg_Extensions','Crucifixo com halteres':'Dumbbell_Flyes','Desenvolvimento com halteres':'Dumbbell_Shoulder_Press','Elevação lateral':'Side_Lateral_Raise','Leg press 45°':'Leg_Press','Mesa flexora':'Lying_Leg_Curls','Puxada frontal':'Wide-Grip_Lat_Pulldown','Remada curvada':'Bent_Over_Barbell_Row','Rosca direta':'Barbell_Curl','Supino reto com barra':'Barbell_Bench_Press_-_Medium_Grip','Tríceps na polia':'Triceps_Pushdown' }[name]) + '/0.jpg' }));
+    const chips = ['Todos','Peito','Costas','Pernas','Ombros','Braços','Só o que tenho'].map(l => { const on = l === f; return { l, p: on ? 'true' : 'false', bg: on ? '#111111' : 'transparent', c: on ? '#FFFFFF' : '#111111', b: on ? '1px solid #111111' : '1px solid #CECECE', pick: () => this.setState({ f: l }) }; });
+    return { list, chips, count: f === 'Todos' ? '229 exercícios · ordem alfabética' : `${list.length} exercícios em ${f.toLowerCase()}` };
+  }
+}
+</script>
+</body>
+</html>

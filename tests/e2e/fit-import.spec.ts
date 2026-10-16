@@ -25,7 +25,7 @@ test('a lifter can import multiple FIT activities at once', async ({ page }) => 
   });
   expect(registerRes.ok()).toBeTruthy();
 
-  await page.goto('/settings');
+  await page.goto('/settings/import');
   await expect(page.getByText('Import from Strong')).toBeVisible();
 
   // Switch the source to FIT: the copy flips to the cardio activity import.
@@ -59,6 +59,9 @@ test('a lifter can import multiple FIT activities at once', async ({ page }) => 
 
   // The records run (April 10) shows a heart-rate-over-time chart (#254).
   await page.goto('/history?month=2026-04&day=2026-04-10');
+  // The calendar first rewrites the URL with the browser time zone; a click
+  // before that lands would be cancelled by the rewrite.
+  await expect(page).toHaveURL(/[?&]tz=/);
   await page.getByRole('link', { name: /Running/ }).click();
   await expect(page.getByRole('heading', { name: 'Running' })).toBeVisible();
   await expect(page.getByTestId('activity-track-chart')).toBeVisible();

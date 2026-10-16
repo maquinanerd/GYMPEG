@@ -88,8 +88,14 @@ export const common = {
       '{count, plural, one {# alteração aguardando envio} other {# alterações aguardando envio}}',
     syncing: 'Sincronizando {count}...',
     pending: 'Offline · {count, plural, one {# pendente} other {# pendentes}}',
+    savedShort: 'Salvo',
+    toSendShort: '{count} a enviar',
+    offlineShort: 'Sem conexão',
+    trainAnyway: 'Você pode treinar normalmente. Tudo fica salvo neste aparelho.',
   },
   errors: {
     generic: 'Algo deu errado. Tente novamente.',
+    loadFailed: 'Não foi possível carregar esta tela.',
+    tryAgain: 'Tentar de novo',
   },
 } satisfies MessageShape<typeof english>;

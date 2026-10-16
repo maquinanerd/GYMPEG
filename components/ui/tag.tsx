@@ -1,59 +1,60 @@
 import { cn } from '@/lib/utils';
 import type { AppIcon } from '@/components/ui/icon';
 
-// Tag: a 28px pill. Two looks:
-// - neutral (bg-pill) with a colored dot that carries the meaning (cycle week,
-//   deload, readiness);
-// - filled with an accent (PR yellow, deload lavender…), always with #111 text
-//   on top, for the few states that must stand out.
+// Tag: a 24px label at radius 4, 12/600. A state in words, never an icon in a
+// colored circle. Accents are always the fill with #111 on top.
 
-export type TagTone = 'brand' | 'pr' | 'info' | 'warmup' | 'deload' | 'warning' | 'destructive';
+export type TagVariant =
+  | 'primary'
+  | 'pr'
+  | 'warmup'
+  | 'deload'
+  | 'warning'
+  | 'info'
+  | 'destructive'
+  | 'muted';
 
-const DOT: Record<TagTone, string> = {
-  brand: 'bg-brand',
-  pr: 'bg-pr',
-  info: 'bg-info',
-  warmup: 'bg-warmup',
-  deload: 'bg-deload',
-  warning: 'bg-warning',
-  destructive: 'bg-destructive',
-};
+/** @deprecated v1 name; use TagVariant. */
+export type TagTone = Exclude<TagVariant, 'muted'> | 'brand';
 
-const FILL: Record<TagTone, string> = {
-  brand: 'bg-primary text-primary-foreground',
+const FILL: Record<TagVariant, string> = {
+  primary: 'bg-primary text-primary-foreground',
   pr: 'bg-pr text-pr-foreground',
-  info: 'bg-info text-info-foreground',
   warmup: 'bg-warmup text-warmup-foreground',
   deload: 'bg-deload text-deload-foreground',
   warning: 'bg-warning text-warning-foreground',
+  info: 'bg-info text-info-foreground',
   destructive: 'bg-destructive text-destructive-foreground',
+  muted: 'bg-muted text-foreground',
 };
 
 export function Tag({
   children,
-  dot,
+  variant,
   fill,
+  dot: _dot,
   icon: Glyph,
   className,
   ...props
 }: React.HTMLAttributes<HTMLSpanElement> & {
-  // Neutral pill with a dot of this tone.
-  dot?: TagTone;
-  // Filled pill in this tone (wins over `dot`).
+  variant?: TagVariant;
+  /** @deprecated v1 prop; use `variant`. */
   fill?: TagTone;
+  /** @deprecated v1 prop: dots are gone, the tag reads muted. */
+  dot?: TagTone;
   icon?: AppIcon;
 }) {
+  const resolved: TagVariant = variant ?? (fill === 'brand' ? 'primary' : (fill ?? 'muted'));
   return (
     <span
       className={cn(
-        'inline-flex h-7 shrink-0 items-center gap-1.5 self-start whitespace-nowrap rounded-pill px-3 text-small',
-        fill ? cn(FILL[fill], 'font-semibold') : 'bg-pill text-foreground',
+        'inline-flex h-6 shrink-0 items-center gap-1 self-start whitespace-nowrap rounded-xs px-2 text-small font-semibold',
+        FILL[resolved],
         className,
       )}
       {...props}
     >
-      {!fill && dot && <span aria-hidden className={cn('size-1.5 rounded-full', DOT[dot])} />}
-      {Glyph && <Glyph className="size-3.5" />}
+      {Glyph && <Glyph weight="bold" className="size-3.5" />}
       {children}
     </span>
   );

@@ -150,8 +150,12 @@ test('a superset gives a short rest between members and a full rest after the gr
   await page.goto(`/session/${session.id}`);
   await expect(page.getByText('Superset A1')).toBeVisible();
 
-  // Reads the big countdown number on the rest timer.
+  // Reads the big countdown on the rest timer, shown as mm:ss, in seconds.
   const restValue = page.getByTestId('rest-remaining');
+  const restSeconds = async () => {
+    const [minutes, seconds] = ((await restValue.textContent()) ?? '').trim().split(':');
+    return Number(minutes) * 60 + Number(seconds);
+  };
 
   // Each member targets 2 sets. While ANY member of the group still owes a set,
   // logging a member starts a SHORT transition rest (<= 20s) and alternates
@@ -161,38 +165,38 @@ test('a superset gives a short rest between members and a full rest after the gr
   // A1 set 1 -> transition (A2 still owes sets).
   await page.getByRole('button', { name: /^confirm set \d+$/i }).click();
   await expect(restValue).toBeVisible();
-  expect(Number(await restValue.textContent())).toBeLessThanOrEqual(20);
+  expect(await restSeconds()).toBeLessThanOrEqual(20);
   await page.getByRole('button', { name: /skip/i }).click();
   await expect(page.getByText('Superset A2')).toBeVisible();
 
   // A2 set 1 -> transition (A1 still owes its 2nd set).
   await page.getByRole('button', { name: /^confirm set \d+$/i }).click();
   await expect(restValue).toBeVisible();
-  expect(Number(await restValue.textContent())).toBeLessThanOrEqual(20);
+  expect(await restSeconds()).toBeLessThanOrEqual(20);
   await page.getByRole('button', { name: /skip/i }).click();
   await expect(page.getByText('Superset A1')).toBeVisible();
 
   // A1 set 2 -> transition (A2 still owes its 2nd set).
   await page.getByRole('button', { name: /^confirm set \d+$/i }).click();
   await expect(restValue).toBeVisible();
-  expect(Number(await restValue.textContent())).toBeLessThanOrEqual(20);
+  expect(await restSeconds()).toBeLessThanOrEqual(20);
   await page.getByRole('button', { name: /skip/i }).click();
   await expect(page.getByText('Superset A2')).toBeVisible();
 
   // A2 set 2 -> group complete: the FULL rest runs (> 20s) before the repeat.
   await page.getByRole('button', { name: /^confirm set \d+$/i }).click();
   await expect(restValue).toBeVisible();
-  expect(Number(await restValue.textContent())).toBeGreaterThan(20);
+  expect(await restSeconds()).toBeGreaterThan(20);
 
   // Rest controls (issue #393): a paused rest holds its time, +15 s adds to
   // it while paused, and resuming brings the countdown back.
   await page.getByRole('button', { name: 'Pause' }).click();
   await expect(page.getByText('Rest paused')).toBeVisible();
-  const pausedAt = Number(await restValue.textContent());
+  const pausedAt = await restSeconds();
   // A still-running countdown would have moved on by the time +15 s lands,
   // so the exact sum proves the paused rest held its time.
   await page.getByRole('button', { name: 'Add 15 seconds' }).click();
-  await expect(restValue).toHaveText(String(pausedAt + 15));
+  await expect.poll(restSeconds).toBe(pausedAt + 15);
   await page.getByRole('button', { name: 'Resume' }).click();
   await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
 });

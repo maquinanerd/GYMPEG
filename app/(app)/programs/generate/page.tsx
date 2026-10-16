@@ -1,9 +1,9 @@
-import { MagicWandIcon } from '@/components/ui/icon';
 import { getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
 import { AI_CONSENT_VERSION, hasAiConsent, isAiFeatureEnabled } from '@/lib/ai/features';
 import { WorkoutPlanner } from '@/components/ai/workout-planner';
+import { SubpageHeader } from '@/components/programs/subpage-header';
 import { getRuntimeEnv } from '@/lib/runtime-env';
 
 export default async function GenerateProgramPage() {
@@ -15,12 +15,9 @@ export default async function GenerateProgramPage() {
   });
 
   return (
-    <main className="flex-1 px-4 py-6">
-      <div className="mx-auto flex max-w-3xl flex-col gap-6">
-        <div className="flex items-center gap-3">
-          <MagicWandIcon className="size-6" />
-          <h1 className="text-2xl font-bold tracking-tight">{t('aiProgram')}</h1>
-        </div>
+    <main className="mx-auto w-full max-w-2xl flex-1">
+      <SubpageHeader backHref="/programs" backLabel={t('detail.back')} title={t('aiProgram')} />
+      <div className="px-5 pb-8 pt-4">
         <WorkoutPlanner
           initialConsent={hasAiConsent(user)}
           consentVersion={AI_CONSENT_VERSION}

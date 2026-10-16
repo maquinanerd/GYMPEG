@@ -8,6 +8,8 @@ export const history = {
   emptyDescription:
     'Conclua seu primeiro treino e ele aparecerá aqui com volume, séries e duração.',
   firstSession: 'Registrar seu primeiro treino',
+  startWorkout: 'Iniciar treino',
+  loading: 'Carregando o histórico',
   freeSession: 'Treino livre',
   cardio: 'Cardio',
   volumeShort: '{weight} vol.',
@@ -24,6 +26,7 @@ export const history = {
     allMuscles: 'Todos os músculos',
     clear: 'Limpar',
     csvTitle: 'Baixar o CSV das séries com os filtros ativos',
+    toggle: 'Filtros',
   },
   calendar: {
     previousMonth: 'Mês anterior',
@@ -31,6 +34,15 @@ export const history = {
     today: 'Hoje',
     workoutCount: '{count, plural, one {# treino} other {# treinos}}',
     noSessions: 'Nenhum treino concluído nesta data.',
+    noSessionsMonth: 'Nenhum treino concluído neste mês.',
+    monthSessions: 'Treinos de {month}',
+    wholeMonth: 'Ver o mês inteiro',
+    missed: 'planejado e não feito',
+    legend: {
+      done: 'treinou',
+      missed: 'planejado, não feito',
+      today: 'hoje',
+    },
   },
   detail: {
     downloadTcx: 'Baixar .tcx',
@@ -59,6 +71,13 @@ export const history = {
     heartRateChart: 'Frequência cardíaca ao longo do tempo',
     heartRate: 'FC',
     chartMinutes: '{value} min',
+    back: 'Voltar ao histórico',
+    record: 'Recorde pessoal',
+    decouplingTitle: 'Desacoplamento aeróbico',
+    decouplingHeld:
+      'Quanto menor, melhor - seu ritmo por batimento se manteve estável na segunda metade desta atividade.',
+    decouplingFaded:
+      'Quanto menor, melhor - seu ritmo por batimento caiu na segunda metade desta atividade.',
   },
   copy: {
     button: 'Copiar como texto',

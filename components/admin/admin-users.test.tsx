@@ -78,12 +78,25 @@ async function pick(user: ReturnType<typeof userEvent.setup>, email: string, act
 describe('AdminUsers', () => {
   it('lists every account, marks blocked ones and offers no actions on the admin’s own row', () => {
     renderList();
-    expect(screen.getByText('3 accounts')).toBeInTheDocument();
-    expect(screen.getByText('You')).toBeInTheDocument();
-    expect(screen.getByText('Blocked')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: '3 accounts' })).toBeInTheDocument();
+    // One row per account, as a real list.
+    const rows = within(screen.getByRole('list')).getAllByRole('listitem');
+    expect(rows).toHaveLength(3);
+
+    // Role and block state are tags in words on the row they belong to.
+    expect(within(rows[0]!).getByText('Admin')).toBeInTheDocument();
+    expect(within(rows[0]!).getByText('You')).toBeInTheDocument();
+    expect(within(rows[0]!).getByText('Pablo · Last active Oct 14, 2026')).toBeInTheDocument();
+    expect(within(rows[1]!).queryByText('Blocked')).not.toBeInTheDocument();
+    expect(within(rows[1]!).getByText('Never signed in')).toBeInTheDocument();
+    expect(within(rows[2]!).getByText('Blocked')).toBeInTheDocument();
+
     expect(
       screen.queryByRole('button', { name: 'Actions for admin@test.dev' }),
     ).not.toBeInTheDocument();
+    expect(
+      within(rows[1]!).getByRole('button', { name: 'Actions for ana@test.dev' }),
+    ).toBeInTheDocument();
   });
 
   it('checks the password length before calling the API', async () => {

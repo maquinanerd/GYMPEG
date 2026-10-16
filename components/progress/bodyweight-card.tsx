@@ -1,24 +1,22 @@
 'use client';
 
-import { useCallback, useId, useMemo, useState } from 'react';
+import { useCallback, useId, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { ScalesIcon, TrashIcon } from '@/components/ui/icon';
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { TrashIcon } from '@/components/ui/icon';
 import type { WeightUnit } from '@/lib/prisma-client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button, IconButton } from '@/components/ui/button';
+import {
+  BottomSheet,
+  BottomSheetContent,
+  BottomSheetDescription,
+  BottomSheetTitle,
+} from '@/components/ui/bottom-sheet';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Num } from '@/components/ui/num';
+import { LineChart } from '@/components/progress/line-chart';
 import {
   formatWeight,
   fromDisplayWeight,
@@ -48,17 +46,18 @@ interface Props {
   entries: BodyweightEntryView[];
   trend?: BodyweightTrendView;
   unit: WeightUnit;
-  // How many recent entries get a row in the list below the chart.
+  // How many recent entries get a row in the log sheet.
   listLimit?: number;
 }
 
 const PERIODS = ['d7', 'd30', 'd90'] as const;
 
-// Bodyweight trend card (issue #99, epic 2.4): quick-add a measurement in the
-// display unit, the 7-day average and its change over 7/30/90 days, a chart of
-// the daily weigh-ins with the average, and deletable recent entries. The
-// profile field in settings keeps working separately (corrections, not
-// measurements).
+// Bodyweight (issue #99, epic 2.4, Corpo tab): the latest weigh-in as the big
+// number with the 7-day average, its change over 7/30/90 days and the weekly
+// pace, then a chart of each weigh-in (thin grey) under the 7-day average
+// (ink). "Registrar" opens a sheet to log a weigh-in in the display unit and
+// delete recent ones. The profile field in settings keeps working separately
+// (corrections, not measurements).
 export function BodyweightCard({ entries, trend, unit, listLimit = 5 }: Props) {
   const t = useTranslations('progress.bodyweight');
   const headingId = useId();
@@ -66,6 +65,7 @@ export function BodyweightCard({ entries, trend, unit, listLimit = 5 }: Props) {
   const locale = useLocale();
   const format = useFormatter();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const [weightField, setWeightField] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -83,28 +83,31 @@ export function BodyweightCard({ entries, trend, unit, listLimit = 5 }: Props) {
       }),
     [format],
   );
+  const display = (kg: number) => roundWeight(toDisplayWeight(kg, unit), 1);
 
-  // Chart data, oldest to newest, in the display unit: the daily values with
-  // their 7-day average when the trend is known, else the raw entries.
-  const chartData = useMemo(
-    (): { label: string; weight: number; average?: number }[] =>
-      trend
-        ? trend.series.map((point) => ({
-            label: shortDay(point.day),
-            weight: roundWeight(toDisplayWeight(point.weightKg, unit), 1),
-            average: roundWeight(toDisplayWeight(point.averageKg, unit), 1),
-          }))
-        : [...entries].reverse().map((e) => ({
-            label: shortDate(e.measuredAt),
-            weight: roundWeight(toDisplayWeight(e.weightKg, unit), 1),
-            average: undefined,
-          })),
-    [entries, trend, unit, shortDate, shortDay],
-  );
+  // Chart, oldest to newest, in the display unit: each day's weigh-in with
+  // its 7-day average when the trend is known, else the raw entries alone.
+  const chart = trend
+    ? {
+        raw: trend.series.map((p) => display(p.weightKg)),
+        average: trend.series.map((p) => display(p.averageKg)),
+        start: trend.series[0] ? shortDay(trend.series[0].day) : '',
+        end: trend.series.at(-1) ? shortDay(trend.series.at(-1)!.day) : '',
+      }
+    : {
+        raw: [...entries].reverse().map((e) => display(e.weightKg)),
+        average: null,
+        start: entries.at(-1) ? shortDate(entries.at(-1)!.measuredAt) : '',
+        end: entries[0] ? shortDate(entries[0].measuredAt) : '',
+      };
+  const points = chart.raw.length;
 
   const latest = entries[0];
-  const signed = (kg: number) =>
-    `${kg > 0 ? '+' : kg < 0 ? '−' : ''}${formatWeight(Math.abs(kg), unit, { locale })}`;
+  // Signed change without the unit (the big number carries it): "−0.4".
+  const signed = (kg: number) => {
+    const value = formatWeight(Math.abs(kg), unit, { locale, withUnit: false });
+    return `${kg > 0 ? '+' : kg < 0 ? '−' : ''}${value}`;
+  };
 
   async function addEntry() {
     const weight = parseFloat(weightField);
@@ -125,6 +128,7 @@ export function BodyweightCard({ entries, trend, unit, listLimit = 5 }: Props) {
       }
       toast.success(t('logged'));
       setWeightField('');
+      setOpen(false);
       router.refresh();
     } finally {
       setBusy(false);
@@ -147,149 +151,178 @@ export function BodyweightCard({ entries, trend, unit, listLimit = 5 }: Props) {
   }
 
   return (
-    <Card role="region" aria-labelledby={headingId}>
-      <CardHeader className="pb-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 id={headingId} className="flex items-center gap-2 text-base font-semibold">
-            <ScalesIcon className="size-4" />
-            {t('title')}
-          </h2>
-          {latest && (
-            <span className="text-sm text-muted-foreground">
-              {t('current', { weight: formatWeight(latest.weightKg, unit, { locale }) })}
+    <section aria-labelledby={headingId} className="flex flex-col gap-3">
+      <h2 id={headingId} className="sr-only">
+        {t('title')}
+      </h2>
+      {latest ? (
+        <div className="flex items-end justify-between gap-3">
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <span className="text-[0.8125rem] font-medium text-muted-foreground">
+              {trend?.averageKg != null
+                ? t('headline', {
+                    average: formatWeight(trend.averageKg, unit, { locale, withUnit: false }),
+                  })
+                : t('headlineNoAverage')}
             </span>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        {/* Quick add, in the display unit */}
-        <form
-          className="flex items-end gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            void addEntry();
-          }}
-        >
-          <div className="flex-1 space-y-1">
-            <Label htmlFor="bodyweight-input">{t('label', { unit: unitSuffix })}</Label>
-            <Input
-              id="bodyweight-input"
-              type="number"
-              inputMode="decimal"
-              step="0.1"
-              min="0"
-              placeholder={
-                latest ? String(roundWeight(toDisplayWeight(latest.weightKg, unit), 1)) : undefined
-              }
-              value={weightField}
-              onChange={(e) => setWeightField(e.target.value)}
-            />
+            <Num className="text-[2.25rem] leading-none" data-testid="bodyweight-current">
+              {formatWeight(latest.weightKg, unit, { locale })}
+            </Num>
           </div>
-          <Button type="submit" disabled={busy}>
-            {busy ? common('actions.saving') : t('log')}
+          <Button variant="ink" size="sm" onClick={() => setOpen(true)}>
+            {t('log')}
           </Button>
-        </form>
-
-        {/* 7-day average and its change */}
-        {trend?.averageKg != null && (
-          <div data-testid="bodyweight-trend" className="flex flex-col gap-1 text-sm">
-            <p className="font-medium">
-              {t('average', { weight: formatWeight(trend.averageKg, unit, { locale }) })}
-            </p>
-            <p className="flex flex-wrap gap-x-3 gap-y-1 text-muted-foreground">
-              {PERIODS.map((period) => {
-                const change = trend.changeKg[period];
-                return (
-                  <span key={period}>
-                    {t('change', {
-                      period: t(`periods.${period}`),
-                      change: change == null ? t('noChange') : signed(change),
-                    })}
-                  </span>
-                );
-              })}
-            </p>
-            {trend.ratePerWeekKg != null && (
-              <p className="text-muted-foreground">
-                {t('rate', { rate: signed(trend.ratePerWeekKg) })}
-              </p>
-            )}
+        </div>
+      ) : (
+        <div className="flex flex-col items-start gap-3 py-2">
+          <div className="flex flex-col gap-1">
+            <p className="text-subtitle">{t('empty')}</p>
+            <p className="text-caption text-muted-foreground">{t('emptyHint')}</p>
           </div>
-        )}
+          <Button variant="ink" size="sm" onClick={() => setOpen(true)}>
+            {t('logWeight')}
+          </Button>
+        </div>
+      )}
 
-        {/* Trend over the window */}
-        {chartData.length < 2 ? (
-          <p className="text-sm text-muted-foreground">
-            {chartData.length === 0 ? t('empty') : t('second')}
-          </p>
+      {/* Change of the 7-day average and the weekly pace */}
+      {trend?.averageKg != null && (
+        <dl data-testid="bodyweight-trend" className="grid grid-cols-4 gap-2">
+          {PERIODS.map((period) => {
+            const change = trend.changeKg[period];
+            return (
+              <div key={period}>
+                <dt className="text-small text-muted-foreground">{t(`periods.${period}`)}</dt>
+                <dd className="mt-0.5">
+                  <ChangeValue value={change == null ? null : signed(change)} unit={unitSuffix} />
+                </dd>
+              </div>
+            );
+          })}
+          <div>
+            <dt className="text-small text-muted-foreground">{t('rate')}</dt>
+            <dd className="mt-0.5">
+              <ChangeValue
+                value={
+                  trend.ratePerWeekKg == null
+                    ? null
+                    : t('perWeek', { rate: signed(trend.ratePerWeekKg) })
+                }
+              />
+            </dd>
+          </div>
+        </dl>
+      )}
+
+      {/* Trend over the window */}
+      {latest &&
+        (points < 2 ? (
+          <p className="text-caption text-muted-foreground">{t('second')}</p>
         ) : (
-          <div className="h-48 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 5, right: 10, bottom: 0, left: -10 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="label" tick={{ fontSize: 11 }} />
-                <YAxis
-                  tick={{ fontSize: 11 }}
-                  domain={['auto', 'auto']}
-                  tickFormatter={(v: number) => String(v)}
-                />
-                <Tooltip
-                  contentStyle={{
-                    background: 'hsl(var(--popover))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: 6,
-                    fontSize: 12,
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="weight"
-                  name={t('chartWeight', { unit: unitSuffix })}
-                  stroke="hsl(var(--muted-foreground))"
-                  strokeWidth={1}
-                  dot={{ r: 2 }}
-                />
-                {trend && (
-                  <Line
-                    type="monotone"
-                    dataKey="average"
-                    name={t('chartAverage', { unit: unitSuffix })}
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                )}
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        )}
+          <LineChart
+            height={120}
+            series={[
+              { values: chart.raw, tone: 'raw' },
+              ...(chart.average ? [{ values: chart.average, tone: 'ink' as const }] : []),
+            ]}
+            label={t('chartAria', {
+              first: `${format.number(chart.raw[0]!)} ${unitSuffix}`,
+              firstDate: chart.start,
+              last: `${format.number(chart.raw[points - 1]!)} ${unitSuffix}`,
+              lastDate: chart.end,
+            })}
+            startLabel={chart.start}
+            endLabel={chart.end}
+            formatTick={(v) => format.number(v)}
+          />
+        ))}
 
-        {/* Recent entries, deletable */}
-        {entries.length > 0 && (
-          <ul className="flex flex-col gap-1">
-            {entries.slice(0, listLimit).map((e) => (
-              <li key={e.id} className="flex items-center justify-between gap-3 text-sm">
-                <span>
-                  <span className="font-medium">{formatWeight(e.weightKg, unit, { locale })}</span>{' '}
-                  <span className="text-muted-foreground">
-                    {t('onDate', { date: shortDate(e.measuredAt) })}
-                  </span>
-                </span>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  aria-label={t('deleteAria', { date: shortDate(e.measuredAt) })}
-                  onClick={() => void deleteEntry(e.id)}
-                  disabled={busy}
-                >
-                  <TrashIcon className="size-4" />
-                </Button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </CardContent>
-    </Card>
+      <BottomSheet open={open} onOpenChange={setOpen}>
+        <BottomSheetContent>
+          <BottomSheetTitle>{t('sheetTitle')}</BottomSheetTitle>
+          <BottomSheetDescription className="sr-only">
+            {t('label', { unit: unitSuffix })}
+          </BottomSheetDescription>
+          <form
+            className="flex flex-col gap-3"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void addEntry();
+            }}
+          >
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="bodyweight-input">{t('label', { unit: unitSuffix })}</Label>
+              <Input
+                id="bodyweight-input"
+                type="number"
+                inputMode="decimal"
+                step="0.1"
+                min="0"
+                placeholder={latest ? String(display(latest.weightKg)) : undefined}
+                value={weightField}
+                onChange={(e) => setWeightField(e.target.value)}
+              />
+            </div>
+            <Button type="submit" variant="ink" loading={busy}>
+              {common('actions.save')}
+            </Button>
+          </form>
+
+          {/* Recent weigh-ins, deletable */}
+          {entries.length > 0 && (
+            <div className="flex flex-col gap-1">
+              <h3 className="text-caption font-semibold">{t('recent')}</h3>
+              <ul>
+                {entries.slice(0, listLimit).map((e) => (
+                  <li
+                    key={e.id}
+                    className="flex items-center justify-between gap-3 border-t border-border"
+                  >
+                    <span className="text-[0.8125rem] font-medium text-muted-foreground">
+                      {shortDate(e.measuredAt)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Num stretch={112} className="text-[0.9375rem]">
+                        {formatWeight(e.weightKg, unit, { locale })}
+                      </Num>
+                      <IconButton
+                        type="button"
+                        size="sm"
+                        aria-label={t('deleteAria', { date: shortDate(e.measuredAt) })}
+                        onClick={() => void deleteEntry(e.id)}
+                        disabled={busy}
+                      >
+                        <TrashIcon />
+                      </IconButton>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </BottomSheetContent>
+      </BottomSheet>
+    </section>
+  );
+}
+
+// A change in the trend row: the signed number without its unit (the big
+// number above carries it), the unit kept for screen readers; a dash when
+// there is not enough data yet.
+function ChangeValue({ value, unit }: { value: string | null; unit?: string }) {
+  const t = useTranslations('progress.bodyweight');
+  if (value == null) {
+    return (
+      <span className="text-[0.9375rem] font-semibold text-muted-foreground">
+        <span aria-hidden>–</span>
+        <span className="sr-only">{t('noChange')}</span>
+      </span>
+    );
+  }
+  return (
+    <Num stretch={112} className="text-[0.9375rem]">
+      {value}
+      {unit && <span className="sr-only"> {unit}</span>}
+    </Num>
   );
 }

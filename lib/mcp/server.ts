@@ -44,9 +44,9 @@ import { Prisma } from '@/prisma/generated/client';
 import { pickableExerciseWhere } from '@/lib/catalog/access';
 import { ensureUsableExercise } from '@/lib/catalog/resolve';
 
-export const GYMCOACH_MCP_INSTRUCTIONS = `GymCoach stores the trainee's profile, gyms, equipment, programs, workout history, sets, RIR, goals and recovery signals.
+export const GYMCOACH_MCP_INSTRUCTIONS = `GYM Peg stores the trainee's profile, gyms, equipment, programs, workout history, sets, RIR, goals and recovery signals.
 
-Use read tools before making recommendations. Ground every recommendation in returned GymCoach data and never invent completed sets, available equipment, records or injuries. Respect the active gym's equipment constraints. Use the trainee's language.
+Use read tools before making recommendations. Ground every recommendation in returned GYM Peg data and never invent completed sets, available equipment, records or injuries. Respect the active gym's equipment constraints. Use the trainee's language.
 
 For MCP tool discovery, inspect the complete tool list once before guessing names. Do not repeatedly probe synonyms or issue many filtered discovery requests. If the client cannot expose the complete tool list, call get_mcp_capability_index once and use the exact tool names it returns. If a capability is still missing after that, report it as missing instead of continuing trial-and-error.
 
@@ -157,7 +157,7 @@ const MCP_CAPABILITY_INDEX = {
 export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): McpServer {
   const server = new McpServer(
     {
-      name: 'GymCoach',
+      name: 'GYM Peg',
       version: '1.0.0',
       websiteUrl: baseUrl,
     },
@@ -168,7 +168,7 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
     'gymcoach-agent-instructions',
     'gymcoach://instructions/agent',
     {
-      title: 'GymCoach agent instructions',
+      title: 'GYM Peg agent instructions',
       description: 'Rules for safely analysing and editing the trainee training data.',
       mimeType: 'text/plain',
     },
@@ -186,8 +186,8 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
   server.registerPrompt(
     'build-training-program',
     {
-      title: 'Build a GymCoach training program',
-      description: 'Analyse the trainee context and prepare a structured program for GymCoach.',
+      title: 'Build a GYM Peg training program',
+      description: 'Analyse the trainee context and prepare a structured program for GYM Peg.',
       argsSchema: { goal: z.string().trim().min(5).max(2000) },
     },
     async ({ goal }) => ({
@@ -206,9 +206,9 @@ export function createGymCoachMcpServer({ principal, baseUrl }: ServerOptions): 
   server.registerTool(
     'get_mcp_capability_index',
     {
-      title: 'Get GymCoach MCP capability index',
+      title: 'Get GYM Peg MCP capability index',
       description:
-        'Returns a compact task-oriented index of exact GymCoach MCP tool names. Use this once when the client cannot expose a complete tools/list; do not repeatedly guess tool names or probe synonyms.',
+        'Returns a compact task-oriented index of exact GYM Peg MCP tool names. Use this once when the client cannot expose a complete tools/list; do not repeatedly guess tool names or probe synonyms.',
       annotations: { readOnlyHint: true, openWorldHint: false, idempotentHint: true },
     },
     async () =>

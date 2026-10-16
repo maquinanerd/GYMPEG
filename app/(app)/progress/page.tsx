@@ -1,11 +1,12 @@
-import Link from 'next/link';
-import { TrendUpIcon } from '@/components/ui/icon';
-import { safeTimeZone } from '@/lib/timezone';
+import { localDayKey, safeTimeZone } from '@/lib/timezone';
 import { getTranslations } from 'next-intl/server';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
 import { EmptyState } from '@/components/ui/empty-state';
+import { ScreenHeader } from '@/components/nav/screen-header';
 import { muscleGroupMessageKeys } from '@/i18n/enum-keys';
+import type { MuscleGroup } from '@/lib/prisma-client';
+import { loadWeeklyReport } from '@/lib/weekly-report';
 import {
   applyBodyweight,
   best1RM,
@@ -33,28 +34,40 @@ import {
 } from '@/lib/deload';
 import { exerciseRecords } from '@/lib/records';
 import { ProgressDashboard } from '@/components/progress/progress-dashboard';
-import { ConsistencyCard } from '@/components/progress/consistency-card';
 import { DeloadBanner } from '@/components/progress/deload-banner';
 import { BodyweightCard } from '@/components/progress/bodyweight-card';
 import { MeasurementsCard } from '@/components/progress/measurements-card';
 import { PhotosCard } from '@/components/progress/photos-card';
-import { ConditioningCard } from '@/components/progress/conditioning-card';
 import { RecordsCard } from '@/components/progress/records-card';
+import { WeekPanel } from '@/components/progress/week-panel';
+import { ProgressTabs } from '@/components/progress/progress-tabs';
+import { parseProgressTab } from '@/components/progress/progress-tab-keys';
 import { usableExerciseWhere } from '@/lib/catalog/access';
 
 interface SearchParams {
   exerciseId?: string;
+  tab?: string;
 }
 
 const RECENT_WEEKS = 12;
 // Enough history for the 90-day bodyweight change.
 const WEIGHT_TREND_LOOKBACK_DAYS = 100;
+const DAY_MS = 86_400_000;
 
+// Evolução: four tabs over the same server-loaded data. Semana (the last 7
+// days, sets per muscle, week map, week report, recent weeks), Treino (one
+// exercise's 1RM, goal, stalls, deload, 12-week recap), Corpo (bodyweight,
+// measurements, photos) and Recordes. Every number comes from lib/.
 export default async function ProgressPage(props: { searchParams: Promise<SearchParams> }) {
   const t = await getTranslations('progress');
   const exerciseT = await getTranslations('exercises');
   const searchParams = await props.searchParams;
   const auth = await requireSession();
+  const initialTab = parseProgressTab(searchParams.tab);
+  const muscleGroupLabel = (group: string) => {
+    const key = muscleGroupMessageKeys[group as MuscleGroup];
+    return key ? exerciseT(`muscleGroups.${key}`) : group;
+  };
 
   // Lower bound: 12 weeks before today (Monday 00:00).
   const since = new Date();
@@ -111,14 +124,15 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
   );
   const usesBodyweightById = new Map(exercisesWithSets.map((e) => [e.id, e.usesBodyweight]));
 
-  // Finished sessions over the window, for the consistency card.
+  // Finished sessions over the window, for the consistency strip and the
+  // last-7-days summary (count and time spent).
   const finishedSessions = await db.session.findMany({
     where: {
       userId: auth.userId,
       finishedAt: { not: null },
       startedAt: { gte: since },
     },
-    select: { startedAt: true },
+    select: { startedAt: true, finishedAt: true },
   });
   const consistency = trainingConsistency(
     finishedSessions.map((s) => s.startedAt),
@@ -516,129 +530,185 @@ export default async function ProgressPage(props: { searchParams: Promise<Search
   const deloadActive = isDeloadActive(user?.deloadUntil ?? null, new Date());
   const deloadUntilIso = deloadActive ? user!.deloadUntil!.toISOString() : null;
 
-  return (
-    <main className="flex-1 px-4 py-6">
-      <div className="mx-auto flex max-w-3xl flex-col gap-6">
-        <div className="flex flex-wrap items-center gap-3">
-          <TrendUpIcon className="size-6" />
-          <h1 className="text-2xl font-bold tracking-tight">{t('title')}</h1>
-          <Link
-            href="/progress/report"
-            className="ml-auto text-sm font-medium text-brand underline-offset-4 hover:underline"
-          >
-            {t('report.link')}
-          </Link>
-        </div>
+  // Last 7 days (Semana header): finished workouts, time spent in them and
+  // working strength sets, over a rolling 7-day window.
+  const now = new Date();
+  const weekCutoff = now.getTime() - 7 * DAY_MS;
+  const lastWeekSessions = finishedSessions.filter((s) => s.startedAt.getTime() >= weekCutoff);
+  const weekSummary = {
+    startIso: new Date(now.getTime() - 6 * DAY_MS).toISOString(),
+    endIso: now.toISOString(),
+    workouts: lastWeekSessions.length,
+    minutes: Math.round(
+      lastWeekSessions.reduce(
+        (sum, s) => sum + Math.max(0, (s.finishedAt?.getTime() ?? 0) - s.startedAt.getTime()),
+        0,
+      ) / 60_000,
+    ),
+    sets: weeklySetsRaw.filter(
+      (s) =>
+        s.session.startedAt.getTime() >= weekCutoff &&
+        s.durationSec == null &&
+        s.exercise.category !== 'CARDIO',
+    ).length,
+  };
 
-        <BodyweightCard
-          entries={bodyweightEntries.map((e) => ({
-            id: e.id,
-            weightKg: e.weightKg,
-            measuredAt: e.measuredAt.toISOString(),
-          }))}
-          trend={{
-            averageKg: weightTrend.averageKg,
-            changeKg: weightTrend.changeKg,
-            ratePerWeekKg: weightTrend.ratePerWeekKg,
-            // The chart window only.
-            series: weightTrend.series.filter(
-              (point) => Date.parse(`${point.day}T12:00:00Z`) >= since.getTime(),
-            ),
-          }}
-          unit={unit}
-        />
+  // The deterministic report of the last completed week (epic 2.6), the same
+  // one /progress/report opens on.
+  const weeklyReport = await loadWeeklyReport(auth.userId, null, now);
 
-        <MeasurementsCard
-          entries={bodyMeasurements.map((e) => ({
-            id: e.id,
-            site: e.site,
-            valueCm: e.valueCm,
-            measuredAt: e.measuredAt.toISOString(),
-          }))}
-          bodyFat={
-            bodyFat
-              ? {
-                  percent: bodyFat.percent,
-                  basedOn: new Date(bodyFat.basedOn).toISOString(),
-                  usesHips: user?.sex === 'FEMALE',
-                }
-              : null
-          }
-          unit={unit}
-        />
+  const muscleRows = volumeLandmarks
+    ? Object.entries(volumeLandmarks.byMuscleGroup)
+        .map(([group, info]) => ({ group, label: muscleGroupLabel(group), ...info }))
+        .sort((a, b) => b.sets - a.sets)
+    : [];
 
-        <PhotosCard
-          photos={progressPhotos.map((p) => ({
-            id: p.id,
-            takenAt: p.takenAt.toISOString(),
-            note: p.note,
-          }))}
-        />
+  const body = (
+    <div className="flex flex-col gap-6">
+      <BodyweightCard
+        entries={bodyweightEntries.map((e) => ({
+          id: e.id,
+          weightKg: e.weightKg,
+          measuredAt: e.measuredAt.toISOString(),
+        }))}
+        trend={{
+          averageKg: weightTrend.averageKg,
+          changeKg: weightTrend.changeKg,
+          ratePerWeekKg: weightTrend.ratePerWeekKg,
+          // The chart window only.
+          series: weightTrend.series.filter(
+            (point) => Date.parse(`${point.day}T12:00:00Z`) >= since.getTime(),
+          ),
+        }}
+        unit={unit}
+      />
+      <MeasurementsCard
+        entries={bodyMeasurements.map((e) => ({
+          id: e.id,
+          site: e.site,
+          valueCm: e.valueCm,
+          measuredAt: e.measuredAt.toISOString(),
+        }))}
+        bodyFat={
+          bodyFat
+            ? {
+                percent: bodyFat.percent,
+                basedOn: new Date(bodyFat.basedOn).toISOString(),
+                usesHips: user?.sex === 'FEMALE',
+              }
+            : null
+        }
+        unit={unit}
+      />
 
-        {conditioningWeeks && (
-          <ConditioningCard
-            weeks={conditioningWeeks.map((w) => ({
+      <PhotosCard
+        photos={progressPhotos.map((p) => ({
+          id: p.id,
+          takenAt: p.takenAt.toISOString(),
+          note: p.note,
+        }))}
+      />
+    </div>
+  );
+
+  const week = (
+    <WeekPanel
+      hasData={exercisesWithSets.length > 0}
+      emptyWeeks={RECENT_WEEKS}
+      summary={weekSummary}
+      muscles={
+        volumeLandmarks
+          ? {
+              weekKey: volumeLandmarks.weekKey,
+              weekStartIso: latestMuscleWeek!.weekStart.toISOString(),
+              rows: muscleRows,
+            }
+          : null
+      }
+      defaultBand={{ mev: WEEKLY_SETS_MEV, mrv: WEEKLY_SETS_MRV }}
+      muscleMap={muscleMap}
+      report={{
+        report: weeklyReport.report,
+        weekStartIso: weeklyReport.weekStart.toISOString(),
+      }}
+      consistency={{
+        weeks: consistency.weeks,
+        currentStreak: consistency.currentStreak,
+        weeklyFrequency: consistency.weeklyFrequency,
+      }}
+      volumeWeeks={weeklyPoints.map((w) => ({
+        weekStartIso: w.weekStart.toISOString(),
+        totalKg: w.total,
+      }))}
+      conditioning={
+        conditioningWeeks
+          ? conditioningWeeks.map((w) => ({
               weekKey: w.weekKey,
               weekStartIso: w.weekStart.toISOString(),
               minutes: w.minutes,
               distanceKm: w.distanceKm,
               sessions: w.sessions,
-            }))}
-          />
-        )}
+            }))
+          : null
+      }
+      unit={unit}
+      timeZone={timeZone}
+    />
+  );
 
-        {exercisesWithSets.length === 0 ? (
-          <EmptyState
-            icon={TrendUpIcon}
-            title={t('emptyTitle')}
-            description={t('emptyDescription', { weeks: RECENT_WEEKS })}
-            action={{ label: t('firstSession'), href: '/session/new' }}
-          />
-        ) : (
-          <>
-            {(deload.recommended || deloadActive) && (
-              <DeloadBanner reasons={deload.reasons} deloadUntil={deloadUntilIso} />
-            )}
-            <ConsistencyCard
-              weeks={consistency.weeks}
-              currentStreak={consistency.currentStreak}
-              weeklyFrequency={consistency.weeklyFrequency}
-            />
-            <ProgressDashboard
-              exercises={exercisesWithSets.map((e) => ({
-                id: e.id,
-                name: e.name,
-                muscleGroup: exerciseT(`muscleGroups.${muscleGroupMessageKeys[e.muscleGroup]}`),
-              }))}
-              selectedExerciseId={selectedExerciseId}
-              exercisePoints={exercisePoints}
-              weeklyPoints={weeklyPoints.map((w) => ({
-                weekKey: w.weekKey,
-                weekStartIso: w.weekStart.toISOString(),
-                byMuscleGroup: w.byMuscleGroup,
-                total: w.total,
-              }))}
-              volumeLandmarks={volumeLandmarks}
-              muscleMap={muscleMap}
-              defaultBand={{ mev: WEEKLY_SETS_MEV, mrv: WEEKLY_SETS_MRV }}
-              recap={recap}
-              unit={unit}
-              selectedGoal={
-                selectedGoal
-                  ? {
-                      id: selectedGoal.id,
-                      targetWeight: selectedGoal.targetWeight,
-                      targetReps: selectedGoal.targetReps,
-                      achievedAt: selectedGoal.achievedAt?.toISOString() ?? null,
-                    }
-                  : null
+  const training =
+    exercisesWithSets.length === 0 ? (
+      <EmptyState
+        title={t('emptyTitle')}
+        description={t('emptyDescription', { weeks: RECENT_WEEKS })}
+        action={{ label: t('firstSession'), href: '/session/new' }}
+      />
+    ) : (
+      <ProgressDashboard
+        exercises={exercisesWithSets.map((e) => ({
+          id: e.id,
+          name: e.name,
+          muscleGroup: muscleGroupLabel(e.muscleGroup),
+        }))}
+        selectedExerciseId={selectedExerciseId}
+        exercisePoints={exercisePoints}
+        recap={recap}
+        unit={unit}
+        selectedGoal={
+          selectedGoal
+            ? {
+                id: selectedGoal.id,
+                targetWeight: selectedGoal.targetWeight,
+                targetReps: selectedGoal.targetReps,
+                achievedAt: selectedGoal.achievedAt?.toISOString() ?? null,
               }
-              selectedBestE1RM={selectedBestE1RM}
-              selectedUsesBodyweight={selectedUsesBodyweight}
-            />
-            {records.length > 0 && <RecordsCard records={records} unit={unit} />}
-          </>
-        )}
+            : null
+        }
+        selectedBestE1RM={selectedBestE1RM}
+        selectedUsesBodyweight={selectedUsesBodyweight}
+        deload={
+          (deload.recommended || deloadActive) && (
+            <DeloadBanner reasons={deload.reasons} deloadUntil={deloadUntilIso} />
+          )
+        }
+      />
+    );
+
+  return (
+    <main className="flex-1">
+      <div className="mx-auto w-full max-w-2xl">
+        <ScreenHeader title={t('title')} />
+        <ProgressTabs
+          initialTab={initialTab}
+          panels={{
+            week,
+            training,
+            body,
+            records: (
+              <RecordsCard records={records} unit={unit} today={localDayKey(now, timeZone)} />
+            ),
+          }}
+        />
       </div>
     </main>
   );

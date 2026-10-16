@@ -4,10 +4,10 @@ export const onboarding = {
   next: 'Next',
   back: 'Back',
   finish: 'Save and finish',
-  saving: 'Saving...',
   skip: 'Skip for now',
   saved: 'All set! Your training profile is saved.',
   error: 'Could not save. Please try again.',
+  offline: 'No connection. Your answers stay on this screen; connect to save them.',
   goal: {
     title: 'What is your main goal?',
     description: 'You can change it anytime in Settings.',

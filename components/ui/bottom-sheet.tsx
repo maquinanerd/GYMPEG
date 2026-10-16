@@ -21,12 +21,12 @@ const BottomSheetContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 flex max-h-[88vh] flex-col gap-4 overflow-y-auto rounded-t-lg border border-b-0 border-border bg-card px-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-3 text-card-foreground duration-200 focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom motion-reduce:animate-none sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:w-full sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-lg sm:border-b sm:pb-5',
+        'fixed inset-x-0 bottom-0 z-50 flex max-h-[88vh] flex-col gap-4 overflow-y-auto rounded-t-lg border border-b-0 border-border bg-card px-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-3 text-card-foreground shadow-lg duration-200 ease-out-quart focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom motion-reduce:animate-none sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:w-full sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-lg sm:border-b sm:pb-5',
         className,
       )}
       {...props}
     >
-      <span aria-hidden className="mx-auto h-1.5 w-10 shrink-0 rounded-full bg-track sm:hidden" />
+      <span aria-hidden className="mx-auto h-1 w-10 shrink-0 rounded-[2px] bg-input sm:hidden" />
       {children}
     </DialogPrimitive.Content>
   </DialogPrimitive.Portal>

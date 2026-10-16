@@ -116,14 +116,14 @@ export function ProgramEditDialog({ open, onOpenChange, program }: Props) {
             <Label htmlFor="name">{common('fields.name')}</Label>
             <Input id="name" {...form.register('name')} />
             {form.formState.errors.name && (
-              <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
+              <p className="text-caption text-destructive-text">{form.formState.errors.name.message}</p>
             )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="phase">{t('phase')}</Label>
             <Input id="phase" {...form.register('phase')} />
             {form.formState.errors.phase && (
-              <p className="text-sm text-destructive">{form.formState.errors.phase.message}</p>
+              <p className="text-caption text-destructive-text">{form.formState.errors.phase.message}</p>
             )}
           </div>
           <div className="space-y-2">
@@ -143,7 +143,7 @@ export function ProgramEditDialog({ open, onOpenChange, program }: Props) {
                 </Select>
               )}
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-small text-muted-foreground">
               {scheduleMode === 'FIXED_DAYS' ? t('schedule.fixedHint') : t('schedule.rotationHint')}
             </p>
           </div>
@@ -184,7 +184,7 @@ export function ProgramEditDialog({ open, onOpenChange, program }: Props) {
             {cycleWeeks ? (
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <Label htmlFor="cycleCurrentWeek" className="text-xs">
+                  <Label htmlFor="cycleCurrentWeek" className="text-small">
                     {t('cycle.currentWeek')}
                   </Label>
                   <Controller
@@ -210,7 +210,7 @@ export function ProgramEditDialog({ open, onOpenChange, program }: Props) {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor="cycleDeloadWeek" className="text-xs">
+                  <Label htmlFor="cycleDeloadWeek" className="text-small">
                     {t('cycle.deloadWeek')}
                   </Label>
                   <Controller
@@ -240,7 +240,7 @@ export function ProgramEditDialog({ open, onOpenChange, program }: Props) {
                 </div>
               </div>
             ) : null}
-            <p className="text-xs text-muted-foreground">
+            <p className="text-small text-muted-foreground">
               {cycleWeeks
                 ? cycleDeloadWeek
                   ? t('cycle.hintDeload', { count: cycleWeeks })

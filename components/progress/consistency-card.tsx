@@ -1,7 +1,6 @@
-import { CalendarCheckIcon, FireIcon } from '@/components/ui/icon';
-import { useTranslations } from 'next-intl';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { useFormatter, useTranslations } from 'next-intl';
 import type { ConsistencyWeek } from '@/lib/stats';
+import { WeekBars } from '@/components/progress/week-bars';
 
 interface Props {
   weeks: ConsistencyWeek[];
@@ -9,72 +8,33 @@ interface Props {
   weeklyFrequency: number | null;
 }
 
-function shortLabelFromWeekKey(weekKey: string) {
-  // "2026-W18" -> "W18"
-  const parts = weekKey.split('-W');
-  return parts[1] ? `W${parts[1]}` : weekKey;
-}
-
-// Read-only consistency card: current streak plus a compact per-week bar of
-// trained days over the window. On-streak weeks are filled, off weeks muted.
+// Read-only consistency block (Semana tab): the current streak and one bar of
+// trained days per week over the window. Weeks that count for the streak are
+// ink, the others the input grey; the numbers are in the strip's label.
 export function ConsistencyCard({ weeks, currentStreak, weeklyFrequency }: Props) {
   const t = useTranslations('progress.consistency');
-  const maxTrained = Math.max(1, ...weeks.map((w) => w.trainedDays));
+  const format = useFormatter();
+  const day = (iso: string) =>
+    format.dateTime(new Date(iso), { day: '2-digit', month: '2-digit', timeZone: 'UTC' });
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <CalendarCheckIcon className="size-4 text-muted-foreground" />
-          <h2 className="text-base font-semibold">{t('title')}</h2>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          {t('description', {
-            weeks: weeks.length,
-            target: weeklyFrequency ?? 'none',
-          })}
-        </p>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="flex items-center gap-2">
-          <FireIcon
-            className={`size-5 ${currentStreak > 0 ? 'text-brand' : 'text-muted-foreground'}`}
-          />
-          <span className="text-2xl font-bold tabular-nums">{currentStreak}</span>
-          <span className="text-sm text-muted-foreground">
-            {t('streak', { weeks: currentStreak })}
-          </span>
-        </div>
-
-        <div className="flex items-end gap-1" role="list" aria-label={t('aria')}>
-          {weeks.map((w) => {
-            const heightPct = Math.round((w.trainedDays / maxTrained) * 100);
-            return (
-              <div
-                key={w.weekKey}
-                role="listitem"
-                className="flex flex-1 flex-col items-center gap-1"
-                title={t('weekTitle', {
-                  week: shortLabelFromWeekKey(w.weekKey),
-                  days: w.trainedDays,
-                })}
-              >
-                <div className="flex h-16 w-full items-end">
-                  <div
-                    className={`w-full rounded-sm ${
-                      w.onStreak ? 'bg-primary' : 'bg-muted'
-                    } ${w.isCurrent ? 'ring-2 ring-primary/40' : ''}`}
-                    style={{ height: `${Math.max(heightPct, w.trainedDays > 0 ? 8 : 4)}%` }}
-                  />
-                </div>
-                <span className="text-[10px] tabular-nums text-muted-foreground">
-                  {w.trainedDays}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-2">
+      <div className="flex items-baseline justify-between gap-3">
+        <h3 className="text-caption font-semibold">{t('title')}</h3>
+        <span className="text-caption font-semibold">{t('streak', { weeks: currentStreak })}</span>
+      </div>
+      <WeekBars
+        values={weeks.map((w) => w.trainedDays)}
+        tones={weeks.map((w) => (w.onStreak ? 'ink' : 'faint'))}
+        label={t('aria', {
+          list: weeks.map((w) => `${day(w.weekStartIso)} ${w.trainedDays}`).join(', '),
+        })}
+        startLabel={weeks[0] ? day(weeks[0].weekStartIso) : undefined}
+        endLabel={weeks.at(-1) ? day(weeks.at(-1)!.weekStartIso) : undefined}
+      />
+      <p className="text-small text-muted-foreground">
+        {t('description', { weeks: weeks.length, target: weeklyFrequency ?? 'none' })}
+      </p>
+    </div>
   );
 }

@@ -78,7 +78,7 @@ export function WheelPicker<T extends string | number>({
       {/* Selection band behind the centred row. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 rounded-pill bg-pill"
+        className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 rounded-sm bg-row-current"
         style={{ height: ITEM_HEIGHT }}
       />
       <div
@@ -100,7 +100,7 @@ export function WheelPicker<T extends string | number>({
             step(-1);
           }
         }}
-        className="relative h-full snap-y snap-mandatory overflow-y-auto overscroll-contain rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="relative h-full snap-y snap-mandatory overflow-y-auto overscroll-contain rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         style={{ paddingTop: padding, paddingBottom: padding }}
       >
         {options.map((option, optionIndex) => {
@@ -116,8 +116,8 @@ export function WheelPicker<T extends string | number>({
                 if (!selected) onChange(option.value);
               }}
               className={cn(
-                'flex snap-center items-center justify-center tabular-nums transition-colors',
-                selected ? 'text-number text-foreground' : 'text-subtitle text-muted-foreground',
+                'flex snap-center items-center justify-center font-num font-semibold tabular-nums stretch-118',
+                selected ? 'text-[1.75rem] text-foreground' : 'text-subtitle text-muted-foreground',
               )}
               style={{ height: ITEM_HEIGHT }}
             >

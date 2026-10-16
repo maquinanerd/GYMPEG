@@ -60,8 +60,8 @@ export function CopyWorkoutButton({ text }: Props) {
 
   return (
     <Button variant="outline" size="sm" onClick={handleCopy}>
-      <CopyIcon className="size-4" />
-      <span className="ml-1">{t('button')}</span>
+      <CopyIcon />
+      {t('button')}
     </Button>
   );
 }

@@ -19,23 +19,30 @@ test('a lifter can log and delete a bodyweight entry on the progress page', asyn
   await page.getByRole('button', { name: 'Create account' }).click();
   await expect(page).toHaveURL('/');
 
-  await page.goto('/progress');
-  // Scope to the Bodyweight card (the page also has a Measurements card whose
-  // own "Log" button would otherwise be ambiguous).
+  // The bodyweight block lives on the Body tab of Progress.
+  await page.goto('/progress?tab=body');
+  // Scope to the Bodyweight block (the tab also has Measurements, whose own
+  // "Log" button would otherwise be ambiguous).
   const card = page.getByRole('region', { name: 'Bodyweight' });
-  await expect(card.getByRole('heading', { name: 'Bodyweight' })).toBeVisible();
   await expect(card.getByText(/no bodyweight logged yet/i)).toBeVisible();
 
-  // Quick-add 82.5 kg.
-  await card.getByLabel(/bodyweight \(kg\)/i).fill('82.5');
-  await card.getByRole('button', { name: 'Log', exact: true }).click();
+  // Log 82.5 kg from the sheet.
+  await card.getByRole('button', { name: 'Log weight' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Log bodyweight' });
+  await sheet.getByLabel(/bodyweight \(kg\)/i).fill('82.5');
+  await sheet.getByRole('button', { name: 'Save', exact: true }).click();
 
-  await expect(card.getByText(/current: 82.5 kg/i)).toBeVisible();
-  // The entry shows in the recent list with a delete button.
-  const deleteButton = card.getByRole('button', { name: /delete entry/i }).first();
+  await expect(card.getByText('82.5 kg')).toBeVisible();
+  // The entry shows in the sheet's recent list with a delete button.
+  await card.getByRole('button', { name: 'Log', exact: true }).click();
+  const deleteButton = page
+    .getByRole('dialog', { name: 'Log bodyweight' })
+    .getByRole('button', { name: /delete entry/i })
+    .first();
   await expect(deleteButton).toBeVisible();
 
   // Delete it again: back to the empty state.
   await deleteButton.click();
+  await page.keyboard.press('Escape');
   await expect(card.getByText(/no bodyweight logged yet/i)).toBeVisible();
 });

@@ -71,7 +71,9 @@ function renderCard(readiness: ReadinessSignal | null, deloadActive = false) {
 }
 
 describe('ExerciseCard mobile title layout', () => {
-  it('keeps a long exercise title on one horizontally scrollable line', () => {
+  // Design v2: the exercise name is the screen's h1 (28px) and a long one
+  // wraps onto balanced lines instead of hiding behind a sideways scroll.
+  it('shows a long exercise title in full as the heading of the screen', () => {
     const longName = 'An exceptionally long incline dumbbell press exercise name';
     const longExercise = { ...exo, name: longName };
     const longProgramExercise = { ...pe, exercise: longExercise };
@@ -86,16 +88,22 @@ describe('ExerciseCard mobile title layout', () => {
       />,
     );
 
-    expect(screen.getByTestId('exercise-title-scroll')).toHaveClass('overflow-x-auto');
-    expect(screen.getByRole('heading', { level: 2, name: longName })).toHaveClass(
-      'w-max',
-      'whitespace-nowrap',
-    );
+    const title = screen.getByRole('heading', { level: 1, name: longName });
+    expect(title).toHaveClass('text-title', 'text-balance');
+    expect(title).not.toHaveClass('whitespace-nowrap');
+    // The section is named by the exercise.
+    expect(screen.getByRole('region', { name: longName })).toBeInTheDocument();
+  });
+
+  it('shows the muscle map in the picture slot when the exercise has no media', () => {
+    renderCard(null);
+    expect(screen.getByTestId('exercise-media-fallback')).toHaveClass('aspect-[3/2]', 'bg-muted');
+    expect(screen.getByRole('group', { name: /quads/i })).toBeInTheDocument();
   });
 });
 
 describe('ExerciseCard technique media', () => {
-  it('shows the start frame next to the title and opens the technique dialog', () => {
+  it('shows the start frame above the title and opens the technique viewer', () => {
     const bench = { ...pe, exercise: { ...exo, name: 'Barbell bench press' } };
     render(
       <ExerciseCard
@@ -107,25 +115,25 @@ describe('ExerciseCard technique media', () => {
       />,
     );
 
-    const thumbnail = screen.getByRole('button', {
-      name: 'View technique for Barbell bench press',
-    });
-    expect(thumbnail.querySelector('img')).toHaveAttribute(
+    const frames = screen
+      .getAllByRole('img')
+      .filter((img) => img.getAttribute('src')?.includes('Barbell_Bench_Press'));
+    expect(frames[0]).toHaveAttribute(
       'src',
       '/exercise-media/test-fixture/Barbell_Bench_Press/0.jpg',
     );
-    fireEvent.click(thumbnail);
-    expect(screen.getByRole('dialog', { name: 'Barbell bench press' })).toBeInTheDocument();
+    fireEvent.click(screen.getAllByRole('button', { name: 'Enlarge the technique' })[0]!);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
-  it('shows no thumbnail when the exercise has no frames', () => {
+  it('shows no picture and no enlarge button when the exercise has no frames', () => {
     renderCard(null);
-    expect(screen.queryByRole('button', { name: /View technique/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Enlarge the technique' })).not.toBeInTheDocument();
   });
 });
 
 describe('ExerciseCard actions button', () => {
-  it('is a full tap target next to the scrollable title', () => {
+  it('is a full tap target next to the title', () => {
     render(
       <ExerciseCard
         programExercise={pe}
@@ -142,7 +150,7 @@ describe('ExerciseCard actions button', () => {
       'min-w-tap',
       'shrink-0',
     );
-    expect(screen.getByTestId('exercise-title-scroll')).toHaveClass('min-w-0', 'flex-1');
+    expect(screen.getByTestId('exercise-title')).toHaveClass('min-w-0', 'flex-1');
   });
 
   it('stays in the header but disabled while the menu is unavailable', () => {

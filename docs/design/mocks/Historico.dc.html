@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,400..700&display=swap" rel="stylesheet"><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script><style>html,body{margin:0;background:#F9F9F9}a{color:#354119}a:hover{color:#111111}button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}:focus-visible{outline:2px solid #111111;outline-offset:2px}</style></helmet>
+<div style="width:100%;max-width:430px;margin:0 auto;height:844px;position:relative;background:#F9F9F9;font-family:Archivo, sans-serif;color:#111111;overflow:hidden;display:flex;flex-direction:column">
+  <dc-import name="StatusBar" hint-size="100%,54px"></dc-import>
+  <header style="flex:none;padding:6px 20px 8px;display:flex;justify-content:space-between;align-items:center"><h1 style="margin:0;font-size:32px;font-weight:600;letter-spacing:-0.02em">Treinos</h1><button style="height:40px;padding:0 12px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px"><i class="ph-bold ph-download-simple"></i>CSV</button></header>
+  <div role="tablist" style="flex:none;display:flex;gap:24px;padding:0 20px;border-bottom:1px solid #E9E9E9">
+    <a role="tab" aria-selected="false" href="#" style="height:44px;display:flex;align-items:center;font-size:16px;font-weight:500;color:#646464;border-bottom:2px solid transparent;margin-bottom:-1px;text-decoration:none">Programas</a>
+    <a role="tab" aria-selected="true" href="#" style="height:44px;display:flex;align-items:center;font-size:16px;font-weight:600;color:#111111;border-bottom:2px solid #111111;margin-bottom:-1px;text-decoration:none">Histórico</a>
+    <a role="tab" aria-selected="false" href="#" style="height:44px;display:flex;align-items:center;font-size:16px;font-weight:500;color:#646464;border-bottom:2px solid transparent;margin-bottom:-1px;text-decoration:none">Exercícios</a>
+  </div>
+  <main style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:16px 20px 28px;display:flex;flex-direction:column;gap:20px">
+    <section aria-labelledby="mes" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <h2 id="mes" style="margin:0;font-size:20px;font-weight:600">Outubro 2026</h2>
+        <div style="display:flex"><button aria-label="Mês anterior" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:18px"><i class="ph-bold ph-caret-left"></i></button><button aria-label="Próximo mês" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#CECECE"><i class="ph-bold ph-caret-right"></i></button></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;font-size:12px;font-weight:600;color:#646464;text-align:center"><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span><span>D</span></div>
+      <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px">
+        <sc-for list="{{ cal }}" as="c" hint-placeholder-count="35">
+          <span aria-label="{{ c.aria }}" style="height:40px;border-radius:6px;background:{{ c.bg }};border:{{ c.border }};box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-family:Archivo, sans-serif;font-stretch:108%;font-weight:600;font-size:14px;color:{{ c.c }}">{{ c.n }}</span>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:16px;font-size:12px;font-weight:500;color:#646464;padding-top:2px">
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:#111111"></span>treinou</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;border:1.5px dashed #8D8D8D;box-sizing:border-box"></span>planejado, não feito</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:#CCFF00;box-shadow:inset 0 0 0 1.5px #111111"></span>hoje</span>
+      </div>
+    </section>
+    <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none">
+      <button style="flex:none;height:40px;padding:0 12px;border-radius:8px;background:#111111;color:#FFFFFF;font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px"><i class="ph-bold ph-sliders-horizontal"></i>Filtros</button>
+      <button style="flex:none;height:40px;padding:0 12px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:600">Programa</button>
+      <button style="flex:none;height:40px;padding:0 12px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:600">Academia</button>
+      <button style="flex:none;height:40px;padding:0 12px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:600">Exercício</button>
+      <button style="flex:none;height:40px;padding:0 12px;border-radius:8px;border:1px solid #CECECE;font-size:14px;font-weight:600">Músculo</button>
+    </div>
+    <ul style="list-style:none;margin:0;padding:0">
+      <sc-for list="{{ sessions }}" as="s" hint-placeholder-count="5">
+        <li style="border-top:1px solid #E9E9E9"><a href="#" style="padding:14px 0;display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:4px 10px;align-items:baseline;text-decoration:none;color:#111111"><span style="font-size:13px;font-weight:600;color:#646464">{{ s.d }}</span><span style="font-size:16px;font-weight:600">{{ s.name }}</span><span style="font-family:Archivo, sans-serif;font-stretch:108%;font-weight:600;font-variant-numeric:tabular-nums;font-size:14px">{{ s.vol }}</span><span></span><span style="grid-column:2 / -1;font-size:13px;font-weight:500;color:#646464">{{ s.meta }}</span></a></li>
+      </sc-for>
+    </ul>
+  </main>
+  <dc-import name="TabBar" active="treinos" hint-size="100%,89px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+class Component extends DCLogic {
+  renderVals() {
+    const done = [1,2,5,6,8,12,13], missed = [9], today = 15, plan = [16,19,20,22,23,26,27,29,30];
+    const cal = [];
+    for (let i = 0; i < 3; i++) cal.push({ n:'', bg:'transparent', border:'none', c:'#111111', aria:'' });
+    for (let d = 1; d <= 31; d++) {
+      const s = done.includes(d) ? 'done' : missed.includes(d) ? 'missed' : d === today ? 'today' : 'none';
+      cal.push({ n: d, aria: `${d} de outubro${s === 'done' ? ', treinou' : s === 'missed' ? ', planejado e não feito' : s === 'today' ? ', hoje' : ''}`,
+        bg: s === 'done' ? '#111111' : s === 'today' ? '#CCFF00' : 'transparent',
+        border: s === 'missed' ? '1.5px dashed #8D8D8D' : s === 'today' ? '1.5px solid #111111' : '1.5px solid transparent',
+        c: s === 'done' ? '#FFFFFF' : d > today ? '#8D8D8D' : '#111111' });
+    }
+    cal.push({ n:'', bg:'transparent', border:'none', c:'#111111', aria:'' });
+    const sessions = [
+      ['ter. 13','Treino B — Inferiores','11.240 kg','58 min · 17 séries · Academia do bairro'],
+      ['seg. 12','Treino A — Superiores','8.410 kg','54 min · 16 séries · Academia do bairro'],
+      ['qui. 08','Treino C — Superiores','7.960 kg','49 min · 16 séries · Condomínio'],
+      ['ter. 06','Treino B — Inferiores','10.880 kg','61 min · 17 séries · 1 recorde'],
+      ['seg. 05','Treino A — Superiores','8.120 kg','55 min · 16 séries']
+    ].map(([d, name, vol, meta]) => ({ d, name, vol, meta }));
+    return { cal, sessions };
+  }
+}
+</script>
+</body>
+</html>

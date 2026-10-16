@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Num } from '@/components/ui/num';
 import { computeWarmupRamp } from '@/lib/warmup';
 import { plateConfigForUnit } from '@/lib/preferences';
 import { roundWeight, toDisplayWeight, unitLabel } from '@/lib/units';
@@ -54,7 +54,7 @@ export function WarmupCalculator({ weightKg, unit, barWeightsKg }: Props) {
           type="button"
           variant="ghost"
           size="sm"
-          className="h-7 gap-1 px-2 text-xs text-muted-foreground"
+          className="gap-1.5 px-2.5 text-muted-foreground"
           aria-label={t('openWarmup')}
         >
           <FireIcon className="size-4" />
@@ -72,31 +72,31 @@ export function WarmupCalculator({ weightKg, unit, barWeightsKg }: Props) {
         </DialogHeader>
 
         {ramp && (
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             {ramp.sets.length > 0 ? (
-              <ol className="space-y-2" aria-label={t('warmupSets')}>
+              <ol className="border-b border-border" aria-label={t('warmupSets')}>
                 {ramp.sets.map((set, index) => (
                   <li
                     key={`${set.weight}-${index}`}
-                    className="flex items-center justify-between gap-2 rounded-md border px-3 py-2"
+                    className="flex min-h-12 items-center justify-between gap-2 border-t border-border"
                   >
-                    <span className="text-base font-semibold">
-                      {set.weight} {label}
-                      <span className="ml-2 text-xs font-normal text-muted-foreground">
-                        {set.percent}%
-                      </span>
+                    <span className="flex items-baseline gap-2">
+                      <Num stretch={118} className="text-subtitle">
+                        {set.weight} {label}
+                      </Num>
+                      <span className="text-small text-muted-foreground">{set.percent}%</span>
                     </span>
-                    <Badge variant="secondary" className="text-sm font-semibold">
+                    <Num stretch={112} className="text-caption">
                       {t('reps', { count: set.reps })}
-                    </Badge>
+                    </Num>
                   </li>
                 ))}
               </ol>
             ) : (
-              <p className="text-sm text-muted-foreground">{t('noWarmup')}</p>
+              <p className="text-caption text-muted-foreground">{t('noWarmup')}</p>
             )}
 
-            <p className="text-xs text-muted-foreground">{t('warmupHelp')}</p>
+            <p className="text-small text-muted-foreground">{t('warmupHelp')}</p>
           </div>
         )}
       </DialogContent>

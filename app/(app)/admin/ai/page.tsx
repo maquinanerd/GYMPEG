@@ -1,5 +1,6 @@
 import { getFormatter, getTranslations } from 'next-intl/server';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Num } from '@/components/ui/num';
+import { Section } from '@/components/ui/section';
 import { AiSettings, type ProviderInfo } from '@/components/admin/ai-settings';
 import { requireAdminPage } from '@/lib/admin';
 import { getAdminConfigView } from '@/lib/admin-config';
@@ -45,28 +46,25 @@ export default async function AdminAiPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <>
       <AiSettings
         view={view}
         providers={providers}
         active={{ label: active.label, model: active.model, configured: active.isConfigured() }}
       />
 
-      <Card>
-        <CardHeader className="pb-3">
-          <h2 className="text-base font-semibold">{t('usage.title', { days: usage.days })}</h2>
-          <p className="text-sm text-muted-foreground">
-            {usage.total.calls === 0
-              ? t('usage.empty')
-              : t('usage.summary', {
-                  calls: usage.total.calls,
-                  failures: usage.total.failures,
-                  cost: cost(usage.total.cost),
-                })}
-          </p>
-        </CardHeader>
+      <Section title={t('usage.title', { days: usage.days })} divider>
+        <p className="-mt-1 text-caption text-muted-foreground text-pretty">
+          {usage.total.calls === 0
+            ? t('usage.empty')
+            : t('usage.summary', {
+                calls: usage.total.calls,
+                failures: usage.total.failures,
+                cost: cost(usage.total.cost),
+              })}
+        </p>
         {usage.total.calls > 0 && (
-          <CardContent className="space-y-6">
+          <div className="flex flex-col gap-6 pt-2">
             <UsageTable
               caption={t('usage.byModel')}
               columns={[t('usage.model'), ...columns]}
@@ -85,12 +83,14 @@ export default async function AdminAiPage() {
                 cells: usageCells(row),
               }))}
             />
-          </CardContent>
+          </div>
         )}
-      </Card>
-    </div>
+      </Section>
+    </>
   );
 }
+
+const TH = 'py-2 text-small font-semibold text-muted-foreground';
 
 function UsageTable({
   caption,
@@ -101,17 +101,18 @@ function UsageTable({
   columns: string[];
   rows: { key: string; label: string; cells: string[] }[];
 }) {
+  // Wider than a phone: the table scrolls sideways inside the 20px gutters.
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[32rem] text-sm">
-        <caption className="pb-2 text-left font-medium">{caption}</caption>
+    <div className="-mx-5 overflow-x-auto px-5 scrollbar-none">
+      <table className="w-full min-w-[32rem] border-collapse text-caption">
+        <caption className="pb-1 text-left text-subtitle">{caption}</caption>
         <thead>
-          <tr className="border-b border-border text-left text-muted-foreground">
+          <tr className="border-b border-border">
             {columns.map((column, index) => (
               <th
                 key={column}
                 scope="col"
-                className={index === 0 ? 'py-2 pr-3 font-normal' : 'py-2 pl-3 text-right font-normal'}
+                className={index === 0 ? `${TH} pr-3 text-left` : `${TH} pl-3 text-right`}
               >
                 {column}
               </th>
@@ -120,13 +121,13 @@ function UsageTable({
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.key} className="border-b border-border last:border-b-0">
-              <th scope="row" className="py-2 pr-3 text-left font-normal">
+            <tr key={row.key} className="border-b border-border">
+              <th scope="row" className="py-2.5 pr-3 text-left font-medium">
                 {row.label}
               </th>
               {row.cells.map((cell, index) => (
-                <td key={index} className="py-2 pl-3 text-right tabular-nums">
-                  {cell}
+                <td key={index} className="py-2.5 pl-3 text-right">
+                  <Num stretch={112}>{cell}</Num>
                 </td>
               ))}
             </tr>

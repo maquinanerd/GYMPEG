@@ -23,7 +23,7 @@ test('a lifter can preview and confirm a Strong CSV import', async ({ page }) =>
   await page.getByRole('button', { name: 'Create account' }).click();
   await expect(page).toHaveURL('/');
 
-  await page.goto('/settings');
+  await page.goto('/settings/import');
   await expect(page.getByText('Import from Strong')).toBeVisible();
 
   // Upload the file: the dry-run preview appears, nothing imported yet.

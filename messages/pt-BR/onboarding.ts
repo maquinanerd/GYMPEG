@@ -7,10 +7,10 @@ export const onboarding = {
   next: 'Continuar',
   back: 'Voltar',
   finish: 'Salvar e concluir',
-  saving: 'Salvando...',
   skip: 'Pular por enquanto',
   saved: 'Tudo pronto! Seu perfil de treino foi salvo.',
   error: 'Não foi possível salvar. Tente de novo.',
+  offline: 'Sem conexão. Suas respostas ficam nesta tela; conecte-se para salvar.',
   goal: {
     title: 'Qual é o seu objetivo principal?',
     description: 'Você pode mudar quando quiser nas Configurações.',

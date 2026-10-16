@@ -1,18 +1,13 @@
 'use client';
 
+import { useId, useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { DownloadSimpleIcon, FunnelIcon, XIcon } from '@/components/ui/icon';
+import { DownloadSimpleIcon, SlidersHorizontalIcon, XIcon } from '@/components/ui/icon';
 import type { MuscleGroup } from '@/lib/prisma-client';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { ChipRow, FilterChip } from '@/components/ui/chip';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useTrainingName } from '@/components/shared/use-training-name';
 import { buildHistoryCsvHref } from '@/lib/history-calendar';
 import {
@@ -21,6 +16,7 @@ import {
   type HistoryFilterValues,
 } from '@/lib/history-filters';
 import { muscleGroupMessageKeys } from '@/i18n/enum-keys';
+import { cn } from '@/lib/utils';
 
 interface Option {
   id: string;
@@ -39,6 +35,13 @@ interface Props {
 
 const ALL = 'all';
 
+// A select drawn as a 40px filter chip: the filter's name while unset, the
+// chosen value in ink once set.
+const CHIP_TRIGGER =
+  'h-10 w-auto shrink-0 gap-1.5 rounded-sm px-3.5 text-caption font-semibold transition-colors duration-[120ms] ease-out-quart [&>span]:line-clamp-1 [&>span]:max-w-[11rem]';
+const CHIP_IDLE = 'border-input bg-transparent text-foreground hover:bg-muted';
+const CHIP_SET = 'border-ink bg-ink text-ink-foreground [&_svg]:text-ink-foreground';
+
 export function HistoryFilters({
   programs,
   gyms,
@@ -53,6 +56,8 @@ export function HistoryFilters({
   const router = useRouter();
   const search = useSearchParams();
   const [isPending, startTransition] = useTransition();
+  const [expanded, setExpanded] = useState(true);
+  const groupId = useId();
 
   function apply(next: HistoryFilterValues) {
     const params = setHistoryFilterParams(new URLSearchParams(search.toString()), next);
@@ -65,26 +70,42 @@ export function HistoryFilters({
     apply({ ...filters, [key]: value === ALL ? undefined : value });
   }
 
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-        <FunnelIcon className="size-4" />
-        <span>{t('title')}</span>
-        <Button variant="outline" size="sm" asChild className="ml-auto" title={t('csvTitle')}>
-          <a href={buildHistoryCsvHref(filters)} download>
-            <DownloadSimpleIcon className="size-4" />
-            <span className="ml-1">CSV</span>
-          </a>
-        </Button>
-      </div>
+  const active = hasHistoryFilters(filters);
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+  return (
+    <ChipRow aria-busy={isPending || undefined}>
+      {/* "Filtros" shows or hides the filter chips; open by default. */}
+      <button
+        type="button"
+        aria-expanded={expanded}
+        aria-controls={groupId}
+        onClick={() => setExpanded((value) => !value)}
+        className={cn(
+          'inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-sm border px-3 text-caption font-semibold transition-colors duration-[120ms] ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background [&_svg]:size-4',
+          expanded || active ? CHIP_SET : CHIP_IDLE,
+        )}
+      >
+        <SlidersHorizontalIcon weight="bold" />
+        {t('toggle')}
+      </button>
+
+      <div
+        id={groupId}
+        role="group"
+        aria-label={t('toggle')}
+        hidden={!expanded}
+        className={cn('flex shrink-0 gap-2', !expanded && 'hidden')}
+      >
         <Select
           value={filters.programId ?? ALL}
           onValueChange={(value) => select('programId', value)}
         >
-          <SelectTrigger className="h-9" disabled={isPending} aria-label={t('program')}>
-            <SelectValue />
+          <SelectTrigger
+            disabled={isPending}
+            aria-label={t('program')}
+            className={cn(CHIP_TRIGGER, filters.programId ? CHIP_SET : CHIP_IDLE)}
+          >
+            {filters.programId ? <SelectValue /> : <SelectValue>{t('program')}</SelectValue>}
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={ALL}>{t('allPrograms')}</SelectItem>
@@ -98,11 +119,11 @@ export function HistoryFilters({
 
         <Select value={filters.gymId ?? ALL} onValueChange={(value) => select('gymId', value)}>
           <SelectTrigger
-            className="h-9"
             disabled={isPending || gyms.length === 0}
             aria-label={t('gym')}
+            className={cn(CHIP_TRIGGER, filters.gymId ? CHIP_SET : CHIP_IDLE)}
           >
-            <SelectValue />
+            {filters.gymId ? <SelectValue /> : <SelectValue>{t('gym')}</SelectValue>}
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={ALL}>{t('allGyms')}</SelectItem>
@@ -119,11 +140,11 @@ export function HistoryFilters({
           onValueChange={(value) => select('exerciseId', value)}
         >
           <SelectTrigger
-            className="h-9"
             disabled={isPending || exercises.length === 0}
             aria-label={t('exercise')}
+            className={cn(CHIP_TRIGGER, filters.exerciseId ? CHIP_SET : CHIP_IDLE)}
           >
-            <SelectValue />
+            {filters.exerciseId ? <SelectValue /> : <SelectValue>{t('exercise')}</SelectValue>}
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={ALL}>{t('allExercises')}</SelectItem>
@@ -137,11 +158,11 @@ export function HistoryFilters({
 
         <Select value={filters.muscle ?? ALL} onValueChange={(value) => select('muscle', value)}>
           <SelectTrigger
-            className="h-9"
             disabled={isPending || muscles.length === 0}
             aria-label={t('muscle')}
+            className={cn(CHIP_TRIGGER, filters.muscle ? CHIP_SET : CHIP_IDLE)}
           >
-            <SelectValue />
+            {filters.muscle ? <SelectValue /> : <SelectValue>{t('muscle')}</SelectValue>}
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={ALL}>{t('allMuscles')}</SelectItem>
@@ -152,20 +173,28 @@ export function HistoryFilters({
             ))}
           </SelectContent>
         </Select>
-      </div>
 
-      {hasHistoryFilters(filters) && (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="self-start"
-          onClick={() => apply({})}
-          disabled={isPending}
-        >
-          <XIcon className="size-4" />
-          <span className="ml-1">{t('clear')}</span>
-        </Button>
-      )}
-    </div>
+        {active && (
+          <FilterChip onClick={() => apply({})} disabled={isPending} aria-pressed={undefined}>
+            <XIcon weight="bold" />
+            {t('clear')}
+          </FilterChip>
+        )}
+      </div>
+    </ChipRow>
+  );
+}
+
+// The header's CSV export: every finished set, narrowed by the active
+// filters (the month on screen is a view, not an export scope).
+export function HistoryCsvLink({ filters }: { filters: HistoryFilterValues }) {
+  const t = useTranslations('history.filters');
+  return (
+    <Button variant="outline" size="sm" asChild title={t('csvTitle')}>
+      <a href={buildHistoryCsvHref(filters)} download>
+        <DownloadSimpleIcon weight="bold" />
+        CSV
+      </a>
+    </Button>
   );
 }

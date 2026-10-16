@@ -21,9 +21,12 @@ import { Button } from '@/components/ui/button';
 export function DeleteExerciseButton({
   exerciseId,
   exerciseName,
+  redirectTo,
 }: {
   exerciseId: string;
   exerciseName: string;
+  // Where to go once deleted (the exercise's own page no longer exists).
+  redirectTo?: string;
 }) {
   const t = useTranslations('exercises');
   const common = useTranslations('common');
@@ -40,6 +43,7 @@ export function DeleteExerciseButton({
       }
       toast.success(t('deleted'));
       setOpen(false);
+      if (redirectTo) router.push(redirectTo);
       router.refresh();
     });
   }
@@ -47,13 +51,9 @@ export function DeleteExerciseButton({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label={common('actions.delete')}
-          className="min-h-tap min-w-tap text-destructive hover:text-destructive"
-        >
-          <TrashIcon className="size-4" />
+        <Button variant="outline" size="sm" className="text-destructive-text">
+          <TrashIcon />
+          {common('actions.delete')}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -71,7 +71,7 @@ export function DeleteExerciseButton({
               handleDelete();
             }}
             disabled={isPending}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="bg-destructive text-destructive-foreground"
           >
             {isPending ? t('deleting') : common('actions.delete')}
           </AlertDialogAction>

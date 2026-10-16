@@ -77,11 +77,15 @@ test('a trainee can log a cardio set (duration + distance) in a live session', a
   // The logged set renders as duration/distance in the sets list.
   await expect(page.getByText('12:30 · 2.5 km')).toBeVisible();
 
-  // The post-session summary shows the cardio totals for the exercise.
-  await page.getByRole('button', { name: 'Finish' }).click();
-  await expect(page.getByText('Session summary')).toBeVisible();
-  await expect(page.getByText(/1\/1 sets · 12:30 · 2\.5 km/)).toBeVisible();
-  await page.getByRole('button', { name: 'Finish the session' }).click();
+  // Logging the set starts the full-screen rest: skip it, then finish from
+  // the header menu. The summary shows the cardio totals for the exercise.
+  await page.getByRole('button', { name: 'Skip rest' }).click();
+  await page.getByRole('button', { name: 'More workout options' }).click();
+  await page.getByRole('menuitem', { name: 'Finish workout' }).click();
+  const byExercise = page.getByRole('region', { name: 'By exercise' });
+  await expect(byExercise).toBeVisible();
+  await expect(byExercise.getByText(/^12:30 · 2\.5 km/)).toBeVisible();
+  await page.getByRole('button', { name: 'Save and exit' }).click();
   await expect(page).toHaveURL('/');
 
   // History renders the cardio set as duration/distance, not weight x reps.

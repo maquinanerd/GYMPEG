@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -37,45 +36,36 @@ export function ProgramCreateForm() {
   }
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
-          <div className="space-y-2">
-            <Label htmlFor="name">{t('programName')}</Label>
-            <Input
-              id="name"
-              placeholder={t('programNamePlaceholder')}
-              {...form.register('name')}
-            />
-            {form.formState.errors.name && (
-              <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
-            )}
-          </div>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="name">{t('programName')}</Label>
+        <Input id="name" placeholder={t('programNamePlaceholder')} {...form.register('name')} />
+        {form.formState.errors.name && (
+          <p className="text-caption text-destructive-text">{form.formState.errors.name.message}</p>
+        )}
+      </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="phase">{t('phase')}</Label>
-            <Input
-              id="phase"
-              placeholder={t('phasePlaceholder')}
-              {...form.register('phase')}
-            />
-            {form.formState.errors.phase && (
-              <p className="text-sm text-destructive">{form.formState.errors.phase.message}</p>
-            )}
-          </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="phase">{t('phase')}</Label>
+        <Input id="phase" placeholder={t('phasePlaceholder')} {...form.register('phase')} />
+        {form.formState.errors.phase && (
+          <p className="text-caption text-destructive-text">{form.formState.errors.phase.message}</p>
+        )}
+      </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="description">{t('descriptionOptional')}</Label>
-            <Textarea id="description" rows={3} {...form.register('description')} />
-          </div>
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="description">{t('descriptionOptional')}</Label>
+        <Textarea id="description" rows={3} {...form.register('description')} />
+      </div>
 
-          <div className="flex justify-end">
-            <Button type="submit" className="min-h-tap" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? t('creating') : t('createProgram')}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+      <Button
+        type="submit"
+        className="mt-2 w-full"
+        loading={form.formState.isSubmitting}
+        disabled={form.formState.isSubmitting}
+      >
+        {form.formState.isSubmitting ? t('creating') : t('createProgram')}
+      </Button>
+    </form>
   );
 }

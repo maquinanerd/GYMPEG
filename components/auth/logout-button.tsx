@@ -3,11 +3,12 @@
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { useTranslations } from 'next-intl';
-import { SignOutIcon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { clearLocalUserData } from '@/lib/local-data';
+import { cn } from '@/lib/utils';
 
-export function LogoutButton() {
+// "Sair desta conta": a full-width 52px outline button at the foot of Perfil.
+export function LogoutButton({ label, className }: { label?: string; className?: string }) {
   const t = useTranslations('auth');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -23,9 +24,15 @@ export function LogoutButton() {
   }
 
   return (
-    <Button variant="secondary" onClick={handleLogout} disabled={isPending} className="w-full">
-      <SignOutIcon className="size-4" />
-      <span>{t('logout')}</span>
+    <Button
+      type="button"
+      variant="outline"
+      onClick={handleLogout}
+      loading={isPending}
+      disabled={isPending}
+      className={cn('h-[3.25rem] w-full text-body font-semibold', className)}
+    >
+      {label ?? t('logout')}
     </Button>
   );
 }

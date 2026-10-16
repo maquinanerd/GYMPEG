@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { CaretLeftIcon, CircleNotchIcon, XIcon } from '@/components/ui/icon';
+import { CaretLeftIcon, PlusIcon, XIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import type {
   MuscleGroup,
@@ -20,11 +20,18 @@ import {
 import { GYM_EQUIPMENT, TRAINING_TIMES, type GymEquipmentTag } from '@/lib/schemas/onboarding';
 import { matchesExerciseQuery } from '@/lib/catalog/search-index';
 import { fromDisplayWeight, toDisplayWeight, unitLabel } from '@/lib/units';
+import { cn } from '@/lib/utils';
 import { useExerciseName } from '@/components/shared/use-exercise-name';
+import { useOnline } from '@/components/auth/use-online';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { FilterChip } from '@/components/ui/chip';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Num } from '@/components/ui/num';
+import { ProgressBar } from '@/components/ui/progress-bar';
+import { OfflineNotice } from '@/components/ui/screen-state';
+import { Section } from '@/components/ui/section';
+import { Segmented } from '@/components/ui/segmented';
 
 export interface OnboardingInitial {
   goal: TrainingGoal | null;
@@ -79,39 +86,43 @@ const DEFAULT_EQUIPMENT: GymEquipmentTag[] = [
   'cardio_machine',
 ];
 
-// A large toggle button: easy to hit with one thumb at the gym.
-function Choice({
+// Choice chips here are 44px (the FilterChip is 40) so every answer clears
+// the touch minimum; a grid cell stretches the chip and centers its label.
+const CHOICE = 'h-11';
+const CELL = 'h-11 w-full justify-center px-1';
+const LEGEND = 'mb-3 text-caption font-semibold';
+
+// A two-line answer (experience level): the option and what it means. Same
+// states as the filter chip: input hairline, ink when chosen.
+function OptionButton({
   selected,
   onClick,
   children,
   hint,
-  className = '',
 }: {
   selected: boolean;
   onClick: () => void;
   children: React.ReactNode;
-  hint?: string;
-  className?: string;
+  hint: string;
 }) {
   return (
     <button
       type="button"
       aria-pressed={selected}
       onClick={onClick}
-      className={`min-h-12 rounded-lg border px-3 py-2 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+      className={cn(
+        'flex min-h-touch w-full flex-col gap-0.5 rounded-sm border px-3.5 py-3 text-left transition-colors duration-[120ms] ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         selected
-          ? 'border-primary bg-primary text-primary-foreground'
-          : 'border-input bg-background hover:bg-muted'
-      } ${className}`}
-    >
-      <span className="block font-medium">{children}</span>
-      {hint && (
-        <span
-          className={`block text-xs ${selected ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}
-        >
-          {hint}
-        </span>
+          ? 'border-ink bg-ink text-ink-foreground'
+          : 'border-input bg-transparent text-foreground hover:bg-muted',
       )}
+    >
+      <span className="text-body font-semibold">{children}</span>
+      <span
+        className={cn('text-caption', selected ? 'text-ink-foreground' : 'text-muted-foreground')}
+      >
+        {hint}
+      </span>
     </button>
   );
 }
@@ -126,6 +137,7 @@ export function OnboardingFlow({ initial, exercises }: Props) {
   const exerciseT = useTranslations('exercises');
   const exerciseName = useExerciseName();
   const router = useRouter();
+  const online = useOnline();
 
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
@@ -218,138 +230,130 @@ export function OnboardingFlow({ initial, exercises }: Props) {
   const stepKey = STEPS[step]!;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">
-          {t('stepOf', { current: step + 1, total: STEPS.length })}
-        </p>
-        <Button type="button" variant="ghost" size="sm" onClick={skip}>
-          {t('skip')}
-        </Button>
-      </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted" aria-hidden="true">
-        <div
-          className="h-full bg-primary transition-all"
-          style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
-        />
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-caption font-semibold text-muted-foreground">
+            {t('stepOf', { current: step + 1, total: STEPS.length })}
+          </p>
+          <Button type="button" variant="ghost" size="sm" className="-mr-3.5 h-11" onClick={skip}>
+            {t('skip')}
+          </Button>
+        </div>
+        <ProgressBar value={step + 1} max={STEPS.length} />
       </div>
 
       {stepKey === 'goal' && (
         <>
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">{t('goal.title')}</CardTitle>
-              <CardDescription>{t('goal.description')}</CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-2 sm:grid-cols-2">
+          <Section title={t('goal.title')}>
+            <p className="-mt-1 text-caption text-muted-foreground">{t('goal.description')}</p>
+            <div className="flex flex-wrap gap-2">
               {GOALS.map((option) => (
-                <Choice key={option} selected={goal === option} onClick={() => setGoal(option)}>
+                <FilterChip
+                  key={option}
+                  selected={goal === option}
+                  onClick={() => setGoal(option)}
+                  className={CHOICE}
+                >
                   {profileT(trainingGoalMessageKeys[option])}
-                </Choice>
+                </FilterChip>
               ))}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">{t('experience.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-2">
+            </div>
+          </Section>
+          <Section title={t('experience.title')} divider>
+            <div className="flex flex-col gap-2">
               {EXPERIENCES.map((option) => {
                 const key = trainingExperienceMessageKeys[option];
                 return (
-                  <Choice
+                  <OptionButton
                     key={option}
                     selected={experience === option}
                     onClick={() => setExperience(experience === option ? null : option)}
                     hint={t(`experience.${key}Hint`)}
                   >
                     {t(`experience.${key}`)}
-                  </Choice>
+                  </OptionButton>
                 );
               })}
-            </CardContent>
-          </Card>
+            </div>
+          </Section>
         </>
       )}
 
       {stepKey === 'availability' && (
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">{t('availability.title')}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-5">
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-medium">{t('availability.daysPerWeek')}</legend>
+        <Section title={t('availability.title')}>
+          <div className="flex flex-col gap-6">
+            <fieldset>
+              <legend className={LEGEND}>{t('availability.daysPerWeek')}</legend>
               <div className="grid grid-cols-5 gap-2">
                 {DAYS_PER_WEEK.map((days) => (
-                  <Choice
+                  <FilterChip
                     key={days}
                     selected={daysPerWeek === days}
                     onClick={() => setDaysPerWeek(days)}
-                    className="text-center"
+                    className={cn(CELL, 'text-body')}
                   >
-                    {days}
-                  </Choice>
+                    <Num stretch={112}>{days}</Num>
+                  </FilterChip>
                 ))}
               </div>
             </fieldset>
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-medium">{t('availability.weekdays')}</legend>
+            <fieldset>
+              <legend className={LEGEND}>{t('availability.weekdays')}</legend>
               <div className="grid grid-cols-7 gap-1.5">
                 {WEEKDAYS.map((day, index) => (
-                  <Choice
+                  <FilterChip
                     key={day}
                     selected={trainingDays.includes(index)}
                     onClick={() => setTrainingDays(toggle(trainingDays, index))}
-                    className="px-1 text-center"
+                    className={CELL}
                   >
                     {t(`weekdays.${day}`)}
-                  </Choice>
+                  </FilterChip>
                 ))}
               </div>
             </fieldset>
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-medium">{t('availability.minutes')}</legend>
+            <fieldset>
+              <legend className={LEGEND}>{t('availability.minutes')}</legend>
               <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
                 {SESSION_MINUTES.map((minutes) => (
-                  <Choice
+                  <FilterChip
                     key={minutes}
                     selected={sessionMinutes === minutes}
                     onClick={() => setSessionMinutes(minutes)}
-                    className="text-center"
+                    className={CELL}
                   >
                     {t('availability.minutesValue', { minutes })}
-                  </Choice>
+                  </FilterChip>
                 ))}
               </div>
             </fieldset>
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-medium">{t('availability.time')}</legend>
+            <fieldset>
+              <legend className={LEGEND}>{t('availability.time')}</legend>
               <div className="grid grid-cols-3 gap-2">
                 {TRAINING_TIMES.map((time) => (
-                  <Choice
+                  <FilterChip
                     key={time}
                     selected={trainingTime === time}
                     onClick={() => setTrainingTime(trainingTime === time ? null : time)}
-                    className="text-center"
+                    className={CELL}
                   >
                     {t(`availability.${time}`)}
-                  </Choice>
+                  </FilterChip>
                 ))}
               </div>
             </fieldset>
-          </CardContent>
-        </Card>
+          </div>
+        </Section>
       )}
 
       {stepKey === 'gym' && (
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">{t('gym.title')}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-5">
-            <div className="space-y-1.5">
-              <Label htmlFor="gym-name">{t('gym.name')}</Label>
+        <Section title={t('gym.title')}>
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="gym-name" className="text-caption font-semibold leading-tight">
+                {t('gym.name')}
+              </Label>
               <Input
                 id="gym-name"
                 value={gymName}
@@ -358,40 +362,41 @@ export function OnboardingFlow({ initial, exercises }: Props) {
                 onChange={(e) => setGymName(e.target.value)}
               />
             </div>
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-medium">{t('gym.equipment')}</legend>
-              <p className="text-xs text-muted-foreground">{t('gym.equipmentHint')}</p>
-              <div className="grid grid-cols-2 gap-2">
+            <fieldset aria-describedby="gym-equipment-hint">
+              <legend className="text-caption font-semibold">{t('gym.equipment')}</legend>
+              <p id="gym-equipment-hint" className="mb-3 mt-1 text-caption text-muted-foreground">
+                {t('gym.equipmentHint')}
+              </p>
+              <div className="flex flex-wrap gap-2">
                 {GYM_EQUIPMENT.map((item) => (
-                  <Choice
+                  <FilterChip
                     key={item}
                     selected={equipment.includes(item)}
                     onClick={() => setEquipment(toggle(equipment, item))}
+                    className={CHOICE}
                   >
                     {t(`equipment.${item}`)}
-                  </Choice>
+                  </FilterChip>
                 ))}
               </div>
             </fieldset>
-          </CardContent>
-        </Card>
+          </div>
+        </Section>
       )}
 
       {stepKey === 'preferences' && (
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">{t('preferences.title')}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-5">
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-medium">{t('preferences.priority')}</legend>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <Section title={t('preferences.title')}>
+          <div className="flex flex-col gap-6">
+            <fieldset>
+              <legend className={LEGEND}>{t('preferences.priority')}</legend>
+              <div className="flex flex-wrap gap-2">
                 {PRIORITY_MUSCLES.map((group) => {
                   const selected = priorityMuscles.includes(group);
                   return (
-                    <Choice
+                    <FilterChip
                       key={group}
                       selected={selected}
+                      className={CHOICE}
                       onClick={() => {
                         if (selected)
                           setPriorityMuscles(priorityMuscles.filter((g) => g !== group));
@@ -400,16 +405,20 @@ export function OnboardingFlow({ initial, exercises }: Props) {
                       }}
                     >
                       {exerciseT(`muscleGroups.${muscleGroupMessageKeys[group]}`)}
-                    </Choice>
+                    </FilterChip>
                   );
                 })}
               </div>
             </fieldset>
-            <div className="space-y-2">
-              <Label htmlFor="avoid-search">{t('preferences.avoid')}</Label>
-              <p className="text-xs text-muted-foreground">{t('preferences.avoidHint')}</p>
+            <div className="flex flex-col gap-2 border-t border-border pt-5">
+              <Label htmlFor="avoid-search" className="text-caption font-semibold leading-tight">
+                {t('preferences.avoid')}
+              </Label>
+              <p id="avoid-hint" className="text-caption text-muted-foreground">
+                {t('preferences.avoidHint')}
+              </p>
               {avoidIds.length > 0 && (
-                <ul className="flex flex-wrap gap-2" aria-label={t('preferences.avoid')}>
+                <ul className="flex flex-wrap gap-2 py-1" aria-label={t('preferences.avoid')}>
                   {avoidIds.map((id) => {
                     const name = nameById.get(id) ?? id;
                     return (
@@ -418,10 +427,10 @@ export function OnboardingFlow({ initial, exercises }: Props) {
                           type="button"
                           onClick={() => setAvoidIds(avoidIds.filter((v) => v !== id))}
                           aria-label={t('preferences.remove', { name })}
-                          className="inline-flex min-h-10 items-center gap-1 rounded-full border border-input bg-muted px-3 text-sm"
+                          className="inline-flex h-11 items-center gap-1.5 rounded-sm bg-ink px-3.5 text-caption font-semibold text-ink-foreground transition-[filter] duration-[120ms] ease-out-quart hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                         >
                           {name}
-                          <XIcon className="size-3.5" aria-hidden="true" />
+                          <XIcon weight="bold" className="size-4" aria-hidden="true" />
                         </button>
                       </li>
                     );
@@ -433,61 +442,65 @@ export function OnboardingFlow({ initial, exercises }: Props) {
                 type="search"
                 value={search}
                 placeholder={t('preferences.search')}
+                aria-describedby="avoid-hint"
                 onChange={(e) => setSearch(e.target.value)}
               />
-              {search.trim() && (
-                <div className="flex flex-col gap-1.5">
-                  {searchResults.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">{t('preferences.noResults')}</p>
-                  ) : (
-                    searchResults.map((exercise) => (
-                      <Choice
-                        key={exercise.id}
-                        selected={false}
-                        onClick={() => {
-                          setAvoidIds([...avoidIds, exercise.id]);
-                          setSearch('');
-                        }}
-                      >
-                        {exerciseName(exercise.name)}
-                      </Choice>
-                    ))
-                  )}
-                </div>
-              )}
-              <p className="text-xs text-muted-foreground">
+              {search.trim() &&
+                (searchResults.length === 0 ? (
+                  <p className="py-2 text-caption text-muted-foreground">
+                    {t('preferences.noResults')}
+                  </p>
+                ) : (
+                  <ul className="flex flex-col">
+                    {searchResults.map((exercise) => (
+                      <li key={exercise.id} className="border-b border-border">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAvoidIds([...avoidIds, exercise.id]);
+                            setSearch('');
+                          }}
+                          className="flex min-h-touch w-full items-center justify-between gap-3 rounded-xs py-2.5 text-left text-body font-semibold transition-colors duration-[120ms] ease-out-quart hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        >
+                          {exerciseName(exercise.name)}
+                          <PlusIcon className="size-4 shrink-0 text-muted-foreground" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ))}
+              <p className="text-caption text-muted-foreground">
                 {t('preferences.selected', { count: avoidIds.length })}
               </p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </Section>
       )}
 
       {stepKey === 'about' && (
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">{t('about.title')}</CardTitle>
-            <CardDescription>{t('about.description')}</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-medium">{t('about.unit')}</legend>
-              <div className="grid grid-cols-2 gap-2">
-                {(['KG', 'LB'] as const).map((option) => (
-                  <Choice
-                    key={option}
-                    selected={unit === option}
-                    onClick={() => setUnit(option)}
-                    className="text-center"
-                  >
-                    {option === 'KG' ? profileT('kilograms') : profileT('pounds')}
-                  </Choice>
-                ))}
-              </div>
-            </fieldset>
+        <Section title={t('about.title')}>
+          <p className="-mt-1 text-caption text-muted-foreground">{t('about.description')}</p>
+          <div className="flex flex-col gap-6 pt-2">
+            <div className="flex flex-col gap-2">
+              <p className="text-caption font-semibold" aria-hidden="true">
+                {t('about.unit')}
+              </p>
+              <Segmented
+                label={t('about.unit')}
+                value={unit}
+                onChange={setUnit}
+                options={[
+                  { value: 'KG', label: profileT('kilograms') },
+                  { value: 'LB', label: profileT('pounds') },
+                ]}
+              />
+            </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label htmlFor="onboarding-weight">
+              <div className="flex flex-col gap-2">
+                <Label
+                  htmlFor="onboarding-weight"
+                  className="text-caption font-semibold leading-tight"
+                >
                   {t('about.bodyweight', { unit: unitLabel(unit) })}
                 </Label>
                 <Input
@@ -495,20 +508,29 @@ export function OnboardingFlow({ initial, exercises }: Props) {
                   inputMode="decimal"
                   value={bodyweight}
                   onChange={(e) => setBodyweight(e.target.value)}
+                  className="font-num tabular-nums stretch-112"
                 />
               </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="onboarding-height">{t('about.height')}</Label>
+              <div className="flex flex-col gap-2">
+                <Label
+                  htmlFor="onboarding-height"
+                  className="text-caption font-semibold leading-tight"
+                >
+                  {t('about.height')}
+                </Label>
                 <Input
                   id="onboarding-height"
                   inputMode="numeric"
                   value={heightCm}
                   onChange={(e) => setHeightCm(e.target.value)}
+                  className="font-num tabular-nums stretch-112"
                 />
               </div>
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="onboarding-birth">{t('about.birthDate')}</Label>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="onboarding-birth" className="text-caption font-semibold leading-tight">
+                {t('about.birthDate')}
+              </Label>
               <Input
                 id="onboarding-birth"
                 type="date"
@@ -517,49 +539,52 @@ export function OnboardingFlow({ initial, exercises }: Props) {
                 className="max-w-xs"
               />
             </div>
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-medium">{t('about.sex')}</legend>
+            <fieldset>
+              <legend className={LEGEND}>{t('about.sex')}</legend>
               <div className="grid grid-cols-3 gap-2">
                 {(['FEMALE', 'MALE', 'OTHER'] as const).map((option) => (
-                  <Choice
+                  <FilterChip
                     key={option}
                     selected={sex === option}
                     onClick={() => setSex(sex === option ? null : option)}
-                    className="text-center"
+                    className={CELL}
                   >
                     {profileT(
                       option === 'FEMALE' ? 'female' : option === 'MALE' ? 'male' : 'other',
                     )}
-                  </Choice>
+                  </FilterChip>
                 ))}
               </div>
             </fieldset>
-          </CardContent>
-        </Card>
+          </div>
+        </Section>
       )}
 
-      <div className="sticky bottom-0 flex gap-3 bg-background/95 py-3">
-        {step > 0 && (
+      {/* Docked to the bottom edge: back and continue stay under the thumb. */}
+      <div className="sticky bottom-0 -mx-5 flex flex-col gap-3 border-t border-border bg-background px-5 py-3">
+        {!online && <OfflineNotice>{t('offline')}</OfflineNotice>}
+        <div className="flex gap-3">
+          {step > 0 && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setStep(step - 1)}
+              disabled={saving}
+            >
+              <CaretLeftIcon className="size-4" aria-hidden="true" />
+              {t('back')}
+            </Button>
+          )}
           <Button
             type="button"
-            variant="outline"
-            className="min-h-12"
-            onClick={() => setStep(step - 1)}
-            disabled={saving}
+            className="flex-1"
+            disabled={!canContinue}
+            loading={saving}
+            onClick={() => (isLast ? save() : setStep(step + 1))}
           >
-            <CaretLeftIcon className="size-4" aria-hidden="true" />
-            <span className="ml-1">{t('back')}</span>
+            {isLast ? t('finish') : t('next')}
           </Button>
-        )}
-        <Button
-          type="button"
-          className="min-h-12 flex-1"
-          disabled={!canContinue || saving}
-          onClick={() => (isLast ? save() : setStep(step + 1))}
-        >
-          {saving && <CircleNotchIcon className="mr-2 size-4 animate-spin" aria-hidden="true" />}
-          {saving ? t('saving') : isLast ? t('finish') : t('next')}
-        </Button>
+        </div>
       </div>
     </div>
   );

@@ -1,14 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
-import { WarningIcon, CircleNotchIcon, ChatCircleIcon, SparkleIcon } from '@/components/ui/icon';
-import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { extractAdjustments, type Adjustment } from '@/lib/coach-adjustments';
-import { CoachAdjustments } from './coach-adjustments';
+import { CoachText } from '@/components/ui/coach-text';
+import { ErrorState, OfflineNotice } from '@/components/ui/screen-state';
+import { Tag } from '@/components/ui/tag';
+import { useOnline } from '@/components/auth/use-online';
+import { extractAdjustments } from '@/lib/coach-adjustments';
+import { cn } from '@/lib/utils';
+import { CoachMarkdown } from './coach-markdown';
+import { KeyMissingNotice } from './key-missing-notice';
+import { ProposedAdjustments } from './proposed-adjustments';
 
 interface DebriefItem {
   id: string;
@@ -35,6 +38,9 @@ interface Props {
   programDefaults: Record<string, ProgramExerciseDefaults>;
 }
 
+// "Análises semanais": the weekly debriefs, newest first, each a row with
+// its week, date and the coach's first line; the open one shows the whole
+// text and the adjustments it proposes.
 export function CoachClient({
   initialHistory,
   hasApiKey,
@@ -43,25 +49,19 @@ export function CoachClient({
   programDefaults,
 }: Props) {
   const t = useTranslations('coach');
-  const format = useFormatter();
-  const formatDate = (iso: string) =>
-    format.dateTime(new Date(iso), { day: '2-digit', month: 'long', year: 'numeric' });
+  const online = useOnline();
+  const headingId = useId();
   const [history, setHistory] = useState(initialHistory);
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [activeId, setActiveId] = useState<string | null>(
-    initialHistory[0]?.id ?? null,
-  );
+  const [failed, setFailed] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(initialHistory[0]?.id ?? null);
 
   async function requestDebrief() {
     setPending(true);
-    setError(null);
+    setFailed(false);
     try {
       const res = await fetch('/api/coach', { method: 'POST' });
-      if (!res.ok) {
-        const j = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(j.error ?? `Error ${res.status}`);
-      }
+      if (!res.ok) throw new Error(String(res.status));
       const j = (await res.json()) as { id: string; response: string; createdAt: string };
       const newItem: DebriefItem = {
         id: j.id,
@@ -73,176 +73,146 @@ export function CoachClient({
       };
       setHistory((h) => [newItem, ...h]);
       setActiveId(newItem.id);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : t('client.unknownError'));
+    } catch {
+      setFailed(true);
     } finally {
       setPending(false);
     }
   }
 
-  const active = history.find((h) => h.id === activeId) ?? history[0];
+  const canGenerate = hasApiKey && online && !pending;
 
   return (
-    <div className="flex flex-col gap-6">
+    <section aria-labelledby={headingId} className="flex flex-col">
+      <div className="flex items-center justify-between gap-3 pb-1.5">
+        <h2 id={headingId} className="text-subtitle">
+          {t('client.title')}
+        </h2>
+        <Button
+          type="button"
+          variant="ink"
+          size="sm"
+          className="h-11"
+          onClick={requestDebrief}
+          loading={pending}
+          disabled={!canGenerate}
+        >
+          {pending ? t('client.generating') : t('client.generate')}
+        </Button>
+      </div>
+
       {!hasApiKey && (
-        <Card className="border-warning/50 bg-warning/10">
-          <CardContent className="flex items-start gap-3 py-4 text-sm">
-            <WarningIcon className="size-5 shrink-0 text-foreground" />
-            <div>
-              <p className="font-medium text-foreground">
-                {t('client.keyMissing', { provider: providerLabel })}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {t('client.keySetup', { variable: apiKeyEnvVar })}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      <Card>
-        <CardContent className="flex flex-col gap-3 py-4">
-          <Button
-            onClick={requestDebrief}
-            disabled={pending || !hasApiKey}
-            className="min-h-tap"
-          >
-            {pending ? (
-              <>
-                <CircleNotchIcon className="size-5 animate-spin" />
-                <span className="ml-2">{t('client.generating')}</span>
-              </>
-            ) : (
-              <>
-                <SparkleIcon className="size-5" />
-                <span className="ml-2">{t('client.request')}</span>
-              </>
-            )}
-          </Button>
-          {error && (
-            <p className="text-sm text-destructive">{error}</p>
-          )}
-        </CardContent>
-      </Card>
-
-      {active ? (
-        <ActiveDebrief
-          active={active}
-          programDefaults={programDefaults}
-          onApplied={(appliedAt) => {
-            setHistory((h) =>
-              h.map((item) => (item.id === active.id ? { ...item, appliedAt } : item)),
-            );
-          }}
+        <KeyMissingNotice
+          title={t('client.keyMissing', { provider: providerLabel })}
+          hint={t('client.keySetup', { variable: apiKeyEnvVar })}
         />
-      ) : (
-        <Card>
-          <CardContent className="flex items-center gap-3 py-8 text-sm text-muted-foreground">
-            <ChatCircleIcon className="size-5" />
-            <span>{t('client.empty')}</span>
-          </CardContent>
-        </Card>
       )}
+      {!online && <OfflineNotice className="mb-2">{t('offline')}</OfflineNotice>}
+      {failed && <ErrorState message={t('client.error')} onRetry={requestDebrief} />}
 
-      {history.length > 1 && (
-        <div>
-          <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            {t('context.history')}
-          </h3>
-          <ul className="flex flex-col gap-2">
-            {history.map((h) => {
-              const isActive = h.id === active?.id;
-              return (
-                <li key={h.id}>
-                  <button
-                    type="button"
-                    onClick={() => setActiveId(h.id)}
-                    className={`block w-full rounded-md border p-3 text-left text-sm transition-colors ${
-                      isActive
-                        ? 'border-brand/40 bg-accent'
-                        : 'border-border hover:bg-accent/40'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-medium">
-                        {formatDate(h.createdAt)}
-                      </span>
-                      {h.appliedAt && (
-                        <Badge variant="secondary" className="text-xs">
-                          {t('client.applied')}
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
-                      {firstNonEmptyLine(h.response)}
-                    </p>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+      {history.length === 0 ? (
+        <p className="border-t border-border py-4 text-caption text-muted-foreground text-pretty">
+          {t('client.empty')}
+        </p>
+      ) : (
+        <ul>
+          {history.map((item) => (
+            <DebriefRow
+              key={item.id}
+              item={item}
+              open={item.id === activeId}
+              onToggle={() => setActiveId((id) => (id === item.id ? null : item.id))}
+              programDefaults={programDefaults}
+              onApplied={(appliedAt) =>
+                setHistory((h) => h.map((d) => (d.id === item.id ? { ...d, appliedAt } : d)))
+              }
+            />
+          ))}
+        </ul>
       )}
-    </div>
+    </section>
   );
 }
 
-function ActiveDebrief({
-  active,
+function DebriefRow({
+  item,
+  open,
+  onToggle,
   programDefaults,
   onApplied,
 }: {
-  active: DebriefItem;
+  item: DebriefItem;
+  open: boolean;
+  onToggle: () => void;
   programDefaults: Record<string, ProgramExerciseDefaults>;
   onApplied: (appliedAt: string) => void;
 }) {
   const t = useTranslations('coach');
   const format = useFormatter();
-  const formatDate = (iso: string) =>
-    format.dateTime(new Date(iso), { day: '2-digit', month: 'long', year: 'numeric' });
-  const { cleaned, adjustments, parseErrors } = extractAdjustments(active.response);
-  return (
-    <div className="flex flex-col gap-4">
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <h2 className="text-base font-semibold">
-                {t('client.debriefFrom', { date: formatDate(active.createdAt) })}
-              </h2>
-              <p className="text-xs text-muted-foreground">
-                {t('client.weekOf', { date: formatDate(active.weekStart) })}
-              </p>
-            </div>
-            {active.appliedAt && (
-              <Badge variant="secondary" className="shrink-0">
-                {t('client.applied')}
-              </Badge>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent>
-          <article className="prose prose-sm dark:prose-invert max-w-none">
-            <ReactMarkdown>{cleaned}</ReactMarkdown>
-          </article>
-          {parseErrors.length > 0 && (
-            <p className="mt-3 text-xs text-foreground">
-              Adjustments block ignored: {parseErrors[0]}
-            </p>
-          )}
-        </CardContent>
-      </Card>
+  const panelId = useId();
+  const { cleaned, adjustments, parseErrors } = extractAdjustments(item.response);
 
-      {adjustments.length > 0 && (
-        <CoachAdjustments
-          debriefId={active.id}
-          initialAdjustments={adjustments as Adjustment[]}
-          programDefaults={programDefaults}
-          alreadyApplied={!!active.appliedAt}
-          onApplied={onApplied}
-        />
-      )}
-    </div>
+  return (
+    <li className="border-t border-border">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={onToggle}
+        className="flex w-full flex-col gap-1 py-3.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+      >
+        <span className="flex w-full items-baseline justify-between gap-2">
+          <span className="text-body font-semibold">
+            {t('client.weekOf', {
+              date: format.dateTime(new Date(item.weekStart), { day: '2-digit', month: '2-digit' }),
+            })}
+          </span>
+          <span className="shrink-0 text-[0.8125rem] font-medium text-muted-foreground">
+            {format.dateTime(new Date(item.createdAt), {
+              weekday: 'short',
+              day: '2-digit',
+              month: '2-digit',
+            })}
+          </span>
+        </span>
+        {!open && (
+          <span className="line-clamp-2 text-caption font-medium italic text-muted-foreground">
+            {firstNonEmptyLine(cleaned)}
+          </span>
+        )}
+        {item.appliedAt ? (
+          <Tag className="mt-1">{t('client.applied')}</Tag>
+        ) : (
+          adjustments.length > 0 && (
+            <Tag variant="primary" className="mt-1">
+              {t('client.suggested', { count: adjustments.length })}
+            </Tag>
+          )
+        )}
+      </button>
+
+      <div id={panelId} hidden={!open} className={cn('flex-col gap-4 pb-5', open && 'flex')}>
+        {open && (
+          <>
+            <CoachText>
+              <CoachMarkdown>{cleaned}</CoachMarkdown>
+            </CoachText>
+            {parseErrors.length > 0 && (
+              <p className="text-caption text-muted-foreground">{t('client.unreadable')}</p>
+            )}
+            {adjustments.length > 0 && (
+              <ProposedAdjustments
+                debriefId={item.id}
+                adjustments={adjustments}
+                programDefaults={programDefaults}
+                appliedAt={item.appliedAt}
+                onApplied={onApplied}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </li>
   );
 }
 

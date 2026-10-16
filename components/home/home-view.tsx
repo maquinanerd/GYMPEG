@@ -6,35 +6,23 @@ import type { GreetingPeriod, WeekDayStatus } from '@/lib/home-week';
 import type { HomeInsightKind } from '@/lib/home-insight';
 import { formatWeight } from '@/lib/units';
 import { cn } from '@/lib/utils';
-import { SyncIndicator } from '@/components/offline/sync-indicator';
+import { SyncStatus } from '@/components/offline/sync-status';
 import { StartWorkoutButton } from '@/components/session/start-workout-button';
 import { MuscleMap } from '@/components/progress/muscle-map';
 import { Button } from '@/components/ui/button';
-import { Tag, type TagTone } from '@/components/ui/tag';
-import { StatTile } from '@/components/ui/stat-tile';
-import { IconCircle, ListRow } from '@/components/ui/list-row';
-import {
-  ArrowRightIcon,
-  BarbellIcon,
-  CalendarCheckIcon,
-  ClockIcon,
-  FilesIcon,
-  ListChecksIcon,
-  ListNumbersIcon,
-  PauseIcon,
-  PlayIcon,
-  ScalesIcon,
-  StackIcon,
-  TargetIcon,
-  TrendUpIcon,
-  TrophyIcon,
-  BatteryLowIcon,
-  type AppIcon,
-} from '@/components/ui/icon';
+import { Tag, type TagVariant } from '@/components/ui/tag';
+import { Num } from '@/components/ui/num';
+import { Highlight } from '@/components/ui/highlight';
+import { LimeBlock } from '@/components/ui/lime-block';
+import { ListRow } from '@/components/ui/list-row';
+import { ProgressBar } from '@/components/ui/progress-bar';
+import { Section, textLinkClass } from '@/components/ui/section';
+import { WeekStrip, type DayCellState, type WeekStripItem } from '@/components/ui/week-strip';
+import { sparkline, type SparkPoint } from '@/components/home/sparkline';
 
-// The home screen ("Início", design round 1): greeting and sync state, the
-// week strip, the dominant "next workout" card, the week against the plan,
-// one computed insight, the latest records and the bodyweight tile. A view
+// The home screen ("Início", design v2): date, greeting and sync tag; the
+// lime block of today's workout; this week against the plan; one computed
+// alert; the latest records and the bodyweight with its sparkline. A view
 // over plain data: app/(app)/page.tsx loads it, nothing here hits the DB.
 
 export interface HomeWeekDay {
@@ -45,29 +33,39 @@ export interface HomeWeekDay {
   trained: boolean;
 }
 
+// One exercise of the workout as prescribed: "4 × 5‑8".
+export interface HomeExercise {
+  name: string;
+  sets: number;
+  repsMin: number;
+  repsMax: number;
+}
+
 export type HomeNext =
   | {
       kind: 'inProgress';
       sessionId: string;
       title: string;
       elapsedMinutes: number;
-      startedAt: Date;
-      exerciseCount: number;
       setsDone: number;
       setsTotal: number;
       muscles: CompactMuscle[];
+      exercises: HomeExercise[];
     }
   | {
       kind: 'next';
       workoutId: string;
       title: string;
-      // Cycle week ("Semana 3 de 5"), the deload week, or the program name.
-      tag: { text: string; tone: TagTone };
-      exerciseCount: number;
-      setCount: number;
+      // Cycle week ("Semana 3 de 5") or the program name.
+      kicker: string;
+      // This week (or a deload the lifter started) runs lighter.
+      deload: boolean;
+      // The program schedules this workout for today.
+      scheduledToday: boolean;
       minutes: number | null;
       reason: string;
       muscles: CompactMuscle[];
+      exercises: HomeExercise[];
     }
   | { kind: 'choose'; programName: string }
   | { kind: 'empty'; programId: string; programName: string; reason: string }
@@ -85,7 +83,6 @@ export interface HomeRecord {
 }
 
 export interface HomeData {
-  initials: string;
   name: string;
   greeting: GreetingPeriod;
   now: Date;
@@ -101,374 +98,331 @@ export interface HomeData {
   };
   insight: { kind: HomeInsightKind; title: string; detail: string; href: string } | null;
   records: HomeRecord[];
-  weight: { latestKg: number; averageKg: number | null; ratePerWeekKg: number | null } | null;
+  weight: {
+    latestKg: number;
+    averageKg: number | null;
+    ratePerWeekKg: number | null;
+    // Weigh-ins of the lookback window, any order.
+    series: SparkPoint[];
+  } | null;
 }
 
 export function HomeView({ data }: { data: HomeData }) {
   return (
-    <main className="flex-1 px-5 pb-6 pt-4">
-      <div className="mx-auto flex max-w-2xl flex-col gap-6">
-        <HomeHeader data={data} />
-        <WeekStrip data={data} />
-        <NextWorkoutCard next={data.next} timeZone={data.timeZone} />
-        <WeekStats stats={data.weekStats} />
-        {data.insight && <InsightCard insight={data.insight} />}
-        <RecentRecords records={data.records} unit={data.unit} timeZone={data.timeZone} />
-        {data.weight && <WeightTile weight={data.weight} unit={data.unit} />}
-      </div>
+    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col pb-7">
+      <HomeHeader data={data} />
+      <TodayBlock next={data.next} />
+      <ThisWeek data={data} />
+      {data.insight && <InsightAlert insight={data.insight} />}
+      <RecentRecords records={data.records} unit={data.unit} timeZone={data.timeZone} />
+      {data.weight && (
+        <WeightSection
+          weight={data.weight}
+          unit={data.unit}
+          className={data.records.length > 0 ? 'mt-4' : 'mt-7'}
+        />
+      )}
     </main>
   );
 }
 
 function HomeHeader({ data }: { data: HomeData }) {
   const t = useTranslations('dashboard.home');
+  const locale = useLocale();
+  const date = new Intl.DateTimeFormat(locale, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: data.timeZone,
+  }).format(data.now);
   return (
-    <header className="flex items-center gap-3">
-      <span
-        aria-hidden
-        className="flex size-11 shrink-0 items-center justify-center rounded-full bg-foreground text-body font-semibold text-background"
-      >
-        {data.initials}
-      </span>
-      <h1 className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="text-caption text-muted-foreground">{t(`greeting.${data.greeting}`)}</span>
-        <span className="truncate text-subtitle">{data.name}</span>
-      </h1>
-      <SyncIndicator />
+    <header className="flex items-end justify-between gap-3 px-5 pb-[18px] pt-4">
+      <div className="flex min-w-0 flex-col gap-0.5">
+        <p className="text-caption text-muted-foreground">{date}</p>
+        <h1 className="text-title [overflow-wrap:anywhere]">
+          {t(`greeting.${data.greeting}`, { name: data.name })}
+        </h1>
+      </div>
+      <SyncStatus />
     </header>
   );
 }
 
-// Weekday label without the abbreviation dot, capitalized: "Seg", "Ter".
-function shortWeekday(date: Date, locale: string): string {
-  const raw = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' })
-    .format(date)
-    .replace(/\.$/u, '');
-  return raw.charAt(0).toLocaleUpperCase(locale) + raw.slice(1);
+// "4 × 5‑8" (non-breaking hyphen), or "3 × 10" for a fixed target.
+function prescription(exercise: HomeExercise): string {
+  const reps =
+    exercise.repsMin === exercise.repsMax
+      ? String(exercise.repsMin)
+      : `${exercise.repsMin}‑${exercise.repsMax}`;
+  return `${exercise.sets} × ${reps}`;
 }
 
-function WeekStrip({ data }: { data: HomeData }) {
-  const t = useTranslations('dashboard.home');
-  const locale = useLocale();
-  const today = new Intl.DateTimeFormat(locale, {
-    weekday: 'short',
-    day: '2-digit',
-    month: '2-digit',
-    timeZone: data.timeZone,
-  }).format(data.now);
-  const fullDay = new Intl.DateTimeFormat(locale, {
-    weekday: 'long',
-    day: '2-digit',
-    month: '2-digit',
-    timeZone: 'UTC',
-  });
-  const dayNumber = new Intl.DateTimeFormat(locale, { day: '2-digit', timeZone: 'UTC' });
+// Past this many the list folds the rest into "+ N exercícios".
+const LISTED_EXERCISES = 6;
 
+function ExerciseList({ exercises }: { exercises: HomeExercise[] }) {
+  const t = useTranslations('dashboard.home.next');
+  // Never fold a single exercise: listing it takes the same room.
+  const shown =
+    exercises.length > LISTED_EXERCISES + 1 ? exercises.slice(0, LISTED_EXERCISES) : exercises;
+  const folded = exercises.length - shown.length;
   return (
-    <section className="flex flex-col gap-3" aria-labelledby="home-week-title">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 id="home-week-title" className="text-heading">
-          {t('thisWeek')}
-        </h2>
-        <span className="text-caption text-muted-foreground">{today}</span>
-      </div>
-      <ol aria-label={t('weekLabel')} className="flex justify-between gap-1">
-        {data.week.map((day) => {
-          const isToday = day.status === 'today';
-          return (
-            <li
-              key={day.key}
-              aria-label={`${fullDay.format(day.date)}: ${t(`dayStatus.${day.status}`)}${
-                isToday && day.trained ? `, ${t('dayStatus.trained')}` : ''
-              }`}
-              aria-current={isToday ? 'date' : undefined}
-              className={cn(
-                'flex h-[88px] min-w-0 max-w-[46px] flex-1 flex-col items-center justify-between rounded-[23px] pb-1.5 pt-[9px]',
-                isToday
-                  ? 'bg-primary text-primary-foreground'
-                  : day.status === 'planned'
-                    ? 'border-[1.5px] border-brand/50 bg-card'
-                    : 'border border-border bg-card',
-              )}
-            >
-              <span
-                aria-hidden
-                className={cn(
-                  'size-[5px] rounded-full',
-                  isToday ? 'bg-primary-foreground' : day.trained ? 'bg-brand' : 'bg-transparent',
-                )}
-              />
-              <span
-                aria-hidden
-                className={cn(
-                  'text-small',
-                  isToday ? 'text-primary-foreground' : 'text-muted-foreground',
-                )}
-              >
-                {shortWeekday(day.date, locale)}
-              </span>
-              <span
-                aria-hidden
-                className={cn(
-                  'flex size-8 items-center justify-center rounded-full text-caption font-semibold tabular-nums',
-                  isToday
-                    ? 'bg-primary-foreground text-primary'
-                    : day.trained
-                      ? 'bg-pill text-foreground'
-                      : 'text-muted-foreground',
-                )}
-              >
-                {dayNumber.format(day.date)}
-              </span>
-            </li>
-          );
-        })}
+    <div className="flex flex-col">
+      <ol aria-label={t('exerciseList')} className="flex flex-col">
+        {shown.map((exercise, index) => (
+          <li
+            key={`${index}-${exercise.name}`}
+            className="flex items-baseline justify-between gap-3 border-t border-ink/[0.14] py-[9px] text-body"
+          >
+            <span className="min-w-0">{exercise.name}</span>
+            <Num className="whitespace-nowrap text-caption">{prescription(exercise)}</Num>
+          </li>
+        ))}
       </ol>
-    </section>
+      {folded > 0 && (
+        <p className="border-t border-ink/[0.14] py-[9px] text-caption font-semibold text-brand-strong">
+          {t('moreExercises', { count: folded })}
+        </p>
+      )}
+    </div>
   );
 }
 
-function MetaItem({ icon: Glyph, children }: { icon: AppIcon; children: React.ReactNode }) {
-  return (
-    <span className="flex items-center gap-1">
-      <Glyph className="size-4 text-muted-foreground" />
-      {children}
-    </span>
-  );
-}
+// Text link on the lime fill: ink text, 44px tall hit area.
+const limeLinkClass =
+  'inline-flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-xs font-semibold text-primary-foreground underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 
-function NextWorkoutCard({ next, timeZone }: { next: HomeNext; timeZone: string }) {
+// The lime block: today's workout (or the workout in progress), and with the
+// same shape the no-program, empty-program and new-account states.
+function TodayBlock({ next }: { next: HomeNext }) {
   const t = useTranslations('dashboard.home.next');
   const dashboardT = useTranslations('dashboard');
-  const locale = useLocale();
 
-  let tag: { text: string; tone: TagTone };
+  let kicker: React.ReactNode;
   let title: string;
-  let meta: { icon: AppIcon; text: string }[] = [];
-  let reason: string;
+  let body: string | null = null;
+  let exercises: HomeExercise[] | null = null;
   let muscles: CompactMuscle[] | null = null;
-  let cta: React.ReactNode;
-  let secondary: { href: string; label: string } | null = null;
+  let action: React.ReactNode;
+  let foot: string | null = null;
+  let footLink: { href: string; label: string } | null = null;
+
+  const linkAction = (href: string, label: string) => (
+    <Button asChild variant="ink" className="w-full">
+      <Link href={href}>{label}</Link>
+    </Button>
+  );
 
   switch (next.kind) {
-    case 'inProgress': {
-      const time = new Intl.DateTimeFormat(locale, {
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZone,
-      }).format(next.startedAt);
-      tag = { text: t('inProgress', { minutes: next.elapsedMinutes }), tone: 'brand' };
+    case 'inProgress':
+      kicker = t('inProgress', { minutes: next.elapsedMinutes });
       title = next.title;
-      meta = [
-        { icon: BarbellIcon, text: t('exercises', { count: next.exerciseCount }) },
-        { icon: StackIcon, text: t('setsDone', { done: next.setsDone, total: next.setsTotal }) },
-      ];
-      reason = t('startedAt', { time });
+      exercises = next.exercises;
       muscles = next.muscles;
-      cta = (
-        <Button asChild className="w-full">
-          <Link href={`/session/${next.sessionId}`}>
-            <PlayIcon />
-            {t('resume')}
-          </Link>
-        </Button>
-      );
+      action = linkAction(`/session/${next.sessionId}`, t('resume'));
+      foot = t('setsLogged', { done: next.setsDone, total: next.setsTotal });
       break;
-    }
     case 'next':
-      tag = next.tag;
+      kicker = (
+        <>
+          <span>{next.scheduledToday ? `${t('today')} · ${next.kicker}` : next.kicker}</span>
+          {next.deload && <Tag variant="deload">{t('deload')}</Tag>}
+        </>
+      );
       title = next.title;
-      meta = [
-        { icon: BarbellIcon, text: t('exercises', { count: next.exerciseCount }) },
-        { icon: StackIcon, text: t('sets', { count: next.setCount }) },
-        ...(next.minutes != null
-          ? [{ icon: ClockIcon, text: t('minutes', { count: next.minutes }) }]
-          : []),
-      ];
-      reason = next.reason;
+      exercises = next.exercises;
       muscles = next.muscles;
-      cta = <StartWorkoutButton workoutId={next.workoutId} label={t('start')} />;
-      secondary = { href: '/session/new', label: t('chooseOther') };
+      action = (
+        <StartWorkoutButton workoutId={next.workoutId} label={t('start')} variant="ink" />
+      );
+      foot =
+        next.minutes != null
+          ? `${next.reason} · ${t('minutes', { count: next.minutes })}`
+          : next.reason;
+      footLink = { href: '/session/new', label: t('switch') };
       break;
     case 'choose':
-      tag = { text: next.programName, tone: 'brand' };
+      kicker = next.programName;
       title = t('chooseTitle');
-      reason = dashboardT('chooseSession');
-      cta = (
-        <Button asChild className="w-full">
-          <Link href="/session/new">
-            <PlayIcon />
-            {dashboardT('chooseSession')}
-          </Link>
-        </Button>
-      );
+      action = linkAction('/session/new', dashboardT('chooseSession'));
       break;
     case 'empty':
-      tag = { text: t('emptyTag'), tone: 'warning' };
+      kicker = t('emptyTag');
       title = next.programName;
-      reason = next.reason;
-      cta = (
-        <Button asChild className="w-full">
-          <Link href={`/programs/${next.programId}`}>
-            <ListChecksIcon />
-            {dashboardT('configureProgram')}
-          </Link>
-        </Button>
-      );
+      body = next.reason;
+      action = linkAction(`/programs/${next.programId}`, dashboardT('configureProgram'));
       break;
     case 'noProgram':
-      tag = { text: t('noProgramTag'), tone: 'warning' };
+      kicker = t('noProgramTag');
       title = t('noProgramTitle');
-      meta = [{ icon: FilesIcon, text: t('noProgramMeta') }];
-      reason = t('noProgramReason');
-      cta = (
-        <Button asChild className="w-full">
-          <Link href="/programs/new/template">
-            <ListChecksIcon />
-            {t('chooseProgram')}
-          </Link>
-        </Button>
-      );
-      secondary = { href: '/programs/new', label: t('createProgram') };
+      body = t('noProgramReason');
+      action = linkAction('/programs/new/template', t('chooseProgram'));
+      foot = t('noProgramMeta');
+      footLink = { href: '/programs/new', label: t('createProgram') };
       break;
     case 'new':
-      tag = { text: t('newTag'), tone: 'brand' };
+      kicker = t('newTag');
       title = dashboardT('onboardingTitle');
-      meta = [
-        { icon: ListNumbersIcon, text: t('newSteps') },
-        { icon: TargetIcon, text: t('newTopics') },
-      ];
-      reason = t('newReason');
-      cta = (
-        <Button asChild className="w-full">
-          <Link href="/onboarding">
-            <ArrowRightIcon />
-            {t('newCta')}
-          </Link>
-        </Button>
-      );
-      secondary = { href: '/exercises', label: t('explore') };
+      body = t('newIntro');
+      action = linkAction('/onboarding', t('newCta'));
+      foot = t('newReason');
+      footLink = { href: '/exercises', label: t('explore') };
       break;
   }
 
   return (
-    <section
-      data-testid="next-workout"
-      aria-labelledby="home-next-title"
-      className="flex flex-col gap-4 rounded-lg border border-border bg-card p-4"
-    >
-      <div className="flex gap-2">
-        <div className="flex min-w-0 flex-1 flex-col gap-2.5 pl-1 pt-1">
-          <Tag dot={tag.tone}>{tag.text}</Tag>
-          <h2 id="home-next-title" className="text-title [text-wrap:pretty]">
+    <LimeBlock data-testid="next-workout" aria-labelledby="home-today-title" className="pb-3.5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-caption font-semibold text-brand-strong">
+            {kicker}
+          </p>
+          <h2
+            id="home-today-title"
+            className="text-display [overflow-wrap:anywhere] [text-wrap:balance]"
+          >
             {title}
           </h2>
-          {meta.length > 0 && (
-            <div className="flex flex-wrap gap-x-2.5 gap-y-1.5 text-caption text-muted-foreground">
-              {meta.map((item) => (
-                <MetaItem key={item.text} icon={item.icon}>
-                  {item.text}
-                </MetaItem>
-              ))}
-            </div>
-          )}
-          <p className="flex items-center gap-1.5 text-caption">
-            <CalendarCheckIcon className="size-4 shrink-0 text-brand" />
-            {reason}
-          </p>
         </div>
-        {muscles && muscles.length > 0 && (
-          <MuscleMap active={muscles} size={104} className="self-center" />
-        )}
+        {muscles && muscles.length > 0 && <MuscleMap active={muscles} theme="lime" size={92} />}
       </div>
-      <div className="flex flex-col gap-1">
-        {cta}
-        {secondary && (
-          <Link
-            href={secondary.href}
-            className="flex h-11 items-center justify-center rounded-pill text-caption text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {secondary.label}
-          </Link>
-        )}
-      </div>
-    </section>
+      {body && <p className="text-body text-brand-strong [text-wrap:pretty]">{body}</p>}
+      {exercises && exercises.length > 0 && <ExerciseList exercises={exercises} />}
+      {action}
+      {(foot || footLink) && (
+        <div className="-my-2 flex min-h-11 items-center justify-between gap-3 text-caption text-brand-strong">
+          <span className="min-w-0 [text-wrap:pretty]">{foot}</span>
+          {footLink && (
+            <Link href={footLink.href} className={limeLinkClass}>
+              {footLink.label}
+            </Link>
+          )}
+        </div>
+      )}
+    </LimeBlock>
   );
 }
 
-function WeekStats({ stats }: { stats: HomeData['weekStats'] }) {
-  const t = useTranslations('dashboard.home.week');
-  const ratio = (done: number, planned: number | null) =>
-    planned != null && planned > 0 ? done / planned : undefined;
-  return (
-    <section className="flex flex-col gap-3" aria-labelledby="home-stats-title">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 id="home-stats-title" className="text-heading">
-          {t('title')}
-        </h2>
-        <Link
-          href="/progress/report"
-          className="rounded-pill text-caption text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          {t('report')}
-        </Link>
-      </div>
-      <div className="grid grid-cols-2 gap-3" data-testid="weekly-adherence">
-        <StatTile
-          label={t('sessions')}
-          icon={BarbellIcon}
-          value={String(stats.sessionsDone)}
-          caption={
-            stats.sessionsPlanned != null
-              ? t('sessionsOf', { count: stats.sessionsPlanned })
-              : t('thisWeek')
-          }
-          progress={ratio(stats.sessionsDone, stats.sessionsPlanned)}
-        />
-        <StatTile
-          label={t('sets')}
-          icon={StackIcon}
-          value={String(stats.setsDone)}
-          caption={
-            stats.setsPrescribed != null
-              ? t('setsOf', { count: stats.setsPrescribed })
-              : t('thisWeek')
-          }
-          progress={ratio(stats.setsDone, stats.setsPrescribed)}
-        />
-      </div>
-    </section>
-  );
-}
-
-const INSIGHT_LOOK: Record<
-  HomeInsightKind,
-  { icon: AppIcon; tone: 'warning' | 'info' | 'deload' | 'pr' }
-> = {
-  stall: { icon: PauseIcon, tone: 'warning' },
-  deload: { icon: BatteryLowIcon, tone: 'deload' },
-  pr: { icon: TrophyIcon, tone: 'pr' },
-  'on-track': { icon: TrendUpIcon, tone: 'info' },
+const DAY_STATE: Record<WeekDayStatus, DayCellState> = {
+  today: 'today',
+  trained: 'done',
+  planned: 'planned',
+  rest: 'rest',
 };
 
-// One insight computed by the domain (lib/home-insight): no AI sphere here.
-function InsightCard({ insight }: { insight: NonNullable<HomeData['insight']> }) {
-  const look = INSIGHT_LOOK[insight.kind];
+function WeekNumber({
+  value,
+  caption,
+  planned,
+}: {
+  value: number;
+  caption: string;
+  planned: number | null;
+}) {
   return (
-    <Link
-      href={insight.href}
-      className="flex items-start gap-3 rounded border border-border bg-card p-4 transition-colors hover:bg-pill/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    <div className="flex flex-col gap-2">
+      <p className="flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
+        <Num className="text-[1.75rem] leading-none">{value}</Num>
+        <span className="text-caption text-muted-foreground">{caption}</span>
+      </p>
+      {/* The bar repeats the sentence above for sighted users only. */}
+      {planned != null && planned > 0 && <ProgressBar value={value} max={planned} />}
+    </div>
+  );
+}
+
+function ThisWeek({ data }: { data: HomeData }) {
+  const t = useTranslations('dashboard.home');
+  const locale = useLocale();
+  const weekday = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' });
+  const dayNumber = new Intl.DateTimeFormat(locale, { day: 'numeric', timeZone: 'UTC' });
+  const fullDay = new Intl.DateTimeFormat(locale, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  });
+  const first = data.week[0];
+  const last = data.week.at(-1);
+  const range =
+    first && last
+      ? new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', timeZone: 'UTC' })
+          .formatRange(first.date, last.date)
+      : undefined;
+
+  const days: WeekStripItem[] = data.week.map((day) => ({
+    key: day.key,
+    // "seg." → "seg".
+    weekday: weekday.format(day.date).replace(/\.$/u, ''),
+    day: dayNumber.format(day.date),
+    state: DAY_STATE[day.status],
+    label: `${fullDay.format(day.date)}: ${t(`dayStatus.${day.status}`)}${
+      day.status === 'today' && day.trained ? `, ${t('dayStatus.trained')}` : ''
+    }`,
+  }));
+
+  const { sessionsDone, sessionsPlanned, setsDone, setsPrescribed } = data.weekStats;
+  return (
+    <Section title={t('thisWeek')} aside={range} className="gap-3.5 px-5 pt-7">
+      <WeekStrip days={days} />
+      <div data-testid="weekly-adherence" className="grid grid-cols-2 gap-6 pt-1.5">
+        <WeekNumber
+          value={sessionsDone}
+          planned={sessionsPlanned}
+          caption={
+            sessionsPlanned != null
+              ? t('week.sessionsOf', { count: sessionsPlanned })
+              : t('week.sessionsThisWeek', { count: sessionsDone })
+          }
+        />
+        <WeekNumber
+          value={setsDone}
+          planned={setsPrescribed}
+          caption={
+            setsPrescribed != null
+              ? t('week.setsOf', { count: setsPrescribed })
+              : t('week.setsThisWeek', { count: setsDone })
+          }
+        />
+      </div>
+    </Section>
+  );
+}
+
+const INSIGHT_TAG: Record<
+  HomeInsightKind,
+  { key: 'stall' | 'deload' | 'pr' | 'onTrack'; variant: TagVariant }
+> = {
+  stall: { key: 'stall', variant: 'warning' },
+  deload: { key: 'deload', variant: 'deload' },
+  pr: { key: 'pr', variant: 'pr' },
+  'on-track': { key: 'onTrack', variant: 'muted' },
+};
+
+// The one alert computed by the domain (lib/home-insight): a tag naming the
+// kind, the title (link to where to act) and the detail. Not AI: no italic.
+function InsightAlert({ insight }: { insight: NonNullable<HomeData['insight']> }) {
+  const t = useTranslations('dashboard.home.insight');
+  const look = INSIGHT_TAG[insight.kind];
+  return (
+    <section
+      aria-labelledby="home-insight-title"
+      data-insight={insight.kind}
+      className="mx-5 mt-7 flex flex-col gap-2 border-t border-border pt-5"
     >
-      <IconCircle tone={look.tone}>
-        <look.icon />
-      </IconCircle>
-      <span className="flex min-w-0 flex-col gap-1">
-        <span className="text-body font-semibold">{insight.title}</span>
-        <span className="text-caption text-muted-foreground [text-wrap:pretty]">
-          {insight.detail}
-        </span>
-      </span>
-    </Link>
+      <Tag variant={look.variant}>{t(look.key)}</Tag>
+      <h2 id="home-insight-title" className="text-subtitle">
+        <Link
+          href={insight.href}
+          className="rounded-xs underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {insight.title}
+        </Link>
+      </h2>
+      <p className="text-[0.9375rem] font-medium leading-[1.45] text-muted-foreground [text-wrap:pretty]">
+        {insight.detail}
+      </p>
+    </section>
   );
 }
 
@@ -495,78 +449,93 @@ function RecentRecords({
   const locale = useLocale();
   const format = useFormatter();
   if (records.length === 0) return null;
-  const number = (kg: number) =>
-    formatWeight(kg, unit, { decimals: 1, locale, withUnit: false });
+  const number = (kg: number) => formatWeight(kg, unit, { decimals: 1, locale, withUnit: false });
   const withUnit = (kg: number) => formatWeight(kg, unit, { decimals: 1, locale });
 
   return (
-    <section className="flex flex-col gap-3" aria-labelledby="home-records-title">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 id="home-records-title" className="text-heading">
-          {t('records.title')}
-        </h2>
-        <Link
-          href="/progress"
-          className="rounded-pill text-caption text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
+    <Section
+      title={t('records.title')}
+      action={
+        <Link href="/progress" className={cn(textLinkClass, '-my-3 inline-flex min-h-11 items-center')}>
           {t('home.records.viewAll')}
         </Link>
-      </div>
-      <div data-testid="recent-records" className="rounded border border-border bg-card px-4 py-1">
+      }
+      className="mx-5 mt-7 gap-1.5"
+    >
+      <ul data-testid="recent-records">
         {records.map((record) => {
           const date = format.dateTime(record.achievedAt, {
             day: '2-digit',
             month: '2-digit',
             timeZone,
           });
+          const label = t(`home.records.${RECORD_LABEL_KEYS[record.type]}`);
           const reps = record.type === 'REPS';
-          const subtitle = reps
-            ? `${withUnit(record.weightKg ?? 0)} · ${date}`
-            : `${t(`home.records.${RECORD_LABEL_KEYS[record.type]}`)} · ${date}`;
+          // Load records keep the unit on both sides; volumes drop it before
+          // the arrow so the pair fits a phone row.
+          const load = record.type === 'WEIGHT' || record.type === 'E1RM';
+          const before = reps
+            ? `× ${record.previousValue}`
+            : load
+              ? withUnit(record.previousValue)
+              : number(record.previousValue);
+          const after = reps ? `× ${record.value}` : withUnit(record.value);
           return (
             <ListRow
               key={record.id}
-              leading={
-                <IconCircle tone="pr">
-                  <TrophyIcon />
-                </IconCircle>
-              }
-              title={record.exerciseName ?? t(`home.records.${RECORD_LABEL_KEYS[record.type]}`)}
-              subtitle={subtitle}
+              title={record.exerciseName ?? label}
+              meta={reps ? `${withUnit(record.weightKg ?? 0)} · ${date}` : `${label} · ${date}`}
+              // `trailing`, not `value`: ListRow's `value` collides with the
+              // <li value> attribute type and only takes strings.
               trailing={
-                <span className="flex shrink-0 items-baseline gap-1 tabular-nums">
+                <span className="flex items-baseline justify-end gap-2 whitespace-nowrap">
                   <span className="text-caption text-muted-foreground">
-                    {reps ? `× ${record.previousValue}` : number(record.previousValue)}
+                    <span className="sr-only">{t('home.records.previous')} </span>
+                    {before}
                   </span>
-                  <span aria-hidden className="text-caption text-muted-foreground">
-                    →
-                  </span>
-                  <span className="text-subtitle">
-                    {reps ? `× ${record.value}` : withUnit(record.value)}
-                  </span>
+                  <Highlight stretch={125} className="text-body">
+                    {after}
+                  </Highlight>
                 </span>
               }
             />
           );
         })}
-      </div>
-    </section>
+      </ul>
+    </Section>
   );
 }
 
-function WeightTile({
+const SPARK_WIDTH = 112;
+const SPARK_HEIGHT = 40;
+
+function WeightSection({
   weight,
   unit,
+  className,
 }: {
   weight: NonNullable<HomeData['weight']>;
   unit: WeightUnit;
+  className?: string;
 }) {
   const t = useTranslations('dashboard.home.weight');
   const locale = useLocale();
-  const value = formatWeight(weight.latestKg, unit, { decimals: 1, fixed: true, locale, withUnit: false });
+  const value = formatWeight(weight.latestKg, unit, {
+    decimals: 1,
+    fixed: true,
+    locale,
+    withUnit: false,
+  });
   const parts = [
     weight.averageKg != null
-      ? t('average', { value: formatWeight(weight.averageKg, unit, { decimals: 1, fixed: true, locale }) })
+      ? t('average', {
+          value: formatWeight(weight.averageKg, unit, {
+            decimals: 1,
+            fixed: true,
+            locale,
+            withUnit: false,
+          }),
+        })
       : null,
     weight.ratePerWeekKg != null
       ? t('rate', {
@@ -578,23 +547,50 @@ function WeightTile({
         })
       : null,
   ].filter(Boolean);
+  // Kilograms or pounds draw the same shape: the scale is linear.
+  const line = sparkline(weight.series, { width: SPARK_WIDTH, height: SPARK_HEIGHT });
+
   return (
-    <Link
-      href="/progress"
+    <section
       data-testid="home-weight"
-      className="flex flex-col gap-3 rounded border border-border bg-card p-4 transition-colors hover:bg-pill/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-    >
-      <span className="flex items-center justify-between text-caption text-muted-foreground">
-        {t('title')}
-        <ScalesIcon className="size-[18px] text-brand" />
-      </span>
-      <span className="flex items-baseline gap-1">
-        <span className="text-number tabular-nums">{value}</span>
-        <span className="text-caption text-muted-foreground">{unit === 'LB' ? 'lb' : 'kg'}</span>
-      </span>
-      {parts.length > 0 && (
-        <span className="text-caption text-muted-foreground tabular-nums">{parts.join(' · ')}</span>
+      aria-labelledby="home-weight-title"
+      className={cn(
+        'mx-5 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 border-t border-border pt-5',
+        className,
       )}
-    </Link>
+    >
+      <div className="flex min-w-0 flex-col gap-1">
+        <h2 id="home-weight-title" className="text-caption font-semibold text-muted-foreground">
+          {t('title')}
+        </h2>
+        <p className="flex items-baseline gap-1">
+          <Num className="text-[1.75rem] leading-none">{value}</Num>
+          <span className="text-caption text-muted-foreground">{unit === 'LB' ? 'lb' : 'kg'}</span>
+        </p>
+        {parts.length > 0 && (
+          <p className="text-[0.8125rem] font-medium text-muted-foreground">{parts.join(' · ')}</p>
+        )}
+      </div>
+      {line && (
+        <svg
+          width={SPARK_WIDTH}
+          height={SPARK_HEIGHT}
+          viewBox={`0 0 ${SPARK_WIDTH} ${SPARK_HEIGHT}`}
+          aria-hidden
+          data-testid="weight-sparkline"
+          className="shrink-0 text-ink"
+        >
+          <polyline
+            points={line.points}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+          <circle cx={line.end.x} cy={line.end.y} r={3} fill="currentColor" />
+        </svg>
+      )}
+    </section>
   );
 }

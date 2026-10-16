@@ -61,7 +61,7 @@ export function ExerciseBodyMap({ regions }: { regions: ExerciseMapRegion[] }) {
             ),
           )}
       </svg>
-      <figcaption className="text-xs text-muted-foreground">{t(view)}</figcaption>
+      <figcaption className="text-small text-muted-foreground">{t(view)}</figcaption>
     </figure>
   );
 
@@ -71,7 +71,7 @@ export function ExerciseBodyMap({ regions }: { regions: ExerciseMapRegion[] }) {
         {renderView('front')}
         {renderView('back')}
       </div>
-      <div className="flex justify-center gap-4 text-xs text-muted-foreground" aria-hidden="true">
+      <div className="flex justify-center gap-4 text-small text-muted-foreground" aria-hidden="true">
         {(['primary', 'secondary'] as const).map((role) => (
           <span key={role} className="flex items-center gap-1.5">
             <svg viewBox="0 0 12 12" className="size-3">

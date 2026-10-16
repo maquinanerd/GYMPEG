@@ -8,6 +8,8 @@ export const history = {
   emptyDescription:
     'Завершите первую тренировку, и здесь появятся её объём, подходы и длительность.',
   firstSession: 'Записать первую тренировку',
+  startWorkout: 'Начать тренировку',
+  loading: 'Загрузка истории',
   freeSession: 'Свободная тренировка',
   cardio: 'Кардио',
   volumeShort: 'объём {weight}',
@@ -24,6 +26,7 @@ export const history = {
     allMuscles: 'Все мышцы',
     clear: 'Сбросить',
     csvTitle: 'Скачать CSV подходов с учётом активных фильтров',
+    toggle: 'Фильтры',
   },
   calendar: {
     previousMonth: 'Предыдущий месяц',
@@ -32,6 +35,15 @@ export const history = {
     workoutCount:
       '{count, plural, one {# тренировка} few {# тренировки} many {# тренировок} other {# тренировки}}',
     noSessions: 'В этот день завершённых тренировок нет.',
+    noSessionsMonth: 'В этом месяце завершённых тренировок нет.',
+    monthSessions: 'Тренировки за {month}',
+    wholeMonth: 'Показать весь месяц',
+    missed: 'запланирована, не выполнена',
+    legend: {
+      done: 'тренировка',
+      missed: 'запланировано, не сделано',
+      today: 'сегодня',
+    },
   },
   detail: {
     downloadTcx: 'Скачать .tcx',
@@ -60,6 +72,13 @@ export const history = {
     heartRateChart: 'Пульс во времени',
     heartRate: 'Пульс',
     chartMinutes: '{value} мин',
+    back: 'Назад к истории',
+    record: 'Личный рекорд',
+    decouplingTitle: 'Аэробное расцепление',
+    decouplingHeld:
+      'Чем ниже, тем лучше: темп на удар сердца держался ровно во второй половине активности.',
+    decouplingFaded:
+      'Чем ниже, тем лучше: темп на удар сердца снизился во второй половине активности.',
   },
   copy: {
     button: 'Скопировать текстом',

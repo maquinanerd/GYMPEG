@@ -108,6 +108,14 @@ describe('OnboardingFlow', () => {
     expect(replace).toHaveBeenCalledWith('/');
   });
 
+  it('warns that saving needs a connection while offline', () => {
+    vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+    render(<OnboardingFlow initial={initial} exercises={exercises} />);
+
+    expect(screen.getByRole('status')).toHaveTextContent(/no connection/i);
+    vi.restoreAllMocks();
+  });
+
   it('can be skipped', async () => {
     const fetchFn = vi.fn(async (_url: string, _init?: RequestInit) => new Response('{}'));
     vi.stubGlobal('fetch', fetchFn);

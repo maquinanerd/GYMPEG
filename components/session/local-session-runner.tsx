@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { CircleNotchIcon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SessionRunner } from '@/components/session/session-runner';
+import { SessionRunnerSkeleton } from '@/components/session/session-runner-skeleton';
 import { getDB } from '@/lib/indexeddb';
 import { getOutboxOwner } from '@/lib/outbox-owner';
 import { runnerPropsFromPack, type PackRunnerProps } from '@/lib/training-pack';
@@ -47,25 +46,24 @@ export function LocalSessionRunner({
     return <SessionRunner {...state.props} initialProgramExerciseId={initialProgramExerciseId} />;
   }
   if (state.kind === 'loading') {
-    return (
-      <main className="flex flex-1 items-center justify-center gap-2 p-6 text-muted-foreground">
-        <CircleNotchIcon className="size-5 animate-spin" />
-        <span>{t('loading')}</span>
-      </main>
-    );
+    return <SessionRunnerSkeleton label={t('loading')} />;
   }
+  // Straight on the page, left aligned: what happened, why, and the way home.
   return (
-    <main className="flex-1 px-4 py-6">
-      <Card className="mx-auto max-w-md">
-        <CardHeader>
-          <CardTitle>{t(`${state.kind}Title`)}</CardTitle>
-          <CardDescription>{t(`${state.kind}Description`)}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {/* Offline, the home screen is the offline page's (precached). */}
-          <Button onClick={() => window.location.assign(offlineAwareHref('/'))}>{t('home')}</Button>
-        </CardContent>
-      </Card>
+    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-start gap-3 px-5 pt-[calc(1.5rem+env(safe-area-inset-top))]">
+      <h1 className="text-heading">{t(`${state.kind}Title`)}</h1>
+      <p className="max-w-prose text-caption text-muted-foreground text-pretty">
+        {t(`${state.kind}Description`)}
+      </p>
+      {/* Offline, the home screen is the offline page's (precached). */}
+      <Button
+        variant="ink"
+        size="sm"
+        className="mt-1"
+        onClick={() => window.location.assign(offlineAwareHref('/'))}
+      >
+        {t('home')}
+      </Button>
     </main>
   );
 }

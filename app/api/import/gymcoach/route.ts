@@ -138,7 +138,7 @@ export async function POST(req: Request) {
     // so the 5 s Prisma default timeout would abort exactly the imports this
     // feature exists for.
     const result = await db.$transaction(
-      async (tx) => executeStrongImport(tx, userId, plan, 'GymCoach CSV'),
+      async (tx) => executeStrongImport(tx, userId, plan, 'GYM Peg CSV'),
       { timeout: 60_000, maxWait: 5_000 },
     );
 

@@ -79,7 +79,7 @@ export default async function ProgramPrintPage(props: Props) {
     <main className="mx-auto flex max-w-[210mm] flex-col gap-4 px-4 py-6 print:max-w-none print:gap-0 print:p-0">
       <PrintSheetToolbar programId={program.id} />
       {workouts.length === 0 ? (
-        <p className="text-sm">{t('noWorkouts')}</p>
+        <p className="text-caption">{t('noWorkouts')}</p>
       ) : (
         workouts.map((workout, index) => (
           <PrintSheet

@@ -21,16 +21,20 @@ const config: Config = {
       },
     },
     extend: {
-      // GYM Peg design tokens (docs/design/tailwind.gympeg.ts).
+      // GYM Peg design tokens v2 (docs/design/tailwind.gympeg.ts).
       fontFamily: {
-        sans: ['var(--font-urbanist)', 'system-ui', 'sans-serif'],
+        // Text: Archivo at 100% width.
+        sans: ['var(--font-archivo)', 'sans-serif'],
+        // Numbers: the same family, always with a font-stretch utility
+        // (stretch-112/118/125) and tabular-nums. Use <Num> (components/ui/num).
+        num: ['var(--font-archivo)', 'sans-serif'],
       },
       fontSize: {
-        timer: ['4.5rem', { lineHeight: '1', fontWeight: '600' }],
-        display: ['2rem', { lineHeight: '1.15', fontWeight: '600' }],
-        number: ['1.75rem', { lineHeight: '1', fontWeight: '600' }],
-        title: ['1.5rem', { lineHeight: '1.15', fontWeight: '600' }],
-        heading: ['1.375rem', { lineHeight: '1.2', fontWeight: '600' }],
+        timer: ['6rem', { lineHeight: '1', letterSpacing: '-0.03em', fontWeight: '600' }],
+        display: ['2.125rem', { lineHeight: '1.02', letterSpacing: '-0.025em', fontWeight: '600' }],
+        title: ['1.75rem', { lineHeight: '1.08', letterSpacing: '-0.02em', fontWeight: '600' }],
+        number: ['1.375rem', { lineHeight: '1', fontWeight: '600' }],
+        heading: ['1.25rem', { lineHeight: '1.2', fontWeight: '600' }],
         subtitle: ['1.0625rem', { lineHeight: '1.3', fontWeight: '600' }],
         body: ['1rem', { lineHeight: '1.45', fontWeight: '500' }],
         caption: ['0.875rem', { lineHeight: '1.4', fontWeight: '500' }],
@@ -70,35 +74,39 @@ const config: Config = {
           DEFAULT: token('popover'),
           foreground: token('popover-foreground'),
         },
-        brand: { DEFAULT: token('brand'), strong: token('brand-strong') },
-        suggestion: { DEFAULT: token('suggestion'), foreground: token('suggestion-foreground') },
+        // #111 on light, #FFF on dark: "done" cells, the ink button, chart lines.
+        ink: { DEFAULT: token('ink'), foreground: token('ink-foreground') },
+        brand: { DEFAULT: token('brand') },
+        'brand-strong': { DEFAULT: token('brand-strong') },
+        'destructive-text': { DEFAULT: token('destructive-text') },
+        'row-current': { DEFAULT: token('row-current') },
         track: { DEFAULT: token('track') },
-        pill: { DEFAULT: token('pill') },
-        nav: { DEFAULT: token('nav'), foreground: token('nav-foreground') },
-        'nav-active': { DEFAULT: token('nav-active'), foreground: token('nav-active-foreground') },
+        // Non-text elements only (dashed outlines, chevrons): too faint for text.
+        subtle: { DEFAULT: token('subtle') },
         pr: { DEFAULT: token('pr'), foreground: token('pr-foreground') },
         info: { DEFAULT: token('info'), foreground: token('info-foreground') },
         warmup: { DEFAULT: token('warmup'), foreground: token('warmup-foreground') },
         deload: { DEFAULT: token('deload'), foreground: token('deload-foreground') },
         warning: { DEFAULT: token('warning'), foreground: token('warning-foreground') },
-        success: { DEFAULT: token('success'), foreground: token('success-foreground') },
+        'warning-text': { DEFAULT: token('warning-text') },
         'heat-0': { DEFAULT: token('heat-0') },
         'heat-1': { DEFAULT: token('heat-1') },
         'heat-2': { DEFAULT: token('heat-2') },
         'heat-3': { DEFAULT: token('heat-3') },
       },
+      // 4 tags and highlights · 8 filters, cells, thumbnails · 12 buttons,
+      // fields, the suggestion note · 16 the one white surface of a screen.
       borderRadius: {
         lg: 'var(--radius-lg)',
         DEFAULT: 'var(--radius)',
         md: 'var(--radius)',
         sm: 'var(--radius-sm)',
-        pill: '9999px',
+        xs: 'var(--radius-xs)',
       },
       height: {
-        btn: 'var(--h-btn)',
-        'btn-session': 'var(--h-btn-session)',
-        nav: 'var(--h-nav)',
-        row: 'var(--h-row)',
+        touch: '2.75rem',
+        'touch-session': '4rem',
+        btn: '3.5rem',
       },
       minHeight: {
         // Minimum tap target, deliberately 4rem (64px) rather than the usual
@@ -107,13 +115,13 @@ const config: Config = {
         // column is what starved the exercise name at 400px (#330, #336), so
         // widen the row or drop a control rather than shrinking this.
         tap: '4rem',
+        touch: '2.75rem',
       },
       minWidth: {
         tap: '4rem',
       },
-      boxShadow: {
-        // The only glow in the app: marks content that comes from the AI.
-        ai: '0 0 0 6px hsl(var(--primary) / 0.12), 0 8px 24px hsl(var(--primary) / 0.35)',
+      transitionTimingFunction: {
+        'out-quart': 'cubic-bezier(0.25, 1, 0.5, 1)',
       },
     },
   },

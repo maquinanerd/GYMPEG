@@ -4,11 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { TargetIcon } from '@/components/ui/icon';
 import type { WeightUnit } from '@/lib/prisma-client';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Num } from '@/components/ui/num';
+import { ProgressBar } from '@/components/ui/progress-bar';
+import { Section } from '@/components/ui/section';
+import { Tag } from '@/components/ui/tag';
 import {
   Dialog,
   DialogContent,
@@ -18,7 +19,6 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
 import { goalProgress, goalTargetE1RM } from '@/lib/goals';
 import { formatWeight, fromDisplayWeight, roundWeight, toDisplayWeight, unitLabel } from '@/lib/units';
 
@@ -121,76 +121,66 @@ export function ExerciseGoalCard({
     }
   }
 
+  const percent = Math.round(progress * 100);
+
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="flex items-center gap-2 text-base font-semibold">
-            <TargetIcon className="size-4" />
-            {t('title', { exercise: exerciseName })}
-          </h2>
-          <div className="flex items-center gap-2">
-            <Button type="button" variant="outline" size="sm" onClick={openDialog}>
-              {goal ? t('edit') : t('set')}
-            </Button>
-            {goal && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={removeGoal}
-                disabled={busy}
-              >
-                {t('remove')}
-              </Button>
-            )}
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {!goal || !target ? (
-          <p className="text-sm text-muted-foreground">
-            {t('empty')}
-          </p>
-        ) : (
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-              <span className="font-medium">
+    <Section
+      size="sm"
+      divider
+      title={t('title', { exercise: exerciseName })}
+      action={
+        goal && target ? (
+          <Num stretch={112} className="text-caption">
+            {percent}%
+          </Num>
+        ) : undefined
+      }
+    >
+      {!goal || !target ? (
+        <p className="text-caption text-muted-foreground">{t('empty')}</p>
+      ) : (
+        <>
+          <ProgressBar size="md" value={percent} max={100} label={t('progressAria')} />
+          <div className="flex flex-col gap-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-caption font-semibold">
                 {t('target', {
                   weight: formatWeight(goal.targetWeight, unit, { locale }),
                   reps: goal.targetReps,
                 })}
               </span>
-              {achieved && (
-                <Badge className="bg-primary text-primary-foreground hover:bg-primary">
-                  {t('achieved')}
-                </Badge>
-              )}
+              {achieved && <Tag variant="primary">{t('achieved')}</Tag>}
             </div>
-            <Progress
-              value={Math.round(progress * 100)}
-              aria-label={t('progressAria')}
-            />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-[0.8125rem] font-medium text-muted-foreground">
               {t('progress', {
-                percent: Math.round(progress * 100),
+                percent,
                 best: formatWeight(bestE1RM, unit, { locale }),
                 target: formatWeight(goalTargetE1RM(target), unit, { locale }),
               })}
             </p>
           </div>
+        </>
+      )}
+      <div className="flex flex-wrap gap-2">
+        <Button type="button" variant="outline" size="sm" onClick={openDialog}>
+          {goal ? t('edit') : t('set')}
+        </Button>
+        {goal && (
+          <Button type="button" variant="ghost" size="sm" onClick={removeGoal} disabled={busy}>
+            {t('remove')}
+          </Button>
         )}
-      </CardContent>
+      </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {goal ? t('edit') : t('set')} - {exerciseName}
+            <DialogTitle className="text-heading">
+              {goal ? t('edit') : t('set')} · {exerciseName}
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
               <Label htmlFor="goal-weight">{t('targetLoad', { unit: unitLabel(unit) })}</Label>
               <Input
                 id="goal-weight"
@@ -202,12 +192,10 @@ export function ExerciseGoalCard({
                 onChange={(e) => setWeightField(e.target.value)}
               />
               {usesBodyweight && (
-                <p className="text-xs text-muted-foreground">
-                  {t('bodyweightHelp')}
-                </p>
+                <p className="text-small text-muted-foreground">{t('bodyweightHelp')}</p>
               )}
             </div>
-            <div className="space-y-2">
+            <div className="flex flex-col gap-2">
               <Label htmlFor="goal-reps">{t('targetReps')}</Label>
               <Input
                 id="goal-reps"
@@ -223,12 +211,12 @@ export function ExerciseGoalCard({
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               {common('actions.cancel')}
             </Button>
-            <Button type="button" onClick={saveGoal} disabled={busy}>
-              {busy ? common('actions.saving') : t('save')}
+            <Button type="button" variant="ink" onClick={saveGoal} loading={busy}>
+              {t('save')}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </Card>
+    </Section>
   );
 }

@@ -3,7 +3,7 @@ import type { MessageShape } from '@/i18n/message-types';
 
 export const admin = {
   title: 'Administration',
-  back: 'Réglages',
+  back: 'Profil',
   nav: {
     label: "Sections de l'administration",
     overview: "Vue d'ensemble",
@@ -43,11 +43,15 @@ export const admin = {
       '{count, plural, =0 {aucun compte bloqué} one {# compte bloqué} other {# comptes bloqués}}',
     statusTitle: 'État',
     aiStatus: 'IA : {provider}',
-    aiReady: 'Prête, modèle {model}',
-    aiMissingKey: "Pas de clé d'API : les fonctions IA ne répondront pas",
+    aiReady: 'Modèle {model}',
+    aiMissingKey: "Les fonctions IA ne répondront pas tant qu'aucune clé n'est définie",
     emailStatus: 'Réinitialisation du mot de passe par e-mail',
-    emailReady: 'Fonctionne',
-    emailOff: "Désactivée : configurez un fournisseur d'e-mail",
+    emailReady: '« Mot de passe oublié ? » envoie un lien',
+    emailOff: "Configurez un fournisseur d'e-mail",
+    ready: 'Prête',
+    noKey: 'Sans clé',
+    on: 'Activée',
+    off: 'Désactivée',
   },
   users: {
     title: '{count, plural, one {# compte} other {# comptes}}',
@@ -143,6 +147,8 @@ export const admin = {
       anthropic: 'Anthropic',
       demo: 'Démo (réponses toutes faites, sans clé)',
     },
+    ready: 'Prêt',
+    noKey: 'Sans clé',
     modelInUse: 'Modèle utilisé : {model}',
     apiKey: "Clé d'API",
     model: 'Modèle',
@@ -189,13 +195,15 @@ export const admin = {
   },
   email: {
     statusTitle: 'Réinitialisation du mot de passe par e-mail',
-    available: 'Fonctionne : « Mot de passe oublié ? » envoie un lien.',
-    unavailable:
-      "Désactivée : « Mot de passe oublié ? » indique que la réinitialisation n'est pas disponible.",
+    onTag: 'Activée',
+    offTag: 'Désactivée',
+    available: '« Mot de passe oublié ? » envoie un lien.',
+    unavailable: "« Mot de passe oublié ? » indique que la réinitialisation n'est pas disponible.",
     linksTo: 'Les liens pointent vers {url}.',
     noAppUrl:
       'Aucune adresse publique définie (APP_URL ou NEXTAUTH_URL) : impossible de construire les liens.',
-    test: 'Envoyer un test à {email}',
+    test: 'Envoyer un test',
+    testTo: 'Le test part vers {email}.',
     testSent: 'Test envoyé à {email}. Vérifiez la boîte de réception et les spams.',
     testNotConfigured: "L'e-mail n'est pas encore configuré.",
     testFailed: "Le fournisseur a refusé le message. Vérifiez la clé et le domaine de l'expéditeur.",

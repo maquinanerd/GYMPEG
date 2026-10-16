@@ -120,8 +120,35 @@ describe('SessionSummary PR section', () => {
         finishing={false}
       />,
     );
-    expect(screen.getByText('Personal records this session')).toBeTruthy();
-    expect(screen.getByText('heaviest load')).toBeTruthy();
+    expect(screen.getByRole('heading', { name: '1 record' })).toBeTruthy();
+    // The record names its kind and the previous best; the new value sits on
+    // the yellow marker.
+    expect(screen.getByText('Heaviest load · before 100 kg')).toBeTruthy();
+    expect(screen.getByText('110 kg')).toHaveClass('bg-pr');
+  });
+
+  it('shows how each exercise moved since last time, with its sets', () => {
+    render(
+      <SessionSummary
+        session={session}
+        workoutName="Leg day"
+        sets={[
+          pendingSet({ localId: 'a', setNumber: 1, weight: 102.5, reps: 8 }),
+          pendingSet({ localId: 'b', setNumber: 2, weight: 102.5, reps: 7 }),
+        ]}
+        programExercises={[pe]}
+        unit="KG"
+        priorSets={{ e1: [{ weight: 100, reps: 8 }] }}
+        onBack={() => {}}
+        onFinish={() => {}}
+        finishing={false}
+      />,
+    );
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Leg daydone');
+    expect(screen.getByText('+2.5 kg')).toHaveClass('text-brand');
+    expect(screen.getByText('102.5 kg × 8 · 7')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Save and exit' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Copy workout' })).toBeTruthy();
   });
 
   it('omits the PR section entirely when no record was set', () => {
@@ -137,7 +164,7 @@ describe('SessionSummary PR section', () => {
         finishing={false}
       />,
     );
-    expect(screen.queryByText('Personal records this session')).toBeNull();
+    expect(screen.queryByRole('heading', { name: /record/ })).toBeNull();
   });
 });
 

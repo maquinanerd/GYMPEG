@@ -5,7 +5,6 @@ import { useFormatter, useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import {
   ArrowsClockwiseIcon,
-  CircleNotchIcon,
   CopyIcon,
   DotsThreeIcon,
   KeyIcon,
@@ -13,7 +12,6 @@ import {
   PlusIcon,
   ShieldCheckIcon,
   TrashIcon,
-  UserIcon,
 } from '@/components/ui/icon';
 import {
   AlertDialog,
@@ -25,8 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button, IconButton } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -44,12 +41,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { IconCircle, ListRow } from '@/components/ui/list-row';
+import { ListRow } from '@/components/ui/list-row';
+import { Section } from '@/components/ui/section';
 import { Switch } from '@/components/ui/switch';
 import { Tag } from '@/components/ui/tag';
 import type { AdminUserRow } from '@/lib/admin';
 import { generatePassword } from '@/lib/random-password';
 import { PASSWORD_MAX_BYTES } from '@/lib/schemas/auth';
+import { ERROR, FIELD, HINT, LABEL, ROW_LABEL } from './admin-ui';
 import { useAdminRequest } from './use-admin-request';
 
 const MIN_PASSWORD_LENGTH = 8;
@@ -65,6 +64,9 @@ interface Props {
   currentUserId: string;
 }
 
+// Accounts as hairline rows: the e-mail, the role and block state as tags in
+// words with the name and last activity, and a "…" menu with the actions
+// (none on the admin's own row).
 export function AdminUsers({ users, currentUserId }: Props) {
   const t = useTranslations('admin.users');
   const format = useFormatter();
@@ -83,92 +85,101 @@ export function AdminUsers({ users, currentUserId }: Props) {
   }
 
   return (
-    <section aria-labelledby="admin-users" className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-3">
-        <h2 id="admin-users" className="text-base font-semibold">
-          {t('title', { count: users.length })}
-        </h2>
-        <Button type="button" size="sm" onClick={() => setDialog({ kind: 'create' })}>
+    <Section
+      title={t('title', { count: users.length })}
+      headerClassName="items-center"
+      action={
+        <Button
+          type="button"
+          variant="ink"
+          size="sm"
+          className="h-11"
+          onClick={() => setDialog({ kind: 'create' })}
+        >
           <PlusIcon aria-hidden="true" />
           {t('create')}
         </Button>
-      </div>
-      <Card>
-        <CardContent className="py-1">
-          {users.map((user) => {
-            const isSelf = user.id === currentUserId;
-            return (
-              <ListRow
-                key={user.id}
-                leading={
-                  <IconCircle tone={user.blocked ? 'warning' : 'pill'}>
-                    {user.blocked ? <LockKeyIcon /> : <UserIcon />}
-                  </IconCircle>
-                }
-                title={user.email}
-                subtitle={
-                  user.displayName ? `${user.displayName} · ${activity(user)}` : activity(user)
-                }
-                trailing={
-                  <div className="flex shrink-0 items-center gap-2">
-                    {user.role === 'ADMIN' && <Tag dot="brand">{t('adminTag')}</Tag>}
-                    {user.blocked && <Tag dot="warning">{t('blockedTag')}</Tag>}
-                    {isSelf ? (
-                      <Tag>{t('youTag')}</Tag>
-                    ) : (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            aria-label={t('actions', { email: user.email })}
-                          >
-                            <DotsThreeIcon aria-hidden="true" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onSelect={() => setDialog({ kind: 'password', user })}>
-                            <KeyIcon className="size-4" aria-hidden="true" />
-                            {t('setPassword')}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onSelect={() =>
-                              setDialog({ kind: user.blocked ? 'unblock' : 'block', user })
-                            }
-                          >
-                            <LockKeyIcon className="size-4" aria-hidden="true" />
-                            {user.blocked ? t('unblock') : t('block')}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onSelect={() =>
-                              setDialog({
-                                kind: user.role === 'ADMIN' ? 'removeAdmin' : 'makeAdmin',
-                                user,
-                              })
-                            }
-                          >
-                            <ShieldCheckIcon className="size-4" aria-hidden="true" />
-                            {user.role === 'ADMIN' ? t('removeAdmin') : t('makeAdmin')}
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="text-destructive focus:text-destructive"
-                            onSelect={() => setDialog({ kind: 'delete', user })}
-                          >
-                            <TrashIcon className="size-4" aria-hidden="true" />
-                            {t('delete')}
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
-                  </div>
-                }
-              />
-            );
-          })}
-        </CardContent>
-      </Card>
+      }
+    >
+      <ul>
+        {users.map((user) => {
+          const isSelf = user.id === currentUserId;
+          const tags = user.role === 'ADMIN' || user.blocked;
+          return (
+            <ListRow
+              key={user.id}
+              title={<span className="break-all">{user.email}</span>}
+              meta={
+                <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  {tags && (
+                    <span className="flex gap-1.5">
+                      {user.role === 'ADMIN' && <Tag variant="info">{t('adminTag')}</Tag>}
+                      {user.blocked && <Tag variant="warning">{t('blockedTag')}</Tag>}
+                    </span>
+                  )}
+                  <span>
+                    {user.displayName
+                      ? `${user.displayName} · ${activity(user)}`
+                      : activity(user)}
+                  </span>
+                </span>
+              }
+              trailing={
+                isSelf ? (
+                  <Tag variant="muted" className="self-center">
+                    {t('youTag')}
+                  </Tag>
+                ) : (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <IconButton
+                        type="button"
+                        size="sm"
+                        aria-label={t('actions', { email: user.email })}
+                      >
+                        <DotsThreeIcon weight="bold" aria-hidden="true" />
+                      </IconButton>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onSelect={() => setDialog({ kind: 'password', user })}>
+                        <KeyIcon aria-hidden="true" />
+                        {t('setPassword')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() =>
+                          setDialog({ kind: user.blocked ? 'unblock' : 'block', user })
+                        }
+                      >
+                        <LockKeyIcon aria-hidden="true" />
+                        {user.blocked ? t('unblock') : t('block')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onSelect={() =>
+                          setDialog({
+                            kind: user.role === 'ADMIN' ? 'removeAdmin' : 'makeAdmin',
+                            user,
+                          })
+                        }
+                      >
+                        <ShieldCheckIcon aria-hidden="true" />
+                        {user.role === 'ADMIN' ? t('removeAdmin') : t('makeAdmin')}
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="text-destructive-text focus:text-destructive-text"
+                        onSelect={() => setDialog({ kind: 'delete', user })}
+                      >
+                        <TrashIcon aria-hidden="true" />
+                        {t('delete')}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )
+              }
+            />
+          );
+        })}
+      </ul>
 
       <CreateUserDialog open={dialog?.kind === 'create'} onClose={close} />
       <SetPasswordDialog
@@ -184,7 +195,7 @@ export function AdminUsers({ users, currentUserId }: Props) {
         onClose={close}
       />
       <DeleteUserDialog user={dialog?.kind === 'delete' ? dialog.user : null} onClose={close} />
-    </section>
+    </Section>
   );
 }
 
@@ -208,8 +219,10 @@ function PasswordField({
 }) {
   const t = useTranslations('admin.users');
   return (
-    <div className="space-y-2">
-      <Label htmlFor={id}>{t('newPassword')}</Label>
+    <div className={FIELD}>
+      <Label htmlFor={id} className={LABEL}>
+        {t('newPassword')}
+      </Label>
       <div className="flex items-center gap-2">
         <Input
           id={id}
@@ -218,9 +231,14 @@ function PasswordField({
           spellCheck={false}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="font-mono"
+          className="min-w-0 flex-1"
         />
-        <Button type="button" variant="outline" size="sm" onClick={() => onChange(generatePassword())}>
+        <Button
+          type="button"
+          variant="outline"
+          className="h-12 px-3.5"
+          onClick={() => onChange(generatePassword())}
+        >
           <ArrowsClockwiseIcon aria-hidden="true" />
           <span>{t('generate')}</span>
         </Button>
@@ -241,20 +259,19 @@ function HandOver({ password, message, onDone }: { password: string; message: st
     }
   }
   return (
-    <div className="space-y-4">
-      <p role="status" className="text-sm">
+    <div className="flex flex-col gap-4">
+      <p role="status" className="text-body">
         {message}
       </p>
       <div className="flex items-center gap-2">
-        <Input readOnly value={password} aria-label={t('newPassword')} className="font-mono" />
-        <Button type="button" variant="outline" size="icon" onClick={copy}>
+        <Input readOnly value={password} aria-label={t('newPassword')} className="min-w-0 flex-1" />
+        <IconButton type="button" tone="outline" aria-label={t('copy')} onClick={copy}>
           <CopyIcon aria-hidden="true" />
-          <span className="sr-only">{t('copy')}</span>
-        </Button>
+        </IconButton>
       </div>
-      <p className="text-sm text-muted-foreground">{t('handOver')}</p>
+      <p className={HINT}>{t('handOver')}</p>
       <DialogFooter>
-        <Button type="button" onClick={onDone} className="min-h-tap">
+        <Button type="button" variant="ink" onClick={onDone}>
           {t('finish')}
         </Button>
       </DialogFooter>
@@ -264,10 +281,18 @@ function HandOver({ password, message, onDone }: { password: string; message: st
 
 function SubmitButton({ pending, label, savingLabel }: { pending: boolean; label: string; savingLabel: string }) {
   return (
-    <Button type="submit" disabled={pending} className="min-h-tap">
-      {pending && <CircleNotchIcon className="animate-spin" aria-hidden="true" />}
-      <span>{pending ? savingLabel : label}</span>
+    <Button type="submit" variant="ink" loading={pending} disabled={pending}>
+      {pending ? savingLabel : label}
     </Button>
+  );
+}
+
+function FormError({ error }: { error: string | null }) {
+  if (!error) return null;
+  return (
+    <p role="alert" className={ERROR}>
+      {error}
+    </p>
   );
 }
 
@@ -319,9 +344,11 @@ function CreateUserDialog({ open, onClose }: { open: boolean; onClose: () => voi
         {created ? (
           <HandOver password={password} message={t('created', { email: email.trim() })} onDone={reset} />
         ) : (
-          <form onSubmit={submit} className="space-y-4" noValidate>
-            <div className="space-y-2">
-              <Label htmlFor="admin-create-email">{t('email')}</Label>
+          <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
+            <div className={FIELD}>
+              <Label htmlFor="admin-create-email" className={LABEL}>
+                {t('email')}
+              </Label>
               <Input
                 id="admin-create-email"
                 type="email"
@@ -330,8 +357,10 @@ function CreateUserDialog({ open, onClose }: { open: boolean; onClose: () => voi
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="admin-create-name">{t('displayName')}</Label>
+            <div className={FIELD}>
+              <Label htmlFor="admin-create-name" className={LABEL}>
+                {t('displayName')}
+              </Label>
               <Input
                 id="admin-create-name"
                 autoComplete="off"
@@ -340,17 +369,15 @@ function CreateUserDialog({ open, onClose }: { open: boolean; onClose: () => voi
               />
             </div>
             <PasswordField id="admin-create-password" value={password} onChange={setPassword} />
-            <div className="flex items-center justify-between gap-3">
-              <Label htmlFor="admin-create-role">{t('makeAdminLabel')}</Label>
+            <div className="flex min-h-[3.25rem] items-center justify-between gap-3 border-y border-border py-2">
+              <Label htmlFor="admin-create-role" className={ROW_LABEL}>
+                {t('makeAdminLabel')}
+              </Label>
               <Switch id="admin-create-role" checked={makeAdmin} onCheckedChange={setMakeAdmin} />
             </div>
-            {error && (
-              <p role="alert" className="text-sm text-destructive">
-                {error}
-              </p>
-            )}
+            <FormError error={error} />
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={reset} className="min-h-tap">
+              <Button type="button" variant="outline" onClick={reset}>
                 {common('cancel')}
               </Button>
               <SubmitButton pending={pending} label={t('createSubmit')} savingLabel={common('saving')} />
@@ -409,16 +436,12 @@ function SetPasswordDialog({ user, onClose }: { user: AdminUserRow | null; onClo
             onDone={reset}
           />
         ) : (
-          <form onSubmit={submit} className="space-y-4" noValidate>
-            <p className="text-sm text-muted-foreground">{t('passwordDescription')}</p>
+          <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
+            <p className={HINT}>{t('passwordDescription')}</p>
             <PasswordField id="admin-new-password" value={password} onChange={setPassword} />
-            {error && (
-              <p role="alert" className="text-sm text-destructive">
-                {error}
-              </p>
-            )}
+            <FormError error={error} />
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={reset} className="min-h-tap">
+              <Button type="button" variant="outline" onClick={reset}>
                 {common('cancel')}
               </Button>
               <SubmitButton pending={pending} label={t('setPassword')} savingLabel={common('saving')} />
@@ -470,7 +493,7 @@ function ConfirmUserDialog({
           <>
             <AlertDialogHeader>
               <AlertDialogTitle>{t(`${state.kind}Title`)}</AlertDialogTitle>
-              <AlertDialogDescription>
+              <AlertDialogDescription className="break-words">
                 {t(`${state.kind}Description`, { email: state.user.email })}
               </AlertDialogDescription>
             </AlertDialogHeader>
@@ -478,6 +501,7 @@ function ConfirmUserDialog({
               <AlertDialogCancel>{common('cancel')}</AlertDialogCancel>
               <AlertDialogAction
                 disabled={pending}
+                aria-busy={pending || undefined}
                 onClick={(event) => {
                   event.preventDefault();
                   void confirm();
@@ -527,11 +551,15 @@ function DeleteUserDialog({ user, onClose }: { user: AdminUserRow | null; onClos
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>{t('deleteTitle')}</DialogTitle>
-          <DialogDescription>{t('deleteDescription', { email: user?.email ?? '' })}</DialogDescription>
+          <DialogDescription className="break-words">
+            {t('deleteDescription', { email: user?.email ?? '' })}
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={submit} className="space-y-4" noValidate>
-          <div className="space-y-2">
-            <Label htmlFor="admin-delete-confirm">{t('deleteConfirmLabel')}</Label>
+        <form onSubmit={submit} className="flex flex-col gap-4" noValidate>
+          <div className={FIELD}>
+            <Label htmlFor="admin-delete-confirm" className={LABEL}>
+              {t('deleteConfirmLabel')}
+            </Label>
             <Input
               id="admin-delete-confirm"
               autoComplete="off"
@@ -539,23 +567,18 @@ function DeleteUserDialog({ user, onClose }: { user: AdminUserRow | null; onClos
               onChange={(e) => setTyped(e.target.value)}
             />
           </div>
-          {error && (
-            <p role="alert" className="text-sm text-destructive">
-              {error}
-            </p>
-          )}
+          <FormError error={error} />
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={reset} className="min-h-tap">
+            <Button type="button" variant="outline" onClick={reset}>
               {common('cancel')}
             </Button>
             <Button
               type="submit"
               variant="destructive"
+              loading={pending}
               disabled={pending || typed.trim() !== user?.email}
-              className="min-h-tap"
             >
-              {pending && <CircleNotchIcon className="animate-spin" aria-hidden="true" />}
-              <span>{t('deleteConfirm')}</span>
+              {t('deleteConfirm')}
             </Button>
           </DialogFooter>
         </form>

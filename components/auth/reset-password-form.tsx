@@ -9,8 +9,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { OfflineNotice } from '@/components/ui/screen-state';
+import { AuthHeading, FormField, FormMessage, fieldErrorId } from '@/components/auth/form-field';
+import { useOnline } from '@/components/auth/use-online';
 
 type FormValues = { password: string; confirm: string };
 
@@ -20,6 +21,7 @@ type FormValues = { password: string; confirm: string };
 export function ResetPasswordForm({ token }: { token: string }) {
   const t = useTranslations('auth');
   const router = useRouter();
+  const online = useOnline();
   const [status, setStatus] = useState<'idle' | 'invalid' | 'error'>(token ? 'idle' : 'invalid');
   const schema = useMemo(
     () =>
@@ -61,60 +63,53 @@ export function ResetPasswordForm({ token }: { token: string }) {
   }
 
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>{t('reset.title')}</CardTitle>
-        <CardDescription>{t('reset.description')}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {status === 'invalid' ? (
-          <>
-            <p role="status" className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-              {t('reset.invalid')}
-            </p>
-            <Button asChild className="min-h-tap w-full">
-              <Link href="/forgot-password">{t('reset.requestNew')}</Link>
-            </Button>
-          </>
-        ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-            <div className="space-y-2">
-              <Label htmlFor="new-password">{t('reset.newPassword')}</Label>
-              <Input
-                id="new-password"
-                type="password"
-                autoComplete="new-password"
-                aria-invalid={errors.password ? 'true' : 'false'}
-                {...register('password')}
-              />
-              {errors.password && (
-                <p className="text-sm text-destructive">{errors.password.message}</p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirm-password">{t('reset.confirmPassword')}</Label>
-              <Input
-                id="confirm-password"
-                type="password"
-                autoComplete="new-password"
-                aria-invalid={errors.confirm ? 'true' : 'false'}
-                {...register('confirm')}
-              />
-              {errors.confirm && (
-                <p className="text-sm text-destructive">{errors.confirm.message}</p>
-              )}
-            </div>
-            {status === 'error' && (
-              <p className="rounded-md bg-destructive/10 p-2 text-sm text-destructive">
-                {t('reset.error')}
-              </p>
-            )}
-            <Button type="submit" className="min-h-tap w-full text-base" disabled={isSubmitting}>
-              {isSubmitting ? t('reset.submitting') : t('reset.submit')}
-            </Button>
-          </form>
-        )}
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-8">
+      <AuthHeading title={t('reset.title')} description={t('reset.description')} />
+
+      {status === 'invalid' ? (
+        <div className="flex flex-col gap-5">
+          <FormMessage role="status">{t('reset.invalid')}</FormMessage>
+          <Button asChild variant="ink" className="w-full">
+            <Link href="/forgot-password">{t('reset.requestNew')}</Link>
+          </Button>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5" noValidate>
+          {!online && <OfflineNotice>{t('offline')}</OfflineNotice>}
+          <FormField
+            id="new-password"
+            label={t('reset.newPassword')}
+            error={errors.password?.message}
+          >
+            <Input
+              id="new-password"
+              type="password"
+              autoComplete="new-password"
+              aria-invalid={errors.password ? 'true' : 'false'}
+              aria-describedby={errors.password ? fieldErrorId('new-password') : undefined}
+              {...register('password')}
+            />
+          </FormField>
+          <FormField
+            id="confirm-password"
+            label={t('reset.confirmPassword')}
+            error={errors.confirm?.message}
+          >
+            <Input
+              id="confirm-password"
+              type="password"
+              autoComplete="new-password"
+              aria-invalid={errors.confirm ? 'true' : 'false'}
+              aria-describedby={errors.confirm ? fieldErrorId('confirm-password') : undefined}
+              {...register('confirm')}
+            />
+          </FormField>
+          {status === 'error' && <FormMessage>{t('reset.error')}</FormMessage>}
+          <Button type="submit" className="mt-1 w-full" loading={isSubmitting}>
+            {t('reset.submit')}
+          </Button>
+        </form>
+      )}
+    </div>
   );
 }

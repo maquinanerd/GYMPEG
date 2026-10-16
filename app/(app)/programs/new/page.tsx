@@ -1,42 +1,30 @@
-import Link from 'next/link';
-import { CaretLeftIcon, LayoutIcon } from '@/components/ui/icon';
 import { getTranslations } from 'next-intl/server';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { ListRow } from '@/components/ui/list-row';
 import { ProgramCreateForm } from '@/components/programs/program-create-form';
+import { SubpageHeader } from '@/components/programs/subpage-header';
 
 export default async function NewProgramPage() {
   const t = await getTranslations('programs');
-  const common = await getTranslations('common');
+  const aiT = await getTranslations('ai.planner');
 
   return (
-    <main className="flex-1 px-4 py-6">
-      <div className="mx-auto flex max-w-2xl flex-col gap-4">
-        <Button asChild variant="ghost" size="sm" className="self-start">
-          <Link href="/programs">
-            <CaretLeftIcon className="size-4" />
-            <span className="ml-1">{common('actions.back')}</span>
-          </Link>
-        </Button>
-        <h1 className="text-2xl font-bold tracking-tight">{t('newProgram')}</h1>
-
-        <Card>
-          <CardContent className="flex items-center justify-between gap-3 pt-6">
-            <div className="flex min-w-0 items-start gap-3">
-              <LayoutIcon className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
-              <div className="min-w-0">
-                <p className="text-sm font-medium">{t('startFromTemplate')}</p>
-                <p className="text-xs text-muted-foreground">
-                  {t('templateTeaser')}
-                </p>
-              </div>
-            </div>
-            <Button asChild variant="outline" className="min-h-tap shrink-0">
-              <Link href="/programs/new/template">{t('browse')}</Link>
-            </Button>
-          </CardContent>
-        </Card>
-
+    <main className="mx-auto w-full max-w-2xl flex-1">
+      <SubpageHeader backHref="/programs" backLabel={t('detail.back')} title={t('newProgram')} />
+      <div className="flex flex-col gap-6 px-5 pb-8 pt-4">
+        <ul className="border-b border-border">
+          <ListRow
+            href="/programs/new/template"
+            title={t('startFromTemplate')}
+            meta={t('templateTeaser')}
+            chevron
+          />
+          <ListRow
+            href="/programs/generate"
+            title={t('list.askCoach')}
+            meta={aiT('description')}
+            chevron
+          />
+        </ul>
         <ProgramCreateForm />
       </div>
     </main>

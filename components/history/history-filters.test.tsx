@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { HistoryFilters } from './history-filters';
+import { HistoryCsvLink, HistoryFilters } from './history-filters';
 
 const navigation = vi.hoisted(() => ({
   push: vi.fn(),
@@ -33,14 +33,26 @@ describe('HistoryFilters', () => {
       expect(screen.getByRole('combobox', { name: label })).toBeInTheDocument();
     }
     expect(screen.queryByRole('button', { name: 'Clear' })).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /CSV/ })).toHaveAttribute('href', '/api/history/csv');
+    // Unset filters read as their name; the "Filters" chip shows and hides them.
+    expect(screen.getByRole('combobox', { name: 'Program' })).toHaveTextContent('Program');
+    const toggle = screen.getByRole('button', { name: 'Filters' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('combobox', { name: 'Program' })).not.toBeInTheDocument();
   });
 
-  it('exports the CSV for the active filters', () => {
-    render(
-      <HistoryFilters {...baseProps} filters={{ gymId: 'gym-1', exerciseId: 'exercise-1' }} />,
-    );
+  it('shows the chosen value on a set filter', () => {
+    render(<HistoryFilters {...baseProps} filters={{ gymId: 'gym-1' }} />);
+    expect(screen.getByRole('combobox', { name: 'Gym' })).toHaveTextContent('Downtown');
+  });
 
+  it('exports the CSV of the whole history, or of the active filters', () => {
+    const { unmount } = render(<HistoryCsvLink filters={{}} />);
+    expect(screen.getByRole('link', { name: /CSV/ })).toHaveAttribute('href', '/api/history/csv');
+    unmount();
+
+    render(<HistoryCsvLink filters={{ gymId: 'gym-1', exerciseId: 'exercise-1' }} />);
     expect(screen.getByRole('link', { name: /CSV/ })).toHaveAttribute(
       'href',
       '/api/history/csv?gymId=gym-1&exerciseId=exercise-1',

@@ -1,34 +1,20 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
-import {
-  PulseIcon,
-  TranslateIcon,
-  MoonIcon,
-  DeviceMobileIcon,
-  SunIcon,
-  SpeakerHighIcon,
-  LightningIcon,
-} from '@/components/ui/icon';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
 import {
   DEFAULT_PREFERENCES,
   loadPreferences,
   savePreferences,
   type UserPreferences,
 } from '@/lib/preferences';
-import { BackupSection } from './backup-section';
-import { PlateFallbackSection } from './plate-fallback-section';
-import { LanguageSelector } from '@/components/shared/language-selector';
 
+// "Durante o treino": the device-only preferences of the running workout, one
+// switch per row. Language and theme live on Perfil itself; the plate
+// calculator and the backup have their own sections.
 export function SettingsClient() {
   const t = useTranslations('settings');
-  const common = useTranslations('common');
-  const { theme, setTheme } = useTheme();
   const [prefs, setPrefs] = useState<UserPreferences>(DEFAULT_PREFERENCES);
   const [hydrated, setHydrated] = useState(false);
 
@@ -38,8 +24,8 @@ export function SettingsClient() {
   }, []);
 
   function update<K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) {
-    // Re-read before writing: the plate-fallback card below keeps its own
-    // copy of the prefs, so spreading this component's state could resurrect
+    // Re-read before writing: the plate-fallback section keeps its own copy
+    // of the prefs, so spreading this component's state could resurrect
     // stale values it changed since mount.
     const next = { ...loadPreferences(), [key]: value };
     savePreferences(next);
@@ -47,128 +33,46 @@ export function SettingsClient() {
   }
 
   return (
-    <>
-      <Card>
-        <CardHeader className="pb-3">
-          <h2 className="flex items-center gap-2 text-base font-semibold">
-            <TranslateIcon className="size-4" />
-            {common('language.label')}
-          </h2>
-          <p className="text-xs text-muted-foreground">{common('language.description')}</p>
-        </CardHeader>
-        <CardContent>
-          <LanguageSelector showLabel />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-3">
-          <h2 className="text-base font-semibold">{t('appearance')}</h2>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            <ThemeChoice
-              current={theme}
-              value="light"
-              icon={<SunIcon className="size-4" />}
-              label={common('theme.light')}
-              onClick={() => setTheme('light')}
-            />
-            <ThemeChoice
-              current={theme}
-              value="dark"
-              icon={<MoonIcon className="size-4" />}
-              label={common('theme.dark')}
-              onClick={() => setTheme('dark')}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-3">
-          <h2 className="text-base font-semibold">{t('session')}</h2>
-          <p className="text-xs text-muted-foreground">{t('deviceOnly')}</p>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
-          <PrefRow
-            icon={<DeviceMobileIcon className="size-4" />}
-            label={t('vibration')}
-            description={t('vibrationDescription')}
-            checked={prefs.vibration}
-            onChange={(v) => update('vibration', v)}
-            disabled={!hydrated}
-          />
-          <PrefRow
-            icon={<SpeakerHighIcon className="size-4" />}
-            label={t('timerSound')}
-            description={t('timerSoundDescription')}
-            checked={prefs.restTimerSound}
-            onChange={(v) => update('restTimerSound', v)}
-            disabled={!hydrated}
-          />
-          <PrefRow
-            icon={<LightningIcon className="size-4" />}
-            label={t('restFlash')}
-            description={t('restFlashDescription')}
-            checked={prefs.restEndFlash}
-            onChange={(v) => update('restEndFlash', v)}
-            disabled={!hydrated}
-          />
-          <PrefRow
-            icon={<PulseIcon className="size-4" />}
-            label={t('readiness')}
-            description={t('readinessDescription')}
-            checked={prefs.readinessAutoRegulation}
-            onChange={(v) => update('readinessAutoRegulation', v)}
-            disabled={!hydrated}
-          />
-        </CardContent>
-      </Card>
-
-      <PlateFallbackSection />
-
-      <BackupSection />
-    </>
-  );
-}
-
-function ThemeChoice({
-  current,
-  value,
-  icon,
-  label,
-  onClick,
-}: {
-  current: string | undefined;
-  value: 'dark' | 'light';
-  icon: React.ReactNode;
-  label: string;
-  onClick: () => void;
-}) {
-  const active = current === value;
-  return (
-    <Button
-      type="button"
-      variant={active ? 'default' : 'outline'}
-      onClick={onClick}
-      className="min-h-tap"
-    >
-      {icon}
-      <span className="ml-2">{label}</span>
-    </Button>
+    <ul className="border-b border-border">
+      <PrefRow
+        label={t('vibration')}
+        description={t('vibrationDescription')}
+        checked={prefs.vibration}
+        onChange={(v) => update('vibration', v)}
+        disabled={!hydrated}
+      />
+      <PrefRow
+        label={t('timerSound')}
+        description={t('timerSoundDescription')}
+        checked={prefs.restTimerSound}
+        onChange={(v) => update('restTimerSound', v)}
+        disabled={!hydrated}
+      />
+      <PrefRow
+        label={t('restFlash')}
+        description={t('restFlashDescription')}
+        checked={prefs.restEndFlash}
+        onChange={(v) => update('restEndFlash', v)}
+        disabled={!hydrated}
+      />
+      <PrefRow
+        label={t('readiness')}
+        description={t('readinessDescription')}
+        checked={prefs.readinessAutoRegulation}
+        onChange={(v) => update('readinessAutoRegulation', v)}
+        disabled={!hydrated}
+      />
+    </ul>
   );
 }
 
 function PrefRow({
-  icon,
   label,
   description,
   checked,
   onChange,
   disabled,
 }: {
-  icon: React.ReactNode;
   label: string;
   description: string;
   checked: boolean;
@@ -176,15 +80,16 @@ function PrefRow({
   disabled?: boolean;
 }) {
   return (
-    <label className="flex items-center justify-between gap-3 rounded-md border border-border/40 p-3">
-      <div className="flex min-w-0 items-start gap-3">
-        <span className="mt-0.5 text-muted-foreground">{icon}</span>
-        <div className="min-w-0">
-          <p className="text-sm font-medium">{label}</p>
-          <p className="text-xs text-muted-foreground">{description}</p>
-        </div>
-      </div>
-      <Switch checked={checked} onCheckedChange={onChange} disabled={disabled} />
-    </label>
+    <li className="border-t border-border">
+      <label className="flex min-h-[3.25rem] items-center justify-between gap-4 py-3">
+        <span className="flex min-w-0 flex-col gap-0.5">
+          <span className="text-body font-semibold">{label}</span>
+          <span className="text-[0.8125rem] font-medium text-muted-foreground text-pretty">
+            {description}
+          </span>
+        </span>
+        <Switch checked={checked} onCheckedChange={onChange} disabled={disabled} />
+      </label>
+    </li>
   );
 }

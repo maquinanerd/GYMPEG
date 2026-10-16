@@ -3,17 +3,10 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import {
-  BuildingsIcon,
-  CheckIcon,
-  PlusIcon,
-  FloppyDiskIcon,
-  TrashIcon,
-} from '@/components/ui/icon';
+import { PlusIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import type { Exercise, Gym, GymExerciseConfig } from '@/lib/prisma-client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button, IconButton } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -37,6 +30,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useExerciseName } from '@/components/shared/use-exercise-name';
 import { matchesExerciseQuery } from '@/lib/catalog/search-index';
+import { SettingsHeading } from './settings-ui';
 
 type GymWithConfigs = Gym & { exerciseConfigs: GymExerciseConfig[] };
 
@@ -158,20 +152,12 @@ export function GymProfilesSection({ initialGyms, activeGymId: initialActive, ex
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <h2 className="flex items-center gap-2 text-base font-semibold">
-          <BuildingsIcon className="size-4" />
-          {t('title')}
-        </h2>
-        <p className="text-xs text-muted-foreground">{t('description')}</p>
-      </CardHeader>
-      <CardContent className="space-y-5">
+    <div className="flex flex-col gap-5">
         <div className="flex items-end gap-2">
-          <div className="min-w-0 flex-1 space-y-1">
-            <Label>{t('savedGyms')}</Label>
+          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+            <Label className={LABEL}>{t('savedGyms')}</Label>
             <Select value={selectedId} onValueChange={selectGym}>
-              <SelectTrigger>
+              <SelectTrigger aria-label={t('savedGyms')}>
                 <SelectValue placeholder={t('newGym')} />
               </SelectTrigger>
               <SelectContent>
@@ -184,19 +170,20 @@ export function GymProfilesSection({ initialGyms, activeGymId: initialActive, ex
               </SelectContent>
             </Select>
           </div>
-          <Button
+          <IconButton
             type="button"
-            variant="outline"
-            size="icon"
+            tone="outline"
             onClick={() => selectGym('new')}
-            title={t('newGym')}
+            aria-label={t('newGym')}
           >
-            <PlusIcon className="size-4" />
-          </Button>
+            <PlusIcon />
+          </IconButton>
         </div>
 
-        <div className="space-y-1">
-          <Label htmlFor="gym-name">{t('name')}</Label>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="gym-name" className={LABEL}>
+            {t('name')}
+          </Label>
           <Input
             id="gym-name"
             value={draft.name}
@@ -229,18 +216,18 @@ export function GymProfilesSection({ initialGyms, activeGymId: initialActive, ex
           />
         </div>
 
-        <div className="space-y-3 border-t pt-4">
-          <div>
-            <h3 className="text-sm font-semibold">{t('exerciseAvailability')}</h3>
-            <p className="text-xs text-muted-foreground">{t('exerciseAvailabilityDescription')}</p>
-          </div>
+        <section className="flex flex-col gap-3 border-t border-border pt-5">
+          <SettingsHeading description={t('exerciseAvailabilityDescription')}>
+            {t('exerciseAvailability')}
+          </SettingsHeading>
           <Input
             type="search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder={t('searchExercises')}
+            aria-label={t('searchExercises')}
           />
-          <div className="max-h-96 space-y-2 overflow-y-auto pr-1">
+          <ul className="max-h-96 overflow-y-auto border-b border-border">
             {filteredExercises.map((exercise) => {
               const config = draft.configs.get(exercise.id) ?? {
                 isAvailable: true,
@@ -249,12 +236,12 @@ export function GymProfilesSection({ initialGyms, activeGymId: initialActive, ex
               const hasStack =
                 exercise.equipmentType === 'MACHINE' || exercise.equipmentType === 'CABLE';
               return (
-                <div key={exercise.id} className="rounded-md border p-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="min-w-0 truncate text-sm font-medium">
+                <li key={exercise.id} className="flex flex-col gap-2 border-t border-border py-3">
+                  <div className="flex min-h-11 items-center justify-between gap-3">
+                    <span className="min-w-0 truncate text-body font-semibold">
                       {exerciseName(exercise.name)}
                     </span>
-                    <label className="flex shrink-0 items-center gap-2 text-xs">
+                    <label className="flex shrink-0 items-center gap-2 text-caption text-muted-foreground">
                       {t('available')}
                       <Switch
                         checked={config.isAvailable}
@@ -265,30 +252,27 @@ export function GymProfilesSection({ initialGyms, activeGymId: initialActive, ex
                     </label>
                   </div>
                   {hasStack && config.isAvailable && (
-                    <div className="mt-2">
-                      <WeightListField
-                        id={`weights-${exercise.id}`}
-                        label={t('machineWeights')}
-                        values={config.weightOptions}
-                        placeholder="5, 10, 15, 20, 25"
-                        onChange={(weightOptions) => updateConfig(exercise.id, { weightOptions })}
-                      />
-                    </div>
+                    <WeightListField
+                      id={`weights-${exercise.id}`}
+                      label={t('machineWeights')}
+                      values={config.weightOptions}
+                      placeholder="5, 10, 15, 20, 25"
+                      onChange={(weightOptions) => updateConfig(exercise.id, { weightOptions })}
+                    />
                   )}
-                </div>
+                </li>
               );
             })}
-          </div>
-        </div>
+          </ul>
+        </section>
 
         <div className="flex flex-wrap justify-between gap-2">
           <div>
             {draft.id && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button type="button" variant="outline" className="text-destructive">
-                    <TrashIcon className="size-4" />
-                    <span className="ml-2">{common('actions.delete')}</span>
+                  <Button type="button" variant="ghost" className="text-destructive-text">
+                    {common('actions.delete')}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -311,22 +295,24 @@ export function GymProfilesSection({ initialGyms, activeGymId: initialActive, ex
           <div className="flex gap-2">
             {draft.id && draft.id !== activeGymId && (
               <Button type="button" variant="outline" onClick={activate}>
-                <CheckIcon className="size-4" />
-                <span className="ml-2">{t('makeActive')}</span>
+                {t('makeActive')}
               </Button>
             )}
-            <Button type="button" onClick={save} disabled={!draft.name.trim() || saving}>
-              <FloppyDiskIcon className="size-4" />
-              <span className="ml-2">
-                {saving ? common('actions.saving') : common('actions.save')}
-              </span>
+            <Button
+              type="button"
+              onClick={save}
+              loading={saving}
+              disabled={!draft.name.trim() || saving}
+            >
+              {saving ? common('actions.saving') : common('actions.save')}
             </Button>
           </div>
         </div>
-      </CardContent>
-    </Card>
+    </div>
   );
 }
+
+const LABEL = 'text-caption font-semibold';
 
 function WeightListField({
   id,
@@ -342,8 +328,8 @@ function WeightListField({
   onChange: (values: number[]) => void;
 }) {
   return (
-    <div className="space-y-1">
-      <Label htmlFor={id} className="text-xs text-muted-foreground">
+    <div className="flex flex-col gap-1.5">
+      <Label htmlFor={id} className="text-small text-muted-foreground">
         {label}
       </Label>
       <Input

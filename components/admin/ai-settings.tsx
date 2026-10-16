@@ -3,11 +3,10 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { CheckIcon, CircleNotchIcon, PlugIcon, WarningCircleIcon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Section } from '@/components/ui/section';
 import {
   Select,
   SelectContent,
@@ -16,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Tag } from '@/components/ui/tag';
 import type { AdminConfigView, ConnectionTest } from '@/lib/admin-config';
 import {
   PANEL_PROVIDER_IDS,
@@ -24,6 +24,17 @@ import {
   type SettingKey,
 } from '@/lib/admin-settings';
 import { AI_FEATURES, type AiFeature } from '@/lib/ai/features';
+import { cn } from '@/lib/utils';
+import {
+  DESCRIPTION,
+  FIELD,
+  HINT,
+  INLINE_FORM,
+  INLINE_INPUT,
+  LABEL,
+  NUMBER_INPUT,
+  ROW_LABEL,
+} from './admin-ui';
 import { SecretField } from './secret-field';
 import { useAdminRequest } from './use-admin-request';
 
@@ -66,16 +77,19 @@ function useSaveSettings() {
   return { save, pending };
 }
 
+// The AI settings as titled sections straight on the page, split by hairlines:
+// which provider answers, each provider's key / model / test, the features
+// that are on and the prices for the cost estimate.
 export function AiSettings({ view, providers, active }: Props) {
   return (
-    <div className="flex flex-col gap-6">
+    <>
       <ProviderChoice view={view} active={active} />
       {providers.map((provider) => (
-        <ProviderCard key={provider.id} provider={provider} view={view} />
+        <ProviderSection key={provider.id} provider={provider} view={view} />
       ))}
-      <FeaturesCard view={view} />
-      <PriceCard view={view} />
-    </div>
+      <FeaturesSection view={view} />
+      <PriceSection view={view} />
+    </>
   );
 }
 
@@ -94,80 +108,82 @@ function ProviderChoice({ view, active }: Pick<Props, 'view' | 'active'>) {
   const serverFallback = view.settings.AI_FALLBACK_PROVIDER.env;
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <h2 className="text-base font-semibold">{t('providerTitle')}</h2>
-        <p className="text-sm text-muted-foreground">
-          {active.configured
-            ? t('inUse', { provider: active.label, model: active.model })
-            : t('inUseNoKey', { provider: active.label })}
-        </p>
-      </CardHeader>
-      <CardContent>
-        <form
-          className="space-y-4"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void save({
-              AI_PROVIDER: primary === SERVER_DEFAULT ? null : primary,
-              AI_FALLBACK_PROVIDER:
-                fallback === SERVER_DEFAULT ? null : fallback === NO_FALLBACK ? '' : fallback,
-            });
-          }}
-        >
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="ai-primary">{t('primary')}</Label>
-              <Select value={primary} onValueChange={setPrimary}>
-                <SelectTrigger id="ai-primary">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={SERVER_DEFAULT}>
-                    {common('serverDefault', { value: providerName(serverPrimary ?? 'gemini') })}
+    <Section title={t('providerTitle')}>
+      <p className={cn(DESCRIPTION, !active.configured && 'text-destructive-text')}>
+        {active.configured
+          ? t('inUse', { provider: active.label, model: active.model })
+          : t('inUseNoKey', { provider: active.label })}
+      </p>
+      <form
+        className="flex flex-col gap-4 pt-1"
+        onSubmit={(event) => {
+          event.preventDefault();
+          void save({
+            AI_PROVIDER: primary === SERVER_DEFAULT ? null : primary,
+            AI_FALLBACK_PROVIDER:
+              fallback === SERVER_DEFAULT ? null : fallback === NO_FALLBACK ? '' : fallback,
+          });
+        }}
+      >
+        {/* minmax(0, 1fr): a long provider label truncates in its trigger
+            instead of widening the page. */}
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:grid-cols-[repeat(2,minmax(0,1fr))]">
+          <div className={FIELD}>
+            <Label htmlFor="ai-primary" className={LABEL}>
+              {t('primary')}
+            </Label>
+            <Select value={primary} onValueChange={setPrimary}>
+              <SelectTrigger id="ai-primary">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={SERVER_DEFAULT}>
+                  {common('serverDefault', { value: providerName(serverPrimary ?? 'gemini') })}
+                </SelectItem>
+                {PANEL_PROVIDER_IDS.map((id) => (
+                  <SelectItem key={id} value={id}>
+                    {providerName(id)}
                   </SelectItem>
-                  {PANEL_PROVIDER_IDS.map((id) => (
-                    <SelectItem key={id} value={id}>
-                      {providerName(id)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="ai-fallback">{t('fallback')}</Label>
-              <Select value={fallback} onValueChange={setFallback}>
-                <SelectTrigger id="ai-fallback">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={SERVER_DEFAULT}>
-                    {common('serverDefault', {
-                      value: serverFallback ? providerName(serverFallback) : t('noFallback'),
-                    })}
-                  </SelectItem>
-                  <SelectItem value={NO_FALLBACK}>{t('noFallback')}</SelectItem>
-                  {PANEL_PROVIDER_IDS.map((id) => (
-                    <SelectItem key={id} value={id}>
-                      {providerName(id)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <p className="text-sm text-muted-foreground">{t('fallbackHint')}</p>
-          <Button type="submit" disabled={pending} className="min-h-tap">
-            {pending && <CircleNotchIcon className="animate-spin" aria-hidden="true" />}
-            {common('save')}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+          <div className={FIELD}>
+            <Label htmlFor="ai-fallback" className={LABEL}>
+              {t('fallback')}
+            </Label>
+            <Select value={fallback} onValueChange={setFallback}>
+              <SelectTrigger id="ai-fallback">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={SERVER_DEFAULT}>
+                  {common('serverDefault', {
+                    value: serverFallback ? providerName(serverFallback) : t('noFallback'),
+                  })}
+                </SelectItem>
+                <SelectItem value={NO_FALLBACK}>{t('noFallback')}</SelectItem>
+                {PANEL_PROVIDER_IDS.map((id) => (
+                  <SelectItem key={id} value={id}>
+                    {providerName(id)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <p className={HINT}>{t('fallbackHint')}</p>
+        <Button type="submit" variant="ink" loading={pending} disabled={pending} className="self-start">
+          {common('save')}
+        </Button>
+      </form>
+    </Section>
   );
 }
 
-function ProviderCard({ provider, view }: { provider: ProviderInfo; view: AdminConfigView }) {
+// One provider: whether it has a key (a tag), the key, the model and a
+// connection test.
+function ProviderSection({ provider, view }: { provider: ProviderInfo; view: AdminConfigView }) {
   const t = useTranslations('admin.ai');
   const common = useTranslations('admin.common');
   const keys = PROVIDER_KEYS[provider.id];
@@ -189,23 +205,30 @@ function ProviderCard({ provider, view }: { provider: ProviderInfo; view: AdminC
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <h2 className="text-base font-semibold">{t(`providers.${provider.id}`)}</h2>
-        <p className="text-sm text-muted-foreground">{t('modelInUse', { model: provider.model })}</p>
-      </CardHeader>
-      <CardContent className="space-y-5">
+    <Section
+      title={t(`providers.${provider.id}`)}
+      divider
+      action={
+        <Tag variant={provider.configured ? 'primary' : 'warning'}>
+          {provider.configured ? t('ready') : t('noKey')}
+        </Tag>
+      }
+    >
+      <p className={cn(DESCRIPTION, 'break-words')}>{t('modelInUse', { model: provider.model })}</p>
+      <div className="flex flex-col gap-5 pt-1">
         <SecretField secretKey={keys.apiKey} label={t('apiKey')} view={view.secrets[keys.apiKey]} />
 
         <form
-          className="space-y-2"
+          className={FIELD}
           onSubmit={(event) => {
             event.preventDefault();
             void save({ [keys.model]: model.trim() || null });
           }}
         >
-          <Label htmlFor={`model-${provider.id}`}>{t('model')}</Label>
-          <div className="flex flex-wrap items-center gap-2">
+          <Label htmlFor={`model-${provider.id}`} className={LABEL}>
+            {t('model')}
+          </Label>
+          <div className={INLINE_FORM}>
             <Input
               id={`model-${provider.id}`}
               value={model}
@@ -213,38 +236,34 @@ function ProviderCard({ provider, view }: { provider: ProviderInfo; view: AdminC
               onChange={(e) => setModel(e.target.value)}
               spellCheck={false}
               autoComplete="off"
-              className="min-w-0 flex-1 font-mono"
+              className={INLINE_INPUT}
             />
-            <Button type="submit" size="sm" disabled={pending}>
+            <Button type="submit" variant="ink" loading={pending} disabled={pending} className="h-12">
               {common('save')}
             </Button>
           </div>
-          <p className="text-sm text-muted-foreground">{t('modelHint')}</p>
+          <p className={HINT}>{t('modelHint')}</p>
         </form>
 
-        <div className="space-y-2">
-          <Button type="button" variant="outline" size="sm" onClick={test} disabled={testing}>
-            {testing ? (
-              <CircleNotchIcon className="animate-spin" aria-hidden="true" />
-            ) : (
-              <PlugIcon aria-hidden="true" />
-            )}
+        <div className="flex flex-col items-start gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={test}
+            loading={testing}
+            disabled={testing}
+            className="h-12"
+          >
             {testing ? common('testing') : t('test')}
           </Button>
           {result && (
             <p
               role="status"
-              className={
-                result.ok
-                  ? 'flex items-center gap-1.5 text-sm'
-                  : 'flex items-center gap-1.5 text-sm text-destructive'
-              }
-            >
-              {result.ok ? (
-                <CheckIcon className="size-4 shrink-0" aria-hidden="true" />
-              ) : (
-                <WarningCircleIcon className="size-4 shrink-0" aria-hidden="true" />
+              className={cn(
+                'text-caption text-pretty break-words',
+                !result.ok && 'text-destructive-text',
               )}
+            >
               {result.ok
                 ? t('testOk', { model: result.model, ms: result.latencyMs })
                 : result.reason === 'not_configured'
@@ -253,8 +272,8 @@ function ProviderCard({ provider, view }: { provider: ProviderInfo; view: AdminC
             </p>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </Section>
   );
 }
 
@@ -267,7 +286,8 @@ function parseDisabled(value: string | null): Set<string> {
   );
 }
 
-function FeaturesCard({ view }: { view: AdminConfigView }) {
+// One switch per AI feature, as hairline rows.
+function FeaturesSection({ view }: { view: AdminConfigView }) {
   const t = useTranslations('admin.ai');
   const common = useTranslations('admin.common');
   const { save, pending } = useSaveSettings();
@@ -284,39 +304,42 @@ function FeaturesCard({ view }: { view: AdminConfigView }) {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <h2 className="text-base font-semibold">{t('featuresTitle')}</h2>
-        <p className="text-sm text-muted-foreground">{t('featuresHint')}</p>
-      </CardHeader>
-      <CardContent>
-        <form
-          className="space-y-4"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void save({ AI_FEATURES_DISABLED: [...disabled].join(',') });
-          }}
-        >
+    <Section title={t('featuresTitle')} divider>
+      <p className={DESCRIPTION}>{t('featuresHint')}</p>
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          void save({ AI_FEATURES_DISABLED: [...disabled].join(',') });
+        }}
+      >
+        <ul>
           {AI_FEATURES.map((feature) => (
-            <div key={feature} className="flex items-center justify-between gap-3">
-              <Label htmlFor={`feature-${feature}`}>{t(`features.${FEATURE_KEYS[feature]}`)}</Label>
+            <li
+              key={feature}
+              className="flex min-h-[3.25rem] items-center justify-between gap-3 border-t border-border py-2"
+            >
+              <Label htmlFor={`feature-${feature}`} className={ROW_LABEL}>
+                {t(`features.${FEATURE_KEYS[feature]}`)}
+              </Label>
               <Switch
                 id={`feature-${feature}`}
                 checked={!disabled.has(feature)}
                 onCheckedChange={(on) => toggle(feature, on)}
               />
-            </div>
+            </li>
           ))}
-          <Button type="submit" disabled={pending} className="min-h-tap">
-            {common('save')}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+        </ul>
+        <Button type="submit" variant="ink" loading={pending} disabled={pending} className="self-start">
+          {common('save')}
+        </Button>
+      </form>
+    </Section>
   );
 }
 
-function PriceCard({ view }: { view: AdminConfigView }) {
+// Price per million tokens, input and output, for the cost estimate.
+function PriceSection({ view }: { view: AdminConfigView }) {
   const t = useTranslations('admin.ai');
   const common = useTranslations('admin.common');
   const { save, pending } = useSaveSettings();
@@ -326,49 +349,50 @@ function PriceCard({ view }: { view: AdminConfigView }) {
   const [outputPrice, setOutputPrice] = useState(output.panel ?? '');
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <h2 className="text-base font-semibold">{t('priceTitle')}</h2>
-        <p className="text-sm text-muted-foreground">{t('priceHint')}</p>
-      </CardHeader>
-      <CardContent>
-        <form
-          className="space-y-4"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void save({
-              AI_COST_PER_MTOKEN_INPUT: inputPrice.trim().replace(',', '.') || null,
-              AI_COST_PER_MTOKEN_OUTPUT: outputPrice.trim().replace(',', '.') || null,
-            });
-          }}
-        >
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="price-input">{t('priceInput')}</Label>
-              <Input
-                id="price-input"
-                inputMode="decimal"
-                value={inputPrice}
-                placeholder={input.env ?? '0.10'}
-                onChange={(e) => setInputPrice(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="price-output">{t('priceOutput')}</Label>
-              <Input
-                id="price-output"
-                inputMode="decimal"
-                value={outputPrice}
-                placeholder={output.env ?? '0.40'}
-                onChange={(e) => setOutputPrice(e.target.value)}
-              />
-            </div>
+    <Section title={t('priceTitle')} divider>
+      <p className={DESCRIPTION}>{t('priceHint')}</p>
+      <form
+        className="flex flex-col gap-4 pt-1"
+        onSubmit={(event) => {
+          event.preventDefault();
+          void save({
+            AI_COST_PER_MTOKEN_INPUT: inputPrice.trim().replace(',', '.') || null,
+            AI_COST_PER_MTOKEN_OUTPUT: outputPrice.trim().replace(',', '.') || null,
+          });
+        }}
+      >
+        <div className="grid grid-cols-2 gap-3">
+          <div className={FIELD}>
+            <Label htmlFor="price-input" className={LABEL}>
+              {t('priceInput')}
+            </Label>
+            <Input
+              id="price-input"
+              inputMode="decimal"
+              value={inputPrice}
+              placeholder={input.env ?? '0.10'}
+              onChange={(e) => setInputPrice(e.target.value)}
+              className={NUMBER_INPUT}
+            />
           </div>
-          <Button type="submit" disabled={pending} className="min-h-tap">
-            {common('save')}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+          <div className={FIELD}>
+            <Label htmlFor="price-output" className={LABEL}>
+              {t('priceOutput')}
+            </Label>
+            <Input
+              id="price-output"
+              inputMode="decimal"
+              value={outputPrice}
+              placeholder={output.env ?? '0.40'}
+              onChange={(e) => setOutputPrice(e.target.value)}
+              className={NUMBER_INPUT}
+            />
+          </div>
+        </div>
+        <Button type="submit" variant="ink" loading={pending} disabled={pending} className="self-start">
+          {common('save')}
+        </Button>
+      </form>
+    </Section>
   );
 }

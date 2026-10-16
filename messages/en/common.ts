@@ -84,8 +84,17 @@ export const common = {
     waiting: '{count, plural, one {# change waiting to sync} other {# changes waiting to sync}}',
     syncing: 'Syncing {count}...',
     pending: 'Offline · {count, plural, one {# pending} other {# pending}}',
+    // Short labels of the sync tag (the long ones above are its accessible name).
+    savedShort: 'Saved',
+    toSendShort: '{count} to send',
+    offlineShort: 'No connection',
+    // Shown on screens that need the network while the device is offline.
+    trainAnyway: 'You can train as usual. Everything is saved on this device.',
   },
   errors: {
     generic: 'Something went wrong. Please try again.',
+    // Error state of a screen whose data did not load.
+    loadFailed: 'This screen did not load.',
+    tryAgain: 'Try again',
   },
 };

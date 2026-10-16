@@ -40,6 +40,8 @@ export const ai = {
       validating: 'Conferindo volume, tempo e limites...',
     },
     disabled: 'O planejamento com IA está desligado neste servidor.',
+    offline:
+      'Planejar com IA precisa de conexão. Seus programas e treinos continuam funcionando sem rede.',
     error: 'Não foi possível gerar um plano. Tente de novo.',
   },
   preview: {

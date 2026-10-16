@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* GYM Peg tokens (docs/design/tokens.css). Light is the default theme; .dark
-   is opt-in from Perfil > Tema. HSL channels so Tailwind can add alpha. */
+/* GYM Peg tokens v2 (docs/design/tokens.css). Light is the default theme;
+   .dark is opt-in from Perfil > Tema. HSL channels so Tailwind can add alpha. */
 @layer base {
   :root {
     --background: 0 0% 97.6%; /* #F9F9F9 */
@@ -14,27 +14,25 @@
     --popover-foreground: 0 0% 6.7%; /* #111111 */
     --primary: 72 100% 50%; /* #CCFF00 */
     --primary-foreground: 0 0% 6.7%; /* #111111 */
-    --secondary: 0 0% 94.1%; /* #F0F0F0 */
+    --secondary: 0 0% 100%; /* #FFFFFF */
     --secondary-foreground: 0 0% 6.7%; /* #111111 */
-    --muted: 0 0% 94.5%; /* #F1F1F1 */
+    --muted: 0 0% 94.1%; /* #F0F0F0 */
     --muted-foreground: 0 0% 39.2%; /* #646464 */
-    --accent: 78.5 68.4% 96.3%; /* #F8FCEF */
+    --accent: 80.8 89.7% 88.6%; /* #EAFCC8 */
     --accent-foreground: 78 44.4% 17.6%; /* #354119 */
     --destructive: 2.8 100% 61.6%; /* #FF443B */
     --destructive-foreground: 0 0% 6.7%; /* #111111 */
-    --border: 0 0% 94.9%; /* #F2F2F2 */
-    --input: 0 0% 94.1%; /* #F0F0F0 */
-    --ring: 73.2 100% 24.9%; /* #637F00 */
+    --border: 0 0% 91.4%; /* #E9E9E9 */
+    --input: 0 0% 80.8%; /* #CECECE */
+    --ring: 0 0% 6.7%; /* #111111 */
+    --ink: 0 0% 6.7%; /* #111111 */
+    --ink-foreground: 0 0% 100%; /* #FFFFFF */
     --brand: 73.2 100% 24.9%; /* #637F00 */
     --brand-strong: 78 44.4% 17.6%; /* #354119 */
-    --suggestion: 78.5 68.4% 96.3%; /* #F8FCEF */
-    --suggestion-foreground: 78 44.4% 17.6%; /* #354119 */
+    --destructive-text: 3.1 77% 44.3%; /* #C8231A */
+    --row-current: 80.8 89.7% 88.6%; /* #EAFCC8 */
     --track: 0 0% 91.4%; /* #E9E9E9 */
-    --pill: 0 0% 94.5%; /* #F1F1F1 */
-    --nav: 0 0% 30.2%; /* #4D4D4D */
-    --nav-foreground: 0 0% 80.8%; /* #CECECE */
-    --nav-active: 72 100% 50%; /* #CCFF00 */
-    --nav-active-foreground: 0 0% 6.7%; /* #111111 */
+    --subtle: 0 0% 55.3%; /* #8D8D8D */
     --pr: 49.8 100% 51.8%; /* #FFD509 */
     --pr-foreground: 0 0% 6.7%; /* #111111 */
     --info: 191.7 100% 59.8%; /* #32D7FF */
@@ -45,19 +43,15 @@
     --deload-foreground: 0 0% 6.7%; /* #111111 */
     --warning: 36.5 100% 52%; /* #FF9F0A */
     --warning-foreground: 0 0% 6.7%; /* #111111 */
-    --success: 72 100% 50%; /* #CCFF00 */
-    --success-foreground: 0 0% 6.7%; /* #111111 */
+    --warning-text: 35.1 100% 30.2%; /* #9A5A00 */
     --heat-0: 0 0% 91.4%; /* #E9E9E9 */
     --heat-1: 78.6 74% 74.3%; /* #D0EE8D */
     --heat-2: 72.6 100% 45.9%; /* #B9EA00 */
     --heat-3: 36.5 100% 52%; /* #FF9F0A */
-    --radius: 1.5rem; /* 24px — cards */
-    --radius-sm: 1rem; /* 16px — miniaturas */
-    --radius-lg: 1.75rem; /* 28px — card dominante */
-    --h-btn: 3.5rem; /* 56px pílula padrão */
-    --h-btn-session: 4rem; /* 64px treino ativo */
-    --h-nav: 4.25rem; /* 68px barra inferior flutuante */
-    --h-row: 4rem; /* 64px linha de lista */
+    --radius: 0.75rem;   /* 12px botões, campos, sugestão */
+    --radius-sm: 0.5rem; /* 8px filtros, células, miniaturas */
+    --radius-xs: 0.25rem;/* 4px etiquetas, marca-texto */
+    --radius-lg: 1rem;   /* 16px única superfície branca da tela */
   }
   .dark {
     --background: 0 0% 6.7%; /* #111111 */
@@ -68,27 +62,25 @@
     --popover-foreground: 0 0% 100%; /* #FFFFFF */
     --primary: 72 100% 50%; /* #CCFF00 */
     --primary-foreground: 0 0% 6.7%; /* #111111 */
-    --secondary: 0 0% 13.7%; /* #232323 */
+    --secondary: 0 0% 9.4%; /* #181818 */
     --secondary-foreground: 0 0% 100%; /* #FFFFFF */
-    --muted: 0 0% 11%; /* #1C1C1C */
+    --muted: 0 0% 13.7%; /* #232323 */
     --muted-foreground: 0 0% 55.3%; /* #8D8D8D */
     --accent: 78.5 46.4% 11%; /* #21290F */
-    --accent-foreground: 72 100% 50%; /* #CCFF00 */
+    --accent-foreground: 80 89% 82.2%; /* #DFFAA9 */
     --destructive: 2.8 100% 61.6%; /* #FF443B */
     --destructive-foreground: 0 0% 6.7%; /* #111111 */
     --border: 0 0% 16.5%; /* #2A2A2A */
-    --input: 0 0% 13.7%; /* #232323 */
+    --input: 0 0% 28.2%; /* #484848 */
     --ring: 72 100% 50%; /* #CCFF00 */
+    --ink: 0 0% 100%; /* #FFFFFF */
+    --ink-foreground: 0 0% 6.7%; /* #111111 */
     --brand: 72 100% 50%; /* #CCFF00 */
     --brand-strong: 80 89% 82.2%; /* #DFFAA9 */
-    --suggestion: 78.5 46.4% 11%; /* #21290F */
-    --suggestion-foreground: 80 89% 82.2%; /* #DFFAA9 */
+    --destructive-text: 3 100% 72.5%; /* #FF7A73 */
+    --row-current: 78.5 46.4% 11%; /* #21290F */
     --track: 0 0% 16.5%; /* #2A2A2A */
-    --pill: 0 0% 13.7%; /* #232323 */
-    --nav: 0 0% 11%; /* #1C1C1C */
-    --nav-foreground: 0 0% 70.6%; /* #B4B4B4 */
-    --nav-active: 72 100% 50%; /* #CCFF00 */
-    --nav-active-foreground: 0 0% 6.7%; /* #111111 */
+    --subtle: 0 0% 55.3%; /* #8D8D8D */
     --pr: 49.8 100% 51.8%; /* #FFD509 */
     --pr-foreground: 0 0% 6.7%; /* #111111 */
     --info: 191.7 100% 59.8%; /* #32D7FF */
@@ -99,8 +91,7 @@
     --deload-foreground: 0 0% 6.7%; /* #111111 */
     --warning: 36.5 100% 52%; /* #FF9F0A */
     --warning-foreground: 0 0% 6.7%; /* #111111 */
-    --success: 72 100% 50%; /* #CCFF00 */
-    --success-foreground: 0 0% 6.7%; /* #111111 */
+    --warning-text: 36.5 100% 52%; /* #FF9F0A */
     --heat-0: 0 0% 16.5%; /* #2A2A2A */
     --heat-1: 75 64% 19.6%; /* #425212 */
     --heat-2: 72 100% 50%; /* #CCFF00 */
@@ -118,6 +109,32 @@
   }
 }
 
+/* Archivo is a width-variable font: text stays at 100%, numbers (load, reps,
+   time, volume) widen to 112–125% like the numbers stamped on a plate. */
+@layer utilities {
+  .stretch-100 {
+    font-stretch: 100%;
+  }
+  .stretch-108 {
+    font-stretch: 108%;
+  }
+  .stretch-112 {
+    font-stretch: 112%;
+  }
+  .stretch-118 {
+    font-stretch: 118%;
+  }
+  .stretch-125 {
+    font-stretch: 125%;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Printable sheets (issue #333): A4 portrait, black on white, no app chrome. */
 @media print {
   @page {
@@ -128,31 +145,5 @@
   body {
     background: white !important;
     color: black !important;
-  }
-}
-
-/* End-of-rest screen flash (issue #393): three blinks, or a single static
-   colour change for people who asked the system for reduced motion. */
-@keyframes rest-end-flash {
-  0%,
-  33%,
-  66% {
-    opacity: 0.85;
-  }
-  16%,
-  50%,
-  83%,
-  100% {
-    opacity: 0;
-  }
-}
-.rest-end-flash {
-  opacity: 0;
-  animation: rest-end-flash 1.5s linear forwards;
-}
-@media (prefers-reduced-motion: reduce) {
-  .rest-end-flash {
-    animation: none;
-    opacity: 0.4;
   }
 }

@@ -2,9 +2,6 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { BuildingsIcon } from '@/components/ui/icon';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -13,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tag } from '@/components/ui/tag';
 import { StartWorkoutButton } from '@/components/session/start-workout-button';
 
 interface WorkoutOption {
@@ -22,6 +20,10 @@ interface WorkoutOption {
   exerciseCount: number;
 }
 
+// The program's workouts as rows on the page (no cards): name, how many
+// exercises and the scheduled day, then the start button. The suggested one
+// (the program's next workout) gets the "Sugerido" tag and the ink button;
+// the others an outline one.
 export function WorkoutStartList({
   workouts,
   gyms,
@@ -41,13 +43,10 @@ export function WorkoutStartList({
   return (
     <>
       {gyms.length > 0 && (
-        <div className="space-y-2 rounded-md border p-3">
-          <Label className="flex items-center gap-2">
-            <BuildingsIcon className="size-4" />
-            {t('trainingGym')}
-          </Label>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="training-gym">{t('trainingGym')}</Label>
           <Select value={gymId} onValueChange={setGymId}>
-            <SelectTrigger>
+            <SelectTrigger id="training-gym" aria-describedby="training-gym-description">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -58,41 +57,46 @@ export function WorkoutStartList({
               ))}
             </SelectContent>
           </Select>
-          <p className="text-xs text-muted-foreground">{t('trainingGymDescription')}</p>
+          <p id="training-gym-description" className="text-[0.8125rem] font-medium text-muted-foreground">
+            {t('trainingGymDescription')}
+          </p>
         </div>
       )}
 
-      <ul className="flex flex-col gap-3">
-        {workouts.map((workout) => (
-          <li key={workout.id}>
-            <Card
-              data-suggested={workout.id === suggestedId || undefined}
-              className={workout.id === suggestedId ? 'border-brand' : undefined}
+      <ul className="flex flex-col">
+        {workouts.map((workout) => {
+          const suggested = workout.id === suggestedId;
+          const nameId = `start-workout-${workout.id}`;
+          return (
+            <li
+              key={workout.id}
+              data-suggested={suggested || undefined}
+              className="flex flex-col gap-3 border-t border-border py-4"
             >
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <CardTitle className="text-base">{workout.name}</CardTitle>
-                    <CardDescription className="text-xs">
-                      {common('counts.exercises', { count: workout.exerciseCount })}
-                    </CardDescription>
-                  </div>
-                  <div className="flex shrink-0 gap-1">
-                    {workout.id === suggestedId && <Badge>{t('suggested')}</Badge>}
-                    {workout.day && <Badge variant="secondary">{workout.day}</Badge>}
-                  </div>
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <h2 id={nameId} className="text-subtitle [overflow-wrap:anywhere]">
+                    {workout.name}
+                  </h2>
+                  <p className="text-[0.8125rem] font-medium text-muted-foreground">
+                    {[common('counts.exercises', { count: workout.exerciseCount }), workout.day]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </p>
                 </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <StartWorkoutButton
-                  workoutId={workout.id}
-                  gymId={gymId === 'none' ? null : gymId}
-                  disabled={workout.exerciseCount === 0}
-                />
-              </CardContent>
-            </Card>
-          </li>
-        ))}
+                {suggested && <Tag variant="primary">{t('suggested')}</Tag>}
+              </div>
+              <StartWorkoutButton
+                workoutId={workout.id}
+                gymId={gymId === 'none' ? null : gymId}
+                disabled={workout.exerciseCount === 0}
+                variant={suggested ? 'ink' : 'outline'}
+                className={suggested ? undefined : 'h-11 text-body'}
+                describedBy={nameId}
+              />
+            </li>
+          );
+        })}
       </ul>
     </>
   );

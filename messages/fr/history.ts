@@ -8,6 +8,8 @@ export const history = {
   emptyDescription:
     'Terminez votre première séance et elle apparaîtra ici avec le volume, les séries et la durée.',
   firstSession: 'Enregistrer votre première séance',
+  startWorkout: 'Démarrer une séance',
+  loading: 'Chargement de l’historique',
   freeSession: 'Séance libre',
   cardio: 'Cardio',
   volumeShort: '{weight} vol.',
@@ -24,6 +26,7 @@ export const history = {
     allMuscles: 'Tous les muscles',
     clear: 'Effacer',
     csvTitle: 'Télécharger le CSV des séries pour les filtres actifs',
+    toggle: 'Filtres',
   },
   calendar: {
     previousMonth: 'Mois précédent',
@@ -31,6 +34,15 @@ export const history = {
     today: 'Aujourd’hui',
     workoutCount: '{count, plural, one {# séance} other {# séances}}',
     noSessions: 'Aucune séance terminée à cette date.',
+    noSessionsMonth: 'Aucune séance terminée ce mois-ci.',
+    monthSessions: 'Séances de {month}',
+    wholeMonth: 'Voir tout le mois',
+    missed: 'prévue, non faite',
+    legend: {
+      done: 'entraîné',
+      missed: 'prévu, non fait',
+      today: 'aujourd’hui',
+    },
   },
   detail: {
     downloadTcx: 'Télécharger le .tcx',
@@ -59,6 +71,13 @@ export const history = {
     heartRateChart: 'Fréquence cardiaque dans le temps',
     heartRate: 'FC',
     chartMinutes: '{value} min',
+    back: 'Retour à l’historique',
+    record: 'Record personnel',
+    decouplingTitle: 'Découplage aérobie',
+    decouplingHeld:
+      'Plus c’est bas, mieux c’est - votre allure par battement est restée stable sur la seconde moitié de cette activité.',
+    decouplingFaded:
+      'Plus c’est bas, mieux c’est - votre allure par battement a baissé sur la seconde moitié de cette activité.',
   },
   copy: {
     button: 'Copier en texte',

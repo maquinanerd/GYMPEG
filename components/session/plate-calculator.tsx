@@ -77,7 +77,7 @@ export function PlateCalculator({
             type="button"
             variant="ghost"
             size="sm"
-            className="h-7 gap-1 px-2 text-xs text-muted-foreground"
+            className="gap-1.5 px-2.5 text-muted-foreground"
             aria-label={t('openPlates')}
           >
             <CalculatorIcon className="size-4" />
@@ -100,17 +100,17 @@ export function PlateCalculator({
           <div className="space-y-4">
             {result.perSide.length > 0 ? (
               <BarbellSideDiagram load={result} unitLabel={label} platesLabel={t('platesPerSide')}>
-                <p className="mt-1 text-center text-xs text-muted-foreground">
+                <p className="mt-1 text-center font-num text-small tabular-nums text-muted-foreground stretch-108">
                   {result.perSide
                     .map((group) => String(group.count) + ' x ' + String(group.plate) + ' ' + label)
                     .join(' + ')}
                 </p>
               </BarbellSideDiagram>
             ) : (
-              <p className="text-sm text-muted-foreground">{t('barOnly')}</p>
+              <p className="text-caption text-muted-foreground">{t('barOnly')}</p>
             )}
 
-            <p className="text-sm text-muted-foreground">
+            <p className="text-caption text-muted-foreground">
               {t('achieved', {
                 weight: `${result.achievedWeight} ${label}`,
                 bar: `${result.barWeight} ${label}`,
@@ -118,7 +118,7 @@ export function PlateCalculator({
             </p>
 
             {!result.exact && result.remainder > 0 && (
-              <p className="text-sm text-foreground">
+              <p className="text-caption text-warning-text">
                 {t('remainder', { remainder: `${result.remainder} ${label}` })}
               </p>
             )}

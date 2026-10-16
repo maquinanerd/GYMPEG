@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,400..700&display=swap" rel="stylesheet"><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script><style>html,body{margin:0;background:#F9F9F9}a{color:#354119}a:hover{color:#111111}button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}:focus-visible{outline:2px solid #111111;outline-offset:2px}</style></helmet>
+<div style="width:100%;max-width:430px;margin:0 auto;height:844px;position:relative;background:#F9F9F9;font-family:Archivo, sans-serif;color:#111111;overflow:hidden;display:flex;flex-direction:column">
+  <dc-import name="StatusBar" hint-size="100%,54px"></dc-import>
+  <main style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:6px 20px 28px;display:flex;flex-direction:column;gap:28px">
+    <header style="display:flex;align-items:center;gap:14px">
+      <span aria-hidden="true" style="width:56px;height:56px;border-radius:50%;background:#111111;color:#CCFF00;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600">RA</span>
+      <div style="display:flex;flex-direction:column;gap:2px"><h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-0.01em">Rafa</h1><span style="font-size:14px;font-weight:500;color:#646464">Intermediário · hipertrofia · 4x por semana</span></div>
+    </header>
+    <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+      <section style="display:flex;flex-direction:column">
+        <h2 style="margin:0 0 4px;font-size:14px;font-weight:600;color:#646464">{{ g.title }}</h2>
+        <ul style="list-style:none;margin:0;padding:0">
+          <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+            <li style="border-top:1px solid #E9E9E9"><a href="#" style="min-height:52px;display:grid;grid-template-columns:minmax(0,1fr) auto 16px;gap:10px;align-items:center;text-decoration:none;color:{{ r.c }}"><span style="font-size:16px;font-weight:600">{{ r.l }}</span><span style="font-size:14px;font-weight:500;color:#646464;text-align:right">{{ r.v }}</span><i class="ph-bold ph-caret-right" style="font-size:14px;color:#8D8D8D"></i></a></li>
+          </sc-for>
+        </ul>
+      </section>
+    </sc-for>
+    <button style="height:52px;border-radius:12px;border:1px solid #CECECE;font-size:16px;font-weight:600">Sair desta conta</button>
+    <span style="font-size:12px;font-weight:500;color:#646464;text-align:center">GYM Peg · versão 0.9 (502abdb)</span>
+  </main>
+  <dc-import name="TabBar" active="perfil" hint-size="100%,89px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+class Component extends DCLogic {
+  renderVals() {
+    const g = (title, rows) => ({ title, rows: rows.map(([l, v, danger]) => ({ l, v, c: danger ? '#C8231A' : '#111111' })) });
+    return { groups: [
+      g('Treino', [['Objetivo','Hipertrofia'],['Disponibilidade','seg, ter, qui, sex · 60 min'],['Academias e equipamentos','2 academias'],['Músculos prioritários','Ombros, costas']]),
+      g('App', [['Unidade','kg'],['Tema','Claro'],['Idioma','Português (Brasil)']]),
+      g('Conta', [['Segurança e sessões','2 aparelhos'],['Integrações','ChatGPT conectado'],['Importar treinos','Hevy, Strong, CSV']]),
+      g('Dados e privacidade', [['Exportar meus dados','JSON e CSV'],['Excluir conta','', true]])
+    ] };
+  }
+}
+</script>
+</body>
+</html>

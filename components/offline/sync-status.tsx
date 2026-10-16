@@ -7,19 +7,12 @@ import { countUnsyncedItems, flushPendingSets } from '@/lib/sync';
 import { CloudArrowUpIcon, CloudCheckIcon, CloudSlashIcon } from '@/components/ui/icon';
 import { cn } from '@/lib/utils';
 
-type SyncState = 'synced' | 'pending' | 'offline';
+export type SyncState = 'synced' | 'pending' | 'offline';
 
-// Sync state of the outbox, where a notification bell would usually sit:
-// - synced: CloudCheck with a brand dot;
-// - pending: CloudArrowUp with a warning badge counting the queued items (a tap
-//   flushes the outbox now);
-// - offline: CloudSlash, grey.
-// The count is everything on this device that has not reached the server
-// (sets and session starts/finishes), read live from IndexedDB.
-export function SyncIndicator({ size = 'md', className }: { size?: 'md' | 'lg'; className?: string }) {
-  const t = useTranslations('common.offline');
+// Live sync state of the outbox, read from IndexedDB: everything on this
+// device that has not reached the server (sets and session starts/finishes).
+export function useSyncState() {
   const [online, setOnline] = useState(true);
-  const [flushing, setFlushing] = useState(false);
 
   useEffect(() => {
     setOnline(navigator.onLine);
@@ -47,6 +40,26 @@ export function SyncIndicator({ size = 'md', className }: { size?: 'md' | 'lg'; 
   );
 
   const state: SyncState = !online ? 'offline' : pending > 0 ? 'pending' : 'synced';
+  return { state, pending, online };
+}
+
+// Sync tag (radius 4) in a screen header:
+// - synced: grey "Salvo";
+// - pending: warning fill "N a enviar" (a tap flushes the outbox now);
+// - offline: grey "Sem conexão".
+// `compact` drops the text (28px square, the running workout's header); the
+// full sentence stays as the accessible name either way.
+export function SyncStatus({
+  compact = false,
+  className,
+}: {
+  compact?: boolean;
+  className?: string;
+}) {
+  const t = useTranslations('common.offline');
+  const { state, pending } = useSyncState();
+  const [flushing, setFlushing] = useState(false);
+
   const label =
     state === 'offline'
       ? pending > 0
@@ -55,6 +68,12 @@ export function SyncIndicator({ size = 'md', className }: { size?: 'md' | 'lg'; 
       : state === 'pending'
         ? `${t('waiting', { count: pending })}. ${t('syncNow')}`
         : t('synced');
+  const short =
+    state === 'offline'
+      ? t('offlineShort')
+      : state === 'pending'
+        ? t('toSendShort', { count: pending })
+        : t('savedShort');
 
   async function syncNow() {
     if (state !== 'pending' || flushing) return;
@@ -78,27 +97,17 @@ export function SyncIndicator({ size = 'md', className }: { size?: 'md' | 'lg'; 
       aria-busy={flushing || undefined}
       data-sync-state={state}
       className={cn(
-        'relative flex shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-        size === 'lg' ? 'size-12' : 'size-11',
-        state === 'pending' ? 'cursor-pointer hover:text-foreground' : 'cursor-default',
+        'flex h-7 shrink-0 items-center justify-center gap-1.5 rounded-xs text-small font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+        compact ? 'w-7' : 'px-2.5',
+        state === 'pending'
+          ? 'cursor-pointer bg-warning text-warning-foreground'
+          : 'cursor-default bg-muted text-muted-foreground',
+        flushing && 'opacity-60',
         className,
       )}
     >
-      <Glyph className={cn('size-5', flushing && 'motion-safe:animate-pulse')} />
-      {state === 'synced' && (
-        <span
-          aria-hidden
-          className="absolute right-2.5 top-2.5 size-2 rounded-full bg-brand ring-2 ring-card"
-        />
-      )}
-      {state !== 'synced' && pending > 0 && (
-        <span
-          aria-hidden
-          className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-warning px-1 text-[11px] font-bold tabular-nums text-warning-foreground"
-        >
-          {pending > 99 ? '99+' : pending}
-        </span>
-      )}
+      <Glyph weight="bold" className={compact ? 'size-[15px]' : 'size-3.5'} />
+      {!compact && <span className="whitespace-nowrap">{short}</span>}
     </button>
   );
 }

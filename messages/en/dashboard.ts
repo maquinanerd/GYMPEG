@@ -45,10 +45,13 @@ export const dashboard = {
   programSessions: 'Program sessions',
   home: {
     greeting: {
-      morning: 'Good morning,',
-      afternoon: 'Good afternoon,',
-      evening: 'Good evening,',
+      morning: 'Good morning, {name}',
+      afternoon: 'Good afternoon, {name}',
+      evening: 'Good evening, {name}',
     },
+    // Accessible name of the home skeleton while the page loads.
+    loading: 'Loading the home screen',
+    loadingScreen: 'Loading',
     thisWeek: 'This week',
     weekLabel: 'Days of this week',
     dayStatus: {
@@ -83,17 +86,35 @@ export const dashboard = {
       emptyTag: 'Empty program',
       chooseTag: 'Free choice',
       chooseTitle: "Pick today's workout",
+      // Kicker of the lime block when the workout is scheduled for today.
+      today: 'Today',
+      setsLogged: '{done} of {total} sets logged',
+      switch: 'Switch workout',
+      exerciseList: 'Exercises of this workout',
+      moreExercises: '{count, plural, one {+ # more exercise} other {+ # more exercises}}',
+      newIntro: '5 steps: goal, days and equipment.',
     },
     week: {
       title: 'Your week',
       report: 'Report',
       sessions: 'Workouts',
       sets: 'Sets',
-      sessionsOf: 'of {count} planned',
-      setsOf: 'of {count} prescribed',
+      sessionsOf: '{count, plural, one {of # workout} other {of # workouts}}',
+      setsOf: '{count, plural, one {of # set} other {of # sets}}',
+      sessionsThisWeek: '{count, plural, one {workout this week} other {workouts this week}}',
+      setsThisWeek: '{count, plural, one {set this week} other {sets this week}}',
       thisWeek: 'this week',
     },
+    // Tag over the one computed alert, by kind of insight.
+    insight: {
+      stall: 'Stalled',
+      deload: 'Deload',
+      pr: 'Record',
+      onTrack: 'On track',
+    },
     records: {
+      // Read before the previous value by screen readers ("before 91 kg").
+      previous: 'before',
       viewAll: 'View all',
       e1rm: 'Estimated 1RM',
       weight: 'Heaviest load',
@@ -106,7 +127,7 @@ export const dashboard = {
     weight: {
       title: 'Bodyweight',
       average: '7-day average {value}',
-      rate: '{value}/week',
+      rate: '{value} per week',
     },
   },
   insight: {

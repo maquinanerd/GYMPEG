@@ -2,15 +2,9 @@
 
 import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import {
-  WarningIcon,
-  DownloadSimpleIcon,
-  CircleNotchIcon,
-  UploadSimpleIcon,
-} from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { SettingsHeading } from './settings-ui';
 
 export function BackupSection() {
   const t = useTranslations('settings.backup');
@@ -84,82 +78,53 @@ export function BackupSection() {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <h2 className="text-base font-semibold">{t('title')}</h2>
-        <p className="text-xs text-muted-foreground">
-          {t('description')}
-        </p>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-3">
-        <Button
-          variant="outline"
-          onClick={handleExport}
-          disabled={exporting}
-          className="min-h-tap"
-        >
-          {exporting ? (
-            <CircleNotchIcon className="size-4 animate-spin" />
-          ) : (
-            <DownloadSimpleIcon className="size-4" />
-          )}
-          <span className="ml-2">{t('export')}</span>
+    <section className="flex flex-col gap-3 border-t border-border pt-6">
+      <SettingsHeading description={t('description')}>{t('title')}</SettingsHeading>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Button variant="outline" onClick={handleExport} loading={exporting} disabled={exporting}>
+          {t('export')}
         </Button>
-
-        <Button
-          variant="outline"
-          onClick={pickFile}
-          disabled={importing}
-          className="min-h-tap"
-        >
-          <UploadSimpleIcon className="size-4" />
-          <span className="ml-2">{t('import')}</span>
+        <Button variant="outline" onClick={pickFile} disabled={importing}>
+          {t('import')}
         </Button>
-        <input
-          ref={fileRef}
-          type="file"
-          accept="application/json"
-          className="hidden"
-          onChange={onFilePicked}
-        />
+      </div>
+      <input
+        ref={fileRef}
+        type="file"
+        accept="application/json"
+        className="hidden"
+        onChange={onFilePicked}
+      />
 
-        {confirmingFile && (
-          <div className="rounded-md border border-warning/50 bg-warning/10 p-3 text-sm">
-            <div className="flex items-start gap-2">
-              <WarningIcon className="size-5 shrink-0 text-foreground" />
-              <div className="flex-1">
-                <p className="font-medium">{t('confirmTitle')}</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {t('confirmDescription', { file: confirmingFile.name })}
-                </p>
-                <div className="mt-3 flex gap-2">
-                  <Button
-                    size="sm"
-                    onClick={confirmImport}
-                    disabled={importing}
-                    className="min-h-tap"
-                  >
-                    {importing ? (
-                      <CircleNotchIcon className="size-4 animate-spin" />
-                    ) : null}
-                    <span className={importing ? 'ml-2' : ''}>
-                      {t('replace')}
-                    </span>
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setConfirmingFile(null)}
-                    disabled={importing}
-                  >
-                    {common('actions.cancel')}
-                  </Button>
-                </div>
-              </div>
-            </div>
+      {confirmingFile && (
+        <div role="alert" className="flex flex-col gap-2 rounded-sm bg-warning px-3.5 py-3 text-warning-foreground">
+          <p className="text-caption font-semibold">{t('confirmTitle')}</p>
+          <p className="text-[0.8125rem] font-medium">
+            {t('confirmDescription', { file: confirmingFile.name })}
+          </p>
+          <div className="flex gap-2">
+            <Button
+              variant="ink"
+              size="sm"
+              className="h-11"
+              onClick={confirmImport}
+              loading={importing}
+              disabled={importing}
+            >
+              {t('replace')}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-11 hover:bg-transparent hover:underline"
+              onClick={() => setConfirmingFile(null)}
+              disabled={importing}
+            >
+              {common('actions.cancel')}
+            </Button>
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </div>
+      )}
+    </section>
   );
 }

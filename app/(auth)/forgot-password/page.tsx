@@ -1,4 +1,3 @@
-import { Logo } from '@/components/brand/logo';
 import { ForgotPasswordForm } from '@/components/auth/forgot-password-form';
 import { canSendAppLinks } from '@/lib/email';
 import { getRuntimeEnv } from '@/lib/runtime-env';
@@ -9,8 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ForgotPasswordPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-4">
-      <Logo size="lg" />
+    <main className="flex flex-1 flex-col">
       <ForgotPasswordForm available={canSendAppLinks(await getRuntimeEnv())} />
     </main>
   );

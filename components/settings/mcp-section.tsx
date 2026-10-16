@@ -2,10 +2,9 @@
 
 import { useState } from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
-import { CopyIcon, KeyIcon, CircleNotchIcon, PlugIcon, TrashIcon } from '@/components/ui/icon';
+import { CopyIcon, TrashIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button, IconButton, Spinner } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 
@@ -80,71 +79,76 @@ export function McpSection({ initialTokens }: Props) {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <h2 className="flex items-center gap-2 text-base font-semibold">
-          <PlugIcon className="size-4" />
-          {t('title')}
-        </h2>
-        <p className="text-xs text-muted-foreground">{t('description')}</p>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
-          <label className="grid gap-1.5">
-            <span className="text-sm font-medium">{t('keyName')}</span>
-            <Input value={name} maxLength={80} onChange={(event) => setName(event.target.value)} />
-          </label>
-          <Button onClick={createToken} disabled={creating || name.trim().length === 0}>
-            {creating ? (
-              <CircleNotchIcon className="size-4 animate-spin" />
-            ) : (
-              <KeyIcon className="size-4" />
-            )}
-            <span className="ml-2">{t('create')}</span>
-          </Button>
-        </div>
+    <>
+      <section className="flex flex-col gap-4">
+        <label className="flex flex-col gap-1.5">
+          <span className="text-caption font-semibold">{t('keyName')}</span>
+          <Input value={name} maxLength={80} onChange={(event) => setName(event.target.value)} />
+        </label>
 
-        <label className="flex items-center justify-between gap-3 rounded-md border p-3">
-          <div>
-            <p className="text-sm font-medium">{t('writeAccess')}</p>
-            <p className="text-xs text-muted-foreground">{t('writeAccessDescription')}</p>
-          </div>
+        <label className="flex items-center justify-between gap-4 border-y border-border py-3">
+          <span className="flex min-w-0 flex-col gap-0.5">
+            <span className="text-body font-semibold">{t('writeAccess')}</span>
+            <span className="text-[0.8125rem] font-medium text-muted-foreground text-pretty">
+              {t('writeAccessDescription')}
+            </span>
+          </span>
           <Switch checked={canWrite} onCheckedChange={setCanWrite} />
         </label>
 
+        <Button
+          type="button"
+          variant="ink"
+          onClick={createToken}
+          loading={creating}
+          disabled={creating || name.trim().length === 0}
+          className="w-full sm:w-auto sm:self-start"
+        >
+          {t('create')}
+        </Button>
+
         {connectorUrl && (
-          <div className="rounded-md border border-brand/40 bg-accent p-3">
-            <p className="text-sm font-medium">{t('readyTitle')}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{t('readyDescription')}</p>
-            <div className="mt-3 flex gap-2">
-              <Input value={connectorUrl} readOnly className="min-w-0 font-mono text-xs" />
-              <Button
+          <div role="status" className="flex flex-col gap-2 rounded-sm bg-accent px-3.5 py-3 text-accent-foreground">
+            <p className="text-caption font-semibold">{t('readyTitle')}</p>
+            <p className="text-[0.8125rem] font-medium">{t('readyDescription')}</p>
+            <div className="flex gap-2">
+              <Input
+                value={connectorUrl}
+                readOnly
+                aria-label={t('readyTitle')}
+                className="min-w-0 font-mono text-caption"
+              />
+              <IconButton
                 type="button"
-                variant="outline"
-                size="icon"
+                tone="outline"
                 onClick={copyConnectorUrl}
-                title={t('copy')}
+                aria-label={t('copy')}
+                className="bg-card"
               >
-                <CopyIcon className="size-4" />
-              </Button>
+                <CopyIcon />
+              </IconButton>
             </div>
           </div>
         )}
+      </section>
 
-        <div className="grid gap-2">
-          <p className="text-sm font-medium">{t('activeKeys')}</p>
-          {tokens.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t('noKeys')}</p>
-          ) : (
-            tokens.map((token) => (
-              <div
+      <section className="flex flex-col">
+        <h2 className="mb-1 text-subtitle">{t('activeKeys')}</h2>
+        {tokens.length === 0 ? (
+          <p className="border-t border-border py-3 text-caption text-muted-foreground">
+            {t('noKeys')}
+          </p>
+        ) : (
+          <ul>
+            {tokens.map((token) => (
+              <li
                 key={token.id}
-                className="flex items-center justify-between gap-3 rounded-md border p-3"
+                className="flex items-center justify-between gap-3 border-t border-border py-3"
               >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{token.name}</p>
-                  <p className="font-mono text-xs text-muted-foreground">{token.tokenPrefix}</p>
-                  <p className="text-xs text-muted-foreground">
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <p className="truncate text-body font-semibold">{token.name}</p>
+                  <p className="font-mono text-small text-muted-foreground">{token.tokenPrefix}</p>
+                  <p className="text-[0.8125rem] font-medium text-muted-foreground">
                     {token.canWrite ? t('readWrite') : t('readOnly')}
                     {token.lastUsedAt
                       ? ` · ${t('lastUsed', {
@@ -157,25 +161,20 @@ export function McpSection({ initialTokens }: Props) {
                       : ''}
                   </p>
                 </div>
-                <Button
+                <IconButton
                   type="button"
-                  variant="ghost"
-                  size="icon"
                   onClick={() => revokeToken(token.id)}
                   disabled={revokingId === token.id}
-                  title={t('revoke')}
+                  aria-label={t('revoke')}
+                  className="text-destructive-text"
                 >
-                  {revokingId === token.id ? (
-                    <CircleNotchIcon className="size-4 animate-spin" />
-                  ) : (
-                    <TrashIcon className="size-4" />
-                  )}
-                </Button>
-              </div>
-            ))
-          )}
-        </div>
-      </CardContent>
-    </Card>
+                  {revokingId === token.id ? <Spinner /> : <TrashIcon />}
+                </IconButton>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </>
   );
 }

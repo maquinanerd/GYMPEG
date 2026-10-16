@@ -82,6 +82,29 @@ const DRAW_ORDER: CompactMuscle[] = [
   'hams',
 ];
 
+// Legend of the heat scale (heat-0..3): a 14px swatch at radius 3 per level.
+// The heat map never goes without it.
+export function MuscleMapLegend({ className }: { className?: string }) {
+  const t = useTranslations('progress.muscleMap.legend');
+  return (
+    <ul className={cn('flex flex-col gap-2 text-[0.8125rem] font-medium', className)}>
+      {(['none', 'low', 'optimal', 'high'] as const).map((key, level) => (
+        <li key={key} className="flex items-center gap-2">
+          <span aria-hidden className={cn('size-3.5 rounded-[3px]', HEAT_BG[level as HeatLevel])} />
+          {t(key)}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const HEAT_BG: Record<HeatLevel, string> = {
+  0: 'bg-heat-0',
+  1: 'bg-heat-1',
+  2: 'bg-heat-2',
+  3: 'bg-heat-3',
+};
+
 function renderShape(shape: Shape, key: number) {
   return shape.kind === 'rect' ? (
     <rect key={key} x={shape.x} y={shape.y} width={shape.width} height={shape.height} rx={shape.rx} />
@@ -94,19 +117,26 @@ export function MuscleMap({
   active = [],
   levels,
   size = 120,
+  theme = 'light',
   className,
 }: {
-  // Muscles the workout trains (painted heat-2).
+  // Muscles the workout trains (painted heat-2, or ink on the lime block).
   active?: readonly CompactMuscle[];
   // Weekly heat per muscle; wins over `active` when given.
   levels?: Partial<Record<CompactMuscle, HeatLevel>>;
   // Width in px; the height follows the 120x116 grid.
   size?: number;
+  // "lime": drawn on the lime block (ink at 13% off, ink on). Ignored with
+  // `levels`, which always reads the heat scale.
+  theme?: 'light' | 'lime';
   className?: string;
 }) {
   const t = useTranslations('progress.muscleMap');
   const levelOf = (muscle: CompactMuscle): HeatLevel =>
     levels ? (levels[muscle] ?? 0) : active.includes(muscle) ? 2 : 0;
+  const onLime = theme === 'lime' && !levels;
+  const fillOf = (level: HeatLevel) =>
+    onLime ? (level > 0 ? 'fill-ink' : 'fill-ink/[0.13]') : HEAT_FILL[level];
   const lit = DRAW_ORDER.filter((muscle) => levelOf(muscle) > 0);
   const status = (level: HeatLevel) =>
     t(`status.${(['none', 'low', 'optimal', 'high'] as const)[level]}`);
@@ -127,7 +157,7 @@ export function MuscleMap({
       className={cn('block shrink-0', className)}
     >
       {/* Heads */}
-      <g className="fill-heat-0" aria-hidden>
+      <g className={fillOf(0)} aria-hidden>
         <ellipse cx={30} cy={8} rx={5.5} ry={6.5} />
         <ellipse cx={90} cy={8} rx={5.5} ry={6.5} />
       </g>
@@ -148,7 +178,7 @@ export function MuscleMap({
                   ? `${t(`compact.${muscle}`)}: ${status(level)}`
                   : t(`compact.${muscle}`)
             }
-            className={HEAT_FILL[level]}
+            className={fillOf(level)}
           >
             {SHAPES[muscle].map(renderShape)}
           </g>

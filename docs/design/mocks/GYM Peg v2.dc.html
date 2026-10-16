@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><meta name="design_doc_mode" content="canvas"><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,400..700&display=swap" rel="stylesheet"><script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script><style>body{margin:0;background:#F9F9F9;font-family:Archivo,sans-serif;-webkit-font-smoothing:antialiased}a{color:#354119}a:hover{color:#111111}button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}</style></helmet>
+<section id="v2" style="padding:96px;display:flex;flex-direction:column;gap:88px;background:#F9F9F9;color:#111111;font-family:Archivo, sans-serif;width:max-content">
+  <header style="display:grid;grid-template-columns:auto 720px;gap:64px;align-items:end">
+    <div style="display:flex;align-items:center;gap:20px">
+      <span style="width:88px;height:88px;background:#CCFF00;border-radius:20px;display:flex;align-items:center;justify-content:center"><dc-import name="Mark" variant="c" color="#111111" size="{{ 64 }}" hint-size="64px,64px"></dc-import></span>
+      <span style="font-size:72px;line-height:1;letter-spacing:-0.03em"><span style="font-weight:600">GYM</span> <span style="font-weight:400">Peg</span></span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:15px;font-weight:600;color:#637F00">Versão 2 · 15/10/2026 · tema claro</span>
+      <p style="margin:0;font-size:22px;font-weight:500;line-height:1.4;text-wrap:pretty">Refino completo da Rodada 1 e as telas internas. A identidade agora sai do próprio treino: a ficha de série, kg e reps, o número estampado da anilha e o marca-texto do recorde.</p>
+    </div>
+  </header>
+
+  <section aria-labelledby="aud" style="display:grid;grid-template-columns:320px 1360px;gap:64px">
+    <div style="display:flex;flex-direction:column;gap:10px"><h2 id="aud" style="margin:0;font-size:32px;font-weight:600;letter-spacing:-0.02em">O que saiu</h2><p style="margin:0;font-size:16px;font-weight:500;color:#646464;line-height:1.5">Padrões genéricos encontrados na Rodada 1, por gravidade, e o que entrou no lugar.</p></div>
+    <ol style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:48px">
+      <sc-for list="{{ audit }}" as="a" hint-placeholder-count="12">
+        <li style="display:grid;grid-template-columns:72px minmax(0,1fr);gap:16px;padding:16px 0;border-top:1px solid #E9E9E9">
+          <span style="align-self:start;height:22px;padding:0 6px;border-radius:4px;background:{{ a.bg }};font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ a.sev }}</span>
+          <div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:16px;font-weight:600;color:#646464;text-decoration:line-through;text-decoration-color:#CECECE">{{ a.was }}</span><span style="font-size:16px;font-weight:600;line-height:1.4">{{ a.now }}</span></div>
+        </li>
+      </sc-for>
+    </ol>
+  </section>
+
+  <section aria-labelledby="sis" style="display:grid;grid-template-columns:320px 1360px;gap:64px">
+    <div style="display:flex;flex-direction:column;gap:10px"><h2 id="sis" style="margin:0;font-size:32px;font-weight:600;letter-spacing:-0.02em">Sistema</h2><p style="margin:0;font-size:16px;font-weight:500;color:#646464;line-height:1.5">Cinco regras que identificam o GYM Peg sem o logo.</p></div>
+    <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:32px">
+      <div style="display:flex;flex-direction:column;gap:14px"><span style="height:120px;background:#CCFF00;display:flex;align-items:flex-end;padding:14px;box-sizing:border-box;font-size:22px;font-weight:600;line-height:1">Treino B<br>Inferiores</span><span style="font-size:16px;font-weight:600">Bloco lime de borda a borda</span><span style="font-size:14px;font-weight:500;color:#646464;line-height:1.45">Só para o que importa agora: treino do dia, descanso, treino concluído. Uma vez por tela.</span></div>
+      <div style="display:flex;flex-direction:column;gap:14px"><span style="height:120px;display:flex;flex-direction:column;justify-content:center;gap:0;font-family:Archivo, sans-serif;font-stretch:118%;font-weight:600;font-size:18px"><span style="display:grid;grid-template-columns:28px 1fr 1fr 1fr;padding:8px 0;border-top:1px solid #E9E9E9"><span>1</span><span>82,5</span><span>8</span><span>2</span></span><span style="display:grid;grid-template-columns:28px 1fr 1fr 1fr;padding:8px 0;border-top:1px solid #E9E9E9;background:#EAFCC8"><span>2</span><span>82,5</span><span>7</span><span>2</span></span><span style="display:grid;grid-template-columns:28px 1fr 1fr 1fr;padding:8px 0;border-top:1px solid #E9E9E9;color:#646464"><span>3</span><span>82,5</span><span>7</span><span>2</span></span></span><span style="font-size:16px;font-weight:600">Treino é uma ficha</span><span style="font-size:14px;font-weight:500;color:#646464;line-height:1.45">Série, kg, reps e RIR em tabela, como a ficha de papel. A linha atual ganha o tom lime claro.</span></div>
+      <div style="display:flex;flex-direction:column;gap:14px"><span style="height:120px;display:flex;align-items:center;gap:10px"><span style="font-size:16px;font-weight:500;color:#646464">91 kg</span><span style="font-family:Archivo, sans-serif;font-stretch:125%;font-weight:600;font-size:32px;background:#FFD509;padding:2px 8px;border-radius:3px">94 kg</span></span><span style="font-size:16px;font-weight:600">Marca-texto = recorde</span><span style="font-size:14px;font-weight:500;color:#646464;line-height:1.45">O amarelo nunca é ícone nem fundo de card. Ele marca o número que bateu o recorde.</span></div>
+      <div style="display:flex;flex-direction:column;gap:14px"><span style="height:120px;display:flex;flex-direction:column;justify-content:center;gap:4px"><span style="font-size:12px;font-weight:600;color:#637F00">Coach</span><span style="font-size:20px;font-weight:500;font-style:italic;line-height:1.3">Eu baixaria a carga por duas semanas.</span></span><span style="font-size:16px;font-weight:600">Itálico = IA</span><span style="font-size:14px;font-weight:500;color:#646464;line-height:1.45">Tudo que a IA escreve é itálico, com o rótulo Coach. Números calculados são sempre romanos. Sem esfera, sem brilho, sem sparkle.</span></div>
+      <div style="display:flex;flex-direction:column;gap:14px"><span style="height:120px;display:flex;align-items:center;font-family:Archivo, sans-serif;font-stretch:125%;font-weight:600;font-size:56px;letter-spacing:-0.02em;line-height:1">01:45</span><span style="font-size:16px;font-weight:600">Número de anilha</span><span style="font-size:14px;font-weight:500;color:#646464;line-height:1.45">Archivo em todo o app. Largura normal no texto; expandida (125%) e tabular em carga, reps e tempo.</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="tok" style="display:grid;grid-template-columns:320px 1360px;gap:64px">
+    <div style="display:flex;flex-direction:column;gap:10px"><h2 id="tok" style="margin:0;font-size:32px;font-weight:600;letter-spacing:-0.02em">Cor e forma</h2><p style="margin:0;font-size:16px;font-weight:500;color:#646464;line-height:1.5">Lime domina, neutros carregam, acentos só com função. Todo acento é fundo com texto #111111.</p></div>
+    <div style="display:flex;flex-direction:column;gap:32px">
+      <div style="display:grid;grid-template-columns:2.2fr repeat(9,minmax(0,1fr));gap:8px">
+        <sc-for list="{{ colors }}" as="c" hint-placeholder-count="10">
+          <div style="display:flex;flex-direction:column;gap:8px"><span style="height:88px;border-radius:4px;background:{{ c.hex }};border:{{ c.b }};box-sizing:border-box"></span><span style="font-size:14px;font-weight:600">{{ c.role }}</span><span style="font-size:12px;font-weight:500;color:#646464;font-variant-numeric:tabular-nums">{{ c.hex }}</span></div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:40px;align-items:flex-end">
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="width:64px;height:28px;border-radius:4px;background:#FF9F0A"></span><span style="font-size:13px;font-weight:600">4 · etiquetas</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="width:96px;height:40px;border-radius:8px;border:1px solid #CECECE"></span><span style="font-size:13px;font-weight:600">8 · filtros, células</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="width:160px;height:56px;border-radius:12px;background:#CCFF00"></span><span style="font-size:13px;font-weight:600">12 · botões, campos</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="width:160px;height:88px;border-radius:16px;background:#FFFFFF;border:1px solid #E9E9E9"></span><span style="font-size:13px;font-weight:600">16 · única superfície</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="width:64px;height:64px;border-radius:50%;background:#CCFF00;display:flex;align-items:center;justify-content:center;font-size:26px"><i class="ph-bold ph-check"></i></span><span style="font-size:13px;font-weight:600">círculo · só concluir série</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-left:24px"><span style="font-size:13px;font-weight:600;color:#646464">Sem sombras · sem degradê · sem vidro · sem pílula</span><span style="font-size:13px;font-weight:600;color:#646464">Toque: 64 px no treino e no descanso, 44 px no resto</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="fluxo" style="display:flex;flex-direction:column;gap:28px">
+    <div style="display:flex;align-items:baseline;gap:20px"><h2 id="fluxo" style="margin:0;font-size:32px;font-weight:600;letter-spacing:-0.02em">Treino</h2><span style="font-size:16px;font-weight:500;color:#646464">Início → Treino ativo → Descanso → Treino concluído. Os checks, o botão Registrar e o descanso funcionam.</span></div>
+    <div style="display:flex;gap:40px">
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Início</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Inicio" variant="{{ homeVariant }}" sync="{{ sync }}" hint-size="390px,844px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Treino ativo</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="TreinoAtivo" sync="{{ sync }}" hint-size="390px,844px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Descanso</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Descanso" hint-size="390px,844px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Treino concluído</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Resumo" offline="{{ offline }}" hint-size="390px,844px"></dc-import></div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="treinos" style="display:flex;flex-direction:column;gap:28px">
+    <div style="display:flex;align-items:baseline;gap:20px"><h2 id="treinos" style="margin:0;font-size:32px;font-weight:600;letter-spacing:-0.02em">Treinos</h2><span style="font-size:16px;font-weight:500;color:#646464">Programas, histórico e catálogo em uma aba, com o treino do programa aberto.</span></div>
+    <div style="display:flex;gap:40px">
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Programas</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Programas" hint-size="390px,844px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Treino do programa</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="TreinoPrograma" hint-size="390px,844px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Histórico</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Historico" hint-size="390px,844px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Exercícios</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Exercicios" hint-size="390px,844px"></dc-import></div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="evo" style="display:flex;flex-direction:column;gap:28px">
+    <div style="display:flex;align-items:baseline;gap:20px"><h2 id="evo" style="margin:0;font-size:32px;font-weight:600;letter-spacing:-0.02em">Evolução, Coach e Perfil</h2><span style="font-size:16px;font-weight:500;color:#646464">As abas internas também funcionam dentro de cada tela.</span></div>
+    <div style="display:flex;gap:40px">
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Evolução · Semana</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Evolucao" tab="semana" hint-size="390px,844px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Evolução · Treino</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Evolucao" tab="treino" hint-size="390px,844px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Evolução · Corpo</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Evolucao" tab="corpo" hint-size="390px,844px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Coach · Conversa</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Coach" tab="conversa" hint-size="390px,844px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Coach · Análises</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Coach" tab="analises" hint-size="390px,844px"></dc-import></div></div>
+      <div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:15px;font-weight:600">Perfil</span><div style="width:390px;height:844px;border-radius:44px;overflow:hidden;border:8px solid #111111"><dc-import name="Perfil" hint-size="390px,844px"></dc-import></div></div>
+    </div>
+  </section>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;homeVariant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;proximo&quot;,&quot;andamento&quot;],&quot;default&quot;:&quot;proximo&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Início&quot;},&quot;sync&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;sincronizado&quot;,&quot;pendente&quot;,&quot;offline&quot;],&quot;default&quot;:&quot;sincronizado&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Sincronização&quot;},&quot;offline&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Treino concluído&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const sev = { 'CRÍTICO':'#FF443B', 'ALTO':'#FF9F0A', 'MÉDIO':'#FFD509', 'BAIXO':'#E9E9E9' };
+    const audit = [
+      ['CRÍTICO','Esfera lime com brilho e ícone sparkle marcando a IA','Texto da IA em itálico com o rótulo Coach. Nenhum brilho no app.'],
+      ['CRÍTICO','Tudo dentro de card de 24–28 px, mesmo raio e mesmo peso','Conteúdo direto no fundo, separado por fio e espaço. Uma superfície branca por tela, no máximo.'],
+      ['CRÍTICO','Pílula em botões, chips, tags, dias e barra inferior','Escala de raio 4 / 8 / 12 / 16. Círculo só no botão de concluir série.'],
+      ['ALTO','Tiles de KPI com anel de progresso','Número grande com barra fina de 4 px, em linha.'],
+      ['ALTO','Ícone dentro de círculo colorido (troféu, alerta)','Recorde vira marca-texto no número. Atenção vira etiqueta de texto.'],
+      ['ALTO','Ícone na frente de cada metadado','Metadado em texto com ponto médio.'],
+      ['ALTO','Barra inferior flutuante, botão flutuante e degradê de fundo','Barra encostada, branca, com fio. Coach virou aba.'],
+      ['ALTO','Uma fonte para tudo, hierarquia só por tamanho','Archivo em tudo: largura normal no texto, expandida nos números, itálico para a IA.'],
+      ['MÉDIO','Pílulas de dia 46 × 88 copiadas de app de streak','Grade de 7 casas: preenchida, tracejada, hoje em lime.'],
+      ['MÉDIO','Ícone fill em todo lugar','Ícone só na navegação e em controles sem rótulo.'],
+      ['MÉDIO','Card de treino igual ao de insight e ao de onboarding','Cada tipo de conteúdo tem um tratamento: bloco, lista, etiqueta, nota.'],
+      ['BAIXO','div como botão, sem foco visível','button, a, nav, table, listas; contorno de 2 px em :focus-visible.']
+    ].map(([s, was, now]) => ({ sev: s, bg: sev[s], was, now }));
+    const colors = [['Lime · foco','#CCFF00'],['Tinta','#111111'],['Texto 2','#646464'],['Fio','#E9E9E9'],['Fundo','#F9F9F9'],['Linha atual','#EAFCC8'],['Recorde','#FFD509'],['Aquecimento','#FF9459'],['Descarga','#C99EFE'],['Atenção','#FF9F0A']]
+      .map(([role, hex]) => ({ role, hex, b: hex === '#F9F9F9' ? '1px solid #E9E9E9' : 'none' }));
+    return { audit, colors, homeVariant: this.props.homeVariant ?? 'proximo', sync: this.props.sync ?? 'sincronizado', offline: this.props.offline ?? false };
+  }
+}
+</script>
+</body>
+</html>

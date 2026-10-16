@@ -48,13 +48,9 @@ export function ProgramDeleteButton({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="min-h-tap text-destructive hover:bg-destructive/10 hover:text-destructive"
-        >
-          <TrashIcon className="size-4" />
-          <span className="ml-2">{common('actions.delete')}</span>
+        <Button variant="outline" size="sm" className="text-destructive-text">
+          <TrashIcon />
+          {common('actions.delete')}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -72,7 +68,7 @@ export function ProgramDeleteButton({
               handleDelete();
             }}
             disabled={isPending}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            className="bg-destructive text-destructive-foreground"
           >
             {isPending ? t('deleting') : common('actions.delete')}
           </AlertDialogAction>

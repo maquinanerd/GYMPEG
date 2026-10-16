@@ -49,10 +49,12 @@ export const dashboard = {
   programSessions: 'Тренировки программы',
   home: {
     greeting: {
-      morning: 'Доброе утро,',
-      afternoon: 'Добрый день,',
-      evening: 'Добрый вечер,',
+      morning: 'Доброе утро, {name}',
+      afternoon: 'Добрый день, {name}',
+      evening: 'Добрый вечер, {name}',
     },
+    loading: 'Загрузка главного экрана',
+    loadingScreen: 'Загрузка',
     thisWeek: 'Эта неделя',
     weekLabel: 'Дни этой недели',
     dayStatus: {
@@ -88,17 +90,35 @@ export const dashboard = {
       emptyTag: 'Пустая программа',
       chooseTag: 'Свободный выбор',
       chooseTitle: 'Выберите тренировку на сегодня',
+      today: 'Сегодня',
+      setsLogged: '{done} из {total} подходов записано',
+      switch: 'Сменить тренировку',
+      exerciseList: 'Упражнения этой тренировки',
+      moreExercises:
+        '{count, plural, one {+ # упражнение} few {+ # упражнения} many {+ # упражнений} other {+ # упражнения}}',
+      newIntro: '5 шагов: цель, дни и оборудование.',
     },
     week: {
       title: 'Ваша неделя',
       report: 'Отчёт',
       sessions: 'Тренировки',
       sets: 'Подходы',
-      sessionsOf: 'из {count} запланированных',
-      setsOf: 'из {count} назначенных',
+      sessionsOf: '{count, plural, one {из # тренировки} other {из # тренировок}}',
+      setsOf: '{count, plural, one {из # подхода} other {из # подходов}}',
+      sessionsThisWeek:
+        '{count, plural, one {тренировка на этой неделе} few {тренировки на этой неделе} many {тренировок на этой неделе} other {тренировки на этой неделе}}',
+      setsThisWeek:
+        '{count, plural, one {подход на этой неделе} few {подхода на этой неделе} many {подходов на этой неделе} other {подхода на этой неделе}}',
       thisWeek: 'на этой неделе',
     },
+    insight: {
+      stall: 'Застой',
+      deload: 'Разгрузка',
+      pr: 'Рекорд',
+      onTrack: 'По плану',
+    },
     records: {
+      previous: 'было',
       viewAll: 'Все',
       e1rm: 'Расчётный 1ПМ',
       weight: 'Макс. вес',
@@ -110,8 +130,8 @@ export const dashboard = {
     },
     weight: {
       title: 'Вес',
-      average: 'Среднее за 7 дней {value}',
-      rate: '{value}/неделя',
+      average: 'среднее за 7 дней {value}',
+      rate: '{value} в неделю',
     },
   },
   insight: {

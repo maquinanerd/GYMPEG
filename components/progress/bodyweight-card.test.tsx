@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BodyweightCard } from './bodyweight-card';
 
@@ -32,22 +32,25 @@ describe('BodyweightCard', () => {
     vi.clearAllMocks();
   });
 
-  it('shows the current bodyweight from the newest entry', () => {
+  it('shows the current bodyweight from the newest entry as the big number', () => {
     render(<BodyweightCard entries={entries} unit="KG" />);
-    expect(screen.getByText(/current: 81.2 kg/i)).toBeInTheDocument();
+    expect(screen.getByTestId('bodyweight-current')).toHaveTextContent('81.2 kg');
+    expect(screen.getByRole('region', { name: 'Bodyweight' })).toBeInTheDocument();
   });
 
-  it('shows an empty state when nothing is logged yet', () => {
+  it('shows an empty state with one action when nothing is logged yet', () => {
     render(<BodyweightCard entries={[]} unit="KG" />);
     expect(screen.getByText(/no bodyweight logged yet/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Log weight' })).toBeInTheDocument();
   });
 
-  it('posts the quick-add weight in kg, converting from the display unit (lb)', async () => {
+  it('posts the logged weight in kg, converting from the display unit (lb)', async () => {
     const user = userEvent.setup();
     render(<BodyweightCard entries={[]} unit="LB" />);
 
+    await user.click(screen.getByRole('button', { name: 'Log weight' }));
     await user.type(screen.getByLabelText(/bodyweight \(lb\)/i), '180');
-    await user.click(screen.getByRole('button', { name: 'Log' }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     const [url, init] = lastFetchCall(fetchMock);
     expect(url).toBe('/api/bodyweight');
@@ -61,14 +64,16 @@ describe('BodyweightCard', () => {
     const user = userEvent.setup();
     render(<BodyweightCard entries={[]} unit="KG" />);
 
-    await user.click(screen.getByRole('button', { name: 'Log' }));
+    await user.click(screen.getByRole('button', { name: 'Log weight' }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('deletes an entry through the API', async () => {
+  it('deletes an entry through the API from the log sheet', async () => {
     const user = userEvent.setup();
     render(<BodyweightCard entries={entries} unit="KG" />);
 
+    await user.click(screen.getByRole('button', { name: 'Log' }));
     await user.click(screen.getAllByRole('button', { name: /delete entry/i })[0] as HTMLElement);
 
     const [url, init] = lastFetchCall(fetchMock);
@@ -77,15 +82,17 @@ describe('BodyweightCard', () => {
     expect(refresh).toHaveBeenCalled();
   });
 
-  it('lists entries in the display unit', () => {
+  it('lists recent entries in the display unit', async () => {
+    const user = userEvent.setup();
     render(<BodyweightCard entries={entries} unit="LB" />);
+    await user.click(screen.getByRole('button', { name: 'Log' }));
     // 80 kg = 176.4 lb.
-    expect(screen.getByText(/176.4 lb/)).toBeInTheDocument();
+    expect(within(screen.getByRole('dialog')).getByText(/176.4 lb/)).toBeInTheDocument();
   });
 });
 
 describe('BodyweightCard trend (epic 2.4)', () => {
-  it('shows the 7-day average, its change per period and the weekly rate', () => {
+  it('shows the 7-day average, its change per period and the weekly pace', () => {
     render(
       <BodyweightCard
         entries={entries}
@@ -101,11 +108,13 @@ describe('BodyweightCard trend (epic 2.4)', () => {
         }}
       />,
     );
+    expect(screen.getByText('Weight · 7-day average 80.6')).toBeInTheDocument();
     const trend = screen.getByTestId('bodyweight-trend');
-    expect(trend).toHaveTextContent('7-day average: 80.6 kg');
-    expect(trend).toHaveTextContent('7 days: −0.4 kg');
-    expect(trend).toHaveTextContent('30 days: −1.2 kg');
-    expect(trend).toHaveTextContent('90 days: not enough data');
-    expect(trend).toHaveTextContent('Rate over 30 days: −0.3 kg/week');
+    expect(trend).toHaveTextContent('7 days−0.4 kg');
+    expect(trend).toHaveTextContent('30 days−1.2 kg');
+    expect(trend).toHaveTextContent('90 days–not enough data');
+    expect(trend).toHaveTextContent('pace−0.3/wk');
+    // The chart reads as one image with its summary.
+    expect(screen.getByRole('img', { name: /bodyweight from 80 kg/i })).toBeInTheDocument();
   });
 });

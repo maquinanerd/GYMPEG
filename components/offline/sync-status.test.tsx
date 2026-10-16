@@ -16,13 +16,13 @@ vi.mock('@/lib/sync', () => ({
   flushPendingSets: sync.flushPendingSets,
 }));
 
-import { SyncIndicator } from './sync-indicator';
+import { SyncStatus } from './sync-status';
 
 function setOnline(value: boolean) {
   Object.defineProperty(window.navigator, 'onLine', { configurable: true, value });
 }
 
-describe('SyncIndicator', () => {
+describe('SyncStatus', () => {
   beforeEach(() => {
     sync.pending = 0;
     sync.flushPendingSets.mockClear();
@@ -30,19 +30,20 @@ describe('SyncIndicator', () => {
   });
   afterEach(() => setOnline(true));
 
-  it('reads synced when online with an empty outbox', () => {
-    render(<SyncIndicator />);
+  it('reads "Saved" when online with an empty outbox', () => {
+    render(<SyncStatus />);
     const button = screen.getByRole('button', { name: 'Everything is synced' });
     expect(button).toHaveAttribute('data-sync-state', 'synced');
+    expect(button).toHaveTextContent('Saved');
   });
 
   it('counts the queued items and flushes them on tap', async () => {
     sync.pending = 3;
     const user = userEvent.setup();
-    render(<SyncIndicator />);
+    render(<SyncStatus />);
     const button = screen.getByRole('button', { name: /3 changes waiting to sync/ });
     expect(button).toHaveAttribute('data-sync-state', 'pending');
-    expect(button).toHaveTextContent('3');
+    expect(button).toHaveTextContent('3 to send');
     await user.click(button);
     expect(sync.flushPendingSets).toHaveBeenCalledTimes(1);
   });
@@ -51,9 +52,10 @@ describe('SyncIndicator', () => {
     sync.pending = 2;
     setOnline(false);
     const user = userEvent.setup();
-    render(<SyncIndicator />);
+    render(<SyncStatus />);
     const button = screen.getByRole('button', { name: 'Offline · 2 pending' });
     expect(button).toHaveAttribute('data-sync-state', 'offline');
+    expect(button).toHaveTextContent('No connection');
     await user.click(button);
     expect(sync.flushPendingSets).not.toHaveBeenCalled();
 
@@ -63,5 +65,11 @@ describe('SyncIndicator', () => {
       window.dispatchEvent(new Event('online'));
     });
     expect(screen.getByRole('button', { name: /2 changes waiting to sync/ })).toBeInTheDocument();
+  });
+
+  it('keeps only the icon in the compact form, with the full sentence as its name', () => {
+    render(<SyncStatus compact />);
+    const button = screen.getByRole('button', { name: 'Everything is synced' });
+    expect(button).not.toHaveTextContent('Saved');
   });
 });

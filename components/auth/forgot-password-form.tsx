@@ -8,8 +8,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { OfflineNotice } from '@/components/ui/screen-state';
+import {
+  AuthHeading,
+  FormField,
+  FormMessage,
+  fieldErrorId,
+  inlineLinkClass,
+} from '@/components/auth/form-field';
+import { useOnline } from '@/components/auth/use-online';
+import { cn } from '@/lib/utils';
 
 type FormValues = { email: string };
 type Status = 'idle' | 'sent' | 'unavailable' | 'tooMany' | 'error';
@@ -19,6 +27,7 @@ type Status = 'idle' | 'sent' | 'unavailable' | 'tooMany' | 'error';
 export function ForgotPasswordForm({ available }: { available: boolean }) {
   const t = useTranslations('auth');
   const common = useTranslations('common');
+  const online = useOnline();
   const [status, setStatus] = useState<Status>(available ? 'idle' : 'unavailable');
   const schema = useMemo(
     () => z.object({ email: z.string().trim().email(t('validation.invalidEmail')) }),
@@ -44,56 +53,51 @@ export function ForgotPasswordForm({ available }: { available: boolean }) {
 
   const message =
     status === 'idle' ? null : status === 'sent' ? t('forgot.sent') : t(`forgot.${status}`);
+  const showForm = status !== 'sent' && status !== 'unavailable';
 
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>{t('forgot.title')}</CardTitle>
-        <CardDescription>{t('forgot.description')}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {message && (
-          <p
-            role="status"
-            className={
-              status === 'sent'
-                ? 'rounded-md bg-muted p-3 text-sm'
-                : 'rounded-md bg-destructive/10 p-3 text-sm text-destructive'
-            }
-          >
-            {message}
-          </p>
-        )}
-        {status !== 'sent' && status !== 'unavailable' && (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-            <div className="space-y-2">
-              <Label htmlFor="email">{common('fields.email')}</Label>
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                autoCapitalize="off"
-                autoCorrect="off"
-                spellCheck={false}
-                aria-invalid={errors.email ? 'true' : 'false'}
-                {...register('email')}
-              />
-              {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
-            </div>
-            <Button type="submit" className="min-h-tap w-full text-base" disabled={isSubmitting}>
-              {isSubmitting ? t('forgot.submitting') : t('forgot.submit')}
-            </Button>
-          </form>
-        )}
-        <p className="text-center text-sm">
-          <Link
-            href="/login"
-            className="font-medium text-foreground underline-offset-4 hover:underline"
-          >
-            {t('forgot.backToLogin')}
-          </Link>
-        </p>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-8">
+      <AuthHeading title={t('forgot.title')} description={t('forgot.description')} />
+
+      {/* Sent and unavailable end the flow here, so they read as a note; a
+          refusal sits with the form, which stays for another try. */}
+      {message && !showForm && (
+        <FormMessage role="status" tone="note">
+          {message}
+        </FormMessage>
+      )}
+
+      {showForm && (
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5" noValidate>
+          {!online && <OfflineNotice>{t('offline')}</OfflineNotice>}
+          <FormField id="email" label={common('fields.email')} error={errors.email?.message}>
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              autoCapitalize="off"
+              autoCorrect="off"
+              spellCheck={false}
+              aria-invalid={errors.email ? 'true' : 'false'}
+              aria-describedby={errors.email ? fieldErrorId('email') : undefined}
+              {...register('email')}
+            />
+          </FormField>
+          {message && <FormMessage role="status">{message}</FormMessage>}
+          <Button type="submit" className="mt-1 w-full" loading={isSubmitting}>
+            {t('forgot.submit')}
+          </Button>
+        </form>
+      )}
+
+      <p className="border-t border-border pt-3 text-caption">
+        <Link
+          href="/login"
+          className={cn(inlineLinkClass, 'inline-flex min-h-touch items-center')}
+        >
+          {t('forgot.backToLogin')}
+        </Link>
+      </p>
+    </div>
   );
 }

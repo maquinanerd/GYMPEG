@@ -17,10 +17,9 @@ import {
   estimateWorkoutMinutes,
   greetingName,
   greetingPeriod,
-  initialsFor,
   weekDayStatus,
 } from '@/lib/home-week';
-import { HomeView, type HomeNext } from '@/components/home/home-view';
+import { HomeView, type HomeExercise, type HomeNext } from '@/components/home/home-view';
 
 const RECENT_RECORDS_DAYS = 30;
 const RECENT_RECORDS_SHOWN = 3;
@@ -69,7 +68,13 @@ export default async function DashboardPage() {
           select: {
             name: true,
             exercises: {
-              select: { targetSets: true, exercise: { select: { muscleGroup: true } } },
+              orderBy: { order: 'asc' },
+              select: {
+                targetSets: true,
+                targetRepsMin: true,
+                targetRepsMax: true,
+                exercise: { select: { name: true, muscleGroup: true } },
+              },
             },
           },
         },
@@ -84,10 +89,13 @@ export default async function DashboardPage() {
           include: {
             _count: { select: { exercises: true } },
             exercises: {
+              orderBy: { order: 'asc' },
               select: {
                 targetSets: true,
+                targetRepsMin: true,
+                targetRepsMax: true,
                 restSec: true,
-                exercise: { select: { muscleGroup: true } },
+                exercise: { select: { name: true, muscleGroup: true } },
               },
             },
           },
@@ -135,7 +143,23 @@ export default async function DashboardPage() {
       : null,
   ]);
 
-  // The dominant card, in priority order: a workout in progress, a brand-new
+  // The prescription of each exercise, in program order, for the lime block.
+  const toHomeExercises = (
+    rows: {
+      targetSets: number;
+      targetRepsMin: number;
+      targetRepsMax: number;
+      exercise: { name: string };
+    }[],
+  ): HomeExercise[] =>
+    rows.map((row) => ({
+      name: getExerciseDisplayName(row.exercise.name, locale),
+      sets: row.targetSets,
+      repsMin: row.targetRepsMin,
+      repsMax: row.targetRepsMax,
+    }));
+
+  // The dominant block, in priority order: a workout in progress, a brand-new
   // account, no program, an empty program, the next workout, a free choice.
   let homeNext: HomeNext;
   if (inProgressSession) {
@@ -150,11 +174,10 @@ export default async function DashboardPage() {
         0,
         Math.floor((now.getTime() - inProgressSession.startedAt.getTime()) / 60_000),
       ),
-      startedAt: inProgressSession.startedAt,
-      exerciseCount: rows.length,
       setsDone: inProgressSession._count.sets,
       setsTotal: rows.reduce((sum, row) => sum + row.targetSets, 0),
       muscles: compactMuscles(rows.map((row) => row.exercise.muscleGroup)),
+      exercises: toHomeExercises(rows),
     };
   } else if (!activeProgram) {
     homeNext = profile && !profile.onboardedAt ? { kind: 'new' } : { kind: 'noProgram' };
@@ -205,20 +228,14 @@ export default async function DashboardPage() {
         kind: 'next',
         workoutId: nextWorkout.id,
         title: getTrainingDisplayName(nextWorkout.name, locale),
-        tag: deload
-          ? {
-              text: weekText ? `${weekText} · ${t('home.next.deload')}` : t('home.next.deload'),
-              tone: 'deload',
-            }
-          : {
-              text: weekText ?? getTrainingDisplayName(activeProgram.name, locale),
-              tone: 'brand',
-            },
-        exerciseCount: nextWorkout._count.exercises,
-        setCount: nextWorkout.exercises.reduce((sum, row) => sum + row.targetSets, 0),
+        // Cycle week ("Semana 3 de 5"), else the program name.
+        kicker: weekText ?? getTrainingDisplayName(activeProgram.name, locale),
+        deload,
+        scheduledToday: next.kind === 'today',
         minutes: estimateWorkoutMinutes(nextWorkout.exercises),
         reason,
         muscles: compactMuscles(nextWorkout.exercises.map((row) => row.exercise.muscleGroup)),
+        exercises: toHomeExercises(nextWorkout.exercises),
       };
     }
   }
@@ -246,7 +263,6 @@ export default async function DashboardPage() {
   return (
     <HomeView
       data={{
-        initials: initialsFor(profile?.displayName, session.email),
         name: greetingName(profile?.displayName, session.email),
         greeting: greetingPeriod(now, timeZone),
         now,
@@ -286,6 +302,8 @@ export default async function DashboardPage() {
                 latestKg: weighIns[0].weightKg,
                 averageKg: trend.averageKg,
                 ratePerWeekKg: trend.ratePerWeekKg,
+                // The same weigh-ins, drawn as the sparkline.
+                series: weighIns.map((entry) => ({ at: entry.measuredAt, kg: entry.weightKg })),
               }
             : null,
       }}

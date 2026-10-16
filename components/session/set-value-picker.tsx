@@ -274,7 +274,7 @@ export function SetValuePicker({
           <IconButton
             type="button"
             size="session"
-            tone="pill"
+            tone="outline"
             onClick={() => step(-1)}
             aria-label={t('decrease')}
           >
@@ -294,12 +294,12 @@ export function SetValuePicker({
               userScrolling.current = false;
               setManualValue(event.target.value);
             }}
-            className="h-16 flex-1 rounded-pill border-transparent bg-pill text-center text-number tabular-nums"
+            className="h-16 flex-1 text-center font-num text-number tabular-nums stretch-118"
           />
           <IconButton
             type="button"
             size="session"
-            tone="pill"
+            tone="outline"
             onClick={() => step(1)}
             aria-label={t('increase')}
           >
@@ -315,7 +315,7 @@ export function SetValuePicker({
             targetWeight={candidateValue ?? undefined}
             compact
           >
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1 text-small text-muted-foreground">
               {plateLoad.exact ? <LockKeyIcon className="size-3 text-brand" /> : null}
               <span>
                 {calculatorT('achieved', {
@@ -359,9 +359,9 @@ export function SetValuePicker({
                   data-picker-option-value={kind === 'weight' ? option.value : undefined}
                   data-picker-selected={selected ? 'true' : undefined}
                   onClick={(event) => selectOption(option, event.currentTarget)}
-                  className={`mx-auto flex h-16 w-full max-w-[15rem] items-center justify-center rounded-pill text-heading tabular-nums ${
+                  className={`mx-auto flex h-16 w-full max-w-[15rem] items-center justify-center rounded-md font-num text-heading tabular-nums stretch-112 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     kind === 'weight' ? 'snap-center' : ''
-                  } ${selected ? 'bg-primary text-primary-foreground' : 'bg-pill text-foreground'}`}
+                  } ${selected ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'}`}
                 >
                   {option.label ?? option.value}{' '}
                   {kind === 'weight' ? unit.toLowerCase() : t('repsShort')}

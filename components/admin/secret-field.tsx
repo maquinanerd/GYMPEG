@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { CircleNotchIcon, FloppyDiskIcon, TrashIcon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { SecretView } from '@/lib/admin-config';
 import type { SecretKey } from '@/lib/admin-settings';
+import { cn } from '@/lib/utils';
+import { FIELD, HINT, INLINE_FORM, INLINE_INPUT, LABEL } from './admin-ui';
 import { useAdminRequest } from './use-admin-request';
 
 // An API key: where the one in use comes from, a field to paste a new one and
@@ -50,19 +51,15 @@ export function SecretField({
   }
 
   return (
-    <div className="space-y-2">
-      <Label htmlFor={id}>{label}</Label>
-      <p
-        className={
-          view.panel && !view.panel.readable
-            ? 'text-sm text-destructive'
-            : 'text-sm text-muted-foreground'
-        }
-      >
+    <div className={FIELD}>
+      <Label htmlFor={id} className={LABEL}>
+        {label}
+      </Label>
+      <p className={cn(HINT, view.panel && !view.panel.readable && 'text-destructive-text')}>
         {status}
       </p>
       <form
-        className="flex flex-wrap items-center gap-2"
+        className={INLINE_FORM}
         onSubmit={(event) => {
           event.preventDefault();
           void save(value.trim());
@@ -76,28 +73,30 @@ export function SecretField({
           placeholder={t('placeholder')}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="min-w-0 flex-1 font-mono"
+          className={INLINE_INPUT}
         />
-        <Button type="submit" size="sm" disabled={pending || value.trim().length < 8}>
-          {pending ? (
-            <CircleNotchIcon className="animate-spin" aria-hidden="true" />
-          ) : (
-            <FloppyDiskIcon aria-hidden="true" />
-          )}
-          {common('save')}
-        </Button>
-        {view.panel && (
+        <div className="flex gap-2">
           <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            disabled={pending}
-            onClick={() => void save(null)}
+            type="submit"
+            variant="ink"
+            loading={pending}
+            disabled={pending || value.trim().length < 8}
+            className="h-12"
           >
-            <TrashIcon aria-hidden="true" />
-            {common('remove')}
+            {common('save')}
           </Button>
-        )}
+          {view.panel && (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={pending}
+              onClick={() => void save(null)}
+              className="h-12"
+            >
+              {common('remove')}
+            </Button>
+          )}
+        </div>
       </form>
     </div>
   );

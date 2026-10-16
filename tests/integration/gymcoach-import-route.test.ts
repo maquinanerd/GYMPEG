@@ -125,7 +125,7 @@ describe('POST /api/import/gymcoach (confirm)', () => {
     // Real export times on the first session, noon-UTC fallback on the rest.
     expect(sessions[0]?.startedAt.toISOString()).toBe('2026-05-02T09:13:00.000Z');
     expect(sessions[0]?.finishedAt?.toISOString()).toBe('2026-05-02T10:05:00.000Z');
-    expect(sessions[0]?.notes).toBe('Imported from GymCoach CSV - Push Day');
+    expect(sessions[0]?.notes).toBe('Imported from GYM Peg CSV - Push Day');
     expect(sessions[1]?.startedAt.toISOString()).toBe('2026-05-03T12:00:00.000Z');
 
     // Per-set extras persisted: warmup/dropset flags, rir (including 0), notes.

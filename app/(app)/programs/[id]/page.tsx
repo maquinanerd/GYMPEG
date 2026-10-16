@@ -6,10 +6,14 @@ import { pickableExerciseWhere } from '@/lib/catalog/access';
 
 interface Props {
   params: Promise<{ id: string }>;
+  // `?workout=<id>` opens that workout of the program (the Programas list
+  // links each workout here).
+  searchParams: Promise<{ workout?: string | string[] }>;
 }
 
 export default async function ProgramDetailPage(props: Props) {
   const params = await props.params;
+  const searchParams = await props.searchParams;
   const session = await requireSession();
 
   const program = await db.program.findFirst({
@@ -34,9 +38,17 @@ export default async function ProgramDetailPage(props: Props) {
     orderBy: [{ muscleGroup: 'asc' }, { name: 'asc' }],
   });
 
+  const requested = Array.isArray(searchParams.workout)
+    ? searchParams.workout[0]
+    : searchParams.workout;
+
   return (
-    <main className="flex-1 px-4 py-6">
-      <ProgramDetailView program={program} catalog={exercisesCatalog} />
+    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col">
+      <ProgramDetailView
+        program={program}
+        catalog={exercisesCatalog}
+        initialWorkoutId={requested ?? null}
+      />
     </main>
   );
 }

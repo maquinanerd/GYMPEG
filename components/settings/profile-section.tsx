@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { CircleNotchIcon, FloppyDiskIcon, UserIcon } from '@/components/ui/icon';
 import { toast } from 'sonner';
 import type { Sex, TrainingGoal, WeightUnit } from '@/lib/prisma-client';
 import { trainingGoalMessageKeys } from '@/i18n/enum-keys';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { textLinkClass } from '@/components/ui/section';
+import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -109,17 +109,9 @@ export function ProfileSection({ initial }: Props) {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <UserIcon className="size-5" />
-          <h2 className="text-base font-semibold">{t('title')}</h2>
-        </div>
-        <p className="text-xs text-muted-foreground">{t('description')}</p>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <div className="space-y-1.5">
-          <Label htmlFor="displayName" className="text-sm">
+    <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="displayName" className={LABEL}>
             {t('displayName')}
           </Label>
           <Input
@@ -128,13 +120,12 @@ export function ProfileSection({ initial }: Props) {
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder={t('namePlaceholder')}
             maxLength={80}
-            className="max-w-xs"
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="bodyweight" className="text-sm">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="bodyweight" className={LABEL}>
               {t('bodyweightLabel')}
             </Label>
             <Input
@@ -144,15 +135,16 @@ export function ProfileSection({ initial }: Props) {
               step="0.1"
               value={bodyweight}
               onChange={(e) => setBodyweight(e.target.value)}
-              placeholder="e.g. 75"
+              placeholder="75"
+              className={NUMBER}
             />
             {!rangeOk(bodyweight, 20, 300) && (
-              <p className="text-xs text-destructive">{t('bodyweightRange')}</p>
+              <p className={FIELD_ERROR}>{t('bodyweightRange')}</p>
             )}
           </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="heightCm" className="text-sm">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="heightCm" className={LABEL}>
               {t('heightLabel')}
             </Label>
             <Input
@@ -162,19 +154,20 @@ export function ProfileSection({ initial }: Props) {
               step="1"
               value={heightCm}
               onChange={(e) => setHeightCm(e.target.value)}
-              placeholder="e.g. 178"
+              placeholder="178"
+              className={NUMBER}
             />
             {!rangeOk(heightCm, 100, 250) && (
-              <p className="text-xs text-destructive">{t('heightRange')}</p>
+              <p className={FIELD_ERROR}>{t('heightRange')}</p>
             )}
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <Label className="text-sm">{t('sex')}</Label>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex flex-col gap-1.5">
+            <Label className={LABEL}>{t('sex')}</Label>
             <Select value={sex} onValueChange={(v) => setSex(v as Sex)}>
-              <SelectTrigger>
+              <SelectTrigger aria-label={t('sex')}>
                 <SelectValue placeholder={t('notSet')} />
               </SelectTrigger>
               <SelectContent>
@@ -187,8 +180,8 @@ export function ProfileSection({ initial }: Props) {
             </Select>
           </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="weeklyFrequency" className="text-sm">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="weeklyFrequency" className={LABEL}>
               {t('weeklyFrequencyLabel')}
             </Label>
             <Input
@@ -198,18 +191,19 @@ export function ProfileSection({ initial }: Props) {
               step="1"
               value={weeklyFrequency}
               onChange={(e) => setWeeklyFrequency(e.target.value)}
-              placeholder="e.g. 3"
+              placeholder="3"
+              className={NUMBER}
             />
             {!rangeOk(weeklyFrequency, 1, 14) && (
-              <p className="text-xs text-destructive">{t('weeklyFrequencyRange')}</p>
+              <p className={FIELD_ERROR}>{t('weeklyFrequencyRange')}</p>
             )}
           </div>
         </div>
 
-        <div className="space-y-1.5">
-          <Label className="text-sm">{t('goal')}</Label>
+        <div className="flex flex-col gap-1.5">
+          <Label className={LABEL}>{t('goal')}</Label>
           <Select value={goal} onValueChange={(v) => setGoal(v as TrainingGoal)}>
-            <SelectTrigger className="max-w-xs">
+            <SelectTrigger aria-label={t('goal')}>
               <SelectValue placeholder={t('notSet')} />
             </SelectTrigger>
             <SelectContent>
@@ -222,10 +216,11 @@ export function ProfileSection({ initial }: Props) {
           </Select>
         </div>
 
-        <div className="space-y-1.5">
-          <Label className="text-sm">{t('unit')}</Label>
+        {/* Perfil > Unidade links here (#unit). */}
+        <div id="unit" className="flex scroll-mt-4 flex-col gap-1.5">
+          <Label className={LABEL}>{t('unit')}</Label>
           <Select value={unit} onValueChange={(v) => setUnit(v as WeightUnit)}>
-            <SelectTrigger className="max-w-xs">
+            <SelectTrigger aria-label={t('unit')}>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -236,18 +231,18 @@ export function ProfileSection({ initial }: Props) {
               ))}
             </SelectContent>
           </Select>
-          <p className="text-xs text-muted-foreground">{t('unitDescription')}</p>
+          <p className={HINT}>{t('unitDescription')}</p>
         </div>
 
-        <div className="space-y-1.5">
-          <Label htmlFor="timezone" className="text-sm">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="timezone" className={LABEL}>
             {t('timezone')}
           </Label>
           <select
             id="timezone"
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
-            className="flex h-10 w-full max-w-xs rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="flex h-12 w-full rounded-md border border-input bg-card px-3.5 text-body font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             {zoneOptions.map((zone) => (
               <option key={zone} value={zone}>
@@ -255,26 +250,32 @@ export function ProfileSection({ initial }: Props) {
               </option>
             ))}
           </select>
-          <p className="text-xs text-muted-foreground">{t('timezoneDescription')}</p>
+          <p className={HINT}>{t('timezoneDescription')}</p>
           {deviceZone && deviceZone !== timezone && (
-            <Button
+            <button
               type="button"
-              variant="link"
-              className="h-auto p-0 text-xs"
+              className={cn(textLinkClass, 'min-h-11 self-start text-left')}
               onClick={() => setTimezone(deviceZone)}
             >
               {t('useDeviceTimezone', { zone: deviceZone.replace(/_/g, ' ') })}
-            </Button>
+            </button>
           )}
         </div>
 
-        <div>
-          <Button type="button" onClick={save} disabled={pending || !isValid} className="min-h-tap">
-            {pending ? <CircleNotchIcon className="size-4 animate-spin" /> : <FloppyDiskIcon className="size-4" />}
-            <span className="ml-2">{common('actions.save')}</span>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+        <Button
+          type="button"
+          onClick={save}
+          loading={pending}
+          disabled={pending || !isValid}
+          className="w-full sm:w-auto sm:self-start"
+        >
+          {common('actions.save')}
+        </Button>
+    </div>
   );
 }
+
+const LABEL = 'text-caption font-semibold';
+const HINT = 'text-[0.8125rem] font-medium text-muted-foreground';
+const FIELD_ERROR = 'text-[0.8125rem] font-medium text-destructive-text';
+const NUMBER = 'font-num tabular-nums stretch-112';

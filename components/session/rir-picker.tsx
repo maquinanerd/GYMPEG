@@ -50,7 +50,7 @@ export function RirPicker({
           <IconButton
             type="button"
             size="session"
-            tone="pill"
+            tone="outline"
             onClick={() => step(-1)}
             disabled={index <= 0}
             aria-label={t('decrease')}
@@ -67,7 +67,7 @@ export function RirPicker({
           <IconButton
             type="button"
             size="session"
-            tone="pill"
+            tone="outline"
             onClick={() => step(1)}
             disabled={index >= OPTIONS.length - 1}
             aria-label={t('increase')}

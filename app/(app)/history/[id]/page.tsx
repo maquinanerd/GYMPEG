@@ -1,18 +1,13 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getFormatter, getLocale, getTimeZone, getTranslations } from 'next-intl/server';
-import {
-  ArrowLeftIcon,
-  CalendarIcon,
-  ClockIcon,
-  DownloadSimpleIcon,
-  BarbellIcon,
-} from '@/components/ui/icon';
+import { CaretLeftIcon, DownloadSimpleIcon } from '@/components/ui/icon';
 import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Button, IconButton } from '@/components/ui/button';
+import { Highlight } from '@/components/ui/highlight';
+import { Num } from '@/components/ui/num';
+import { Tag } from '@/components/ui/tag';
 import { muscleGroupMessageKeys } from '@/i18n/enum-keys';
 import { applyBodyweight, best1RM, totalVolume } from '@/lib/stats';
 import {
@@ -46,7 +41,7 @@ interface Params {
 }
 
 // The calendar links here with the month, day, history filters and the
-// lifter's zone; the back link returns to that exact view and the date badge
+// lifter's zone; the back link returns to that exact view and the date line
 // is formatted in that zone (review of #351).
 function buildBackHref(params: BackParams) {
   const query = new URLSearchParams();
@@ -60,11 +55,15 @@ function buildBackHref(params: BackParams) {
   return qs ? `/history?${qs}` : '/history';
 }
 
+const TH = 'py-2 text-left text-small font-semibold text-muted-foreground';
+const TD = 'py-2.5';
+
 export default async function HistorySessionPage(props: Params) {
   const t = await getTranslations('history');
   const detail = await getTranslations('history.detail');
   const copyT = await getTranslations('history.copy');
   const exerciseT = await getTranslations('exercises');
+  const common = await getTranslations('common');
   const locale = await getLocale();
   const format = await getFormatter();
   const params = await props.params;
@@ -72,7 +71,7 @@ export default async function HistorySessionPage(props: Params) {
   const timeZone = resolveCalendarTimeZone(searchParams.tz, await getTimeZone());
   const auth = await requireSession();
 
-  const [session, user] = await Promise.all([
+  const [session, user, records] = await Promise.all([
     db.session.findUnique({
       where: { id: params.id },
       include: {
@@ -97,6 +96,11 @@ export default async function HistorySessionPage(props: Params) {
     db.user.findUnique({
       where: { id: auth.userId },
       select: { bodyweight: true, unit: true },
+    }),
+    // Records this session set (lib/personal-records), to mark their sets.
+    db.personalRecord.findMany({
+      where: { userId: auth.userId, sessionId: params.id },
+      select: { exerciseId: true, weightKg: true, reps: true },
     }),
   ]);
 
@@ -147,6 +151,19 @@ export default async function HistorySessionPage(props: Params) {
   const sessionTitle = session.workout?.name
     ? getTrainingDisplayName(session.workout.name, locale)
     : t('freeSession');
+  const programName = session.program
+    ? getTrainingDisplayName(session.program.name, locale)
+    : null;
+  // A working set is marked when a record of this session names its exercise,
+  // load and reps (the record's load already counts the bodyweight).
+  const isRecordSet = (exerciseId: string, effective: number, reps: number) =>
+    records.some(
+      (record) =>
+        record.exerciseId === exerciseId &&
+        record.reps === reps &&
+        record.weightKg != null &&
+        Math.abs(record.weightKg - effective) < 0.01,
+    );
   // "Copy as text" (issue #405) recaps a FINISHED session only, like the TCX
   // export: an in-progress session is not a log worth pasting yet.
   const workoutText =
@@ -188,97 +205,71 @@ export default async function HistorySessionPage(props: Params) {
         )
       : null;
 
+  const dateLine = format.dateTime(session.startedAt, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone,
+  });
+  const summary = [
+    common('counts.sets', { count: workingSetCount }),
+    common('counts.exercises', { count: setsByExercise.size }),
+    volume > 0 ? formatWeight(volume, unit, { decimals: 0, locale }) : null,
+  ].filter(Boolean);
+
   return (
-    <main className="flex-1 px-4 py-6">
-      <div className="mx-auto flex max-w-2xl flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <Button asChild variant="ghost" size="sm" className="-ml-2">
-            <Link href={buildBackHref(searchParams)}>
-              <ArrowLeftIcon className="size-4" />
-              <span className="ml-1">{t('title')}</span>
-            </Link>
-          </Button>
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            {workoutText && <CopyWorkoutButton text={workoutText} />}
-            {hasCardio && (
-              <Button asChild variant="outline" size="sm">
-                <a href={`/api/cardio/tcx?sessionId=${session.id}`} download>
-                  <DownloadSimpleIcon className="size-4" />
-                  <span className="ml-1">{detail('downloadTcx')}</span>
-                </a>
-              </Button>
-            )}
-            <DeleteSessionButton
-              sessionId={session.id}
-              workoutName={
-                session.workout?.name ? getTrainingDisplayName(session.workout.name, locale) : null
-              }
-              startedAt={session.startedAt}
-            />
-          </div>
+    <main className="mx-auto w-full max-w-2xl flex-1">
+      <header className="flex items-center gap-1 px-2 pt-2">
+        <IconButton asChild aria-label={detail('back')}>
+          <Link href={buildBackHref(searchParams)}>
+            <CaretLeftIcon />
+          </Link>
+        </IconButton>
+        <span className="min-w-0 flex-1 truncate text-caption text-muted-foreground">
+          {programName ?? t('title')}
+        </span>
+      </header>
+
+      <div className="flex flex-col gap-6 px-5 pb-8 pt-2">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-balance text-[2rem] font-semibold leading-[1.05] tracking-[-0.025em]">
+            {sessionTitle}
+          </h1>
+          <p className="text-caption text-muted-foreground first-letter:uppercase">
+            {[dateLine, durationMin != null ? t('minutes', { count: durationMin }) : null]
+              .filter(Boolean)
+              .join(' · ')}
+          </p>
+          <p className="font-num text-caption font-semibold tabular-nums stretch-108">
+            {summary.join(' · ')}
+          </p>
         </div>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <h1 className="text-2xl font-bold tracking-tight">{sessionTitle}</h1>
-            <div className="mt-1 flex flex-wrap gap-1.5">
-              {session.program && (
-                <Badge variant="secondary">
-                  {getTrainingDisplayName(session.program.name, locale)}
-                </Badge>
-              )}
-              <Badge variant="outline" className="gap-1">
-                <CalendarIcon className="size-3" />
-                {format.dateTime(session.startedAt, {
-                  day: '2-digit',
-                  month: 'long',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  timeZone,
-                })}
-              </Badge>
-              {durationMin != null && (
-                <Badge variant="outline" className="gap-1">
-                  <ClockIcon className="size-3" />
-                  {t('minutes', { count: durationMin })}
-                </Badge>
-              )}
-            </div>
-          </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-3 pt-0 text-sm sm:grid-cols-3">
-            <Stat label={detail('sets')} value={String(workingSetCount)} />
-            <Stat label={detail('exercises')} value={String(setsByExercise.size)} />
-            <Stat
-              label={detail('totalVolume')}
-              value={formatWeight(volume, unit, { decimals: 0, locale })}
-            />
-          </CardContent>
-        </Card>
-
         {session.notes && (
-          <Card>
-            <CardContent className="py-4 text-sm">
-              <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">
-                {detail('notes')}
-              </p>
-              <p className="whitespace-pre-line">{session.notes}</p>
-            </CardContent>
-          </Card>
+          <div className="flex flex-col gap-1 border-y border-border py-3.5">
+            <span className="text-small font-semibold text-muted-foreground">
+              {detail('notes')}
+            </span>
+            <p className="whitespace-pre-line text-[0.9375rem] leading-normal text-pretty">
+              {session.notes}
+            </p>
+          </div>
         )}
 
         {exerciseOrder.length === 0 ? (
-          <Card>
-            <CardContent className="py-8 text-center text-sm text-muted-foreground">
-              {detail('noSets')}
-            </CardContent>
-          </Card>
+          <p className="border-t border-border py-4 text-caption text-muted-foreground">
+            {detail('noSets')}
+          </p>
         ) : (
-          <ul className="flex flex-col gap-3">
+          <ol className="flex flex-col gap-6">
             {exerciseOrder.map((exerciseId) => {
               const entry = setsByExercise.get(exerciseId);
               if (!entry) return null;
               const isCardio = entry.exercise.category === 'CARDIO';
+              const exerciseName = getExerciseDisplayName(entry.exercise.name, locale);
               const enrichedExoSets = applyBodyweight(
                 entry.sets.map((s) => ({
                   weight: s.weight,
@@ -306,205 +297,242 @@ export default async function HistorySessionPage(props: Params) {
                     .filter(Boolean)
                     .join(' · ')
                 : null;
+              const meta = [
+                exerciseT(`muscleGroups.${muscleGroupMessageKeys[entry.exercise.muscleGroup]}`),
+                cardioTotal
+                  ? detail('total', { value: cardioTotal })
+                  : detail('volume', {
+                      value: formatWeight(exoVolume, unit, { decimals: 0, locale }),
+                    }),
+                e1rm > 0
+                  ? detail('oneRm', {
+                      value: formatWeight(e1rm, unit, {
+                        decimals: 1,
+                        fixed: true,
+                        group: false,
+                        locale,
+                      }),
+                    })
+                  : null,
+              ].filter(Boolean);
               return (
-                <li key={exerciseId}>
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between gap-2">
-                        <h2 className="text-base font-semibold">
-                          {getExerciseDisplayName(entry.exercise.name, locale)}
-                        </h2>
-                        <Badge variant="secondary" className="text-xs">
-                          {exerciseT(
-                            `muscleGroups.${muscleGroupMessageKeys[entry.exercise.muscleGroup]}`,
-                          )}
-                        </Badge>
-                      </div>
-                      <div className="mt-1 flex gap-3 text-xs text-muted-foreground">
-                        {cardioTotal ? (
-                          <span>{detail('total', { value: cardioTotal })}</span>
-                        ) : (
-                          <span>
-                            {detail('volume', {
-                              value: formatWeight(exoVolume, unit, {
-                                decimals: 0,
-                                group: false,
-                                locale,
-                              }),
-                            })}
-                          </span>
-                        )}
-                        {e1rm > 0 && (
-                          <span>
-                            {detail('oneRm', {
-                              value: formatWeight(e1rm, unit, {
-                                decimals: 1,
-                                fixed: true,
-                                group: false,
-                                locale,
-                              }),
-                            })}
-                          </span>
-                        )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      {isCardio ? (
-                        <table className="w-full text-sm">
-                          <thead>
-                            <tr className="border-b text-left text-xs uppercase tracking-wide text-muted-foreground">
-                              <th className="py-1.5 font-medium">#</th>
-                              <th className="py-1.5 font-medium">{detail('duration')}</th>
-                              <th className="py-1.5 font-medium">{detail('distance')}</th>
-                              <th className="py-1.5 font-medium">{detail('pace')}</th>
-                              <th className="py-1.5 font-medium">{detail('avgHr')}</th>
-                              <th className="py-1.5 font-medium">{detail('maxHr')}</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {entry.sets.map((s) => {
-                              const pace =
-                                s.durationSec != null
-                                  ? formatPace(s.durationSec, s.distanceM, unit)
-                                  : null;
-                              return (
-                                <tr key={s.id} className="border-b border-border/40">
-                                  <td className="py-1.5">{s.setNumber}</td>
-                                  <td className="py-1.5">
+                <li key={exerciseId} className="flex flex-col gap-1 border-t border-border pt-4">
+                  <h2 className="text-subtitle">{exerciseName}</h2>
+                  <p className="text-[0.8125rem] font-medium text-muted-foreground">
+                    {meta.join(' · ')}
+                  </p>
+                  {isCardio ? (
+                    <div className="-mx-5 overflow-x-auto px-5 scrollbar-none">
+                      <table className="w-full min-w-[22rem] border-collapse text-caption">
+                        <caption className="sr-only">{exerciseName}</caption>
+                        <thead>
+                          <tr className="border-b border-border">
+                            <th scope="col" className={TH}>
+                              #
+                            </th>
+                            <th scope="col" className={TH}>
+                              {detail('duration')}
+                            </th>
+                            <th scope="col" className={TH}>
+                              {detail('distance')}
+                            </th>
+                            <th scope="col" className={TH}>
+                              {detail('pace')}
+                            </th>
+                            <th scope="col" className={TH}>
+                              {detail('avgHr')}
+                            </th>
+                            <th scope="col" className={TH}>
+                              {detail('maxHr')}
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {entry.sets.map((s) => {
+                            const pace =
+                              s.durationSec != null
+                                ? formatPace(s.durationSec, s.distanceM, unit)
+                                : null;
+                            return (
+                              <tr key={s.id} className="border-b border-border">
+                                <td className={TD}>
+                                  <Num stretch={112}>{s.setNumber}</Num>
+                                </td>
+                                <td className={TD}>
+                                  <Num stretch={112}>
                                     {s.durationSec != null ? formatDuration(s.durationSec) : '-'}
-                                  </td>
-                                  <td className="py-1.5">
+                                  </Num>
+                                </td>
+                                <td className={TD}>
+                                  <Num stretch={112}>
                                     {s.distanceM != null && s.distanceM > 0
                                       ? formatDistance(s.distanceM)
                                       : '-'}
-                                  </td>
-                                  <td className="py-1.5">{pace ?? '-'}</td>
-                                  <td className="py-1.5">
+                                  </Num>
+                                </td>
+                                <td className={TD}>
+                                  <Num stretch={112}>{pace ?? '-'}</Num>
+                                </td>
+                                <td className={TD}>
+                                  <Num stretch={112}>
                                     {s.avgHr != null ? `${s.avgHr} bpm` : '-'}
-                                  </td>
-                                  <td className="py-1.5">
+                                  </Num>
+                                </td>
+                                <td className={TD}>
+                                  <Num stretch={112}>
                                     {s.maxHr != null ? `${s.maxHr} bpm` : '-'}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      ) : null}
-                      {isCardio &&
-                        entry.sets.map((s) => {
-                          if (!Array.isArray(s.track) || s.track.length === 0) return null;
-                          const track = s.track as { t: number; d?: number; hr?: number }[];
+                                  </Num>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    // Fixed layout: the columns line up from one exercise to the next.
+                    <table className="w-full table-fixed border-collapse text-caption">
+                      <caption className="sr-only">{exerciseName}</caption>
+                      <thead>
+                        <tr className="border-b border-border">
+                          <th scope="col" className={`${TH} w-10`}>
+                            #
+                          </th>
+                          <th scope="col" className={`${TH} w-[40%]`}>
+                            {detail('load')}
+                          </th>
+                          <th scope="col" className={`${TH} w-[16%]`}>
+                            {detail('reps')}
+                          </th>
+                          <th scope="col" className={`${TH} w-[14%]`}>
+                            RIR
+                          </th>
+                          <th scope="col" className={`${TH} text-right`}>
+                            {detail('type')}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {entry.sets.map((s) => {
+                          const isBw = entry.exercise.usesBodyweight && bodyweight;
+                          const effective = isBw ? bodyweight + s.weight : s.weight;
+                          const record =
+                            !s.isWarmup && isRecordSet(exerciseId, effective, s.reps);
+                          const load =
+                            !isBw && effective === 0
+                              ? detail('bodyweight')
+                              : formatWeight(effective, unit, {
+                                  decimals: 2,
+                                  group: false,
+                                  locale,
+                                });
                           return (
-                            <div key={`track-${s.id}`}>
-                              <ActivityTrackChart track={track} />
-                              <TrackDecoupling track={track} />
-                            </div>
+                            <tr
+                              key={s.id}
+                              className={
+                                s.isWarmup
+                                  ? 'border-b border-border text-muted-foreground'
+                                  : 'border-b border-border'
+                              }
+                            >
+                              <td className={TD}>
+                                <Num stretch={112}>{s.setNumber}</Num>
+                              </td>
+                              <td className={TD}>
+                                {record ? (
+                                  <Highlight stretch={112} title={detail('record')}>
+                                    {load}
+                                    <span className="sr-only"> ({detail('record')})</span>
+                                  </Highlight>
+                                ) : (
+                                  <Num stretch={112}>{load}</Num>
+                                )}
+                                {isBw && (
+                                  <span className="ml-1 text-small text-muted-foreground">
+                                    ({s.weight >= 0 ? '+' : ''}
+                                    {formatWeight(s.weight, unit, {
+                                      decimals: 2,
+                                      withUnit: false,
+                                      group: false,
+                                      locale,
+                                    })}{' '}
+                                    {detail('external')})
+                                  </span>
+                                )}
+                              </td>
+                              <td className={TD}>
+                                <Num stretch={112}>{s.reps}</Num>
+                              </td>
+                              <td className={TD}>
+                                <Num stretch={112}>{s.rir ?? '-'}</Num>
+                              </td>
+                              <td className={`${TD} text-right`}>
+                                {s.isWarmup ? (
+                                  <Tag variant="warmup">{detail('warmup')}</Tag>
+                                ) : s.isDropSet ? (
+                                  <Tag variant="muted">{detail('dropSet')}</Tag>
+                                ) : (
+                                  <span className="text-small text-muted-foreground">
+                                    {detail('working')}
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
                           );
                         })}
-                      {!isCardio && (
-                        <table className="w-full text-sm">
-                          <thead>
-                            <tr className="border-b text-left text-xs uppercase tracking-wide text-muted-foreground">
-                              <th className="py-1.5 font-medium">#</th>
-                              <th className="py-1.5 font-medium">{detail('load')}</th>
-                              <th className="py-1.5 font-medium">{detail('reps')}</th>
-                              <th className="py-1.5 font-medium">RIR</th>
-                              <th className="py-1.5 font-medium">{detail('type')}</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {entry.sets.map((s) => {
-                              const isBw = entry.exercise.usesBodyweight && bodyweight;
-                              const effective = isBw ? bodyweight + s.weight : s.weight;
-                              return (
-                                <tr
-                                  key={s.id}
-                                  className={
-                                    s.isWarmup
-                                      ? 'text-muted-foreground'
-                                      : 'border-b border-border/40'
-                                  }
-                                >
-                                  <td className="py-1.5">{s.setNumber}</td>
-                                  <td className="py-1.5">
-                                    {isBw ? (
-                                      <span>
-                                        {formatWeight(effective, unit, {
-                                          decimals: 2,
-                                          group: false,
-                                          locale,
-                                        })}
-                                        <span className="ml-1 text-xs text-muted-foreground">
-                                          ({s.weight >= 0 ? '+' : ''}
-                                          {formatWeight(s.weight, unit, {
-                                            decimals: 2,
-                                            withUnit: false,
-                                            group: false,
-                                            locale,
-                                          })}{' '}
-                                          {detail('external')})
-                                        </span>
-                                      </span>
-                                    ) : effective === 0 ? (
-                                      detail('bodyweight')
-                                    ) : (
-                                      formatWeight(effective, unit, {
-                                        decimals: 2,
-                                        group: false,
-                                        locale,
-                                      })
-                                    )}
-                                  </td>
-                                  <td className="py-1.5">{s.reps}</td>
-                                  <td className="py-1.5">{s.rir ?? '-'}</td>
-                                  <td className="py-1.5 text-xs">
-                                    {s.isWarmup
-                                      ? detail('warmup')
-                                      : s.isDropSet
-                                        ? detail('dropSet')
-                                        : detail('working')}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      )}
-                      {entry.sets.some((s) => s.notes) && (
-                        <div className="mt-2 space-y-1 text-xs text-muted-foreground">
-                          {entry.sets
-                            .filter((s) => s.notes)
-                            .map((s) => (
-                              <p key={s.id}>
-                                <span className="font-medium">
-                                  {detail('setNote', { number: s.setNumber })}{' '}
-                                </span>
-                                {s.notes}
-                              </p>
-                            ))}
+                      </tbody>
+                    </table>
+                  )}
+                  {isCardio &&
+                    entry.sets.map((s) => {
+                      if (!Array.isArray(s.track) || s.track.length === 0) return null;
+                      const track = s.track as { t: number; d?: number; hr?: number }[];
+                      return (
+                        <div key={`track-${s.id}`}>
+                          <ActivityTrackChart track={track} />
+                          <TrackDecoupling track={track} />
                         </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                      );
+                    })}
+                  {entry.sets.some((s) => s.notes) && (
+                    <div className="mt-1 flex flex-col gap-1 text-[0.8125rem] text-muted-foreground">
+                      {entry.sets
+                        .filter((s) => s.notes)
+                        .map((s) => (
+                          <p key={s.id}>
+                            <span className="font-semibold">
+                              {detail('setNote', { number: s.setNumber })}{' '}
+                            </span>
+                            {s.notes}
+                          </p>
+                        ))}
+                    </div>
+                  )}
                 </li>
               );
             })}
-          </ul>
+          </ol>
         )}
+
+        <div className="flex flex-wrap gap-2 border-t border-border pt-5">
+          {workoutText && <CopyWorkoutButton text={workoutText} />}
+          {hasCardio && (
+            <Button asChild variant="outline" size="sm">
+              <a href={`/api/cardio/tcx?sessionId=${session.id}`} download>
+                <DownloadSimpleIcon weight="bold" />
+                {detail('downloadTcx')}
+              </a>
+            </Button>
+          )}
+          <DeleteSessionButton
+            sessionId={session.id}
+            workoutName={
+              session.workout?.name ? getTrainingDisplayName(session.workout.name, locale) : null
+            }
+            startedAt={session.startedAt}
+          />
+        </div>
       </div>
     </main>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center gap-2">
-      <BarbellIcon className="size-4 shrink-0 text-muted-foreground" />
-      <div className="min-w-0">
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className="truncate font-medium">{value}</p>
-      </div>
-    </div>
   );
 }

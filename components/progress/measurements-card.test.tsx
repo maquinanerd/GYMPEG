@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MeasurementsCard, type BodyMeasurementView } from './measurements-card';
 
@@ -33,19 +33,31 @@ describe('MeasurementsCard', () => {
     vi.clearAllMocks();
   });
 
-  it('shows the latest value per site', () => {
+  it('lists the latest value per site with its date', () => {
     render(<MeasurementsCard entries={entries} unit="KG" />);
-    // Latest waist (newest entry m3 = 82) appears in the latest-per-site grid
-    // and the selected-site list, so it shows at least once.
-    expect(screen.getAllByText('82 cm').length).toBeGreaterThanOrEqual(1);
-    // Hips (95) is only in the grid (waist is the selected site for the list).
-    expect(screen.getByText('95 cm')).toBeInTheDocument();
-    // The older waist value (84) shows in the list but never as a "latest".
-    expect(screen.getByText('84 cm')).toBeInTheDocument();
+    const list = screen.getByRole('region', { name: 'Measurements' });
+    // Latest waist (newest entry m3 = 82) and hips (95); the older waist (84)
+    // is history, never a "latest".
+    expect(within(list).getByText('82 cm')).toBeInTheDocument();
+    expect(within(list).getByText('95 cm')).toBeInTheDocument();
+    expect(within(list).queryByText('84 cm')).not.toBeInTheDocument();
+    expect(within(list).getByRole('button', { name: /waist: 82 cm on 06\/08/i })).toBeInTheDocument();
   });
 
-  it('shows an empty-state trend message for a site with no data', () => {
+  it('shows the site history in the sheet, older values included', async () => {
+    const user = userEvent.setup();
+    render(<MeasurementsCard entries={entries} unit="KG" />);
+    await user.click(screen.getByRole('button', { name: /waist: 82 cm/i }));
+    const sheet = screen.getByRole('dialog');
+    expect(within(sheet).getByText('84 cm')).toBeInTheDocument();
+    expect(within(sheet).getByRole('img', { name: /waist from 84 cm/i })).toBeInTheDocument();
+  });
+
+  it('shows an empty state, and an empty trend message for a site with no data', async () => {
+    const user = userEvent.setup();
     render(<MeasurementsCard entries={[]} unit="KG" />);
+    expect(screen.getByText(/no measurements yet/i)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Log' }));
     expect(screen.getByText(/no waist measurement yet/i)).toBeInTheDocument();
   });
 
@@ -53,8 +65,9 @@ describe('MeasurementsCard', () => {
     const user = userEvent.setup();
     render(<MeasurementsCard entries={[]} unit="KG" />);
 
-    await user.type(screen.getByLabelText(/value \(cm\)/i), '82.5');
     await user.click(screen.getByRole('button', { name: 'Log' }));
+    await user.type(screen.getByLabelText(/value \(cm\)/i), '82.5');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     const [url, init] = lastFetchCall(fetchMock);
     expect(url).toBe('/api/measurements');
@@ -68,8 +81,9 @@ describe('MeasurementsCard', () => {
     const user = userEvent.setup();
     render(<MeasurementsCard entries={[]} unit="LB" />);
 
-    await user.type(screen.getByLabelText(/value \(in\)/i), '32');
     await user.click(screen.getByRole('button', { name: 'Log' }));
+    await user.type(screen.getByLabelText(/value \(in\)/i), '32');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
 
     const [, init] = lastFetchCall(fetchMock);
     const body = JSON.parse(init?.body as string) as { valueCm: number };
@@ -81,12 +95,14 @@ describe('MeasurementsCard', () => {
     const user = userEvent.setup();
     render(<MeasurementsCard entries={[]} unit="KG" />);
     await user.click(screen.getByRole('button', { name: 'Log' }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('deletes the selected-site entry through the API', async () => {
     const user = userEvent.setup();
     render(<MeasurementsCard entries={entries} unit="KG" />);
+    await user.click(screen.getByRole('button', { name: 'Log' }));
     // Default site is WAIST; the first deletable row is the newest waist (m3).
     await user.click(
       screen.getAllByRole('button', { name: /delete waist measurement/i })[0] as HTMLElement,
@@ -100,6 +116,7 @@ describe('MeasurementsCard', () => {
   it('switches the trend and list to the chosen site', async () => {
     const user = userEvent.setup();
     render(<MeasurementsCard entries={entries} unit="KG" />);
+    await user.click(screen.getByRole('button', { name: 'Log' }));
     await user.selectOptions(screen.getByLabelText(/^site$/i), 'HIPS');
     // Hips has a single entry -> the "log a second" trend message appears.
     expect(screen.getByText(/log a second hips measurement/i)).toBeInTheDocument();
@@ -115,8 +132,9 @@ describe('MeasurementsCard body fat (epic 2.4)', () => {
         bodyFat={{ percent: 16.6, basedOn: '2026-06-01T08:00:00Z', usesHips: false }}
       />,
     );
-    expect(screen.getByTestId('body-fat')).toHaveTextContent('Estimated body fat: 16.6%');
-    expect(screen.getByTestId('body-fat')).toHaveTextContent(/waist, neck and height/);
+    expect(screen.getByTestId('body-fat')).toHaveTextContent('Estimated body fat');
+    expect(screen.getByTestId('body-fat')).toHaveTextContent('16.6%');
+    expect(screen.getByTestId('body-fat-hint')).toHaveTextContent(/waist, neck and height/);
 
     rerender(<MeasurementsCard entries={entries} unit="KG" bodyFat={null} />);
     expect(screen.queryByTestId('body-fat')).not.toBeInTheDocument();

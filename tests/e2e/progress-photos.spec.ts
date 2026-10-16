@@ -26,28 +26,32 @@ test('a lifter can upload a progress photo and see it in the gallery', async ({
   });
   expect(registerRes.ok()).toBeTruthy();
 
-  await page.goto('/progress');
-  // Scope to the Progress photos card (the page has several cards).
+  // Photos live on the Body tab of Progress.
+  await page.goto('/progress?tab=body');
+  // Scope to the Progress photos block (the tab has several sections).
   const card = page.getByRole('region', { name: 'Progress photos' });
   await expect(card.getByRole('heading', { name: 'Progress photos' })).toBeVisible();
   await expect(card.getByText(/no progress photos yet/i)).toBeVisible();
 
-  // Upload the tiny PNG with a note.
-  await card.getByLabel('Photo').setInputFiles({
+  // Upload the tiny PNG with a note, from the "Add" sheet.
+  await card.getByRole('button', { name: 'Add', exact: true }).click();
+  const sheet = page.getByRole('dialog', { name: 'Add a progress photo' });
+  await sheet.getByLabel('Photo').setInputFiles({
     name: 'front.png',
     mimeType: 'image/png',
     buffer: TINY_PNG,
   });
-  await card.getByLabel(/note/i).fill('e2e upload');
-  await card.getByRole('button', { name: 'Upload', exact: true }).click();
+  await sheet.getByLabel(/note/i).fill('e2e upload');
+  await sheet.getByRole('button', { name: 'Upload', exact: true }).click();
 
   // The thumbnail appears, served through the ownership-scoped image route.
   const thumbnail = card.locator('img[src*="/api/progress-photos/"]').first();
   await expect(thumbnail).toBeVisible();
   await expect(card.getByText(/no progress photos yet/i)).toBeHidden();
 
-  // Delete it again (accepting the confirm dialog): back to the empty state.
+  // Open it and delete it (accepting the confirm dialog): back to empty.
   page.on('dialog', (dialog) => void dialog.accept());
-  await card.getByRole('button', { name: /delete photo of/i }).click();
+  await card.getByRole('button', { name: /photo of/i }).first().click();
+  await page.getByRole('button', { name: /delete photo of/i }).click();
   await expect(card.getByText(/no progress photos yet/i)).toBeVisible();
 });
