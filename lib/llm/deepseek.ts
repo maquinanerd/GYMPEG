@@ -37,6 +37,9 @@ export function buildDeepSeekRequestBody(
     // DeepSeek's JSON mode requires the prompt itself to ask for JSON; every
     // caller that sets responseFormat 'json' already describes a JSON schema.
     ...(req.responseFormat === 'json' ? { response_format: { type: 'json_object' } } : {}),
+    // Thinking is on by default (effort high), and while it is on DeepSeek
+    // ignores temperature: https://api-docs.deepseek.com/guides/thinking_mode
+    ...(req.reasoning === 'off' ? { thinking: { type: 'disabled' } } : {}),
     ...(stream ? { stream: true } : {}),
   };
 }

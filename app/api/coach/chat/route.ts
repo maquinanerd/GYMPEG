@@ -105,6 +105,9 @@ export async function POST(req: Request) {
             messages: llmMessages,
             maxTokens: 4096,
             temperature: 0.5,
+            // A chat answer streams to someone waiting (often between sets):
+            // no hidden chain of thought, which only delayed the first word.
+            reasoning: 'off',
           })) {
             assistant += chunk;
             controller.enqueue(encoder.encode(chunk));

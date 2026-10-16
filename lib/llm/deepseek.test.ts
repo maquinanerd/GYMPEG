@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DeepSeekProvider } from './deepseek';
+import { buildDeepSeekRequestBody, DeepSeekProvider } from './deepseek';
 import { LlmError } from './types';
 
 const ENV_KEYS = ['DEEPSEEK_API_KEY', 'DEEPSEEK_MODEL'] as const;
@@ -124,5 +124,15 @@ describe('DeepSeekProvider', () => {
 
     expect(chunks).toEqual(['Oi', '!']);
     expect(JSON.parse(fetchFn.mock.calls[0]![1].body as string).stream).toBe(true);
+  });
+
+  it('disables thinking only when the request asks for reasoning off', () => {
+    expect(buildDeepSeekRequestBody('deepseek-flash', req, true)).not.toHaveProperty('thinking');
+    expect(
+      buildDeepSeekRequestBody('deepseek-flash', { ...req, reasoning: 'default' }, false),
+    ).not.toHaveProperty('thinking');
+    expect(
+      buildDeepSeekRequestBody('deepseek-flash', { ...req, reasoning: 'off' }, true),
+    ).toMatchObject({ thinking: { type: 'disabled' }, stream: true });
   });
 });

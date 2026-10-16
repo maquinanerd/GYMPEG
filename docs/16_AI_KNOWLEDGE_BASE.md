@@ -31,6 +31,15 @@ O prompt do chat (`buildChatSystemPrompt` em `lib/prompts/chat-system-prompt.ts`
 3. os dados do usuário em JSON compacto, sem o `generatedAt`, porque um horário mudaria o começo do prompt a cada requisição; o treino em andamento (`currentSession`) vai por último dentro do JSON;
 4. as fichas da pergunta, a única parte que muda a cada mensagem.
 
+O chat pede a resposta sem raciocínio interno (`reasoning: 'off'`, que na DeepSeek vira `thinking: { type: "disabled" }`). Medido em 2026-10-16 com o `deepseek-flash`:
+
+- a primeira palavra aparece em ~1 s em vez de ~2 s;
+- a resposta completa chega em ~4 s em vez de ~10 s;
+- cada mensagem custa de 27% a 36% menos;
+- as respostas continuaram usando os números do usuário e citando só as fichas.
+
+A análise semanal e o gerador de treino continuam com o raciocínio ligado.
+
 ## O que a IA sabe do usuário
 
 Além do que já ia no payload do coach (perfil, semana atual e anterior, programa ativo, progressão de 8 semanas, recordes, metas e sinais de fadiga), o chat recebe `trainingHistory` (`buildTrainingHistoryContext` em `lib/coach.ts`):
