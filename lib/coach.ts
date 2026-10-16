@@ -1194,7 +1194,8 @@ export interface CoachCompletion {
 // which the API route maps to an HTTP status.
 export async function callCoach(payload: CoachPayload): Promise<CoachCompletion> {
   const provider = getLlmProvider();
-  const userMessage = JSON.stringify(payload, null, 2);
+  // Compact JSON: indentation is pure token cost for the model.
+  const userMessage = JSON.stringify(payload);
 
   const { text, modelUsed } = await provider.complete({
     system: `${COACH_SYSTEM_PROMPT}\n\n${knowledgeSectionFor(debriefKnowledgeQuery(payload), 6)}`,

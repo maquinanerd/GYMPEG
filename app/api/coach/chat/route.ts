@@ -9,9 +9,11 @@ import {
   buildCurrentSessionContext,
   buildTrainingHistoryContext,
 } from '@/lib/coach';
-import { CHAT_SYSTEM_PROMPT } from '@/lib/prompts/chat-system-prompt';
+import { buildChatSystemPrompt } from '@/lib/prompts/chat-system-prompt';
 import { chatKnowledgeQuery, deriveConversationTitle } from '@/lib/chat';
 import { knowledgeSectionFor } from '@/lib/knowledge';
+import { localDayKey } from '@/lib/timezone';
+import { getUserTimeZone } from '@/lib/user-timezone';
 
 const bodySchema = z.object({
   conversationId: z.string().cuid().optional(),
@@ -85,14 +87,12 @@ export async function POST(req: Request) {
     }
 
     const provider = getLlmProvider();
-    // Stable text first (cacheable prefix), then the evidence matched to this
-    // question, then the trainee's data.
-    const system = [
-      CHAT_SYSTEM_PROMPT,
-      `# About this assistant\nModel: ${provider.label} (${provider.model}).`,
-      knowledgeSectionFor(chatKnowledgeQuery(llmMessages)),
-      `# Trainee's current training data (JSON)\n${JSON.stringify(payload, null, 2)}`,
-    ].join('\n\n');
+    const system = buildChatSystemPrompt({
+      model: `${provider.label} (${provider.model})`,
+      today: localDayKey(new Date(), await getUserTimeZone(userId)),
+      payload,
+      knowledgeSection: knowledgeSectionFor(chatKnowledgeQuery(llmMessages)),
+    });
     const encoder = new TextEncoder();
     let assistant = '';
 

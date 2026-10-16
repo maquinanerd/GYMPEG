@@ -24,7 +24,12 @@ A base de conhecimento é a fonte de evidência científica do coach do GYM Peg.
 3. `formatKnowledgeSection` (`lib/knowledge/format.ts`) monta a seção "Knowledge cards" do prompt com as regras de citação: citar no formato curto (Autor et al., ano), citar só fontes das fichas, nunca inventar estudo ou número, dizer quando não há fonte curada, e encaminhar dor, lesão, doença, gestação e remédio para um profissional.
 4. A análise semanal (`callCoach` em `lib/coach.ts`) usa as mesmas fichas, buscadas pelos temas fixos do debrief (progressão, platô, deload, volume, RIR) mais o objetivo e a nota do usuário.
 
-O prompt do chat fica nesta ordem: texto fixo (cacheável pelo provedor), "About this assistant" com o modelo em uso, fichas da pergunta e dados do usuário em JSON.
+O prompt do chat (`buildChatSystemPrompt` em `lib/prompts/chat-system-prompt.ts`) segue a ordem que aproveita o cache da DeepSeek. A parte do começo que se repete idêntica entre as mensagens custa cerca de 50 vezes menos. A ordem é:
+
+1. o texto fixo, igual para todo usuário;
+2. "About this assistant", com o modelo em uso e a data de hoje, que só muda uma vez por dia;
+3. os dados do usuário em JSON compacto, sem o `generatedAt`, porque um horário mudaria o começo do prompt a cada requisição; o treino em andamento (`currentSession`) vai por último dentro do JSON;
+4. as fichas da pergunta, a única parte que muda a cada mensagem.
 
 ## O que a IA sabe do usuário
 
