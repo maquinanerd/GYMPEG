@@ -34,13 +34,20 @@ afterEach(() => {
 });
 
 function row(
-  over: Partial<{ userId: string; revokedAt: Date | null; expiresAt: Date; lastSeenAt: Date }>,
+  over: Partial<{
+    userId: string;
+    revokedAt: Date | null;
+    expiresAt: Date;
+    lastSeenAt: Date;
+    user: { blockedAt: Date | null };
+  }>,
 ) {
   return {
     userId: 'u1',
     revokedAt: null,
     expiresAt: new Date(NOW.getTime() + 86_400_000),
     lastSeenAt: NOW,
+    user: { blockedAt: null },
     ...over,
   };
 }
@@ -75,7 +82,7 @@ describe('isSessionActive', () => {
     expect(findUnique).not.toHaveBeenCalled();
   });
 
-  it('rejects missing, revoked, expired and foreign sessions', async () => {
+  it('rejects missing, revoked, expired, foreign and blocked-account sessions', async () => {
     findUnique.mockResolvedValueOnce(null);
     await expect(isSessionActive(claims, NOW)).resolves.toBe(false);
     findUnique.mockResolvedValueOnce(row({ revokedAt: NOW }));
@@ -83,6 +90,8 @@ describe('isSessionActive', () => {
     findUnique.mockResolvedValueOnce(row({ expiresAt: NOW }));
     await expect(isSessionActive(claims, NOW)).resolves.toBe(false);
     findUnique.mockResolvedValueOnce(row({ userId: 'someone-else' }));
+    await expect(isSessionActive(claims, NOW)).resolves.toBe(false);
+    findUnique.mockResolvedValueOnce(row({ user: { blockedAt: NOW } }));
     await expect(isSessionActive(claims, NOW)).resolves.toBe(false);
   });
 

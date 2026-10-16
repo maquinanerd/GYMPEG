@@ -78,6 +78,7 @@ Marque os segredos apenas como **runtime** (não "build variable"), para não fi
 |---|---|---|
 | `DATABASE_URL` | Postgres URL (internal) do passo 2 | sim |
 | `JWT_SECRET` | 48+ caracteres aleatórios (`openssl rand -base64 48`) | sim |
+| `APP_SECRETS_KEY` | 48+ caracteres aleatórios; cifra as chaves de API salvas no painel. Sem ela, usa o `JWT_SECRET` | não |
 | `NEXTAUTH_URL` | `https://gympeg.62.171.164.224.sslip.io` | sim |
 | `SIGNUP_MODE` | `allowlist` (padrão em produção; `open` libera o cadastro, `closed` fecha) | não |
 | `SIGNUP_ALLOWED_EMAILS` | seu e-mail (e de quem você convidar), separados por vírgula | sim, para criar a primeira conta |
@@ -118,9 +119,19 @@ Deploy. Ao subir, acessar `/signup` e criar a conta com um e-mail listado em `SI
 
 > Em produção o cadastro vem fechado por padrão (`allowlist`): só os e-mails listados conseguem criar conta. Outros recebem "cadastro apenas por convite", sem revelar se o e-mail já existe.
 
-### Administrador
+### Painel de administração
 
-Um admin define uma senha nova para outra conta em **Configurações → Administração** (`/admin`). A conta sai de todos os dispositivos, os links de reset pendentes deixam de valer e a troca fica registrada em `AuditLog` (quem, qual conta, quando; nunca a senha). A própria senha do admin continua sendo trocada em Configurações, com a senha atual.
+**Configurações → Administração** (`/admin`), só para contas com papel `ADMIN`:
+
+- **Visão geral**: contas, quem treinou na semana, treinos concluídos, chamadas e custo de IA, e se IA e e-mail estão prontos.
+- **Contas**: criar conta direto (fora da lista de convidados), definir senha, bloquear/desbloquear, dar/tirar admin e excluir (LGPD, confirmando o e-mail). Bloquear encerra sessões e tokens MCP e recusa o login. O admin não age sobre a própria conta, então sempre sobra um admin.
+- **IA**: provedor principal e reserva, modelo e chave de cada provedor (Gemini, DeepSeek, OpenRouter, Anthropic), recursos ligados, preço por milhão de tokens e uso dos últimos 30 dias. "Testar conexão" faz uma chamada mínima.
+- **E-mail**: Resend, remetente e chave, para o "Esqueceu a senha?". "Enviar teste" manda um e-mail para o próprio admin.
+- **Auditoria**: as últimas 100 ações (senha, bloqueio, papel, exclusão, configuração, chave), sem senhas nem chaves.
+
+O que o painel salva vale **por cima** das variáveis do Coolify (`lib/runtime-env`); campo vazio no painel = vale a variável. As chaves de API ficam no banco (`AppSecret`) criptografadas com AES-256-GCM, com chave derivada de `APP_SECRETS_KEY` ou, se ela não existir, do `JWT_SECRET`. Trocar esse segredo invalida as chaves salvas: o painel avisa e é só colar de novo. Uma alteração aparece em até 30 s em cada réplica.
+
+Modo de cadastro e lista de convidados (`SIGNUP_MODE`, `SIGNUP_ALLOWED_EMAILS`) continuam só no Coolify.
 
 O papel não vem do cadastro nem de variável de ambiente: é concedido à mão no banco, porque o cadastro não verifica a posse do e-mail. Em **gympeg-postgres → Terminal**:
 

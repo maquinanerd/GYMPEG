@@ -4,6 +4,7 @@ import {
   type LlmCompletionRequest,
   type LlmCompletionResult,
   type LlmProvider,
+  type LlmEnv,
 } from './types';
 
 // Default to the most capable model. Override with ANTHROPIC_MODEL (e.g.
@@ -19,9 +20,9 @@ export class AnthropicProvider implements LlmProvider {
   private readonly apiKey: string | undefined;
   private client: Anthropic | undefined;
 
-  constructor() {
-    this.apiKey = process.env.ANTHROPIC_API_KEY;
-    this.model = process.env.ANTHROPIC_MODEL?.trim() || DEFAULT_MODEL;
+  constructor(env: LlmEnv = process.env) {
+    this.apiKey = env.ANTHROPIC_API_KEY;
+    this.model = env.ANTHROPIC_MODEL?.trim() || DEFAULT_MODEL;
   }
 
   isConfigured(): boolean {

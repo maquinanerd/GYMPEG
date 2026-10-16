@@ -30,6 +30,7 @@ import { loadTrainingBlock } from '@/lib/deload-history';
 import { COACH_SYSTEM_PROMPT } from '@/lib/prompts/coach-system-prompt';
 import { exerciseRecords, type ExerciseRecord } from '@/lib/records';
 import { getLlmProvider } from '@/lib/llm';
+import { getRuntimeEnv } from '@/lib/runtime-env';
 
 // ============================================================
 // Structured payload sent to the coach
@@ -1193,7 +1194,7 @@ export interface CoachCompletion {
 // OpenRouter, selected via LLM_PROVIDER). Provider errors surface as LlmError,
 // which the API route maps to an HTTP status.
 export async function callCoach(payload: CoachPayload): Promise<CoachCompletion> {
-  const provider = getLlmProvider();
+  const provider = getLlmProvider(await getRuntimeEnv());
   // Compact JSON: indentation is pure token cost for the model.
   const userMessage = JSON.stringify(payload);
 

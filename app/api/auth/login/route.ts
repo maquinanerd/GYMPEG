@@ -39,6 +39,13 @@ export async function POST(req: Request) {
     if (!user) return invalid;
     const ok = await verifyPassword(password, user.passwordHash);
     if (!ok) return invalid;
+    // Told only to someone who knows the password: an admin blocked the account.
+    if (user.blockedAt) {
+      return NextResponse.json(
+        { error: 'This account is blocked.', code: 'ACCOUNT_BLOCKED' },
+        { status: 403 },
+      );
+    }
 
     const { token } = await createAuthSession({
       userId: user.id,

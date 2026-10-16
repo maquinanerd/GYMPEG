@@ -9,6 +9,7 @@ import { clientIp, rateLimit } from '@/lib/rate-limit';
 import { localeCookieName, resolveLocale } from '@/i18n/config';
 import { loadMessages } from '@/i18n/messages';
 import { log } from '@/lib/log';
+import { getRuntimeEnv } from '@/lib/runtime-env';
 
 const requestSchema = z.object({ email: z.string().trim().email().max(200) });
 
@@ -28,8 +29,9 @@ export async function POST(req: Request) {
       maxBytes: AUTH_JSON_BODY_MAX_BYTES,
     });
 
-    const provider = getEmailProvider();
-    const appUrl = resolvePublicAppUrl(process.env, new URL(req.url).origin);
+    const env = await getRuntimeEnv();
+    const provider = getEmailProvider(env);
+    const appUrl = resolvePublicAppUrl(env, new URL(req.url).origin);
     if (!provider || !appUrl) {
       return NextResponse.json(
         { error: 'Password reset by e-mail is not available.' },

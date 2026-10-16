@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { requireSession } from '@/lib/auth';
 import { AI_CONSENT_VERSION, hasAiConsent, isAiFeatureEnabled } from '@/lib/ai/features';
 import { WorkoutPlanner } from '@/components/ai/workout-planner';
+import { getRuntimeEnv } from '@/lib/runtime-env';
 
 export default async function GenerateProgramPage() {
   const t = await getTranslations('programs');
@@ -23,7 +24,7 @@ export default async function GenerateProgramPage() {
         <WorkoutPlanner
           initialConsent={hasAiConsent(user)}
           consentVersion={AI_CONSENT_VERSION}
-          enabled={isAiFeatureEnabled('ai.workout_generation')}
+          enabled={isAiFeatureEnabled('ai.workout_generation', await getRuntimeEnv())}
         />
       </div>
     </main>

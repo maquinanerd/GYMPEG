@@ -12,6 +12,7 @@ import {
 import { buildChatSystemPrompt } from '@/lib/prompts/chat-system-prompt';
 import { chatKnowledgeQuery, deriveConversationTitle } from '@/lib/chat';
 import { knowledgeSectionFor } from '@/lib/knowledge';
+import { getRuntimeEnv } from '@/lib/runtime-env';
 import { localDayKey } from '@/lib/timezone';
 import { getUserTimeZone } from '@/lib/user-timezone';
 
@@ -86,7 +87,7 @@ export async function POST(req: Request) {
       if (currentSession) payload.currentSession = currentSession;
     }
 
-    const provider = getLlmProvider();
+    const provider = getLlmProvider(await getRuntimeEnv());
     const system = buildChatSystemPrompt({
       model: `${provider.label} (${provider.model})`,
       today: localDayKey(new Date(), await getUserTimeZone(userId)),

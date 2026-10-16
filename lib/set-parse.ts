@@ -4,6 +4,7 @@ import {
   parseSetDescription,
   type SetParseResult,
 } from '@/lib/schemas/set-parse';
+import { getRuntimeEnv } from '@/lib/runtime-env';
 
 // Server-side AI parse of one free-text set description (issue #210). Builds the
 // compact user message (exercise name + kind + the user's weight unit + the raw
@@ -35,7 +36,7 @@ export async function aiParseSet(
 
   let responseText: string;
   try {
-    const { text: out } = await getLlmProvider().complete({
+    const { text: out } = await getLlmProvider(await getRuntimeEnv()).complete({
       system: SET_PARSE_SYSTEM_PROMPT,
       messages: [{ role: 'user', content: userMessage }],
       // A single set is tiny; cap output so a runaway response cannot balloon.

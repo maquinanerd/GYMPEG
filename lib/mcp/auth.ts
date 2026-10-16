@@ -39,9 +39,16 @@ export async function authenticateMcpRequest(req: Request): Promise<McpPrincipal
 
   const row = await db.mcpAccessToken.findUnique({
     where: { tokenHash: hashMcpToken(token) },
-    select: { id: true, userId: true, canWrite: true, revokedAt: true, lastUsedAt: true },
+    select: {
+      id: true,
+      userId: true,
+      canWrite: true,
+      revokedAt: true,
+      lastUsedAt: true,
+      user: { select: { blockedAt: true } },
+    },
   });
-  if (!row || row.revokedAt) return null;
+  if (!row || row.revokedAt || row.user.blockedAt) return null;
 
   const staleUsage = !row.lastUsedAt || Date.now() - row.lastUsedAt.getTime() > 5 * 60_000;
   if (staleUsage) {

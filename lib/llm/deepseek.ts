@@ -5,6 +5,7 @@ import {
   type LlmCompletionRequest,
   type LlmCompletionResult,
   type LlmProvider,
+  type LlmEnv,
 } from './types';
 
 // DeepSeek through its OpenAI-compatible Chat Completions API. Override the
@@ -47,9 +48,9 @@ export class DeepSeekProvider implements LlmProvider {
   readonly model: string;
   private readonly apiKey: string | undefined;
 
-  constructor() {
-    this.apiKey = process.env.DEEPSEEK_API_KEY?.trim() || undefined;
-    this.model = process.env.DEEPSEEK_MODEL?.trim() || DEFAULT_MODEL;
+  constructor(env: LlmEnv = process.env) {
+    this.apiKey = env.DEEPSEEK_API_KEY?.trim() || undefined;
+    this.model = env.DEEPSEEK_MODEL?.trim() || DEFAULT_MODEL;
   }
 
   isConfigured(): boolean {
