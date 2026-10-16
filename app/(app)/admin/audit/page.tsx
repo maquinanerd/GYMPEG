@@ -1,5 +1,7 @@
 import { getFormatter, getTranslations } from 'next-intl/server';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { EmptyState } from '@/components/ui/empty-state';
+import { ListRow } from '@/components/ui/list-row';
+import { Section } from '@/components/ui/section';
 import { AUDIT_ACTIONS, requireAdminPage, type AuditAction } from '@/lib/admin';
 import { listAuditLog, type AuditRow } from '@/lib/admin-stats';
 
@@ -55,30 +57,31 @@ export default async function AdminAuditPage() {
     }
   }
 
+  // A list straight on the page: the action and its target, then who did it,
+  // when, and what changed. Newest first.
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <h2 className="text-base font-semibold">{t('title')}</h2>
-        <p className="text-sm text-muted-foreground">{t('description', { limit: LIMIT })}</p>
-      </CardHeader>
-      <CardContent className="py-1">
-        {rows.length === 0 ? (
-          <p className="py-4 text-sm text-muted-foreground">{t('none')}</p>
-        ) : (
-          <ol>
-            {rows.map((row) => {
-              const extra = detail(row);
-              return (
-                <li
-                  key={row.id}
-                  className="flex flex-col gap-0.5 border-b border-border py-3 last:border-b-0"
-                >
-                  <span className="text-body">
+    <Section title={t('title')}>
+      <p className="-mt-1 text-caption text-muted-foreground text-pretty">
+        {t('description', { limit: LIMIT })}
+      </p>
+      {rows.length === 0 ? (
+        <EmptyState title={t('none')} className="border-t border-border" />
+      ) : (
+        <ol>
+          {rows.map((row) => {
+            const extra = detail(row);
+            return (
+              <ListRow
+                key={row.id}
+                title={
+                  <>
                     {isAuditAction(row.action) ? t(`actions.${row.action}`) : row.action}
                     {' · '}
-                    <span className="break-all">{target(row)}</span>
-                  </span>
-                  <span className="text-small text-muted-foreground">
+                    <span className="break-all font-medium">{target(row)}</span>
+                  </>
+                }
+                meta={
+                  <>
                     {t('by', {
                       actor: row.actorEmail ?? t('erasedAccount'),
                       date: format.dateTime(new Date(row.createdAt), {
@@ -87,13 +90,14 @@ export default async function AdminAuditPage() {
                       }),
                     })}
                     {extra ? ` · ${extra}` : ''}
-                  </span>
-                </li>
-              );
-            })}
-          </ol>
-        )}
-      </CardContent>
-    </Card>
+                  </>
+                }
+                contentClassName="break-words"
+              />
+            );
+          })}
+        </ol>
+      )}
+    </Section>
   );
 }

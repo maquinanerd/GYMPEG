@@ -3,11 +3,10 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { CircleNotchIcon, PaperPlaneRightIcon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Section } from '@/components/ui/section';
 import {
   Select,
   SelectContent,
@@ -15,8 +14,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tag } from '@/components/ui/tag';
 import type { AdminConfigView, EmailTest } from '@/lib/admin-config';
 import { EMAIL_PROVIDER_VALUES } from '@/lib/admin-settings';
+import { cn } from '@/lib/utils';
+import { DESCRIPTION, FIELD, HINT, LABEL } from './admin-ui';
 import { SecretField } from './secret-field';
 import { useAdminRequest } from './use-admin-request';
 
@@ -30,6 +32,8 @@ interface Props {
 }
 
 // E-mail for password reset links: Resend with a verified sender domain.
+// Two sections on the page: whether reset works (a tag) with a test send,
+// then the provider, sender and key.
 export function EmailSettings({ view, available, appUrl, adminEmail }: Props) {
   const t = useTranslations('admin.email');
   const common = useTranslations('admin.common');
@@ -64,79 +68,84 @@ export function EmailSettings({ view, available, appUrl, adminEmail }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <Card>
-        <CardHeader className="pb-3">
-          <h2 className="text-base font-semibold">{t('statusTitle')}</h2>
-          <p className={available ? 'text-sm' : 'text-sm text-destructive'}>
-            {available ? t('available') : t('unavailable')}
-          </p>
-          <p className="text-sm text-muted-foreground">
+    <>
+      <Section
+        title={t('statusTitle')}
+        action={
+          <Tag variant={available ? 'primary' : 'warning'}>
+            {available ? t('onTag') : t('offTag')}
+          </Tag>
+        }
+      >
+        <div className="-mt-1 flex flex-col gap-1">
+          <p className="text-caption text-pretty">{available ? t('available') : t('unavailable')}</p>
+          <p className={cn(HINT, '[overflow-wrap:anywhere]')}>
             {appUrl ? t('linksTo', { url: appUrl }) : t('noAppUrl')}
           </p>
-        </CardHeader>
-        <CardContent>
-          <Button type="button" variant="outline" onClick={test} disabled={testing}>
-            {testing ? (
-              <CircleNotchIcon className="animate-spin" aria-hidden="true" />
-            ) : (
-              <PaperPlaneRightIcon aria-hidden="true" />
-            )}
-            {t('test', { email: adminEmail })}
+        </div>
+        <div className="flex flex-col items-start gap-1.5 pt-1">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={test}
+            loading={testing}
+            disabled={testing}
+            className="h-12"
+          >
+            {t('test')}
           </Button>
-        </CardContent>
-      </Card>
+          <p className={cn(HINT, '[overflow-wrap:anywhere]')}>{t('testTo', { email: adminEmail })}</p>
+        </div>
+      </Section>
 
-      <Card>
-        <CardHeader className="pb-3">
-          <h2 className="text-base font-semibold">{t('settingsTitle')}</h2>
-          <p className="text-sm text-muted-foreground">{t('settingsHint')}</p>
-        </CardHeader>
-        <CardContent className="space-y-5">
-          <form className="space-y-4" onSubmit={save}>
-            <div className="space-y-2">
-              <Label htmlFor="email-provider">{t('provider')}</Label>
-              <Select value={provider} onValueChange={setProvider}>
-                <SelectTrigger id="email-provider" className="max-w-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={SERVER_DEFAULT}>
-                    {common('serverDefault', { value: providerName(serverProvider) })}
+      <Section title={t('settingsTitle')} divider>
+        <p className={DESCRIPTION}>{t('settingsHint')}</p>
+        <form className="flex flex-col gap-4 pt-1" onSubmit={save}>
+          <div className={FIELD}>
+            <Label htmlFor="email-provider" className={LABEL}>
+              {t('provider')}
+            </Label>
+            <Select value={provider} onValueChange={setProvider}>
+              <SelectTrigger id="email-provider" className="sm:max-w-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={SERVER_DEFAULT}>
+                  {common('serverDefault', { value: providerName(serverProvider) })}
+                </SelectItem>
+                {EMAIL_PROVIDER_VALUES.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {providerName(value)}
                   </SelectItem>
-                  {EMAIL_PROVIDER_VALUES.map((value) => (
-                    <SelectItem key={value} value={value}>
-                      {providerName(value)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email-from">{t('from')}</Label>
-              <Input
-                id="email-from"
-                value={from}
-                placeholder={view.settings.EMAIL_FROM.env ?? t('fromPlaceholder')}
-                onChange={(e) => setFrom(e.target.value)}
-                autoComplete="off"
-              />
-              <p className="text-sm text-muted-foreground">{t('fromHint')}</p>
-            </div>
-            <Button type="submit" disabled={pending} className="min-h-tap">
-              {pending && <CircleNotchIcon className="animate-spin" aria-hidden="true" />}
-              {common('save')}
-            </Button>
-          </form>
-          <div className="border-t border-border pt-5">
-            <SecretField
-              secretKey="RESEND_API_KEY"
-              label={t('apiKey')}
-              view={view.secrets.RESEND_API_KEY}
-            />
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+          <div className={FIELD}>
+            <Label htmlFor="email-from" className={LABEL}>
+              {t('from')}
+            </Label>
+            <Input
+              id="email-from"
+              value={from}
+              placeholder={view.settings.EMAIL_FROM.env ?? t('fromPlaceholder')}
+              onChange={(e) => setFrom(e.target.value)}
+              autoComplete="off"
+            />
+            <p className={HINT}>{t('fromHint')}</p>
+          </div>
+          <Button type="submit" variant="ink" loading={pending} disabled={pending} className="self-start">
+            {common('save')}
+          </Button>
+        </form>
+        <div className="mt-3 border-t border-border pt-5">
+          <SecretField
+            secretKey="RESEND_API_KEY"
+            label={t('apiKey')}
+            view={view.secrets.RESEND_API_KEY}
+          />
+        </div>
+      </Section>
+    </>
   );
 }
