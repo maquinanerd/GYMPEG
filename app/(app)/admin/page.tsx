@@ -1,30 +1,123 @@
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
-import { CaretLeftIcon } from '@/components/ui/icon';
-import { AdminUsers } from '@/components/admin/admin-users';
-import { listUsersForAdmin, requireAdminPage } from '@/lib/admin';
+import { getFormatter, getTranslations } from 'next-intl/server';
+import {
+  BarbellIcon,
+  CaretRightIcon,
+  ChartLineUpIcon,
+  PaperPlaneRightIcon,
+  SparkleIcon,
+  UserIcon,
+} from '@/components/ui/icon';
+import { Card, CardContent } from '@/components/ui/card';
+import { IconCircle, ListRow } from '@/components/ui/list-row';
+import { StatTile } from '@/components/ui/stat-tile';
+import { requireAdminPage } from '@/lib/admin';
+import { getOverviewStats } from '@/lib/admin-stats';
+import { canSendAppLinks } from '@/lib/email';
+import { getLlmProvider } from '@/lib/llm';
+import { getRuntimeEnv } from '@/lib/runtime-env';
 
-// Admin area: lists the accounts and lets an admin set a new password for
-// someone else. Anyone who is not an admin gets a 404 (lib/admin).
-export default async function AdminPage() {
-  const session = await requireAdminPage();
-  const t = await getTranslations('admin');
-  const users = await listUsersForAdmin();
+// Overview: how many people use the app, how much they train and what the AI
+// costs, plus whether AI and e-mail are ready. Aggregates only.
+export default async function AdminOverviewPage() {
+  await requireAdminPage();
+  const [t, format, stats, env] = await Promise.all([
+    getTranslations('admin.overview'),
+    getFormatter(),
+    getOverviewStats(),
+    getRuntimeEnv(),
+  ]);
+  const provider = getLlmProvider(env);
+  const emailReady = canSendAppLinks(env);
+  const number = (value: number) => format.number(value);
 
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-5 pb-7 pt-2">
-      <Link
-        href="/settings"
-        className="-ml-3 inline-flex min-h-touch items-center gap-1 self-start rounded-sm px-2 text-caption font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        <CaretLeftIcon className="size-5" />
-        {t('back')}
-      </Link>
-      <div className="flex flex-col gap-1">
-        <h1 className="text-title">{t('title')}</h1>
-        <p className="text-caption text-muted-foreground">{t('description')}</p>
-      </div>
-      <AdminUsers users={users} currentUserId={session.userId} />
-    </main>
+    <div className="flex flex-col gap-6">
+      <section aria-labelledby="admin-stats" className="flex flex-col gap-3">
+        <h2 id="admin-stats" className="text-base font-semibold">
+          {t('statsTitle')}
+        </h2>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <StatTile
+            label={t('accounts')}
+            icon={UserIcon}
+            value={number(stats.accounts)}
+            caption={t('newAccounts', { count: stats.newAccounts7d })}
+          />
+          <StatTile
+            label={t('activeLifters')}
+            icon={ChartLineUpIcon}
+            value={number(stats.activeLifters7d)}
+            caption={t('last7Days')}
+          />
+          <StatTile
+            label={t('workouts')}
+            icon={BarbellIcon}
+            value={number(stats.workouts7d)}
+            caption={t('workouts30d', { count: stats.workouts30d })}
+          />
+          <StatTile
+            label={t('aiCalls')}
+            icon={SparkleIcon}
+            value={number(stats.aiCalls7d)}
+            caption={t('aiFailures', { count: stats.aiFailures7d })}
+          />
+          <StatTile
+            label={t('aiCost')}
+            icon={SparkleIcon}
+            value={
+              stats.aiCost7d === null
+                ? '—'
+                : format.number(stats.aiCost7d, { style: 'currency', currency: 'USD' })
+            }
+            caption={stats.aiCost7d === null ? t('noPrice') : t('last7Days')}
+          />
+          <StatTile
+            label={t('admins')}
+            icon={UserIcon}
+            value={number(stats.admins)}
+            caption={t('blocked', { count: stats.blocked })}
+          />
+        </div>
+      </section>
+
+      <section aria-labelledby="admin-status" className="flex flex-col gap-3">
+        <h2 id="admin-status" className="text-base font-semibold">
+          {t('statusTitle')}
+        </h2>
+        <Card>
+          <CardContent className="py-1">
+            <Link href="/admin/ai" className="block">
+              <ListRow
+                leading={
+                  <IconCircle tone={provider.isConfigured() ? 'primary' : 'warning'}>
+                    <SparkleIcon />
+                  </IconCircle>
+                }
+                title={t('aiStatus', { provider: provider.label })}
+                subtitle={
+                  provider.isConfigured()
+                    ? t('aiReady', { model: provider.model })
+                    : t('aiMissingKey')
+                }
+                trailing={<CaretRightIcon className="size-5 text-muted-foreground" aria-hidden />}
+              />
+            </Link>
+            <Link href="/admin/email" className="block">
+              <ListRow
+                leading={
+                  <IconCircle tone={emailReady ? 'primary' : 'warning'}>
+                    <PaperPlaneRightIcon />
+                  </IconCircle>
+                }
+                title={t('emailStatus')}
+                subtitle={emailReady ? t('emailReady') : t('emailOff')}
+                trailing={<CaretRightIcon className="size-5 text-muted-foreground" aria-hidden />}
+              />
+            </Link>
+          </CardContent>
+        </Card>
+      </section>
+    </div>
   );
 }

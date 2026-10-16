@@ -63,3 +63,7 @@ export interface LlmProvider {
   // Streams text deltas as they arrive. Same request shape as complete().
   stream(req: LlmCompletionRequest): AsyncIterable<string>;
 }
+
+// The settings a provider reads (API key, model): process.env, or the
+// runtime environment with the admin panel's values on top (lib/runtime-env).
+export type LlmEnv = Record<string, string | undefined>;

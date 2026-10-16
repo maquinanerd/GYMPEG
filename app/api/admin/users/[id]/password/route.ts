@@ -1,16 +1,13 @@
 import { NextResponse } from 'next/server';
-import { z } from 'zod';
 import { ApiError, AUTH_JSON_BODY_MAX_BYTES, handleApiError, parseJsonBody } from '@/lib/api';
 import { requireAdminUserId, setPasswordAsAdmin } from '@/lib/admin';
+import { adminRateLimit } from '@/lib/admin-route';
 import { log } from '@/lib/log';
-import { rateLimit } from '@/lib/rate-limit';
-import { passwordSchema } from '@/lib/schemas/auth';
+import { adminSetPasswordSchema } from '@/lib/schemas/admin';
 
 interface Params {
   params: Promise<{ id: string }>;
 }
-
-const bodySchema = z.object({ password: passwordSchema });
 
 // POST /api/admin/users/[id]/password { password }: an admin sets a new
 // password for another account (lib/admin). Admins only; the target is any
@@ -19,16 +16,10 @@ export async function POST(req: Request, props: Params) {
   const params = await props.params;
   try {
     const adminId = await requireAdminUserId();
+    const limited = await adminRateLimit(adminId, 'password', 20);
+    if (limited) return limited;
 
-    const rl = await rateLimit(`admin-password:${adminId}`, 20, 15 * 60_000);
-    if (!rl.ok) {
-      return NextResponse.json(
-        { error: 'Too many attempts. Please try again later.' },
-        { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } },
-      );
-    }
-
-    const { password } = await parseJsonBody(req, bodySchema, {
+    const { password } = await parseJsonBody(req, adminSetPasswordSchema, {
       maxBytes: AUTH_JSON_BODY_MAX_BYTES,
     });
 

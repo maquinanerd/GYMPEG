@@ -214,7 +214,7 @@ export const settings = {
   },
   admin: {
     title: 'Administration',
-    description: 'Comptes et mots de passe',
+    description: 'Comptes, IA et e-mail',
   },
   privacy: {
     title: 'Données et confidentialité',

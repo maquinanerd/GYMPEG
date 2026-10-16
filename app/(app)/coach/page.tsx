@@ -17,6 +17,7 @@ import { CoachContextCard } from '@/components/coach/coach-context-card';
 import { CoachNoteCard } from '@/components/coach/coach-note-card';
 import { ScreenHeader } from '@/components/nav/screen-header';
 import { TabLinks } from '@/components/ui/tabs';
+import { getRuntimeEnv } from '@/lib/runtime-env';
 
 interface SearchParams {
   tab?: string;
@@ -30,7 +31,7 @@ export default async function CoachPage(props: { searchParams: Promise<SearchPar
   const t = await getTranslations('coach');
   const searchParams = await props.searchParams;
   const auth = await requireSession();
-  const provider = getLlmProvider();
+  const provider = getLlmProvider(await getRuntimeEnv());
   // A live session always opens the conversation.
   const tab = searchParams.tab === 'analyses' && !searchParams.sessionId ? 'analyses' : 'chat';
 

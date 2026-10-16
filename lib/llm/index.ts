@@ -5,7 +5,7 @@ import { DemoProvider } from './demo';
 import { FallbackProvider } from './fallback';
 import { GeminiProvider } from './gemini';
 import { OpenRouterProvider } from './openrouter';
-import type { LlmProvider } from './types';
+import type { LlmEnv, LlmProvider } from './types';
 
 export * from './types';
 export type LlmProviderId = LlmProvider['id'];
@@ -31,46 +31,48 @@ export function parseProviderId(raw: string | undefined): LlmProviderId | null {
 // AI_PROVIDER wins; LLM_PROVIDER is the legacy name kept for upstream
 // compatibility. Unset or unknown values resolve to the default provider.
 // 'demo' serves canned responses (no key needed), useful to try the AI screens.
-export function resolveProviderId(): LlmProviderId {
+export function resolveProviderId(env: LlmEnv = process.env): LlmProviderId {
   return (
-    parseProviderId(process.env.AI_PROVIDER) ??
-    parseProviderId(process.env.LLM_PROVIDER) ??
-    DEFAULT_PROVIDER_ID
+    parseProviderId(env.AI_PROVIDER) ?? parseProviderId(env.LLM_PROVIDER) ?? DEFAULT_PROVIDER_ID
   );
 }
 
 // Optional second provider (AI_FALLBACK_PROVIDER). Ignored when it names the
 // primary itself.
-export function resolveFallbackProviderId(primary: LlmProviderId): LlmProviderId | null {
-  const id = parseProviderId(process.env.AI_FALLBACK_PROVIDER);
+export function resolveFallbackProviderId(
+  primary: LlmProviderId,
+  env: LlmEnv = process.env,
+): LlmProviderId | null {
+  const id = parseProviderId(env.AI_FALLBACK_PROVIDER);
   return id && id !== primary ? id : null;
 }
 
-function createProvider(id: LlmProviderId): LlmProvider {
+export function createProvider(id: LlmProviderId, env: LlmEnv = process.env): LlmProvider {
   switch (id) {
     case 'gemini':
-      return new GeminiProvider();
+      return new GeminiProvider(env);
     case 'deepseek':
-      return new DeepSeekProvider();
+      return new DeepSeekProvider(env);
     case 'codex-lb':
-      return new CodexLbProvider();
+      return new CodexLbProvider(env);
     case 'openrouter':
-      return new OpenRouterProvider();
+      return new OpenRouterProvider(env);
     case 'demo':
       return new DemoProvider();
     case 'anthropic':
-      return new AnthropicProvider();
+      return new AnthropicProvider(env);
   }
 }
 
 // The single entry point to an LLM. No other module talks to a vendor SDK or
-// API directly.
-export function getLlmProvider(): LlmProvider {
-  const primary = createProvider(resolveProviderId());
-  const fallbackId = resolveFallbackProviderId(primary.id);
+// API directly. Callers pass the runtime environment (lib/runtime-env) so the
+// admin panel's provider, model and keys apply.
+export function getLlmProvider(env: LlmEnv = process.env): LlmProvider {
+  const primary = createProvider(resolveProviderId(env), env);
+  const fallbackId = resolveFallbackProviderId(primary.id, env);
   if (!fallbackId) return primary;
 
-  const fallback = createProvider(fallbackId);
+  const fallback = createProvider(fallbackId, env);
   if (!fallback.isConfigured()) return primary;
   if (!primary.isConfigured()) return fallback;
   return new FallbackProvider(primary, fallback);

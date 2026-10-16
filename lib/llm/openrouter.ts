@@ -3,6 +3,7 @@ import {
   type LlmCompletionRequest,
   type LlmCompletionResult,
   type LlmProvider,
+  type LlmEnv,
 } from './types';
 
 // Any model exposed by OpenRouter, via its Chat Completions-compatible API.
@@ -52,11 +53,11 @@ export class OpenRouterProvider implements LlmProvider {
   private readonly appName: string;
   private readonly appUrl: string;
 
-  constructor() {
-    this.apiKey = process.env.OPENROUTER_API_KEY;
-    this.model = process.env.OPENROUTER_MODEL?.trim() || DEFAULT_MODEL;
-    this.appName = process.env.OPENROUTER_APP_NAME ?? 'GYM Peg';
-    this.appUrl = process.env.OPENROUTER_APP_URL ?? 'http://localhost:3030';
+  constructor(env: LlmEnv = process.env) {
+    this.apiKey = env.OPENROUTER_API_KEY;
+    this.model = env.OPENROUTER_MODEL?.trim() || DEFAULT_MODEL;
+    this.appName = env.OPENROUTER_APP_NAME ?? 'GYM Peg';
+    this.appUrl = env.OPENROUTER_APP_URL ?? 'http://localhost:3030';
   }
 
   isConfigured(): boolean {

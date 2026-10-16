@@ -31,8 +31,12 @@ export async function issuePasswordReset(
   appUrl: string,
   now: Date = new Date(),
 ): Promise<{ to: string; link: string; expiresAt: Date } | null> {
-  const user = await db.user.findUnique({ where: { email }, select: { id: true, email: true } });
-  if (!user) return null;
+  const user = await db.user.findUnique({
+    where: { email },
+    select: { id: true, email: true, blockedAt: true },
+  });
+  // A blocked account gets no link; the caller answers the same either way.
+  if (!user || user.blockedAt) return null;
 
   const token = randomBytes(32).toString('base64url');
   const expiresAt = new Date(now.getTime() + RESET_TOKEN_TTL_MS);

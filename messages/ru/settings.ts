@@ -218,7 +218,7 @@ export const settings = {
   },
   admin: {
     title: 'Администрирование',
-    description: 'Аккаунты и пароли',
+    description: 'Аккаунты, ИИ и почта',
   },
   privacy: {
     title: 'Данные и конфиденциальность',

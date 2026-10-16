@@ -8,6 +8,7 @@ export const auth = {
     noAccount: 'No account yet?',
     createAccount: 'Create one',
     error: 'Could not sign in. Check the e-mail and password.',
+    blocked: 'This account is blocked. Talk to the administrator.',
     accountDeleted: 'Your account and all its data were deleted.',
     forgotPassword: 'Forgot your password?',
     passwordReset: 'Password changed. Sign in with the new password.',

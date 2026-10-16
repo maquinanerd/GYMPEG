@@ -7,6 +7,7 @@ import type { AIOperation } from '@/lib/prisma-client';
 import { db } from '@/lib/db';
 import { getLlmProvider, type LlmCompletionRequest, type LlmCompletionResult } from '@/lib/llm';
 import { log } from '@/lib/log';
+import { getRuntimeEnv } from '@/lib/runtime-env';
 
 type Env = Record<string, string | undefined>;
 
@@ -35,7 +36,8 @@ export async function runAiCompletion(
   request: LlmCompletionRequest,
   promptVersion?: string,
 ): Promise<LlmCompletionResult> {
-  const provider = getLlmProvider();
+  const env = await getRuntimeEnv();
+  const provider = getLlmProvider(env);
   const started = Date.now();
   let result: LlmCompletionResult | null = null;
   try {
@@ -53,7 +55,7 @@ export async function runAiCompletion(
           inputTokens: result?.usage?.inputTokens ?? null,
           outputTokens: result?.usage?.outputTokens ?? null,
           latencyMs,
-          estimatedCost: estimateAiCost(result?.usage),
+          estimatedCost: estimateAiCost(result?.usage, env),
           success: result != null,
           promptVersion: promptVersion ?? null,
         },
