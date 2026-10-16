@@ -19,7 +19,6 @@ import { Num } from '@/components/ui/num';
 import { Section } from '@/components/ui/section';
 import { LineChart } from '@/components/progress/line-chart';
 import {
-  formatLength,
   fromDisplayLength,
   MEASUREMENT_SITES,
   roundLength,
@@ -63,6 +62,9 @@ export function MeasurementsCard({ entries, unit, listLimit = 5, bodyFat = null 
   const router = useRouter();
   const metric = unit !== 'LB';
   const unitSuffix = metric ? 'cm' : 'in';
+  // The rounded value in the lifter's locale ("84,1 cm" in pt-BR).
+  const formatLength = (valueCm: number, toMetric: boolean) =>
+    `${format.number(roundLength(toDisplayLength(valueCm, toMetric)))} ${toMetric ? 'cm' : 'in'}`;
   const shortDate = useCallback(
     (iso: string) => format.dateTime(new Date(iso), { day: '2-digit', month: '2-digit' }),
     [format],

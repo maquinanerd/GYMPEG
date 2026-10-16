@@ -81,7 +81,14 @@ export function HistoryCalendar({
   )
     ? 1
     : 0;
-  const cells = useMemo(() => buildMonthGrid(month, weekStartsOn), [month, weekStartsOn]);
+  // The grid is padded to six weeks; drop the trailing weeks that hold no day
+  // so a five-week month does not leave an empty row above the legend.
+  const cells = useMemo(() => {
+    const grid = buildMonthGrid(month, weekStartsOn);
+    let last = grid.length - 1;
+    while (last >= 0 && !grid[last]?.dateKey) last -= 1;
+    return grid.slice(0, Math.ceil((last + 1) / 7) * 7);
+  }, [month, weekStartsOn]);
   const todayKey = dateKeyInTimeZone(new Date(), timeZone);
 
   const sessionsByDate = useMemo(() => {

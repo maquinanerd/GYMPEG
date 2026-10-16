@@ -277,7 +277,9 @@ export function ProgressDashboard({
         </div>
       )}
 
-      {deload}
+      {/* A server-rendered slot: wrapped so React does not read it as an
+          unkeyed child of this list of siblings. */}
+      {deload && <div>{deload}</div>}
 
       {/* 12-week recap of every exercise */}
       <Section size="sm" divider title={t('recap')}>

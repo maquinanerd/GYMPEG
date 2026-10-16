@@ -1097,9 +1097,11 @@ export function SessionRunner({
           above the safe area. Finishing the workout is in the header menu. */}
       <footer
         inert={covered || undefined}
-        className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card px-5 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3"
+        className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-card px-5 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 max-[359px]:px-4"
       >
-        <div className="mx-auto flex max-w-2xl gap-2.5">
+        {/* Under 360px the gutter, the gap and the label tighten so "Registrar
+            série N" fits whole between the two 64px buttons. */}
+        <div className="mx-auto flex max-w-2xl gap-2.5 max-[359px]:gap-2">
           <IconButton
             size="session"
             tone="outline"
@@ -1114,9 +1116,11 @@ export function SessionRunner({
             size="session"
             onClick={cta.onClick}
             disabled={cta.disabled}
-            className="min-w-0 flex-1 flex-col gap-px px-3"
+            className="min-w-0 flex-1 flex-col gap-px px-3 max-[359px]:px-1"
           >
-            <span className="max-w-full truncate text-subtitle">{cta.label}</span>
+            <span className="max-w-full truncate text-subtitle max-[359px]:text-[0.9375rem] max-[359px]:tracking-[-0.01em]">
+              {cta.label}
+            </span>
             {cta.sub && (
               <span className="max-w-full truncate text-[0.8125rem] font-semibold tabular-nums text-brand-strong">
                 {cta.sub}

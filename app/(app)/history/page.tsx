@@ -4,7 +4,7 @@ import { requireSession } from '@/lib/auth';
 import { EmptyState } from '@/components/ui/empty-state';
 import { applyBodyweight, totalVolume } from '@/lib/stats';
 import { formatWeight } from '@/lib/units';
-import { formatDistance, formatDuration } from '@/lib/cardio';
+import { formatDuration } from '@/lib/cardio';
 import { HistoryCsvLink, HistoryFilters } from '@/components/history/history-filters';
 import { TrainingHeader } from '@/components/nav/screen-header';
 import {
@@ -40,6 +40,8 @@ interface SearchParams {
 export default async function HistoryPage(props: { searchParams: Promise<SearchParams> }) {
   const t = await getTranslations('history');
   const locale = await getLocale();
+  // Cardio distance in the lifter's locale ("6,24 km" in pt-BR).
+  const kmFormat = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
   const searchParams = await props.searchParams;
   const timeZone = resolveCalendarTimeZone(searchParams.tz, await getTimeZone());
   const auth = await requireSession();
@@ -147,7 +149,8 @@ export default async function HistoryPage(props: { searchParams: Promise<SearchP
         ? null
         : formatWeight(totalVolume(enrichedSets), unit, { decimals: 0, locale }),
       durationLabel: !isCardio && durationMin != null ? t('minutes', { count: durationMin }) : null,
-      cardioDistanceLabel: isCardio && cardioDistance > 0 ? formatDistance(cardioDistance) : null,
+      cardioDistanceLabel:
+        isCardio && cardioDistance > 0 ? `${kmFormat.format(cardioDistance / 1000)} km` : null,
       cardioDurationLabel:
         isCardio && (cardioDurationSec > 0 || durationMin != null)
           ? formatDuration(cardioDurationSec || (durationMin ?? 0) * 60)

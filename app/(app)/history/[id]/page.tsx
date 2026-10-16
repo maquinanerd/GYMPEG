@@ -302,7 +302,7 @@ export default async function HistorySessionPage(props: Params) {
                 cardioTotal
                   ? detail('total', { value: cardioTotal })
                   : detail('volume', {
-                      value: formatWeight(exoVolume, unit, { decimals: 0, group: false, locale }),
+                      value: formatWeight(exoVolume, unit, { decimals: 0, locale }),
                     }),
                 e1rm > 0
                   ? detail('oneRm', {
@@ -390,20 +390,21 @@ export default async function HistorySessionPage(props: Params) {
                       </table>
                     </div>
                   ) : (
-                    <table className="w-full border-collapse text-caption">
+                    // Fixed layout: the columns line up from one exercise to the next.
+                    <table className="w-full table-fixed border-collapse text-caption">
                       <caption className="sr-only">{exerciseName}</caption>
                       <thead>
                         <tr className="border-b border-border">
                           <th scope="col" className={`${TH} w-10`}>
                             #
                           </th>
-                          <th scope="col" className={TH}>
+                          <th scope="col" className={`${TH} w-[40%]`}>
                             {detail('load')}
                           </th>
-                          <th scope="col" className={TH}>
+                          <th scope="col" className={`${TH} w-[16%]`}>
                             {detail('reps')}
                           </th>
-                          <th scope="col" className={TH}>
+                          <th scope="col" className={`${TH} w-[14%]`}>
                             RIR
                           </th>
                           <th scope="col" className={`${TH} text-right`}>

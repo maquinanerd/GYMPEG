@@ -77,15 +77,16 @@ export default async function WeeklyReportPage(props: Props) {
         />
 
         <div className="flex flex-col gap-6 px-5 pb-7 pt-3">
-          <nav className="flex items-center justify-between gap-2" aria-label={t('navigation')}>
-            <Button asChild variant="outline" size="sm">
+          {/* Two equal halves so both fit side by side at 320px. */}
+          <nav className="grid grid-cols-2 gap-2" aria-label={t('navigation')}>
+            <Button asChild variant="outline" size="sm" className="min-h-touch w-full px-3">
               <Link href={`/progress/report?week=${previousWeekKey}`}>
                 <CaretLeftIcon aria-hidden />
                 {t('previous')}
               </Link>
             </Button>
             {nextWeekKey && (
-              <Button asChild variant="outline" size="sm">
+              <Button asChild variant="outline" size="sm" className="min-h-touch w-full px-3">
                 <Link href={`/progress/report?week=${nextWeekKey}`}>
                   {t('next')}
                   <CaretRightIcon aria-hidden />
