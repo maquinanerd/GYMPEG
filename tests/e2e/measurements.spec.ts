@@ -34,12 +34,18 @@ test('a lifter can log and delete a body measurement on the progress page', asyn
   await sheet.getByLabel(/value \(cm\)/i).fill('82.5');
   await sheet.getByRole('button', { name: 'Save', exact: true }).click();
 
-  // The sheet's history gets a deletable row, and the list the latest value.
-  const deleteButton = sheet.getByRole('button', { name: /delete waist measurement/i }).first();
-  await expect(deleteButton).toBeVisible();
+  // The sheet's history gets a deletable row.
+  await expect(sheet.getByRole('button', { name: /delete waist measurement/i })).toBeVisible();
+  await expect(sheet.getByText('82.5 cm')).toBeVisible();
+
+  // The sheet is modal (the page behind it is hidden from assistive tech):
+  // close it, and the list shows the latest value per site.
+  await page.keyboard.press('Escape');
+  await expect(sheet).toBeHidden();
   await expect(card.getByText('82.5 cm')).toBeVisible();
 
-  // Delete it: back to the empty trend state for waist.
-  await deleteButton.click();
+  // Reopen the waist row and delete it: back to the empty trend state.
+  await card.getByRole('button', { name: /waist/i }).click();
+  await sheet.getByRole('button', { name: /delete waist measurement/i }).first().click();
   await expect(sheet.getByText(/no waist measurement yet/i)).toBeVisible();
 });

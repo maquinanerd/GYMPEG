@@ -124,8 +124,10 @@ test('a lifter starts, logs and finishes a workout offline, and it syncs back on
   await page.getByRole('button', { name: /^confirm set 1$/i }).click();
   await expect(page.getByTestId('rest-remaining')).toBeVisible();
   await page.getByRole('button', { name: /skip/i }).click();
-  await page.getByRole('button', { name: 'Finish' }).click();
-  await page.getByRole('button', { name: 'Finish the session' }).click();
+  // Finishing lives in the runner's header menu; the summary saves and exits.
+  await page.getByRole('button', { name: 'More workout options' }).click();
+  await page.getByRole('menuitem', { name: 'Finish workout' }).click();
+  await page.getByRole('button', { name: 'Save and exit' }).click();
 
   // Still offline: the offline home, with the workout waiting to be sent.
   await expect(page.getByRole('heading', { name: 'No connection' })).toBeVisible();
